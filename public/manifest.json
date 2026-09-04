@@ -1,0 +1,24 @@
+{
+  "short_name": "Branify",
+  "name": "Branify — Luxury Digital Studio & Futuristic Technology",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#08090B",
+  "theme_color": "#D4AF37",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "utilities", "design"]
+}

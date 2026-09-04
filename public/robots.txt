@@ -1,0 +1,17 @@
+# robots.txt for BRANIFY (https://branify.store)
+User-agent: *
+Allow: /
+
+# Disallow crawling of administrative and private checkout routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /cart
+Disallow: /cart/
+Disallow: /checkout
+Disallow: /checkout/
+Disallow: /api/
+Disallow: /login
+Disallow: /register
+
+# Sitemaps
+Sitemap: https://branify.store/sitemap.xml

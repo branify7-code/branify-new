@@ -1,0 +1,86 @@
+================================================================================
+ATS-OPTIMIZED TECH RESUME TEMPLATE (MARKDOWN / PLAIN TEXT FORMAT)
+================================================================================
+Provided 100% Free by BRANIFY (https://branify.store)
+License: Free to use and edit for personal job search and career growth.
+
+ATS OPTIMIZATION TIPS:
+1. ATS (Applicant Tracking Systems) prefer clean, single-column plain text or standard 
+   formatting without tables, multi-column boxes, icons, or unusual graphics.
+2. Use standard section headings (e.g., "PROFESSIONAL EXPERIENCE", "EDUCATION", "SKILLS").
+3. Use the formula for bullet points: [STRONG ACTION VERB] + [WHAT YOU BUILT / CONTEXT] + 
+   [MEASURABLE BUSINESS IMPACT / PERCENTAGE / METRIC].
+4. Export as a clean PDF or plain text file (.txt / .docx).
+
+================================================================================
+[YOUR FULL NAME]
+================================================================================
+[City, State / Country] | [Phone Number] | [Professional Email Address]
+LinkedIn: [linkedin.com/in/yourusername] | GitHub: [github.com/yourusername] | Portfolio: [yourportfolio.com]
+
+--------------------------------------------------------------------------------
+PROFESSIONAL SUMMARY
+--------------------------------------------------------------------------------
+Results-driven Senior Full-Stack Software Engineer with [X] years of experience architecting high-availability web applications, distributed cloud services, and responsive user interfaces. Proven track record of reducing latency by [X]%, scaling backend infrastructure to [X]M+ daily active users, and mentoring cross-functional engineering teams in agile environments.
+
+--------------------------------------------------------------------------------
+TECHNICAL SKILLS & COMPETENCIES
+--------------------------------------------------------------------------------
+* Programming Languages: TypeScript, JavaScript (ES6+), Python, Go, SQL, HTML5, CSS3
+* Frontend Frameworks & Libraries: React, Next.js, Vue.js, Tailwind CSS, Redux Toolkit, Zustand
+* Backend & API Architecture: Node.js, Express, FastAPI, RESTful APIs, GraphQL, WebSockets, Microservices
+* Databases & Caching: PostgreSQL, MySQL, Redis, MongoDB, Supabase, Drizzle ORM, Prisma
+* Cloud & DevOps: AWS (S3, EC2, Lambda), Google Cloud Platform (GCP), Docker, CI/CD (GitHub Actions), Vercel
+* Tools & Methodologies: Git, Jest, Vitest, Cypress, Agile / Scrum, JIRA, Postman, Linux
+
+--------------------------------------------------------------------------------
+PROFESSIONAL WORK EXPERIENCE
+--------------------------------------------------------------------------------
+
+[SENIOR SOFTWARE ENGINEER] | [Company Name] — [City, State / Remote]
+[Month, Year] – Present
+* Architected and deployed a multi-tenant SaaS analytics platform using Next.js, TypeScript, and PostgreSQL, serving [X]00,000+ monthly active users.
+* Optimized database queries and implemented Redis caching layer, decreasing p95 API response times from 450ms to 85ms (81% performance improvement).
+* Automated CI/CD deployment pipelines via GitHub Actions and Docker, reducing team deployment cycle time from 4 hours to 12 minutes.
+* Collaborated with product managers and UX designers to implement a component library in Tailwind CSS, increasing engineering velocity by 35%.
+* Mentored 4 junior and mid-level engineers through code reviews, architectural design sessions, and technical pair programming.
+
+[FULL-STACK SOFTWARE DEVELOPER] | [Previous Company Name] — [City, State / Remote]
+[Month, Year] – [Month, Year]
+* Developed core checkout and subscription billing microservices integrating Stripe API, processing over $[X]M in annual recurring transactions.
+* Built responsive, accessible front-end user dashboards adhering to WCAG 2.1 AA accessibility standards across desktop and mobile devices.
+* Refactored legacy monolithic backend into decoupled RESTful services, improving system test coverage from 42% to 88% using Jest and Supertest.
+* Reduced infrastructure operational costs by 24% through serverless AWS Lambda migrations and cloud resource auto-scaling rules.
+
+[SOFTWARE ENGINEER INTERN / JUNIOR DEVELOPER] | [Initial Company] — [City, State]
+[Month, Year] – [Month, Year]
+* Built dynamic interactive data visualization widgets using React and D3.js for client reporting portals.
+* Resolved 60+ critical bug tickets in production web applications, collaborating closely with senior QA engineers.
+* Authored technical API documentation and Swagger specifications for internal microservices.
+
+--------------------------------------------------------------------------------
+FEATURED TECHNICAL PROJECTS
+--------------------------------------------------------------------------------
+
+[Project Name / Open-Source Tool] | [Technologies: React, Node.js, Supabase, Tailwind]
+Live Demo: [project-url.com] | Repository: [github.com/yourusername/project]
+* Built an open-source real-time task collaboration engine supporting 50+ concurrent users per room with sub-50ms sync latency.
+* Implemented row-level security (RLS) policies and JWT authentication in Supabase to guarantee complete data isolation.
+
+[E-Commerce Microservices Engine] | [Technologies: Go, Redis, Docker, PostgreSQL]
+Repository: [github.com/yourusername/ecommerce-engine]
+* Engineered high-throughput inventory reservation service handling 2,000 requests/sec during simulated flash sales without race conditions.
+
+--------------------------------------------------------------------------------
+EDUCATION
+--------------------------------------------------------------------------------
+[Bachelor of Science in Computer Science / Software Engineering]
+[University / College Name] — [City, State] | Graduated: [Year]
+* Honors: [Dean's List / Cum Laude / GPA if > 3.5]
+* Relevant Coursework: Data Structures & Algorithms, Distributed Systems, Database Management Systems, Software Architecture.
+
+--------------------------------------------------------------------------------
+CERTIFICATIONS
+--------------------------------------------------------------------------------
+* AWS Certified Solutions Architect – Associate (Amazon Web Services, [Year])
+* Professional Full-Stack Developer Certification ([Issuing Body], [Year])

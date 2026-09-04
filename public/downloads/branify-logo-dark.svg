@@ -1,0 +1,61 @@
+<svg width="2400" height="720" viewBox="0 0 640 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800;900&amp;display=swap');
+    text {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+  </style>
+
+  <defs>
+    <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5A8DFF" />
+      <stop offset="45%" stop-color="#3B6EF6" />
+      <stop offset="100%" stop-color="#2450C7" />
+    </linearGradient>
+    <linearGradient id="silver-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EDEFF3" />
+      <stop offset="60%" stop-color="#C7CBD4" />
+      <stop offset="100%" stop-color="#9AA0AC" />
+    </linearGradient>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#12131A" />
+      <stop offset="100%" stop-color="#060608" />
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="190" rx="28" fill="url(#bg-grad)" stroke="#242838" stroke-width="2" />
+
+  <!-- Left Icon Mark -->
+  <g transform="translate(35, 35)">
+    <path
+      d="M 18 36 L 42 14 H 80 C 98 14 110 25 110 41 C 110 54 99 63 83 67 L 40 40 L 18 36 Z"
+      fill="url(#blue-grad)"
+    />
+    <path
+      d="M 48 26 H 75 C 83 26 89 30 89 37 C 89 44 83 48 73 48 L 41 28 L 48 26 Z"
+      fill="#12131A"
+    />
+    <path
+      d="M 38 41 L 83 67 L 76 72 L 30 46 Z"
+      fill="#12131A"
+    />
+    <path
+      d="M 14 78 L 52 53 H 84 C 102 53 114 64 114 80 C 114 98 98 106 74 106 H 32 C 22 106 18 98 28 98 L 72 98 C 86 98 94 91 94 80 C 94 69 86 63 70 63 L 40 81 L 14 78 Z"
+      fill="url(#silver-grad)"
+    />
+  </g>
+
+  <!-- Typography BRANIFY -->
+  <text x="190" y="102" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="68" letter-spacing="3">
+    <tspan fill="#FFFFFF">BRAN</tspan><tspan fill="#5A8DFF">IFY</tspan>
+  </text>
+
+  <!-- Tagline BUILD. BRAND. GROW. -->
+  <text x="194" y="136" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="15" letter-spacing="5">
+    <tspan fill="#FFFFFF">BUILD.</tspan>
+    <tspan fill="#5A8DFF" dx="10">BRAND.</tspan>
+    <tspan fill="#FFFFFF" dx="10">GROW.</tspan>
+  </text>
+  <rect x="194" y="148" width="70" height="3.5" rx="1.75" fill="#5A8DFF" />
+</svg>

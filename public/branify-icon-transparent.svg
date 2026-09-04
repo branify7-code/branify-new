@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="branify-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5A8DFF" />
+      <stop offset="45%" stop-color="#3B6EF6" />
+      <stop offset="100%" stop-color="#2450C7" />
+    </linearGradient>
+    <linearGradient id="branify-silver-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EDEFF3" />
+      <stop offset="60%" stop-color="#C7CBD4" />
+      <stop offset="100%" stop-color="#9AA0AC" />
+    </linearGradient>
+    <mask id="upper-cutout">
+      <rect width="120" height="120" fill="white" />
+      <!-- Cutout inner hole -->
+      <path d="M 48 26 H 75 C 83 26 89 30 89 37 C 89 44 83 48 73 48 L 41 28 L 48 26 Z" fill="black" />
+      <!-- Diagonal slice cut -->
+      <path d="M 38 41 L 83 67 L 76 72 L 30 46 Z" fill="black" />
+    </mask>
+  </defs>
+
+  <!-- Top Cobalt Blue Wing with Masked Cutouts -->
+  <path
+    d="M 18 36 L 42 14 H 80 C 98 14 110 25 110 41 C 110 54 99 63 83 67 L 40 40 L 18 36 Z"
+    fill="url(#branify-blue-grad)"
+    mask="url(#upper-cutout)"
+  />
+
+  <!-- Lower Silver Loop of B with Sharp Parallel Tail -->
+  <path
+    d="M 14 78 L 52 53 H 84 C 102 53 114 64 114 80 C 114 98 98 106 74 106 H 32 C 22 106 18 98 28 98 L 72 98 C 86 98 94 91 94 80 C 94 69 86 63 70 63 L 40 81 L 14 78 Z"
+    fill="url(#branify-silver-grad)"
+  />
+</svg>

@@ -1,0 +1,197 @@
+================================================================================
+MASTER SERVICES AGREEMENT & STATEMENT OF WORK TEMPLATE
+================================================================================
+Provided 100% Free by BRANIFY (https://branify.store)
+License: Free to use and customize for personal and commercial business purposes.
+
+--------------------------------------------------------------------------------
+DISCLAIMER:
+This template is provided for general informational and drafting purposes only 
+and does not constitute legal advice. Laws vary by jurisdiction. You should 
+consult a qualified legal professional to review and adapt these terms for 
+your specific jurisdiction, business model, and operational needs.
+--------------------------------------------------------------------------------
+
+MASTER SERVICES AGREEMENT (the "Agreement")
+
+EFFECTIVE DATE: [DATE, e.g., March 15, 2026]
+
+BETWEEN:
+
+SERVICE PROVIDER:
+  Company / Individual Name: [YOUR AGENCY / COMPANY NAME]
+  Principal Business Address: [YOUR BUSINESS ADDRESS]
+  Contact Email: [YOUR EMAIL ADDRESS]
+  Contact Phone / WhatsApp: [YOUR PHONE NUMBER]
+  (hereinafter referred to as the "Service Provider")
+
+AND
+
+CLIENT:
+  Company / Individual Name: [CLIENT COMPANY NAME / FULL NAME]
+  Principal Business Address: [CLIENT BILLING ADDRESS]
+  Contact Email: [CLIENT CONTACT EMAIL]
+  Contact Phone: [CLIENT PHONE NUMBER]
+  (hereinafter referred to as the "Client")
+
+(Individually a "Party" and collectively the "Parties")
+
+================================================================================
+1. RECITALS & ENGAGEMENT
+================================================================================
+1.1 The Service Provider is in the business of providing professional digital, 
+    design, software engineering, branding, and consulting services.
+1.2 The Client desires to retain the Service Provider to perform the specific 
+    services and deliver the work product set forth in this Agreement and any 
+    subsequent Statement of Work ("SOW").
+
+================================================================================
+2. SCOPE OF SERVICES & DELIVERABLES
+================================================================================
+2.1 The Service Provider shall perform the services described in the attached 
+    Schedule A / Statement of Work (the "Services") in a professional and 
+    workmanlike manner consistent with recognized industry standards.
+2.2 Deliverables: The specific tangible deliverables, code, designs, or assets 
+    to be created under this Agreement include:
+    - Deliverable 1: [DETAILED DESCRIPTION OF DELIVERABLE 1]
+    - Deliverable 2: [DETAILED DESCRIPTION OF DELIVERABLE 2]
+    - Deliverable 3: [DETAILED DESCRIPTION OF DELIVERABLE 3]
+2.3 Out of Scope: Any service, feature, integration, or deliverable not 
+    explicitly identified in Section 2.2 or Schedule A shall be deemed outside 
+    the scope of work and will require an executed Change Order.
+
+================================================================================
+3. PROJECT TIMELINE & MILESTONES
+================================================================================
+3.1 The Services shall commence on [COMMENCEMENT DATE] and estimated completion 
+    is scheduled for [ESTIMATED COMPLETION DATE].
+3.2 Milestone Schedule:
+    - Milestone 1 (Discovery & Architecture): [TARGET DATE]
+    - Milestone 2 (Design Approval / Prototype): [TARGET DATE]
+    - Milestone 3 (Development / Staging Delivery): [TARGET DATE]
+    - Milestone 4 (Quality Assurance & Production Launch): [TARGET DATE]
+3.3 Timeframes are estimates subject to timely feedback, content delivery, 
+    and approvals provided by the Client.
+
+================================================================================
+4. FEES, INVOICING & PAYMENT TERMS
+================================================================================
+4.1 Total Contract Value: The total fixed fee for the Services is 
+    $[TOTAL AMOUNT] [USD / CURRENCY].
+4.2 Payment Schedule:
+    - Deposit / Milestone 1 (50%): $[AMOUNT] due upon execution of this Agreement.
+    - Milestone 2 (25%): $[AMOUNT] due upon approval of design/mid-point deliverables.
+    - Final Balance (25%): $[AMOUNT] due prior to final source code handover / launch.
+4.3 Invoicing: All invoices are payable within [14] calendar days from date of invoice.
+4.4 Late Fees: Unpaid invoices past due shall accrue interest at the rate of 1.5% 
+    per month or the maximum allowable under governing law.
+4.5 Suspension of Work: The Service Provider reserves the right to withhold 
+    deliverables or suspend ongoing work if payments are past due.
+
+================================================================================
+5. REVISIONS & CHANGE ORDER PROCESS
+================================================================================
+5.1 Included Revisions: This project includes up to [TWO (2)] rounds of iterative 
+    revisions during the design phase and up to [TWO (2)] rounds of review on 
+    the staging build.
+5.2 Scope Changes: Any additions, substantial structural alterations, or extra 
+    features requested outside the agreed scope will be evaluated under a written 
+    Change Order specifying additional costs (billed at $[HOURLY RATE]/hr or 
+    fixed fee) and adjusted timelines.
+
+================================================================================
+6. CLIENT RESPONSIBILITIES & ASSET HANDOVER
+================================================================================
+6.1 Client shall supply all necessary copy, raw media assets, credentials, API 
+    keys, and feedback within [THREE (3)] business days of request.
+6.2 Project delays resulting from Client inaction, delay in delivering assets, or 
+    withholding approval shall automatically extend completion deadlines.
+
+================================================================================
+7. INTELLECTUAL PROPERTY RIGHTS & OWNERSHIP
+================================================================================
+7.1 Assignment of Work Product: Conditioned upon full payment of all invoiced fees, 
+    the Service Provider hereby assigns to the Client all worldwide rights, 
+    title, and interest in the custom final deliverables created specifically for 
+    the Client under this Agreement.
+7.2 Pre-Existing IP & Tools: Service Provider retains all rights in its 
+    pre-existing proprietary tools, starter boilerplates, libraries, generic 
+    scripts, and reusable routines. Service Provider grants Client a perpetual, 
+    non-exclusive, royalty-free license to use such tools as integrated into the 
+    deliverable.
+7.3 Portfolio Display: Service Provider reserves the non-exclusive right to 
+    showcase the completed project, screenshots, and logo in its promotional 
+    materials, case studies, website, and portfolio.
+
+================================================================================
+8. CONFIDENTIALITY & NON-DISCLOSURE
+================================================================================
+8.1 Each Party agrees to keep strictly confidential all non-public proprietary 
+    information, business strategies, technical code, customer data, and pricing 
+    disclosed by the other Party during the course of the engagement.
+8.2 Confidential information shall not include information that is publicly known, 
+    already in recipient's possession without breach, or required to be disclosed 
+    by judicial order.
+
+================================================================================
+9. WARRANTIES & DISCLAIMERS
+================================================================================
+9.1 Service Provider warrants that the deliverables will substantially conform 
+    to the technical specifications for a period of [30] days post-launch (the 
+    "Warranty Period"). During this period, Service Provider will rectify reproducible 
+    code bugs at no additional charge.
+9.2 EXCEPT AS EXPRESSLY SET FORTH HEREIN, ALL SERVICES ARE PROVIDED "AS IS" 
+    WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+
+================================================================================
+10. LIMITATION OF LIABILITY
+================================================================================
+10.1 TO THE MAXIMUM EXTENT PERMITTED BY LAW, NEITHER PARTY SHALL BE LIABLE FOR 
+     ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, OR PUNITIVE DAMAGES 
+     (INCLUDING LOSS OF REVENUE, PROFITS, OR DATA).
+10.2 IN NO EVENT SHALL THE TOTAL AGGREGATE LIABILITY OF THE SERVICE PROVIDER 
+     EXCEED THE TOTAL FEES ACTUALLY PAID BY CLIENT UNDER THIS SPECIFIC AGREEMENT.
+
+================================================================================
+11. TERM & TERMINATION
+================================================================================
+11.1 This Agreement commences on the Effective Date and remains in effect until 
+     completion of the Services, unless terminated earlier.
+11.2 Either Party may terminate this Agreement upon [SEVEN (7)] days written notice 
+     for material breach, provided the breaching Party fails to cure within said period.
+11.3 In the event of early termination, Client shall immediately pay Service Provider 
+     for all work completed and expenses incurred up to the effective termination date.
+
+================================================================================
+12. GOVERNING LAW & DISPUTE RESOLUTION
+================================================================================
+12.1 This Agreement shall be governed by and construed in accordance with the laws 
+     of [STATE / PROVINCE / COUNTRY], without regard to conflict of law principles.
+12.2 In the event of a dispute, the Parties agree to first attempt resolution 
+     through good-faith negotiation, followed by binding mediation or arbitration.
+
+================================================================================
+13. ENTIRE AGREEMENT & AMENDMENTS
+================================================================================
+13.1 This document constitutes the entire agreement between the Parties and 
+     supersedes all prior discussions, proposals, or understandings.
+13.2 Any modification to this Agreement must be in writing and signed by both Parties.
+
+================================================================================
+SIGNATURES & EXECUTION
+================================================================================
+
+IN WITNESS WHEREOF, the Parties hereto have executed this Master Services Agreement 
+as of the Effective Date written above.
+
+SERVICE PROVIDER:
+Signature: ____________________________________
+Printed Name: [YOUR FULL NAME]
+Title: [YOUR TITLE, e.g., Managing Director / Principal Architect]
+Date: _________________________________________
+
+CLIENT:
+Signature: ____________________________________
+Printed Name: [CLIENT REPRESENTATIVE FULL NAME]
+Title: [CLIENT TITLE, e.g., CEO / Founder / Marketing Director]
+Date: _________________________________________

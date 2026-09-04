@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex Rivera — Senior Full-Stack Engineer & Technical Architect | BRANIFY Free Portfolio</title>
+  <meta name="description" content="Minimalist, high-performance developer portfolio starter. Features interactive project filters, skills breakdown, work history timeline, and contact consultation form.">
+  <meta name="keywords" content="developer portfolio, software engineer resume, tech portfolio, HTML5 portfolio template, tailwind developer theme">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              400: '#38bdf8',
+              500: '#0284c7',
+              600: '#0369a1',
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 antialiased selection:bg-sky-500 selection:text-white">
+
+  <!-- 
+  ========================================================================
+  PORTFOLIO CUSTOMIZATION GUIDE:
+  1. NAME & TITLE: Search "[YOUR NAME]" or "Alex Rivera" and change to your name.
+  2. SOCIAL LINKS: Update GitHub, LinkedIn, and Twitter links in <header> and <footer>.
+  3. SKILLS & TECH: Modify badges in <section id="skills">.
+  4. PROJECTS: Update titles, descriptions, live demo URLs in <section id="projects">.
+  5. WORK EXPERIENCE: Customize companies and dates in <section id="experience">.
+  6. CONTACT EMAIL: Point form action to Formspree, Basin, or your own backend in <section id="contact">.
+  ========================================================================
+  -->
+
+  <!-- Fixed Navigation -->
+  <nav class="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+      
+      <!-- Terminal Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center font-mono text-sky-400 text-xs font-bold group-hover:bg-sky-500 group-hover:text-black transition-all">
+          &gt;_
+        </div>
+        <span class="font-extrabold text-white tracking-tight text-base sm:text-lg">alex.dev</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-8 text-xs uppercase tracking-widest font-mono text-zinc-400">
+        <a href="#about" class="hover:text-sky-400 transition-colors">About</a>
+        <a href="#skills" class="hover:text-sky-400 transition-colors">Skills</a>
+        <a href="#projects" class="hover:text-sky-400 transition-colors">Projects</a>
+        <a href="#experience" class="hover:text-sky-400 transition-colors">Experience</a>
+        <a href="#contact" class="hover:text-sky-400 transition-colors">Contact</a>
+      </div>
+
+      <!-- Action Button -->
+      <a href="#contact" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-black text-xs font-black uppercase tracking-wider transition-all">
+        Hire Me
+      </a>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 space-y-24">
+
+    <!-- Hero Section -->
+    <section id="about" class="pt-6 sm:pt-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-8 space-y-6">
+        
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>AVAILABLE FOR NEW PROJECTS & CONSULTING</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.1]">
+          Building scalable, <br class="hidden sm:block">
+          <span class="text-sky-400">high-performance</span> web systems.
+        </h1>
+
+        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-2xl">
+          Hi! I'm <strong class="text-white">Alex Rivera</strong>, a full-stack engineer with 7+ years of experience crafting modern web architectures, real-time distributed backends, and pixel-perfect design systems.
+        </p>
+
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a href="#projects" class="px-6 py-3.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-black font-extrabold text-xs uppercase tracking-wider transition-all">
+            View Featured Projects &rarr;
+          </a>
+          <a href="#contact" class="px-6 py-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-white font-semibold text-xs transition-colors">
+            Get In Touch
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Code Terminal Block -->
+      <div class="lg:col-span-4 bg-zinc-900 border border-white/10 rounded-2xl p-5 shadow-2xl space-y-3 font-mono text-xs">
+        <div class="flex items-center gap-1.5 pb-3 border-b border-white/5">
+          <div class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
+          <span class="text-[10px] text-zinc-500 ml-2">developer.json</span>
+        </div>
+        <div class="text-zinc-400 space-y-1">
+          <div><span class="text-sky-400">const</span> developer = &#123;</div>
+          <div class="pl-4">name: <span class="text-emerald-400">'Alex Rivera'</span>,</div>
+          <div class="pl-4">role: <span class="text-emerald-400">'Staff Full-Stack Architect'</span>,</div>
+          <div class="pl-4">coreTech: [<span class="text-amber-400">'React'</span>, <span class="text-amber-400">'TypeScript'</span>, <span class="text-amber-400">'Node'</span>, <span class="text-amber-400">'PostgreSQL'</span>],</div>
+          <div class="pl-4">coffeeLevel: <span class="text-purple-400">Infinity</span>,</div>
+          <div class="pl-4">readyToShip: <span class="text-sky-400">true</span></div>
+          <div>&#125;;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills & Technologies -->
+    <section id="skills" class="space-y-8 border-t border-white/10 pt-16">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono text-sky-400 uppercase tracking-widest">// STACK & EXPERTISE</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Technical Competencies</h2>
+        </div>
+        <p class="text-xs text-zinc-500 max-w-sm">
+          Clean code, modular design patterns, test coverage, and automated CI/CD deployments.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 space-y-3">
+          <div class="text-sky-400 font-mono text-xs uppercase font-bold">Frontend</div>
+          <div class="text-sm font-bold text-white">React, Next.js, Vue</div>
+          <div class="text-xs text-zinc-400">TypeScript, Tailwind CSS, Redux, Zustand, WebSockets</div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 space-y-3">
+          <div class="text-indigo-400 font-mono text-xs uppercase font-bold">Backend & APIs</div>
+          <div class="text-sm font-bold text-white">Node.js, Express, Go</div>
+          <div class="text-xs text-zinc-400">RESTful APIs, GraphQL, gRPC, Microservices, BullMQ</div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 space-y-3">
+          <div class="text-emerald-400 font-mono text-xs uppercase font-bold">Databases & Cloud</div>
+          <div class="text-sm font-bold text-white">PostgreSQL, Redis, Supabase</div>
+          <div class="text-xs text-zinc-400">Docker, AWS (S3, ECS, Lambda), GCP, Drizzle, Prisma</div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-zinc-900/60 border border-white/10 space-y-3">
+          <div class="text-amber-400 font-mono text-xs uppercase font-bold">DevOps & Tooling</div>
+          <div class="text-sm font-bold text-white">CI/CD & Observability</div>
+          <div class="text-xs text-zinc-400">GitHub Actions, Vitest, Jest, Datadog, Sentry, Vercel</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects Grid -->
+    <section id="projects" class="space-y-8 border-t border-white/10 pt-16">
+      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono text-sky-400 uppercase tracking-widest">// RECENT REPOSITORIES</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Featured Projects</h2>
+        </div>
+        <a href="https://github.com" target="_blank" class="text-xs text-sky-400 hover:underline font-mono">View all GitHub repos &rarr;</a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Project 1 -->
+        <div class="p-7 rounded-3xl bg-zinc-900/70 border border-white/10 flex flex-col justify-between space-y-6 group hover:border-sky-500/50 transition-all">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded bg-sky-500/10 text-sky-400 text-[10px] font-mono font-bold">Next.js • Supabase • Tailwind</span>
+              <span class="text-xs text-zinc-500 font-mono">2026</span>
+            </div>
+            <h3 class="text-xl font-bold text-white group-hover:text-sky-400 transition-colors">
+              PulseMetrics — Real-Time SaaS Analytics Engine
+            </h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+              Open-source event stream processing dashboard handling 5M+ daily telemetry events with sub-100ms querying speeds.
+            </p>
+          </div>
+          <div class="flex items-center gap-4 text-xs font-mono">
+            <a href="#" class="text-sky-400 hover:underline flex items-center gap-1">Live Demo &nearr;</a>
+            <a href="#" class="text-zinc-400 hover:text-white flex items-center gap-1">Source Code &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="p-7 rounded-3xl bg-zinc-900/70 border border-white/10 flex flex-col justify-between space-y-6 group hover:border-sky-500/50 transition-all">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-bold">Node.js • Redis • WebSockets</span>
+              <span class="text-xs text-zinc-500 font-mono">2025</span>
+            </div>
+            <h3 class="text-xl font-bold text-white group-hover:text-sky-400 transition-colors">
+              HyperSync — Distributed Collaborative Canvas
+            </h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+              Multi-user whiteboard engine featuring Operational Transformation (OT), end-to-end encryption, and conflict resolution.
+            </p>
+          </div>
+          <div class="flex items-center gap-4 text-xs font-mono">
+            <a href="#" class="text-sky-400 hover:underline flex items-center gap-1">Live Demo &nearr;</a>
+            <a href="#" class="text-zinc-400 hover:text-white flex items-center gap-1">Source Code &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Work Experience Timeline -->
+    <section id="experience" class="space-y-8 border-t border-white/10 pt-16">
+      <div>
+        <span class="text-xs font-mono text-sky-400 uppercase tracking-widest">// TRACK RECORD</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Professional Experience</h2>
+      </div>
+
+      <div class="space-y-6 border-l border-white/10 pl-6 sm:pl-8 ml-2">
+        
+        <!-- Experience Item 1 -->
+        <div class="relative space-y-2">
+          <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-sky-500 border-4 border-zinc-950"></div>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <h3 class="text-base font-bold text-white">Lead Frontend Architect • CloudScale Systems</h3>
+            <span class="text-xs font-mono text-zinc-500">2023 — Present</span>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Spearheaded migration of enterprise monolith to modern Next.js micro-frontends, cutting bundle size by 54% and accelerating customer page speeds.
+          </p>
+        </div>
+
+        <!-- Experience Item 2 -->
+        <div class="relative space-y-2">
+          <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-zinc-700 border-4 border-zinc-950"></div>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <h3 class="text-base font-bold text-white">Senior Software Engineer • Fintech Nexus</h3>
+            <span class="text-xs font-mono text-zinc-500">2021 — 2023</span>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Designed high-throughput payment settlement microservices in TypeScript & PostgreSQL processing over $12M in monthly volume.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Contact & Consultation Section -->
+    <section id="contact" class="space-y-8 border-t border-white/10 pt-16">
+      <div class="max-w-2xl mx-auto text-center space-y-4">
+        <span class="text-xs font-mono text-sky-400 uppercase tracking-widest">// START A CONVERSATION</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-white">Have an ambitious project in mind?</h2>
+        <p class="text-xs sm:text-sm text-zinc-400">
+          Whether you need a full-stack technical partner or high-impact contract engineering, let's connect.
+        </p>
+      </div>
+
+      <div class="max-w-xl mx-auto bg-zinc-900 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-4 shadow-2xl">
+        <form action="#" method="POST" class="space-y-4 text-left">
+          <div>
+            <label class="block text-xs font-mono text-zinc-400 uppercase mb-1.5">Your Name</label>
+            <input type="text" placeholder="Sarah Connor" required class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs placeholder-zinc-600 focus:outline-none focus:border-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-zinc-400 uppercase mb-1.5">Your Email</label>
+            <input type="email" placeholder="sarah@company.com" required class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs placeholder-zinc-600 focus:outline-none focus:border-sky-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-zinc-400 uppercase mb-1.5">Project Brief / Message</label>
+            <textarea rows="4" placeholder="Tell me about your tech stack, project goals, and target timeline..." required class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs placeholder-zinc-600 focus:outline-none focus:border-sky-500"></textarea>
+          </div>
+          <button type="submit" class="w-full py-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-black font-black text-xs uppercase tracking-widest transition-all">
+            Send Message &rarr;
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-10 bg-zinc-950 text-xs text-zinc-500 text-center font-mono">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <div>Designed with precision. Free template distributed under MIT License by <a href="https://branify.store" class="text-sky-400 hover:underline">BRANIFY.store</a></div>
+      <div class="text-[11px] text-zinc-600">© 2026 Alex Rivera. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

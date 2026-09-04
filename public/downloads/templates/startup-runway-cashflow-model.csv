@@ -1,0 +1,13 @@
+Month,Starting_Cash_USD,MRR_Revenue_USD,Services_Revenue_USD,Total_Revenue_USD,Payroll_Salaries_USD,Contractors_USD,Marketing_AdSpend_USD,Software_SaaS_USD,Hosting_Cloud_USD,Office_Operations_USD,Legal_Accounting_USD,Other_Expenses_USD,Total_Expenses_USD,Net_Burn_CashFlow_USD,Ending_Cash_USD,Monthly_Burn_Rate_USD,Estimated_Runway_Months,Notes_Assumptions
+Month 1,250000,5000,2500,7500,12000,3000,2000,1200,800,500,1000,500,21000,-13500,236500,13500,17.5,Initial baseline post-seed funding
+Month 2,236500,6500,3000,9500,12000,3000,2500,1250,850,500,500,500,21100,-11600,224900,11600,19.4,Beta user conversions begin
+Month 3,224900,8500,2000,10500,12000,3500,3000,1300,900,500,500,500,22200,-11700,213200,11700,18.2,Expanded contractor hours for feature sprint
+Month 4,213200,11500,2500,14000,18000,2000,3500,1400,1000,500,500,500,27400,-13400,199800,13400,14.9,Hired full-time Senior Full-Stack Engineer
+Month 5,199800,15000,3000,18000,18000,2000,4000,1450,1100,500,500,500,28050,-10050,189750,10050,18.9,Content SEO and organic inbound scaling
+Month 6,189750,19500,4000,23500,18000,2500,4500,1500,1200,500,1200,600,30000,-6500,183250,6500,28.2,Mid-year financial and tax audit
+Month 7,183250,25000,2000,27000,24000,2000,5000,1600,1350,600,500,600,35650,-8650,174600,8650,20.2,Hired dedicated Growth Marketing Lead
+Month 8,174600,31500,3000,34500,24000,2000,5500,1700,1500,600,500,600,36400,-1900,172700,1900,90.9,Approaching cashflow breakeven point
+Month 9,172700,39000,2500,41500,24000,2000,6000,1800,1650,600,500,600,37150,4350,177050,0,Profitable,First cashflow positive operating month
+Month 10,177050,47500,3000,50500,30000,2000,7000,1900,1800,700,500,700,44600,5900,182950,0,Profitable,Hired Customer Success Architect
+Month 11,182950,57000,3500,60500,30000,2500,8000,2000,2000,700,500,700,46400,14100,197050,0,Profitable,Enterprise tier self-serve tier launch
+Month 12,197050,68000,4000,72000,30000,2500,9000,2100,2200,700,1500,800,49800,22200,219250,0,Profitable,End of Year 1: $816k ARR run-rate achieved

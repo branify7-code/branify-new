@@ -1,0 +1,145 @@
+================================================================================
+CLIENT DISCOVERY QUESTIONNAIRE & PROJECT BRIEF
+================================================================================
+Provided 100% Free by BRANIFY (https://branify.store)
+License: Free to use and customize for client onboarding and agency discovery.
+
+This structured questionnaire is designed for agencies, consultants, and developers
+to uncover project requirements, align expectations, understand brand goals, and
+prevent scope creep before writing a single line of code or designing a mockup.
+
+================================================================================
+SECTION 1: COMPANY BACKGROUND & CORE BUSINESS MODEL
+================================================================================
+1.1 What is your company name, website, and industry?
+    [Your answer here...]
+
+1.2 What is your core value proposition in 1-2 sentences? (What problem do you solve, 
+    and for whom?)
+    [Your answer here...]
+
+1.3 How does your business generate revenue? (e.g., direct e-commerce sales, SaaS 
+    subscriptions, high-ticket consulting, lead generation, affiliate model)
+    [Your answer here...]
+
+1.4 Who are your top 3 direct competitors? What do they do well, and what do you do 
+    differently or better?
+    - Competitor 1 (URL + Strengths/Weaknesses):
+    - Competitor 2 (URL + Strengths/Weaknesses):
+    - Competitor 3 (URL + Strengths/Weaknesses):
+
+================================================================================
+SECTION 2: TARGET AUDIENCE & USER PERSONAS
+================================================================================
+2.1 Who is your primary target customer? (Demographics, job title, company size, 
+    industry, purchasing power)
+    [Your answer here...]
+
+2.2 What is the primary pain point or frustration your customer is experiencing 
+    before finding your solution?
+    [Your answer here...]
+
+2.3 What specific action should a first-time visitor take when they arrive on your 
+    new site/app? (e.g., Book a demo, buy a product, start a free trial, call your office)
+    [Your answer here...]
+
+================================================================================
+SECTION 3: PROJECT GOALS & SUCCESS METRICS
+================================================================================
+3.1 What is driving the need for this new project or redesign right now?
+    [Your answer here...]
+
+3.2 What are the top 3 measurable business goals for this project?
+    - Goal 1 (e.g., Increase conversion rate by 25%):
+    - Goal 2 (e.g., Reduce bounce rate and improve mobile experience):
+    - Goal 3 (e.g., Automate lead capture and CRM synchronization):
+
+3.3 What does a wild success look like 6 months post-launch?
+    [Your answer here...]
+
+================================================================================
+SECTION 4: BRAND IDENTITY & DESIGN PREFERENCES
+================================================================================
+4.1 Do you have an established brand identity? (Check all that apply)
+    [ ] Complete Brand Guidelines (PDF)
+    [ ] High-Resolution Logo Vector Files (SVG/AI/EPS)
+    [ ] Official Brand Color Palette (HEX codes)
+    [ ] Defined Typography & Fonts
+    [ ] Professional Photography / Product Imagery
+    [ ] We need the agency to create/refresh our brand identity
+
+4.2 How would you describe the desired look, feel, and tone of the new website/app?
+    (e.g., Minimalist & High-Tech, Warm & Friendly, Editorial & Luxury, Bold & Vibrant)
+    [Your answer here...]
+
+4.3 Share 2-3 reference websites whose design, layout, or user experience you admire 
+    (and why):
+    - Example 1 (URL + What you like):
+    - Example 2 (URL + What you like):
+    - Example 3 (URL + What you like):
+
+================================================================================
+SECTION 5: FUNCTIONALITY, SCOPE & TECHNICAL REQUIREMENTS
+================================================================================
+5.1 What core pages or modules will be required?
+    [ ] Homepage
+    [ ] About / Story
+    [ ] Capabilities / Services
+    [ ] Individual Service Detail Pages
+    [ ] Case Studies / Portfolio
+    [ ] Blog / Insights / Resources
+    [ ] E-Commerce / Storefront / Checkout
+    [ ] User Dashboard / Client Portal
+    [ ] Contact / Booking / Lead Intake Form
+    [ ] Legal / Privacy / Terms
+
+5.2 What third-party tools, APIs, or software need to be integrated?
+    - CRM (e.g., HubSpot, Salesforce, Pipedrive):
+    - Email Marketing (e.g., Mailchimp, Klaviyo, ConvertKit):
+    - Payments / Billing (e.g., Stripe, PayPal, LemonSqueezy):
+    - Analytics (e.g., Google Analytics 4, PostHog, Plausible):
+    - Scheduling / Booking (e.g., Calendly, Cal.com):
+    - Other Custom APIs or Databases:
+
+5.3 Are there specific technical preferences or existing hosting environments?
+    (e.g., React / Next.js, Node.js, Supabase, Tailwind, Vercel, WordPress, Shopify)
+    [Your answer here...]
+
+================================================================================
+SECTION 6: CONTENT STRATEGY & ASSETS
+================================================================================
+6.1 Who will be responsible for copywriting and text content?
+    [ ] Client has finalized copy ready to insert
+    [ ] Client has rough drafts and needs professional editing
+    [ ] Agency will handle complete copywriting and content strategy
+
+6.2 Do you have high-quality photo/video assets ready, or will you require stock / 
+    custom graphics?
+    [Your answer here...]
+
+================================================================================
+SECTION 7: BUDGET, TIMELINE & STAKEHOLDERS
+================================================================================
+7.1 What is your allocated budget range for this project?
+    [ ] $2,500 – $5,000
+    [ ] $5,000 – $10,000
+    [ ] $10,000 – $25,000
+    [ ] $25,000+
+    [ ] Open to recommendations based on scope
+
+7.2 What is your desired hard launch date? Is there an external event driving this date?
+    (e.g., Product launch, conference, investor pitch)
+    [Your answer here...]
+
+7.3 Who will be the primary project point of contact and final decision-maker on approvals?
+    - Primary Contact Name:
+    - Email:
+    - Phone / WhatsApp:
+    - Other Key Decision Makers:
+
+================================================================================
+COMPLETION & SUBMISSION INSTRUCTIONS
+================================================================================
+Please complete this brief and email it to [YOUR AGENCY EMAIL] along with any brand 
+assets, wireframes, or reference materials. Our team will review your answers and 
+schedule our technical architecture & proposal alignment session.
