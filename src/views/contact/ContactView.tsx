@@ -3,6 +3,7 @@ import {
   Send, Sparkles, CheckCircle2, MessageSquare, 
   Clock, ShieldCheck, Mail, MapPin, Phone, ArrowRight, Calendar
 } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 interface ContactViewProps {
   onNavigateHome: () => void;
@@ -54,10 +55,27 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email) return;
     setIsSubmitting(true);
+
+    try {
+      await supabase.from('inquiries').insert([
+        {
+          name,
+          email,
+          company: company || 'Not specified',
+          services: selectedServices,
+          budget: selectedBudget,
+          timeline: selectedTimeline,
+          details: message || 'Direct Contact Form Inquiry',
+          created_at: new Date().toISOString()
+        }
+      ]);
+    } catch (err) {
+      console.log('Supabase contact note:', err);
+    }
 
     setTimeout(() => {
       setIsSubmitting(false);
