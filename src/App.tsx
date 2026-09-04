@@ -9,8 +9,10 @@ import { usePWA } from './hooks/usePWA';
 
 // Views
 import { ServicesView } from './views/services/ServicesView';
+import ServiceDetailPage from './views/services/ServiceDetailPage';
 import { PortfolioView } from './views/portfolio/PortfolioView';
-import { FreeToolsView } from './views/tools/FreeToolsView';
+import FreeToolsView from './views/tools/FreeToolsView';
+import ToolPageView from './views/tools/ToolPageView';
 import { AIToolsView } from './views/ai-tools/AIToolsView';
 import { ContactView } from './views/contact/ContactView';
 import { AboutView } from './views/about/AboutView';
@@ -64,6 +66,28 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Legacy ?tool=<id> deep links (pre-136-tool era) → redirect to the matching real tool page
+  useEffect(() => {
+    const legacyToolMap: Record<string, string> = {
+      'pdf-tools': 'pdf-merge-planner',
+      'image-compressor': 'image-compressor',
+      'meta-generator': 'meta-title-description-gen',
+      'json-formatter': 'json-formatter-dev',
+      'word-counter': 'word-counter',
+      'text-formatter': 'case-converter',
+      'password-gen': 'password-generator',
+      'qr-gen': 'qr-code-generator',
+      'color-converter': 'color-hex-rgb-converter',
+    };
+    const [path, search] = currentRoute.split('?');
+    if (path === '/tools' || path === '/free-tools') {
+      const legacyId = new URLSearchParams(search || '').get('tool');
+      const mapped = legacyId ? legacyToolMap[legacyId] : undefined;
+      if (mapped) navigateTo(`/tools/${mapped}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRoute]);
+
   const navigateTo = (path: string) => {
     window.history.pushState({}, '', path);
     setCurrentRoute(path);
@@ -95,36 +119,6 @@ export default function App() {
   const pathname = currentRoute.split('?')[0] || '/';
   const queryParams = new URLSearchParams(currentRoute.split('?')[1] || '');
 
-  // Helper to map route slugs (like /services/website-development) to service ids
-  const resolveServiceId = (slug?: string | null): string | undefined => {
-    if (!slug) return undefined;
-    const clean = slug.toLowerCase().trim();
-    const map: Record<string, string> = {
-      'website-development': 'web-dev',
-      'web-development': 'web-dev',
-      'web-dev': 'web-dev',
-      'ui-ux': 'ui-ux',
-      'ui-ux-design': 'ui-ux',
-      'uiux': 'ui-ux',
-      'ecommerce': 'ecommerce',
-      'e-commerce': 'ecommerce',
-      'branding': 'branding',
-      'brand-identity': 'branding',
-      'digital-marketing': 'digital-marketing',
-      'seo': 'seo',
-      'search-engine-optimization': 'seo',
-      'ai-solutions': 'ai-solutions',
-      'ai-automation': 'ai-solutions',
-      'automation': 'automation',
-      'software-dev': 'software-dev',
-      'software-development': 'software-dev',
-      'social-media': 'social-media',
-      'social-media-management': 'social-media',
-      'business-consultation': 'web-dev',
-    };
-    return map[clean] || clean;
-  };
-
   return (
     <div className="relative min-h-screen bg-[#08090B] text-[#E6E1D6] selection:bg-[#D4AF37]/30 selection:text-[#FFF5DC] font-sans flex flex-col justify-between">
       {/* Luxury Custom Cursor follower */}
@@ -140,17 +134,14 @@ export default function App() {
 
       {/* Main View Router */}
       <main className="flex-1 relative">
-        {(pathname === '/services' || pathname.startsWith('/services/')) && (
-          <ServicesView
-            onStartInquiry={(serviceId) => handleOpenInquiry(serviceId)}
-            onNavigateHome={() => navigateTo('/')}
-            initialCategory={
-              resolveServiceId(
-                pathname.startsWith('/services/')
-                  ? pathname.replace('/services/', '').split('/')[0]
-                  : queryParams.get('category')
-              )
-            }
+        {pathname === '/services' && (
+          <ServicesView onNavigate={navigateTo} initialCategory={queryParams.get('category')} />
+        )}
+
+        {pathname.startsWith('/services/') && (
+          <ServiceDetailPage
+            slug={decodeURIComponent(pathname.replace('/services/', '').split('/')[0])}
+            onNavigate={navigateTo}
           />
         )}
 
@@ -167,28 +158,29 @@ export default function App() {
           />
         )}
 
-        {(pathname === '/free-tools' || pathname === '/tools' || pathname.startsWith('/tools/')) && (
+        {(pathname === '/free-tools' || pathname === '/tools') && (
           <FreeToolsView
-            onRunToolModal={handleRunTool}
-            onNavigateHome={() => navigateTo('/')}
-            initialToolId={queryParams.get('tool')}
+            onNavigate={navigateTo}
+            initialCategory={queryParams.get('category')}
+            onOpenPWA={openPWAModal}
           />
         )}
 
-        {(pathname === '/ai-tools' || pathname.startsWith('/ai-tools/')) && (
-          <AIToolsView
-            onStartInquiry={(cat) => handleOpenInquiry(cat)}
-            onNavigateHome={() => navigateTo('/')}
-            initialToolId={queryParams.get('tool')}
+        {(pathname.startsWith('/tools/') || pathname.startsWith('/free-tools/')) && (
+          <ToolPageView
+            slug={decodeURIComponent(
+              (pathname.startsWith('/tools/')
+                ? pathname.replace('/tools/', '')
+                : pathname.replace('/free-tools/', '')
+              ).split('/')[0]
+            )}
+            onNavigate={navigateTo}
           />
         )}
 
-        {pathname === '/pricing' && (
-          <ServicesView
-            onStartInquiry={(serviceId) => handleOpenInquiry(serviceId)}
-            onNavigateHome={() => navigateTo('/')}
-          />
-        )}
+        {(pathname === '/ai-tools' || pathname.startsWith('/ai-tools/')) && <AIToolsView />}
+
+        {pathname === '/pricing' && <ServicesView onNavigate={navigateTo} />}
 
         {pathname === '/contact' && (
           <ContactView onNavigateHome={() => navigateTo('/')} />

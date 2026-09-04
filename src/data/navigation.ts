@@ -166,7 +166,7 @@ export const navItemsWithDropdowns: NavCategory[] = [
         title: 'Entropy Password Generator',
         desc: 'Cryptographic browser credential generator with zero server transmission',
         href: '#tools',
-        route: '/free-tools?tool=password-gen',
+        route: '/tools/password-generator',
         badge: 'Instant',
         iconName: 'ShieldCheck'
       },
@@ -175,7 +175,7 @@ export const navItemsWithDropdowns: NavCategory[] = [
         title: 'Vector QR Code Generator',
         desc: 'High-res branded QR codes with SVG export & custom colors',
         href: '#tools',
-        route: '/free-tools?tool=qr-gen',
+        route: '/tools/qr-code-generator',
         iconName: 'QrCode'
       },
       {
@@ -183,7 +183,7 @@ export const navItemsWithDropdowns: NavCategory[] = [
         title: 'Harmonic Color Converter',
         desc: 'HEX, RGB, HSL, OKLCH conversion & WCAG AA/AAA contrast check',
         href: '#tools',
-        route: '/free-tools?tool=color-converter',
+        route: '/tools/color-hex-rgb-converter',
         iconName: 'Palette'
       },
       {
@@ -191,7 +191,7 @@ export const navItemsWithDropdowns: NavCategory[] = [
         title: 'JSON Formatter & Validator',
         desc: 'Syntax checker, tree viewer, beautifier & TypeScript types generator',
         href: '#tools',
-        route: '/free-tools?tool=json-formatter',
+        route: '/tools/json-formatter-dev',
         badge: 'Popular',
         iconName: 'FileJson'
       },
@@ -200,7 +200,7 @@ export const navItemsWithDropdowns: NavCategory[] = [
         title: 'Social Meta Tag Generator',
         desc: 'Open Graph & Twitter card preview with copy-ready HTML tags',
         href: '#tools',
-        route: '/free-tools?tool=meta-generator',
+        route: '/tools/meta-title-description-gen',
         iconName: 'Code'
       },
       {
@@ -208,7 +208,7 @@ export const navItemsWithDropdowns: NavCategory[] = [
         title: 'Pro Word & Reading Metrics',
         desc: 'Character counter, reading time estimator, and keyword density tester',
         href: '#tools',
-        route: '/free-tools?tool=word-counter',
+        route: '/tools/word-counter',
         iconName: 'FileText'
       }
     ]
@@ -341,9 +341,9 @@ export const footerColumns = {
   resources: [
     { label: 'Free Developer Tools', href: '#tools', route: '/free-tools' },
     { label: 'AI Tools Studio', href: '#ai-tools', route: '/ai-tools' },
-    { label: 'Password Generator', href: '#tools', route: '/free-tools?tool=password-gen' },
-    { label: 'Vector QR Maker', href: '#tools', route: '/free-tools?tool=qr-gen' },
-    { label: 'Color Converter', href: '#tools', route: '/free-tools?tool=color-converter' },
+    { label: 'Password Generator', href: '#tools', route: '/tools/password-generator' },
+    { label: 'Vector QR Maker', href: '#tools', route: '/tools/qr-code-generator' },
+    { label: 'Color Converter', href: '#tools', route: '/tools/color-hex-rgb-converter' },
     { label: 'Frequently Asked Questions', href: '#faq', route: '/about#faq' }
   ],
   legal: [

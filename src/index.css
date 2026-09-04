@@ -1220,3 +1220,200 @@
   }
 }
 
+
+/* =========================================
+   GOLD PRIMARY BUTTON (matches branify.store)
+========================================= */
+.btn-gold-primary {
+  background: linear-gradient(135deg, #fff6e5 0%, #e2c27b 35%, #c9a45c 75%, #a88133 100%);
+  color: #05080c;
+  border: 1px solid rgba(230, 203, 145, 0.8);
+  box-shadow:
+    0 5px 27px 1px rgba(231, 204, 146, 0.45),
+    0 0 22px 0 rgba(205, 169, 97, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-gold-primary:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 32px 2px rgba(231, 204, 146, 0.55),
+    0 0 30px 0 rgba(205, 169, 97, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.btn-gold-primary:active {
+  transform: translateY(0);
+  filter: brightness(0.97);
+}
+
+/* =========================================
+   LUXURY SERIF DISPLAY FONT
+========================================= */
+.font-serif-luxury {
+  font-family: "Syne", "Georgia", serif;
+  letter-spacing: -0.01em;
+}
+
+/* =========================================
+   MEGA MENU PANEL ENTRANCE (fade + slide)
+========================================= */
+.mega-panel-enter {
+  animation: megaPanelIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes megaPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mobile-menu-slide {
+  animation: megaPanelIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-gold-primary,
+  .mega-panel-enter,
+  .mobile-menu-slide {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* =========================================
+   GRADIENT PRIMARY BUTTON (matches branify.store)
+========================================= */
+.btn-gradient-primary {
+  color: #05080c;
+  will-change: transform, box-shadow, background-position;
+  background: linear-gradient(135deg, #fff6e5, #e2c27b 35%, #c9a45c 75%, #a88133) 0 0 / 200% 200%;
+  border: 1px solid rgba(255, 246, 229, 0.6);
+  font-weight: 800;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: 3.2s ease-in-out infinite glow-pulse-gold-primary;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px -2px rgba(201, 164, 92, 0.45),
+    0 0 15px rgba(226, 194, 123, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7);
+}
+.btn-gradient-primary::after {
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(60deg, transparent 30%, rgba(255, 255, 255, 0.5), transparent 70%);
+  width: 200%;
+  height: 200%;
+  transition: transform 0.6s;
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  transform: translate(-100%) rotate(25deg);
+}
+.btn-gradient-primary:hover {
+  color: #000;
+  background: linear-gradient(135deg, #fff, #f0d9a3 30%, #e2c27b, #c9a45c);
+  border-color: #fff;
+  animation: none;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 10px 30px rgba(201, 164, 92, 0.6),
+    0 0 35px rgba(226, 194, 123, 0.5),
+    inset 0 1px 3px rgba(255, 255, 255, 0.9);
+}
+.btn-gradient-primary:hover::after {
+  transform: translate(100%) rotate(25deg);
+}
+.btn-gradient-primary:active {
+  transform: translateY(-1px) scale(0.99);
+  box-shadow: 0 4px 15px rgba(201, 164, 92, 0.4);
+}
+@keyframes glow-pulse-gold-primary {
+  0%,
+  100% {
+    border-color: rgba(201, 164, 92, 0.6);
+    box-shadow:
+      0 4px 20px -2px rgba(201, 164, 92, 0.4),
+      0 0 16px rgba(226, 194, 123, 0.25),
+      0 0 35px rgba(201, 164, 92, 0.15);
+  }
+  50% {
+    border-color: rgba(240, 217, 163, 0.9);
+    box-shadow:
+      0 6px 30px 2px rgba(240, 217, 163, 0.65),
+      0 0 25px rgba(201, 164, 92, 0.5),
+      0 0 50px rgba(226, 194, 123, 0.3);
+  }
+}
+
+/* =========================================
+   TILT CARD SYSTEM (matches branify.store)
+========================================= */
+.perspective-1200 {
+  perspective: 1200px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.tilt-card-glow {
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(450px circle at var(--x, 50%) var(--y, 50%), rgba(201, 164, 92, 0.2), rgba(226, 194, 123, 0.1) 40%, transparent 75%);
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 0.3s;
+  position: absolute;
+  inset: 0;
+}
+.tilt-card-border-glow {
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(400px circle at var(--x, 50%) var(--y, 50%), rgba(240, 217, 163, 0.8), rgba(201, 164, 92, 0.5) 30%, rgba(226, 194, 123, 0.2) 60%, transparent 80%);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  z-index: 2;
+  padding: 1px;
+  transition: opacity 0.3s;
+  position: absolute;
+  inset: -1px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+}
+.tilt-card-wrapper:hover .tilt-card-glow {
+  opacity: 1;
+}
+.tilt-card-wrapper:hover .tilt-card-border-glow {
+  opacity: 1;
+}
+
+/* =========================================
+   FADE IN (modal / toast entrance)
+========================================= */
+.animate-fade-in {
+  animation: branifyFadeIn 0.25s ease-out both;
+}
+@keyframes branifyFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-gradient-primary,
+  .animate-fade-in {
+    animation: none !important;
+  }
+  .btn-gradient-primary:hover {
+    transform: none !important;
+  }
+}

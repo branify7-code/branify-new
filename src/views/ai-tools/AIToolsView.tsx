@@ -1,258 +1,156 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Sparkles, PenTool, Workflow, LineChart, Code2, 
-  ArrowRight, Copy, Check, RefreshCw, Zap, Shield, Cpu, MessageSquare 
-} from 'lucide-react';
-import { aiToolsData } from '../../data/aiTools';
-import { AITool } from '../../types';
+/* =========================================================
+   AIToolsView — 1:1 replica of branify.store/ai-tools
+   (AIToolsPage chunk): curated directory of 26 AI tools
+   with live search, 9 category filters and external
+   "Visit Tool" cards.
+========================================================= */
+
+import React, { useState, useMemo } from 'react';
+import { Sparkles, Search, ExternalLink, ArrowUpRight } from 'lucide-react';
+import Seo from '../../components/Seo';
+import { aiToolsDirectory, aiToolCategories } from '../../data/aiToolsDirectory';
 
 interface AIToolsViewProps {
-  onStartInquiry: (category?: string) => void;
-  onNavigateHome: () => void;
-  initialToolId?: string | null;
+  onNavigate?: (path: string) => void;
 }
 
-export const AIToolsView: React.FC<AIToolsViewProps> = ({
-  onStartInquiry,
-  onNavigateHome,
-  initialToolId,
-}) => {
-  const [selectedToolId, setSelectedToolId] = useState<string>(
-    initialToolId || aiToolsData[0]?.id || 'ai-copy-architect'
+export const AIToolsView: React.FC<AIToolsViewProps> = () => {
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo(
+    () =>
+      aiToolsDirectory.filter((tool) => {
+        const inCategory = activeCategory === 'All' || tool.category === activeCategory;
+        const q = query.trim();
+        const matchesQuery =
+          q === '' ||
+          tool.name.toLowerCase().includes(q.toLowerCase()) ||
+          tool.desc.toLowerCase().includes(q.toLowerCase()) ||
+          tool.category.toLowerCase().includes(q.toLowerCase());
+        return inCategory && matchesQuery;
+      }),
+    [activeCategory, query]
   );
-  const [promptInput, setPromptInput] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedResult, setGeneratedResult] = useState('');
-  const [copied, setCopied] = useState(false);
 
-  const activeTool = aiToolsData.find((t) => t.id === selectedToolId) || aiToolsData[0];
-
-  useEffect(() => {
-    if (initialToolId) {
-      setSelectedToolId(initialToolId);
-    }
-  }, [initialToolId]);
-
-  // Set default prompt based on tool
-  useEffect(() => {
-    if (selectedToolId === 'ai-copy-architect') {
-      setPromptInput('Luxury Swiss watch brand announcing a limited titanium tourbillon timepiece for avant-garde collectors.');
-      setGeneratedResult('Introducing the Aethel Chrono-Sovereign: Precision-machined from aerospace Grade 5 titanium, housing an unyielding 3Hz mechanical tourbillon. Engineered not merely to measure time, but to claim dominion over it.');
-    } else if (selectedToolId === 'ai-visual-synthesizer') {
-      setPromptInput('Seamless dark brushed gold metallic texture with champagne specular reflection and microscopic geometric etching, 8k PBR.');
-      setGeneratedResult('Synthesizing PBR Material Map: [Albedo: #D4AF37, Roughness: 0.18, Metalness: 0.96, Normal: Tangent-Space Micro-Hex Lattice]. Ready for WebGL Shader export.');
-    } else if (selectedToolId === 'ai-code-auditor') {
-      setPromptInput('Audit a React Three Fiber useEffect hook for memory leaks, WebGL context disposal, and listener cleanup.');
-      setGeneratedResult('✓ Memory Audit Passed: 0 Memory Leaks detected. 1 WebGLRenderer.dispose() verified. Event listeners bound with { passive: true } and strictly cleaned in useEffect teardown.');
-    } else {
-      setPromptInput('Optimize customer acquisition funnel for enterprise B2B SaaS platform with $25k ACV.');
-      setGeneratedResult('Predictive Model Result: Identified 3 high-intent conversion vectors with 84% estimated ROAS uplift. Recommended allocation: 45% LinkedIn Account-Based InMail, 35% Search Intent, 20% Founder-Led Retargeting.');
-    }
-  }, [selectedToolId]);
-
-  const handleSimulatedGenerate = () => {
-    if (!promptInput.trim()) return;
-    setIsGenerating(true);
-    setGeneratedResult('');
-
-    setTimeout(() => {
-      if (selectedToolId === 'ai-copy-architect') {
-        setGeneratedResult(
-          `Generated calibrated brand narrative:\n\n"Crafted at the nexus of high aesthetic poise and mathematical rigor. The new standard for digital supremacy."\n\n• Primary Hook: 96% Estimated Conversion Index\n• Tone: Architectural, Exclusive, Visionary\n• Formats: Hero Headline, Social Teaser, Investor Memo.`
-        );
-      } else if (selectedToolId === 'ai-visual-synthesizer') {
-        setGeneratedResult(
-          `Generated Spatial PBR Texture Profile:\n\n• Base Color: Metallic Champagne (#E5C378)\n• Roughness Map: 4096 x 4096 px (Lossless Float16)\n• Ambient Occlusion: High-Frequency Depth Mesh\n• Render Latency: 1.2 seconds on Neural Engine.`
-        );
-      } else {
-        setGeneratedResult(
-          `Analysis Complete for: "${promptInput.slice(0, 50)}..."\n\n✓ Model: ${activeTool.model}\n✓ Verified Precision: ${activeTool.metrics}\n✓ Key Vector: Autonomous pipeline calibrated for zero-overhead execution.`
-        );
-      }
-      setIsGenerating(false);
-    }, 900);
-  };
-
-  const copyResult = () => {
-    navigator.clipboard.writeText(generatedResult);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const resetFilters = () => {
+    setQuery('');
+    setActiveCategory('All');
   };
 
   return (
-    <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
-      {/* Header Breadcrumbs & Hero Title */}
-      <div className="space-y-4 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#D4AF37]/30 text-xs font-mono text-[#F3E5AB]">
-          <button 
-            onClick={onNavigateHome} 
-            className="text-white/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
-          >
-            Home
-          </button>
-          <span className="text-white/30">/</span>
-          <span className="text-[#D4AF37]">Autonomous AI Innovation Lab</span>
+    <div className="min-h-screen bg-[#0A0A0D] text-white py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+      <Seo
+        title="27+ AI Tools for Work & Productivity | BRANIFY"
+        description="Discover useful AI tools for productivity, business, content, design and everyday workflows from BRANIFY."
+        canonicalPath="/ai-tools"
+      />
+
+      {/* Hero */}
+      <div className="max-w-7xl mx-auto text-center space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-extrabold uppercase tracking-widest text-zinc-300 shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-[#5A8DFF]" />
+          <span>Curated AI Directory</span>
         </div>
-
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
-          Neural & Autonomous <br />
-          <span className="text-gold-gradient">AI Solutions</span>
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase">
+          AI <span className="text-[#5A8DFF]">Tools</span>
         </h1>
-
-        <p className="text-sm sm:text-base text-white/65 font-light leading-relaxed">
-          Explore our suite of proprietary AI models, brand-voice calibrators, PBR texture synthesizers, and self-healing agent pipelines engineered for high-velocity enterprises.
+        <p className="text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto">
+          Discover and explore 27+ top-tier artificial intelligence tools for writing, coding, image generation, video creation, and
+          automation.
         </p>
       </div>
 
-      {/* AI Tools Selection Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 max-w-5xl mx-auto">
-        {aiToolsData.map((tool) => {
-          const isSelected = selectedToolId === tool.id;
-          return (
+      {/* Search + category filters */}
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="relative max-w-lg mx-auto">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <input
+            type="text"
+            placeholder="Search AI tools by name, feature, or keyword..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full bg-zinc-900/80 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#5A8DFF] transition-all shadow-xl"
+            aria-label="Search AI tools"
+          />
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          {aiToolCategories.map((cat) => (
             <button
-              key={tool.id}
-              onClick={() => setSelectedToolId(tool.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer border ${
-                isSelected
-                  ? 'bg-[#D4AF37] text-[#08090B] font-bold border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.35)]'
-                  : 'bg-[#0F1015] text-white/70 hover:text-white border-white/10 hover:border-[#D4AF37]/40'
+              key={cat}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                activeCategory === cat
+                  ? 'bg-[#5A8DFF] text-black shadow-lg shadow-[#5A8DFF]/20'
+                  : 'bg-zinc-950/80 hover:bg-zinc-900 text-zinc-300 border border-white/10 hover:border-white/20'
               }`}
+              onClick={() => setActiveCategory(cat)}
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{tool.name}</span>
+              {cat}
             </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tool cards */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filtered.map((tool) => {
+          const pricing = tool.pricing.toLowerCase();
+          const pricingClass =
+            pricing === 'free'
+              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+              : pricing === 'freemium'
+                ? 'bg-[#5A8DFF]/20 text-[#5A8DFF] border border-[#5A8DFF]/30'
+                : 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+          return (
+            <a
+              key={tool.name}
+              href={tool.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-[#12131A] hover:bg-zinc-900/90 border border-white/10 hover:border-[#5A8DFF]/40 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between shadow-xl relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#5A8DFF]/0 group-hover:via-[#5A8DFF] to-transparent transition-all duration-500" />
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#5A8DFF]">{tool.category}</span>
+                    <h3 className="text-xl font-bold text-white group-hover:text-[#5A8DFF] transition-colors flex items-center gap-2">
+                      {tool.name}
+                      <ExternalLink className="w-4 h-4 text-zinc-500 group-hover:text-[#5A8DFF] transition-colors opacity-0 group-hover:opacity-100" />
+                    </h3>
+                  </div>
+                  <span className={`text-[10px] px-2.5 py-1 rounded-full font-extrabold uppercase tracking-wider shrink-0 ${pricingClass}`}>
+                    {tool.pricing}
+                  </span>
+                </div>
+                <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">{tool.desc}</p>
+              </div>
+              <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between text-xs font-bold text-zinc-400 group-hover:text-white transition-colors">
+                <span className="font-mono text-[11px] text-zinc-500 truncate max-w-[200px]">{tool.url.replace('https://', '')}</span>
+                <span className="flex items-center gap-1 text-[#5A8DFF] font-extrabold text-xs">
+                  Visit Tool
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </span>
+              </div>
+            </a>
           );
         })}
-      </div>
 
-      {/* Active AI Tool Interactive Playground */}
-      <div className="rounded-3xl bg-[#0F1015] border border-[#D4AF37]/30 p-6 sm:p-10 shadow-[0_0_50px_rgba(0,0,0,0.6)] space-y-8">
-        {/* Tool Info Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-mono uppercase">
-                {activeTool.category}
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/60 text-[10px] font-mono">
-                Model: {activeTool.model}
-              </span>
-            </div>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#FFF5DC]">
-              {activeTool.name}
-            </h2>
-            <p className="text-xs sm:text-sm text-white/70 font-light max-w-2xl">
-              {activeTool.description}
-            </p>
-          </div>
-
-          <div className="p-3 rounded-xl bg-black/40 border border-[#D4AF37]/30 text-right shrink-0">
-            <span className="text-[10px] font-mono text-white/50 block">Accuracy Benchmark</span>
-            <span className="font-mono text-sm font-bold text-[#D4AF37]">{activeTool.metrics}</span>
-          </div>
-        </div>
-
-        {/* Prompt & Output Playground */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Prompt Column */}
-          <div className="space-y-4 flex flex-col justify-between">
-            <div className="space-y-2">
-              <label className="block text-xs font-mono uppercase tracking-wider text-white/60">
-                Input Prompt / Vector Directive
-              </label>
-              <textarea
-                value={promptInput}
-                onChange={(e) => setPromptInput(e.target.value)}
-                rows={7}
-                className="w-full p-4 rounded-2xl bg-black/60 border border-white/15 text-xs text-white focus:border-[#D4AF37] focus:outline-none resize-none leading-relaxed font-mono"
-                placeholder="Enter prompt instructions for the neural engine..."
-              />
-            </div>
-
+        {filtered.length === 0 && (
+          <div className="col-span-full py-16 text-center space-y-3 bg-zinc-950/40 border border-white/10 rounded-2xl">
+            <Sparkles className="w-8 h-8 text-zinc-600 mx-auto animate-pulse" />
+            <p className="text-zinc-400 font-semibold text-sm">No AI tools found matching your search query.</p>
             <button
-              onClick={handleSimulatedGenerate}
-              disabled={isGenerating}
-              className="w-full py-4 rounded-xl bg-[#D4AF37] hover:bg-[#E5C378] disabled:opacity-50 text-[#08090B] font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(212,175,55,0.35)] transition-all cursor-pointer"
+              onClick={resetFilters}
+              className="px-4 py-2 bg-[#5A8DFF]/10 border border-[#5A8DFF]/30 text-[#5A8DFF] rounded-xl text-xs font-bold hover:bg-[#5A8DFF] hover:text-black transition-all cursor-pointer"
             >
-              {isGenerating ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Synthesizing Output...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Run Inference Model</span>
-                </>
-              )}
+              Reset Filters
             </button>
           </div>
-
-          {/* Result Column */}
-          <div className="space-y-2 flex flex-col">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-mono uppercase tracking-wider text-[#D4AF37]">
-                Neural Model Synthesis Output
-              </label>
-              {generatedResult && (
-                <button
-                  onClick={copyResult}
-                  className="text-xs font-mono text-white/70 hover:text-white flex items-center gap-1 cursor-pointer"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? 'Copied' : 'Copy'}</span>
-                </button>
-              )}
-            </div>
-
-            <div className="flex-1 min-h-[220px] p-4 rounded-2xl bg-black/40 border border-white/10 font-mono text-xs text-[#FFF5DC] leading-relaxed whitespace-pre-wrap flex flex-col justify-between">
-              <div>{generatedResult || 'Click "Run Inference Model" to generate output...'}</div>
-              <div className="pt-4 flex items-center justify-between text-[10px] text-white/40 border-t border-white/5">
-                <span>Latency: 18ms</span>
-                <span>Tokens: 142</span>
-                <span>Security: End-to-End Encrypted</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Capabilities Checklist */}
-        <div className="pt-6 border-t border-white/10 space-y-3">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#D4AF37]">
-            Core Model Capabilities:
-          </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {activeTool.capabilities.map((cap, idx) => (
-              <div key={idx} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-2 text-xs text-white/80">
-                <Check className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                <span>{cap}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Enterprise Custom AI Integration Banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-[#12131A] via-[#1A1810] to-[#12131A] border border-[#D4AF37]/30 p-8 sm:p-12 text-center space-y-6 shadow-2xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-xs font-mono text-[#D4AF37]">
-          <Cpu className="w-3.5 h-3.5" />
-          <span>Enterprise AI Architecture</span>
-        </div>
-        <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#FFF5DC]">
-          Need Custom AI Models or Autonomous Agent Workflows?
-        </h2>
-        <p className="text-xs sm:text-sm text-white/70 max-w-xl mx-auto leading-relaxed">
-          We architect, fine-tune, and deploy private LLMs, automated multi-agent systems, and bespoke vision pipelines tailored to your proprietary company data.
-        </p>
-        <div>
-          <button
-            onClick={() => onStartInquiry('AI Solutions')}
-            className="px-8 py-4 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#08090B] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(212,175,55,0.4)] cursor-pointer"
-          >
-            Consult Our AI Engineering Team
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );
 };
+
+export default AIToolsView;
