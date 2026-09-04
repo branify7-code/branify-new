@@ -3,6 +3,7 @@ import {
   Play, RotateCcw, Copy, Check, Download, Sparkles, UploadCloud, AlertTriangle, FileText, ImageIcon, ArrowLeft,
 } from 'lucide-react';
 import { getCompleteTool, defaultsFor } from '../../tools';
+import { trackEvent } from '../../lib/track';
 import type { ToolResult, ToolField } from '../../tools/types';
 
 interface ToolPageViewProps {
@@ -14,6 +15,11 @@ const fieldId = (name: string) => `tool-field-${name}`;
 
 const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
   const tool = getCompleteTool(slug);
+
+  useEffect(() => {
+    trackEvent('tool_page_view', { slug });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
   const [values, setValues] = useState<Record<string, string | number | boolean>>(() =>
     tool ? defaultsFor(tool.definition.fields) : {}

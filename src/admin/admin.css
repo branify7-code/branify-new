@@ -1,0 +1,89 @@
+/* =============================================================================
+   BRANIFY ADMIN — shell styles (loaded only with the lazy admin chunk)
+   ============================================================================= */
+
+.adm-root {
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(201, 164, 92, 0.06), transparent 60%),
+    radial-gradient(900px 420px at -10% 110%, rgba(201, 164, 92, 0.04), transparent 55%),
+    #020407;
+  color: #f5f6f2;
+  min-height: 100vh;
+}
+
+.adm-sidebar {
+  background: linear-gradient(180deg, rgba(7, 16, 26, 0.92), rgba(2, 4, 7, 0.96));
+  border-right: 1px solid rgba(201, 164, 92, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.adm-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #a7afba;
+  transition: background 0.15s ease, color 0.15s ease;
+  outline: none;
+}
+.adm-nav-item:hover { background: rgba(255, 255, 255, 0.045); color: #f5f6f2; }
+.adm-nav-item:focus-visible { box-shadow: 0 0 0 2px rgba(201, 164, 92, 0.55); }
+.adm-nav-item.active {
+  background: linear-gradient(100deg, rgba(201, 164, 92, 0.22), rgba(201, 164, 92, 0.07));
+  color: #f3d27a;
+}
+.adm-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -1px; top: 20%; bottom: 20%;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #f3d27a, #c9a45c);
+}
+
+.adm-caption {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #566072;
+  padding: 0.9rem 0.7rem 0.35rem;
+}
+
+.adm-header {
+  background: rgba(2, 4, 7, 0.82);
+  border-bottom: 1px solid rgba(201, 164, 92, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.adm-table-scroll { scrollbar-width: thin; }
+
+/* thin scrollbars inside admin panels */
+.adm-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.adm-scroll::-webkit-scrollbar-track { background: transparent; }
+.adm-scroll::-webkit-scrollbar-thumb { background: rgba(201, 164, 92, 0.25); border-radius: 4px; }
+
+@keyframes admFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.adm-page { animation: admFadeUp 0.28s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-page { animation: none; }
+}
+
+/* safe-area for mobile bottom spacing */
+.adm-safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+
+/* -----------------------------------------------------------------------------
+   Responsive guard (spec §31): no page-level horizontal overflow.
+   Grid items default to min-width:auto, so intrinsic content (empty-state
+   hints, long headers) can blow out the track wider than the viewport.
+   min-width:0 on grid items lets tracks respect the container; card-internal
+   table scrollers (overflow-x-auto) are unaffected. */
+#adm-scroll [class*='grid'] > * { min-width: 0; }

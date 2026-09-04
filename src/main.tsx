@@ -26,6 +26,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { applyPublicContentOverrides } from './lib/contentOverrides';
 
 // Purge any stale service workers and caches
 if (typeof window !== 'undefined') {
@@ -43,9 +44,15 @@ if (typeof window !== 'undefined') {
   }
 }
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+// Apply admin-managed content overrides before first render (no-op when the
+// admin database is absent — public site then renders the compiled registries).
+const overridesReady = applyPublicContentOverrides();
+
+Promise.resolve(overridesReady).finally(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+});
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { X, CheckCircle, ArrowRight, Sparkles, Send } from 'lucide-react';
 import { servicesData } from '../data/services';
 import { supabase } from '../lib/supabase';
+import { mirrorLeadToPreview } from '../lib/leadCapture';
+import { trackEvent } from '../lib/track';
 
 interface ProjectInquiryModalProps {
   isOpen: boolean;
@@ -41,24 +43,26 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await supabase.from('inquiries').insert([
-        {
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          services: selectedServices,
-          budget,
-          timeline,
-          details: formData.projectDetails,
-          created_at: new Date().toISOString()
-        }
-      ]);
+      const inquiryRecord = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        services: selectedServices,
+        budget,
+        timeline,
+        details: formData.projectDetails,
+        source: 'inquiry_modal',
+        created_at: new Date().toISOString()
+      };
+      await supabase.from('inquiries').insert([inquiryRecord]);
+      mirrorLeadToPreview(inquiryRecord);
     } catch (err) {
       console.log('Supabase inquiry note:', err);
     }
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+      trackEvent('lead_submit', { services: selectedServices, budget, source: 'inquiry_modal' });
     }, 800);
   };
 

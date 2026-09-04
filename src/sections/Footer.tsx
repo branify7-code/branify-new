@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { BrandKitModal } from '../components/BrandKitModal';
+import { trackEvent } from '../lib/track';
 
 interface FooterProps {
   onNavigate: (route: string) => void;
@@ -132,6 +133,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
       } else {
         setSubMessage('Subscribed! Watch your inbox for strategy updates.');
         setSubState('done');
+        trackEvent('newsletter_signup', {});
         setEmail('');
         setTimeout(() => {
           setSubState('idle');

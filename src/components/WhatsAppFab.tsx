@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { trackEvent } from '../lib/track';
 
 /* ------------------------------------------------------------------ */
 /* WhatsAppFab — replica of branify.store's floating WhatsApp button: */
@@ -47,7 +48,7 @@ export const WhatsAppFab: React.FC = () => {
                   href={waLink(line.number, DEFAULT_MESSAGE)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => setOpen(false)}
+                  onClick={() => { trackEvent('whatsapp_click', { line: line.number }); setOpen(false); }}
                   className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5"
                 >
                   <span className="text-lg leading-none">{line.flag}</span>

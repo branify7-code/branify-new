@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import { CustomCursor } from './components/CustomCursor';
 import { PWAModal } from './components/PWAModal';
@@ -6,6 +6,8 @@ import { ProjectInquiryModal } from './components/ProjectInquiryModal';
 import { ToolRunnerModal } from './components/ToolRunnerModal';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { usePWA } from './hooks/usePWA';
+import { trackEvent, trackNotFound } from './lib/track';
+import { getSeoOverride, getRedirectTarget } from './lib/contentOverrides';
 
 // Views
 import { ServicesView } from './views/services/ServicesView';
@@ -20,9 +22,12 @@ import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageV
 import { FreeTemplatesView } from './views/templates/FreeTemplatesView';
 import { FreeTemplateDetailPage } from './views/templates/FreeTemplateDetailPage';
 import { BlogIndex, BlogPostPage } from './views/blog/BlogView';
-import { AdminView } from './views/admin/AdminView';
+import { NotFoundView } from './views/NotFoundView';
 import { WhatsAppFab } from './components/WhatsAppFab';
 import { freeTemplates } from './data/freeTemplatesRegistry';
+
+// Admin dashboard — lazy-loaded, never downloaded by public pages
+const AdminApp = lazy(() => import('./admin/AdminApp'));
 
 // Home Sections
 import { Hero } from './sections/Hero';
@@ -39,6 +44,16 @@ import { FAQSection } from './sections/FAQSection';
 import { CTASection } from './sections/CTASection';
 import { Footer } from './sections/Footer';
 import { Project, DigitalTool } from './types';
+
+// Known public SPA routes (everything else → 404 view + monitor log)
+const PUBLIC_ROUTE_PREFIXES = [
+  '/', '/services', '/portfolio', '/tools', '/free-tools', '/ai-tools', '/pricing',
+  '/contact', '/about', '/privacypolicy', '/termsandconditions', '/refundpolicy',
+  '/cookiespolicy', '/disclaimer', '/free-templates', '/blog', '/admin',
+];
+function isKnownRoute(pathname: string): boolean {
+  return PUBLIC_ROUTE_PREFIXES.some((p) => (p === '/' ? pathname === '/' : pathname === p || pathname.startsWith(`${p}/`)));
+}
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
@@ -72,7 +87,47 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Legacy ?tool=<id> deep links (pre-136-tool era) → redirect to the matching real tool page
+  // Admin SEO overrides (priority #1) — applied on EVERY route change AFTER the
+  // views' own <Seo>/document.title effects, so an override always wins. Pages
+  // without a <Seo> mount (About, Contact, Portfolio, tool pages…) are covered
+  // too. No-op when no override exists for the path.
+  useEffect(() => {
+    try {
+      const path = window.location.pathname;
+      const ov = getSeoOverride(path);
+      if (!ov) return;
+      if (ov.title) document.title = ov.title;
+      if (ov.description) {
+        document.querySelector('meta[name="description"]')?.setAttribute('content', ov.description);
+        document.querySelector('meta[property="og:description"]')?.setAttribute('content', ov.description);
+        document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', ov.description);
+      }
+      if (ov.ogImage) {
+        document.querySelector('meta[property="og:image"]')?.setAttribute('content', ov.ogImage);
+        document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', ov.ogImage);
+      }
+      if (ov.robots) {
+        document.querySelector('meta[name="robots"]')?.setAttribute('content', ov.robots.replace(/,\s*/g, ', '));
+      }
+    } catch { /* overrides are optional */ }
+  }, [currentRoute]);
+
+  // Redirects (legacy aliases + admin Redirect Manager) then 404 logging.
+  // A path that matches an active admin redirect is rewritten in place
+  // (replaceState — 301-style: no extra history entry) and never counts as 404.
+  useEffect(() => {
+    const [path] = currentRoute.split('?');
+    if (!path) return;
+    const target = LEGACY_LEGAL_REDIRECTS[path] || getRedirectTarget(path);
+    if (target && target !== path) {
+      const search = window.location.search || '';
+      window.history.replaceState({}, '', `${target}${search}`);
+      setCurrentRoute(`${target}${search}`);
+      return;
+    }
+    if (path !== '/' && !isKnownRoute(path)) trackNotFound(path);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRoute]);
   useEffect(() => {
     const legacyToolMap: Record<string, string> = {
       'pdf-tools': 'pdf-merge-planner',
@@ -91,14 +146,6 @@ export default function App() {
       const mapped = legacyId ? legacyToolMap[legacyId] : undefined;
       if (mapped) navigateTo(`/tools/${mapped}`);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRoute]);
-
-  // Legacy legal URLs → canonical owner-requested slugs (/privacypolicy, /termsandconditions, …)
-  useEffect(() => {
-    const [path] = currentRoute.split('?');
-    const canonical = LEGACY_LEGAL_REDIRECTS[path];
-    if (canonical) navigateTo(canonical);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoute]);
 
@@ -122,6 +169,7 @@ export default function App() {
   };
 
   const handleRunTool = (tool: DigitalTool) => {
+    trackEvent('tool_launch', { tool: tool.id, name: tool.name });
     setActiveToolRunner(tool);
   };
 
@@ -132,9 +180,26 @@ export default function App() {
   // Route parsing
   const pathname = currentRoute.split('?')[0] || '/';
   const queryParams = new URLSearchParams(currentRoute.split('?')[1] || '');
+  const isAdminRoute = pathname === '/admin' || pathname.startsWith('/admin/');
+  const isKnown = isKnownRoute(pathname);
 
   return (
     <div className="relative min-h-screen bg-[#08090B] text-[#E6E1D6] selection:bg-[#D4AF37]/30 selection:text-[#FFF5DC] font-sans flex flex-col justify-between">
+      {/* Admin app — full control surface, replaces the public chrome entirely */}
+      {isAdminRoute && (
+        <Suspense
+          fallback={
+            <div className="flex min-h-screen items-center justify-center bg-[#020407]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C9A45C]">Loading admin…</span>
+            </div>
+          }
+        >
+          <AdminApp />
+        </Suspense>
+      )}
+
+      {!isAdminRoute && (
+        <>
       {/* Luxury Custom Cursor follower */}
       <CustomCursor />
 
@@ -241,8 +306,16 @@ export default function App() {
           />
         )}
 
-        {/* Admin Portal */}
-        {pathname === '/admin' && <AdminView />}
+        {/* Admin Portal — protected, lazy-loaded control center (rendered above as a full-screen app) */}
+
+        {/* Unknown routes → real 404 page */}
+        {!isKnown && (
+          <NotFoundView
+            path={pathname}
+            onNavigateHome={() => navigateTo('/')}
+            onExploreTools={() => navigateTo('/tools')}
+          />
+        )}
 
         {/* Homepage Single-View Experience when pathname === '/' */}
         {pathname === '/' && (
@@ -331,6 +404,8 @@ export default function App() {
         onClose={() => setActiveProjectDetail(null)}
         onStartInquiry={(category) => handleOpenInquiry(category)}
       />
+        </>
+      )}
     </div>
   );
 }

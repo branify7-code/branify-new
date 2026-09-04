@@ -8,6 +8,7 @@
 import React, { useState, useMemo } from 'react';
 import { Sparkles, Search, ExternalLink, ArrowUpRight } from 'lucide-react';
 import Seo from '../../components/Seo';
+import { trackEvent } from '../../lib/track';
 import { aiToolsDirectory, aiToolCategories } from '../../data/aiToolsDirectory';
 
 interface AIToolsViewProps {
@@ -107,6 +108,7 @@ export const AIToolsView: React.FC<AIToolsViewProps> = () => {
               href={tool.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent('ai_tool_click', { name: tool.name, url: tool.url })}
               className="group bg-[#12131A] hover:bg-zinc-900/90 border border-white/10 hover:border-[#5A8DFF]/40 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between shadow-xl relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#5A8DFF]/0 group-hover:via-[#5A8DFF] to-transparent transition-all duration-500" />

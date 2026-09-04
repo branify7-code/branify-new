@@ -7,6 +7,7 @@
 ========================================================= */
 
 import React, { useEffect } from 'react';
+import { getSeoOverride } from '../lib/contentOverrides';
 
 const SITE_URL = 'https://branify.store';
 const DEFAULT_DESCRIPTION =
@@ -200,6 +201,28 @@ export const Seo: React.FC<SeoProps> = ({
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify(jsonLd);
+
+    // Admin SEO overrides (highest priority — managed from /admin SEO Center)
+    try {
+      const ov = getSeoOverride(typeof window !== 'undefined' ? window.location.pathname : '/');
+      if (ov) {
+        if (ov.title) {
+          document.title = ov.title;
+          setMeta('og:title', ov.title, true);
+          setMeta('twitter:title', ov.title);
+        }
+        if (ov.description) {
+          setMeta('description', ov.description);
+          setMeta('og:description', ov.description, true);
+          setMeta('twitter:description', ov.description);
+        }
+        if (ov.ogImage) {
+          setMeta('og:image', ov.ogImage, true);
+          setMeta('twitter:image', ov.ogImage);
+        }
+        if (ov.robots) setMeta('robots', ov.robots.replace(/,\s*/g, ', '));
+      }
+    } catch { /* overrides optional */ }
 
     return () => {
       document.title = originalTitle;

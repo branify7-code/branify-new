@@ -4,6 +4,8 @@ import {
   Clock, ShieldCheck, Mail, MapPin, Phone, ArrowRight, Calendar
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { trackEvent } from '../../lib/track';
+import { mirrorLeadToPreview } from '../../lib/leadCapture';
 
 interface ContactViewProps {
   onNavigateHome: () => void;
@@ -61,18 +63,19 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
     setIsSubmitting(true);
 
     try {
-      await supabase.from('inquiries').insert([
-        {
-          name,
-          email,
-          company: company || 'Not specified',
-          services: selectedServices,
-          budget: selectedBudget,
-          timeline: selectedTimeline,
-          details: message || 'Direct Contact Form Inquiry',
-          created_at: new Date().toISOString()
-        }
-      ]);
+      const inquiryRecord = {
+        name,
+        email,
+        company: company || 'Not specified',
+        services: selectedServices,
+        budget: selectedBudget,
+        timeline: selectedTimeline,
+        details: message || 'Direct Contact Form Inquiry',
+        source: 'contact_form',
+        created_at: new Date().toISOString()
+      };
+      await supabase.from('inquiries').insert([inquiryRecord]);
+      mirrorLeadToPreview(inquiryRecord);
     } catch (err) {
       console.log('Supabase contact note:', err);
     }
@@ -80,6 +83,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
+      trackEvent('contact_submit', { services: selectedServices, budget: selectedBudget, source: 'contact_form' });
     }, 800);
   };
 
