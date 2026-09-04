@@ -16,7 +16,13 @@ import ToolPageView from './views/tools/ToolPageView';
 import { AIToolsView } from './views/ai-tools/AIToolsView';
 import { ContactView } from './views/contact/ContactView';
 import { AboutView } from './views/about/AboutView';
-import { LegalView } from './views/policy/LegalView';
+import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageView';
+import { FreeTemplatesView } from './views/templates/FreeTemplatesView';
+import { FreeTemplateDetailPage } from './views/templates/FreeTemplateDetailPage';
+import { BlogIndex, BlogPostPage } from './views/blog/BlogView';
+import { AdminView } from './views/admin/AdminView';
+import { WhatsAppFab } from './components/WhatsAppFab';
+import { freeTemplates } from './data/freeTemplatesRegistry';
 
 // Home Sections
 import { Hero } from './sections/Hero';
@@ -85,6 +91,14 @@ export default function App() {
       const mapped = legacyId ? legacyToolMap[legacyId] : undefined;
       if (mapped) navigateTo(`/tools/${mapped}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRoute]);
+
+  // Legacy legal URLs → canonical owner-requested slugs (/privacypolicy, /termsandconditions, …)
+  useEffect(() => {
+    const [path] = currentRoute.split('?');
+    const canonical = LEGACY_LEGAL_REDIRECTS[path];
+    if (canonical) navigateTo(canonical);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoute]);
 
@@ -193,16 +207,42 @@ export default function App() {
           />
         )}
 
-        {(pathname === '/privacy' ||
-          pathname === '/terms' ||
-          pathname === '/refund' ||
-          pathname === '/cookies' ||
+        {/* Legal pages — dedicated page per policy at owner-requested URLs */}
+        {(pathname === '/privacypolicy' ||
+          pathname === '/termsandconditions' ||
+          pathname === '/refundpolicy' ||
+          pathname === '/cookiespolicy' ||
           pathname === '/disclaimer') && (
-          <LegalView
-            onNavigateHome={() => navigateTo('/')}
-            initialTab={pathname.replace('/', '') as 'privacy' | 'terms' | 'refund' | 'cookies' | 'disclaimer'}
+          <LegalPageView docPath={pathname} onNavigateHome={() => navigateTo('/')} />
+        )}
+
+        {/* Free Templates directory + category/slug detail pages */}
+        {pathname === '/free-templates' && (
+          <FreeTemplatesView onNavigate={navigateTo} initialCategory={queryParams.get('category') || undefined} />
+        )}
+
+        {pathname.startsWith('/free-templates/') &&
+          (() => {
+            const seg = decodeURIComponent(pathname.replace('/free-templates/', '').split('/')[0]);
+            const asSlug = freeTemplates.find((t) => t.slug === seg);
+            if (asSlug) {
+              return <FreeTemplateDetailPage slug={asSlug.slug} onNavigate={navigateTo} />;
+            }
+            return <FreeTemplatesView onNavigate={navigateTo} initialCategory={seg} />;
+          })()}
+
+        {/* Insights Blog */}
+        {pathname === '/blog' && <BlogIndex onNavigate={navigateTo} />}
+
+        {pathname.startsWith('/blog/') && (
+          <BlogPostPage
+            slug={decodeURIComponent(pathname.replace('/blog/', '').split('/')[0])}
+            onNavigate={navigateTo}
           />
         )}
+
+        {/* Admin Portal */}
+        {pathname === '/admin' && <AdminView />}
 
         {/* Homepage Single-View Experience when pathname === '/' */}
         {pathname === '/' && (
@@ -261,6 +301,9 @@ export default function App() {
         onOpenPWA={openPWAModal}
         isPWAInstalled={isInstalled}
       />
+
+      {/* Floating WhatsApp chat button (app-wide, like live) */}
+      <WhatsAppFab />
 
       {/* Interactive Modals */}
       <PWAModal

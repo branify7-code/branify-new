@@ -2065,19 +2065,25 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://branify.store/privacy</loc>
+    <loc>https://branify.store/privacypolicy</loc>
     <lastmod>2026-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://branify.store/terms</loc>
+    <loc>https://branify.store/termsandconditions</loc>
     <lastmod>2026-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://branify.store/refund</loc>
+    <loc>https://branify.store/refundpolicy</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/cookiespolicy</loc>
     <lastmod>2026-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Download, Smartphone, Laptop, Share2, PlusSquare, CheckCircle2, Sparkles } from 'lucide-react';
 
 interface PWAModalProps {
@@ -14,13 +14,36 @@ export const PWAModal: React.FC<PWAModalProps> = ({
   onNativeInstall,
   isInstallable,
 }) => {
+  /* Escape-to-close + body scroll lock while the modal is open */
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-lg rounded-2xl bg-[#0F1015] border border-[#D4AF37]/30 shadow-[0_0_50px_rgba(212,175,55,0.15)] p-6 sm:p-8 text-white space-y-6">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Install Branify App"
+    >
+      <div
+        className="relative w-full max-w-lg rounded-2xl bg-[#0F1015] border border-[#D4AF37]/30 shadow-[0_0_50px_rgba(212,175,55,0.15)] p-6 sm:p-8 text-white space-y-6"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
