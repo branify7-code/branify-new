@@ -131,13 +131,13 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
     return (
       <div className="max-w-3xl mx-auto px-4 py-24 text-center space-y-6">
         <div className="text-7xl">🧭</div>
-        <h1 className="text-2xl font-black text-white uppercase tracking-tight">Tool Not Found</h1>
+        <h1 className="text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">Tool Not Found</h1>
         <p className="text-zinc-400 text-sm">
-          The tool <span className="text-[#F27D26] font-bold">/tools/{slug}</span> is not part of the 136-tool catalog.
+          The tool <span className="text-[#D4AF37] font-bold">/tools/{slug}</span> is not part of the 136-tool catalog.
         </p>
         <button
           onClick={() => onNavigate('/tools')}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#F27D26] hover:bg-orange-500 text-black font-extrabold text-xs uppercase tracking-widest rounded-full transition-colors"
+          className="btn-metal inline-flex items-center gap-2 px-6 py-3 font-extrabold text-xs uppercase tracking-widest rounded-full"
         >
           <ArrowLeft className="w-4 h-4" /> Browse All 136 Free Tools
         </button>
@@ -155,7 +155,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
 
   const renderField = (f: ToolField) => {
     const base =
-      'w-full px-3 py-2.5 bg-zinc-950 border border-white/10 rounded-lg text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26]/60 transition-colors';
+      'w-full px-3 py-2.5 bg-[#070A0F] border border-white/10 rounded-lg text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors';
     switch (f.type) {
       case 'number':
         return (
@@ -201,7 +201,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
               className={`${base} appearance-none cursor-pointer`}
             >
               {f.options.map((o) => (
-                <option key={o.value} value={o.value} className="bg-zinc-950">{o.label}</option>
+                <option key={o.value} value={o.value} className="bg-[#070A0F]">{o.label}</option>
               ))}
             </select>
             {f.hint && <p className="text-[10px] text-zinc-600">{f.hint}</p>}
@@ -209,13 +209,13 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
         );
       case 'checkbox':
         return (
-          <label key={f.name} htmlFor={fieldId(f.name)} className="flex items-center gap-2.5 px-3 py-2.5 bg-zinc-950 border border-white/10 rounded-lg cursor-pointer hover:border-white/25 transition-colors">
+          <label key={f.name} htmlFor={fieldId(f.name)} className="flex items-center gap-2.5 px-3 py-2.5 bg-[#070A0F] border border-white/10 rounded-lg cursor-pointer hover:border-white/25 transition-colors">
             <input
               id={fieldId(f.name)}
               type="checkbox"
               checked={!!values[f.name]}
               onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.checked }))}
-              className="w-4 h-4 accent-[#F27D26] cursor-pointer"
+              className="w-4 h-4 accent-[#C9A45C] cursor-pointer"
             />
             <span className="text-[11px] font-bold text-zinc-300">{f.label}</span>
           </label>
@@ -230,7 +230,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
       <div className="space-y-6" key={resetTick}>
         <button
           onClick={() => onNavigate('/tools')}
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-[#F1F2EE] transition-colors"
         >
           ← Back to All 100+ Free Tools
         </button>
@@ -239,17 +239,17 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
         <div className="bg-[#080808] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-6">
           <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#F27D26] text-[10px] font-extrabold uppercase tracking-widest mb-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#D4AF37] text-[10px] font-extrabold uppercase tracking-widest mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
                 {tool.category} — Free Utility
               </div>
-              <h1 className="text-xl font-black text-white uppercase tracking-tight">{tool.name}</h1>
+              <h1 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight">{tool.name}</h1>
               <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{tool.description}</p>
             </div>
             <button
               onClick={handleReset}
               title="Reset Inputs"
-              className="p-2 text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1 shrink-0"
+              className="p-2 text-zinc-400 hover:text-[#F1F2EE] bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1 shrink-0"
             >
               <RotateCcw className="w-4 h-4" />
               <span className="hidden sm:inline">Reset</span>
@@ -272,7 +272,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                   if (f) handleFile(f);
                 }}
                 className={`relative flex flex-col items-center justify-center gap-2 py-10 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${
-                  dragOver ? 'border-[#F27D26] bg-[#F27D26]/5' : 'border-white/15 hover:border-[#F27D26]/50 bg-zinc-950/50'
+                  dragOver ? 'border-[#C9A45C] bg-[#C9A45C]/5' : 'border-white/15 hover:border-[#C9A45C]/50 bg-[#070A0F]/50'
                 }`}
               >
                 <input
@@ -286,7 +286,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                 {uploadKind === 'image' && dataUrl ? (
                   <img src={dataUrl} alt="Uploaded preview" className="max-h-40 rounded-lg border border-white/10" />
                 ) : (
-                  <UploadCloud className={`w-10 h-10 ${file ? 'text-[#F27D26]' : 'text-zinc-500'}`} />
+                  <UploadCloud className={`w-10 h-10 ${file ? 'text-[#D4AF37]' : 'text-zinc-500'}`} />
                 )}
                 <p className="text-xs font-extrabold uppercase tracking-widest text-zinc-200">
                   {file ? file.name : 'Click or drag file to upload'}
@@ -317,7 +317,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                   value={String(values[f.name] ?? '')}
                   placeholder={f.placeholder}
                   onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                  className="w-full px-3 py-2.5 bg-zinc-950 border border-white/10 rounded-lg text-xs text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-[#F27D26]/60 transition-colors resize-y"
+                  className="w-full px-3 py-2.5 bg-[#070A0F] border border-white/10 rounded-lg text-xs text-[#F1F2EE] font-mono placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors resize-y"
                 />
                 {f.hint && <p className="text-[10px] text-zinc-600">{f.hint}</p>}
               </div>
@@ -328,7 +328,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
             <button
               onClick={handleRun}
               disabled={running}
-              className="w-full py-4 bg-[#F27D26] hover:bg-orange-500 text-black font-extrabold text-xs sm:text-sm uppercase tracking-widest rounded-full shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-wait"
+              className="btn-metal w-full py-4 font-extrabold text-xs sm:text-sm uppercase tracking-widest rounded-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-wait"
             >
               <Play className="w-4 h-4 fill-current" />
               {running ? 'Running…' : `Run ${tool.name}`}
@@ -355,7 +355,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                 {result?.imageDataUrl && (
                   <button
                     onClick={downloadResult}
-                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-white flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#F1F2EE] flex items-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" /> Download Image
                   </button>
@@ -363,7 +363,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                 {result?.downloadDataUrl && (
                   <button
                     onClick={downloadResult}
-                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-white flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#F1F2EE] flex items-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" /> Download {result.downloadMime === 'application/pdf' ? 'PDF' : 'File'}
                   </button>
@@ -371,7 +371,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                 <button
                   onClick={copyOutput}
                   disabled={!outputText}
-                  className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-white flex items-center gap-1.5 transition-colors disabled:opacity-40"
+                  className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#F1F2EE] flex items-center gap-1.5 transition-colors disabled:opacity-40"
                 >
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   {copied ? 'Copied' : 'Copy Text'}
@@ -410,7 +410,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                           const isCodeLine = /^[<{[]|^(background-image|Content-Security-Policy|<script|<link|<meta|<IfModule|Redirect|RewriteRule|const |function |SELECT|INSERT|UPDATE|<!DOCTYPE|<?xml)/i.test(trimmed);
                           if (isSection) {
                             return (
-                              <p key={i} className="text-[10px] font-extrabold uppercase tracking-widest text-[#F27D26] pt-2">{trimmed}</p>
+                              <p key={i} className="text-[10px] font-extrabold uppercase tracking-widest text-[#D4AF37] pt-2">{trimmed}</p>
                             );
                           }
                           if (isCodeLine || tool.outputType === 'textarea' || tool.outputType === 'text' || tool.outputType === 'file') {
@@ -422,7 +422,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                             const idx = trimmed.indexOf(': ');
                             return (
                               <p key={i} className="text-xs text-zinc-300 flex flex-wrap gap-x-2">
-                                <span className="font-extrabold text-white uppercase tracking-wide text-[11px]">{trimmed.slice(0, idx)}:</span>
+                                <span className="font-extrabold text-[#F1F2EE] uppercase tracking-wide text-[11px]">{trimmed.slice(0, idx)}:</span>
                                 <span className="text-zinc-200">{trimmed.slice(idx + 2)}</span>
                               </p>
                             );
@@ -432,7 +432,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                             if (idx > 1) {
                               return (
                                 <p key={i} className="text-xs text-zinc-300 flex flex-wrap gap-x-2 pl-1">
-                                  <span className="font-extrabold text-white text-[11px]">{trimmed.slice(0, idx)}:</span>
+                                  <span className="font-extrabold text-[#F1F2EE] text-[11px]">{trimmed.slice(0, idx)}:</span>
                                   <span className="text-zinc-200">{trimmed.slice(idx + 2)}</span>
                                 </p>
                               );
@@ -462,9 +462,9 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
 
         {/* Privacy strip */}
         <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-          <span className="flex items-center gap-1.5"><ImageIcon className="w-3.5 h-3.5 text-[#F27D26]/60" /> 100% Local Processing</span>
-          <span className="flex items-center gap-1.5"><Play className="w-3.5 h-3.5 text-[#F27D26]/60" /> No Sign-Up Required</span>
-          <span className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5 text-[#F27D26]/60" /> Instant Free Results</span>
+          <span className="flex items-center gap-1.5"><ImageIcon className="w-3.5 h-3.5 text-[#C9A45C]/60" /> 100% Local Processing</span>
+          <span className="flex items-center gap-1.5"><Play className="w-3.5 h-3.5 text-[#C9A45C]/60" /> No Sign-Up Required</span>
+          <span className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5 text-[#C9A45C]/60" /> Instant Free Results</span>
         </div>
       </div>
     </div>

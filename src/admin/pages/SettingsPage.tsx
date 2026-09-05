@@ -241,7 +241,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
             className={cx(
               'inline-flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-bold transition-all',
               tab === s.id
-                ? 'border-[#C9A45C]/60 bg-gradient-to-b from-[#E8C97C]/20 to-[#C9A45C]/[0.06] text-[#F3D27A]'
+                ? 'border-[#C9A45C]/60 bg-gradient-to-b from-[#E8C97C]/20 to-[#C9A45C]/[0.06] text-[#E9CF79]'
                 : 'border-white/[0.07] bg-white/[0.02] text-[#A7AFBA] hover:border-white/15 hover:text-[#F5F6F2]',
             )}
           >

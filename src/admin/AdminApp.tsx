@@ -390,7 +390,7 @@ const AdminShell: React.FC<{
                   ['New Redirect', '/seo/redirects?new=1'],
                   ['Edit Homepage SEO', '/seo?page=/'],
                 ].map(([label, href]) => (
-                  <button key={href} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#C9CED6] hover:bg-white/[0.05] hover:text-[#F3D27A]" onClick={() => { setQaOpen(false); navigate(href); }}>
+                  <button key={href} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#C9CED6] hover:bg-white/[0.05] hover:text-[#E9CF79]" onClick={() => { setQaOpen(false); navigate(href); }}>
                     <Plus size={13} className="text-[#C9A45C]" /> {label}
                   </button>
                 ))}

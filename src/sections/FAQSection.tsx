@@ -10,7 +10,7 @@ export const FAQSection: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="relative py-28 sm:py-36 bg-[#0B0C10] text-white overflow-hidden border-t border-white/[0.06]">
+    <section id="faq" className="relative py-28 sm:py-36 bg-[#0B0C10] text-[#F1F2EE] overflow-hidden border-t border-white/[0.06]">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-mesh-radial pointer-events-none" />
 
@@ -25,7 +25,7 @@ export const FAQSection: React.FC = () => {
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
             Frequently Asked Questions
           </h2>
-          <p className="text-base sm:text-lg text-white/60 font-light max-w-xl mx-auto">
+          <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl mx-auto">
             Everything you need to know about our engagement models, technical standards, and delivery pipeline.
           </p>
         </div>
@@ -58,8 +58,8 @@ export const FAQSection: React.FC = () => {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all shrink-0 ${
                       isOpen
-                        ? 'bg-[#D4AF37] text-[#08090B] rotate-180'
-                        : 'bg-white/5 text-white/60'
+                        ? 'bg-[#D4AF37] text-[#05080D] rotate-180'
+                        : 'bg-white/5 text-[#F1F2EE]/60'
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -67,7 +67,7 @@ export const FAQSection: React.FC = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-0 text-sm sm:text-base text-white/70 font-light leading-relaxed border-t border-white/[0.04] animate-fade-in">
+                  <div className="px-6 pb-6 pt-0 text-sm sm:text-base text-[#F1F2EE]/70 font-light leading-relaxed border-t border-white/[0.04] animate-fade-in">
                     <p className="pt-4">{faq.answer}</p>
                   </div>
                 )}

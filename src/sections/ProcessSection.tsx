@@ -7,7 +7,7 @@ export const ProcessSection: React.FC = () => {
   const activeStep = processStepsData[activeStepIndex];
 
   return (
-    <section id="about" className="relative py-28 sm:py-36 bg-[#08090B] text-white overflow-hidden">
+    <section id="about" className="relative py-28 sm:py-36 bg-[#05080D] text-[#F1F2EE] overflow-hidden">
       {/* Background ambient lighting */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-mesh-radial pointer-events-none" />
 
@@ -23,12 +23,12 @@ export const ProcessSection: React.FC = () => {
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
               Our Process
             </h2>
-            <p className="text-base sm:text-lg text-white/60 font-light max-w-xl">
+            <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl">
               From first idea to final experience. A synchronized 5-phase delivery model crafted for zero ambiguity and maximum velocity.
             </p>
           </div>
 
-          <div className="text-xs font-mono text-white/40">
+          <div className="text-xs font-mono text-[#F1F2EE]/40">
             5-PHASE LINEAR PIPELINE<br />
             ZERO SURPRISES GUARANTEED
           </div>
@@ -62,14 +62,14 @@ export const ProcessSection: React.FC = () => {
                     isActive
                       ? 'bg-[#0E0F14] border-[#D4AF37] shadow-[0_0_30px_rgba(212,175,55,0.25)] scale-105'
                       : isPast
-                      ? 'bg-[#0E0F14]/70 border-[#D4AF37]/40 text-white/80'
-                      : 'bg-[#0E0F14]/40 border-white/10 text-white/50 hover:border-white/20'
+                      ? 'bg-[#0E0F14]/70 border-[#D4AF37]/40 text-[#F1F2EE]/80'
+                      : 'bg-[#0E0F14]/40 border-white/10 text-[#F1F2EE]/50 hover:border-white/20'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span
                       className={`font-mono text-xs font-bold ${
-                        isActive ? 'text-[#D4AF37]' : isPast ? 'text-[#E5C378]' : 'text-white/40'
+                        isActive ? 'text-[#D4AF37]' : isPast ? 'text-[#E5C378]' : 'text-[#F1F2EE]/40'
                       }`}
                     >
                       {step.number}
@@ -88,12 +88,12 @@ export const ProcessSection: React.FC = () => {
                   <div>
                     <span
                       className={`font-display text-sm sm:text-base font-bold uppercase tracking-tight block ${
-                        isActive ? 'text-[#FFF5DC]' : 'text-white/70'
+                        isActive ? 'text-[#FFF5DC]' : 'text-[#F1F2EE]/70'
                       }`}
                     >
                       {step.title}
                     </span>
-                    <span className="text-[10px] font-mono text-white/40 block mt-0.5">
+                    <span className="text-[10px] font-mono text-[#F1F2EE]/40 block mt-0.5">
                       {step.duration}
                     </span>
                   </div>
@@ -115,7 +115,7 @@ export const ProcessSection: React.FC = () => {
                 <span className="px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#FFF5DC]">
                   PHASE {activeStep.number}
                 </span>
-                <span className="text-white/40">•</span>
+                <span className="text-[#F1F2EE]/40">•</span>
                 <span className="text-[#E5C378]">{activeStep.duration}</span>
               </div>
 
@@ -123,24 +123,24 @@ export const ProcessSection: React.FC = () => {
                 {activeStep.title}: {activeStep.subtitle}
               </h3>
 
-              <p className="text-base sm:text-lg text-white/70 font-light leading-relaxed">
+              <p className="text-base sm:text-lg text-[#F1F2EE]/70 font-light leading-relaxed">
                 {activeStep.description}
               </p>
 
               {/* Quote */}
-              <blockquote className="p-4 rounded-xl bg-white/[0.02] border-l-2 border-[#D4AF37] text-sm text-white/80 italic">
+              <blockquote className="p-4 rounded-xl bg-white/[0.02] border-l-2 border-[#D4AF37] text-sm text-[#F1F2EE]/80 italic">
                 {activeStep.quote}
               </blockquote>
             </div>
 
             {/* Right Key Deliverables Panel */}
-            <div className="lg:col-span-5 p-6 sm:p-8 rounded-2xl bg-[#08090B] border border-white/10 space-y-4">
+            <div className="lg:col-span-5 p-6 sm:p-8 rounded-2xl bg-[#05080D] border border-white/10 space-y-4">
               <span className="text-xs font-mono uppercase tracking-widest text-[#D4AF37] block">
                 Guaranteed Milestone Outputs
               </span>
               <div className="space-y-3">
                 {activeStep.keyOutputs.map((out, idx) => (
-                  <div key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-white/80">
+                  <div key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-[#F1F2EE]/80">
                     <div className="w-5 h-5 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37] shrink-0 mt-0.5">
                       <Check className="w-3 h-3" />
                     </div>
@@ -155,7 +155,7 @@ export const ProcessSection: React.FC = () => {
                   <button
                     id="next-process-step-btn"
                     onClick={() => setActiveStepIndex((prev) => Math.min(prev + 1, processStepsData.length - 1))}
-                    className="w-full py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white text-xs font-mono flex items-center justify-center gap-2 transition-colors"
+                    className="w-full py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-[#F1F2EE]/80 hover:text-[#F1F2EE] text-xs font-mono flex items-center justify-center gap-2 transition-colors"
                   >
                     <span>Inspect Next: {processStepsData[activeStepIndex + 1].title}</span>
                     <ChevronRight className="w-4 h-4 text-[#D4AF37]" />

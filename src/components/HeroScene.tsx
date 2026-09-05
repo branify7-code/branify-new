@@ -444,7 +444,7 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
     return (
       <div className={`w-full h-full flex items-center justify-center ${className}`}>
         <div className="w-48 h-56 rounded-2xl border border-[#D4AF37]/30 bg-[#08090D]/90 backdrop-blur-xl flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.25)]">
-          <span className="font-display text-4xl font-extrabold text-[#F3D27A]">B</span>
+          <span className="font-display text-4xl font-extrabold text-[#D4AF37]">B</span>
         </div>
       </div>
     );

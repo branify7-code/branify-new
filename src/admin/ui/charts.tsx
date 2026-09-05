@@ -4,7 +4,7 @@
 import React, { useId } from 'react';
 
 const GOLD = '#C9A45C';
-const GOLD_BRIGHT = '#F3D27A';
+const GOLD_BRIGHT = '#E9CF79';
 
 // ------------------------------------------------------------------ Sparkline
 export const Sparkline: React.FC<{ data: number[]; width?: number; height?: number; stroke?: string; fill?: boolean; className?: string }> = ({

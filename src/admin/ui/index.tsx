@@ -23,7 +23,7 @@ export const Btn: React.FC<
   const variants: Record<BtnVariant, string> = {
     gold: 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206] hover:brightness-110 shadow-[0_2px_14px_-4px_rgba(201,164,92,0.5)] border border-[#E8C97C]/60',
     ghost: 'text-[#A7AFBA] hover:text-[#F5F6F2] hover:bg-white/[0.05]',
-    outline: 'border border-[rgba(201,164,92,0.25)] text-[#D8DCE2] hover:border-[rgba(201,164,92,0.55)] hover:text-[#F3D27A] bg-white/[0.02]',
+    outline: 'border border-[rgba(201,164,92,0.25)] text-[#D8DCE2] hover:border-[rgba(201,164,92,0.55)] hover:text-[#E9CF79] bg-white/[0.02]',
     danger: 'border border-red-500/30 text-red-300 hover:bg-red-500/10 hover:border-red-500/60',
     subtle: 'bg-white/[0.05] text-[#D8DCE2] hover:bg-white/[0.09] border border-transparent',
   };

@@ -53,7 +53,7 @@ export const WhatsAppFab: React.FC = () => {
                 >
                   <span className="text-lg leading-none">{line.flag}</span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-white">{line.label}</span>
+                    <span className="block truncate text-sm font-semibold text-[#F1F2EE]">{line.label}</span>
                     <span className="block truncate font-mono text-[11px] text-zinc-400">{line.number}</span>
                   </span>
                   <WhatsAppGlyph className="h-4 w-4 shrink-0 fill-[#25D366]" />
@@ -79,7 +79,7 @@ export const WhatsAppFab: React.FC = () => {
           aria-label="Chat on WhatsApp"
           aria-expanded={open}
           title={DISPLAY_NAME}
-          className="relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-[0_8px_30px_rgb(37,211,102,0.35)] hover:shadow-[0_12px_40px_rgb(37,211,102,0.5)] transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#25D366]/40 cursor-pointer"
+          className="relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-[#F1F2EE] rounded-full shadow-[0_8px_30px_rgb(37,211,102,0.35)] hover:shadow-[0_12px_40px_rgb(37,211,102,0.5)] transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#25D366]/40 cursor-pointer"
         >
           <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-75 animate-ping pointer-events-none group-hover:animate-none"></span>
           {open ? (

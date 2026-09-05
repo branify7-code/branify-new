@@ -630,7 +630,7 @@ export default function Header({
   };
 
   const navLinkClass = (isActive: boolean) =>
-    `px-3 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
+    `px-2.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
       isActive
         ? "text-[#E2C27B] font-bold bg-[#C9A45C]/10 border border-[#C9A45C]/25 shadow-sm"
         : "border border-transparent hover:text-[#E2C27B] hover:bg-white/[0.04]"
@@ -713,7 +713,7 @@ export default function Header({
         className="sticky top-0 left-0 right-0 w-full z-40 bg-[#06080C]/95 backdrop-blur-xl border-b border-[#C9A45C]/20 transition-all"
         onMouseLeave={schedulePanelClose}
       >
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 h-20 flex items-center justify-between gap-3 lg:gap-5">
+      <div className="w-full px-3 min-[420px]:px-4 sm:px-6 lg:px-8 xl:px-8 2xl:px-12 h-20 flex items-center justify-between gap-2 min-[420px]:gap-3 lg:gap-4 2xl:gap-5">
         {/* ============ LOGO LOCKUP ============ */}
         <button
           type="button"
@@ -721,19 +721,19 @@ export default function Header({
           aria-label="BRANIFY Home"
           onClick={(e) => handleNavClick(e, "/")}
         >
-          <div className="flex items-center gap-3 group ">
+          <div className="flex items-center gap-2 min-[420px]:gap-3 group ">
             <div className="relative shrink-0 transition-transform duration-300 group-hover:scale-105">
               <BranifyLogoMark />
             </div>
             <div className="flex flex-col justify-center">
-              <div className="font-black uppercase flex items-center leading-none font-sans text-2xl tracking-wider">
-                <span className="text-white">BRAN</span>
+              <div className="font-black uppercase flex items-center leading-none font-sans text-xl min-[420px]:text-2xl tracking-wider">
+                <span className="text-[#F1F2EE]">BRAN</span>
                 <span className="text-[#E2C27B]">IFY</span>
               </div>
-              <div className="flex items-center uppercase font-extrabold text-zinc-400 mt-1 text-[10px] gap-1.5">
-                <span className="text-white">BUILD.</span>
+              <div className="hidden min-[420px]:flex items-center uppercase font-extrabold text-zinc-400 mt-1 text-[10px] gap-1.5">
+                <span className="text-[#F1F2EE]">BUILD.</span>
                 <span className="text-[#E2C27B]">BRAND.</span>
-                <span className="text-white">GROW.</span>
+                <span className="text-[#F1F2EE]">GROW.</span>
               </div>
             </div>
           </div>
@@ -741,7 +741,7 @@ export default function Header({
 
         {/* ============ DESKTOP NAV ============ */}
         <nav
-          className="hidden xl:flex items-center gap-1 lg:gap-1.5 2xl:gap-2 text-[13px] font-semibold text-zinc-300 tracking-wide uppercase font-sans"
+          className="hidden xl:flex items-center gap-1 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-zinc-300 tracking-wide uppercase font-sans"
           aria-label="Main Navigation"
         >
           {/* HOME */}
@@ -834,7 +834,7 @@ export default function Header({
             onClick={(e) => handleNavClick(e, "/ai-tools")}
           >
             <span>AI TOOLS</span>
-            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#05080C] rounded-full shrink-0 shadow-sm font-mono">
+            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#090A0C] rounded-full shrink-0 shadow-sm font-mono">
               27+
             </span>
             {isAiToolsActive && activeUnderline}
@@ -852,7 +852,7 @@ export default function Header({
         </nav>
 
         {/* ============ RIGHT ACTIONS ============ */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {/* INSTALL APP */}
           <button
             type="button"
@@ -866,7 +866,7 @@ export default function Header({
               strokeWidth={2}
               className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-[#E2C27B]"
             />
-            <span className="hidden lg:inline-block">Install App</span>
+            <span className="hidden 2xl:inline-block">Install App</span>
           </button>
 
           {/* SEARCH / CURRENCY / CART PILL */}
@@ -876,7 +876,7 @@ export default function Header({
           >
             <button
               type="button"
-              className="p-1.5 text-zinc-300 hover:text-[#E2C27B] hover:bg-[#C9A45C]/10 rounded-full transition-colors flex items-center gap-1 text-xs cursor-pointer"
+              className="hidden 2xl:flex p-1.5 text-zinc-300 hover:text-[#E2C27B] hover:bg-[#C9A45C]/10 rounded-full transition-colors items-center gap-1 text-xs cursor-pointer"
               title="Search Services, Portfolio, Tools... (⌘K)"
               aria-label="Search"
             >
@@ -892,7 +892,7 @@ export default function Header({
               onClick={() => setCurrencyDropdownOpen((prev) => !prev)}
             >
               <span className="text-sm">{currency.flag}</span>
-              <span className="text-white group-hover:text-[#E2C27B] transition-colors">
+              <span className="text-[#F1F2EE] group-hover:text-[#E2C27B] transition-colors">
                 {currency.code}
               </span>
               <ChevronDown
@@ -906,7 +906,7 @@ export default function Header({
 
             <button
               type="button"
-              className="p-1.5 text-zinc-300 hover:text-[#E2C27B] hover:bg-[#C9A45C]/10 rounded-full transition-colors relative cursor-pointer"
+              className="hidden 2xl:block p-1.5 text-zinc-300 hover:text-[#E2C27B] hover:bg-[#C9A45C]/10 rounded-full transition-colors relative cursor-pointer"
               title="View Cart"
               aria-label="Shopping Cart"
             >
@@ -950,7 +950,7 @@ export default function Header({
           {/* BOOK A CONSULTATION */}
           <button
             type="button"
-            className="hidden sm:inline-flex items-center gap-1.5 px-5 lg:px-6 py-2.5 btn-gold-primary rounded-full uppercase tracking-wider text-[11px] lg:text-xs font-extrabold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A45C] cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 xl:px-4 2xl:px-6 py-2.5 btn-gold-primary rounded-full uppercase tracking-wider text-[11px] lg:text-xs font-extrabold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A45C] cursor-pointer"
             aria-label="Book a Consultation"
             onClick={handleConsultClick}
           >
@@ -960,7 +960,7 @@ export default function Header({
           {/* MOBILE MENU BUTTON */}
           <button
             type="button"
-            className="xl:hidden p-2 text-zinc-300 hover:text-white bg-[#0B0F15] border border-[#C9A45C]/25 rounded-xl shrink-0 cursor-pointer"
+            className="xl:hidden p-2 text-zinc-300 hover:text-[#F1F2EE] bg-[#0B0F15] border border-[#C9A45C]/25 rounded-xl shrink-0 cursor-pointer"
             aria-label="Toggle Navigation Menu"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((value) => !value)}
@@ -1021,7 +1021,7 @@ export default function Header({
                                   {item.title}
                                 </span>
                                 {item.badge && (
-                                  <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#05080C] rounded font-mono">
+                                  <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#090A0C] rounded font-mono">
                                     {item.badge}
                                   </span>
                                 )}
@@ -1041,7 +1041,7 @@ export default function Header({
 
             <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-white flex items-center gap-2">
+                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
                   <span className="text-[#FFF6E5]">Need a Custom Solution?</span>
                 </div>
                 <p className="text-xs text-zinc-400 mt-0.5">
@@ -1108,14 +1108,14 @@ export default function Header({
               <div className="bg-gradient-to-br from-[#0E141D] to-[#06080C] p-5 rounded-2xl border border-[#C9A45C]/25 flex flex-col justify-between shadow-lg">
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="px-2 py-0.5 bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#05080C] text-[10px] font-black rounded-md">
+                    <span className="px-2 py-0.5 bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#090A0C] text-[10px] font-black rounded-md">
                       FEATURED CASE STUDY
                     </span>
                     <span className="text-[10px] text-[#C9A45C] font-mono">
                       REAL ESTATE &amp; WEB
                     </span>
                   </div>
-                  <h4 className="text-base font-black text-white leading-snug mb-2 font-serif-luxury">
+                  <h4 className="text-base font-black text-[#F1F2EE] leading-snug mb-2 font-serif-luxury">
                     Property Atlas: Luxury Real Estate &amp; Digital Experience
                   </h4>
                   <p className="text-xs text-zinc-400 leading-relaxed mb-4">
@@ -1126,7 +1126,7 @@ export default function Header({
                 </div>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#E2C27B] hover:text-white transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#E2C27B] hover:text-[#F1F2EE] transition-colors cursor-pointer"
                   onClick={(e) => handleNavClick(e, "/portfolio")}
                 >
                   <span>Read Full Case Study</span>
@@ -1137,7 +1137,7 @@ export default function Header({
 
             <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-white flex items-center gap-2">
+                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
                   <span className="text-[#FFF6E5]">
                     Want to See Case Studies &amp; Client Results?
                   </span>
@@ -1203,7 +1203,7 @@ export default function Header({
 
             <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-white flex items-center gap-2">
+                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
                   <span className="text-[#FFF6E5]">
                     Explore 100+ Free Online Browser Tools
                   </span>
@@ -1267,7 +1267,7 @@ export default function Header({
                 </button>
                 <button
                   type="button"
-                  className="p-2.5 text-zinc-400 hover:text-white hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
+                  className="p-2.5 text-zinc-400 hover:text-[#F1F2EE] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
                   aria-label="Toggle Services Submenu"
                   aria-expanded={openMobileMenu === "services"}
                   onClick={() => toggleMobileMenu("services")}
@@ -1324,7 +1324,7 @@ export default function Header({
                 </button>
                 <button
                   type="button"
-                  className="p-2.5 text-zinc-400 hover:text-white hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
+                  className="p-2.5 text-zinc-400 hover:text-[#F1F2EE] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
                   aria-label="Toggle Portfolio Submenu"
                   aria-expanded={openMobileMenu === "portfolio"}
                   onClick={() => toggleMobileMenu("portfolio")}
@@ -1374,7 +1374,7 @@ export default function Header({
                 </button>
                 <button
                   type="button"
-                  className="p-2.5 text-zinc-400 hover:text-white hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
+                  className="p-2.5 text-zinc-400 hover:text-[#F1F2EE] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
                   aria-label="Toggle Free Tools Submenu"
                   aria-expanded={openMobileMenu === "tools"}
                   onClick={() => toggleMobileMenu("tools")}
@@ -1447,9 +1447,9 @@ export default function Header({
               <div className="flex items-center gap-2.5">
                 <span className="text-lg">📲</span>
                 <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-[#F1F2EE] flex items-center gap-1.5">
                     <span>Install BRANIFY App</span>
-                    <span className="text-[9px] px-1.5 py-0.5 bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#05080C] rounded font-black uppercase">
+                    <span className="text-[9px] px-1.5 py-0.5 bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#090A0C] rounded font-black uppercase">
                       PWA
                     </span>
                   </div>
@@ -1474,7 +1474,7 @@ export default function Header({
                 <div className="flex items-center gap-2.5">
                   <span className="text-xl">{currency.flag}</span>
                   <div>
-                    <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <div className="text-xs font-bold text-[#F1F2EE] flex items-center gap-1.5">
                       <span>{currency.code}</span>
                       <span className="text-zinc-400">({currency.symbol})</span>
                       <span className="text-[9px] px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-semibold uppercase">

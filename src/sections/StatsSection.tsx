@@ -25,7 +25,7 @@ export const StatsSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 sm:py-28 bg-[#08090B] border-y border-white/[0.06] overflow-hidden"
+      className="relative py-20 sm:py-28 bg-[#05080D] border-y border-white/[0.06] overflow-hidden"
     >
       {/* Background Subtle Gradient */}
       <div className="absolute inset-0 bg-mesh-radial opacity-60 pointer-events-none" />
@@ -106,11 +106,11 @@ const StatCounterItem: React.FC<StatCounterItemProps> = ({
         {stat.label}
       </div>
 
-      <p className="text-xs text-white/50 font-light leading-relaxed">
+      <p className="text-xs text-[#F1F2EE]/50 font-light leading-relaxed">
         {stat.description}
       </p>
 
-      <div className="text-[10px] font-mono text-white/30 pt-1">
+      <div className="text-[10px] font-mono text-[#F1F2EE]/30 pt-1">
         {stat.sublabel}
       </div>
     </div>

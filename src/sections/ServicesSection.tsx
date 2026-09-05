@@ -40,7 +40,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
     servicesData.find((s) => s.id === hoveredServiceId) || servicesData[0];
 
   return (
-    <section id="services" className="relative py-28 sm:py-36 bg-[#08090B] text-white">
+    <section id="services" className="relative py-28 sm:py-36 bg-[#05080D] text-[#F1F2EE] overflow-hidden">
       {/* Atmospheric Background glow */}
       <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#D4AF37]/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-[#997A15]/4 rounded-full blur-[120px] pointer-events-none" />
@@ -56,12 +56,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
             <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
               Specialized Digital Services
             </h2>
-            <p className="text-base sm:text-lg text-white/60 font-light max-w-xl">
+            <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl">
               Strategy, creativity and technology working together to construct category-defining platforms.
             </p>
           </div>
 
-          <div className="text-right font-mono text-xs text-white/40 hidden md:block">
+          <div className="text-right font-mono text-xs text-[#F1F2EE]/40 hidden md:block">
             01 — 10 DISCIPLINES<br />
             PRECISION ENGINEERING
           </div>
@@ -100,7 +100,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                       {/* Service Number */}
                       <span
                         className={`font-mono text-xs sm:text-sm font-semibold transition-colors ${
-                          isHovered ? 'text-[#D4AF37]' : 'text-white/30'
+                          isHovered ? 'text-[#D4AF37]' : 'text-[#F1F2EE]/30'
                         }`}
                       >
                         {service.number}
@@ -111,7 +111,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                         className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
                           isHovered
                             ? 'bg-[#D4AF37]/20 text-[#FFF5DC] border border-[#D4AF37]/50'
-                            : 'bg-white/[0.03] text-white/40 border border-white/[0.06]'
+                            : 'bg-white/[0.03] text-[#F1F2EE]/40 border border-white/[0.06]'
                         }`}
                       >
                         <IconComponent className="w-4 h-4" />
@@ -121,12 +121,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                       <div className="min-w-0">
                         <h3
                           className={`font-display text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-tight transition-colors truncate ${
-                            isHovered ? 'text-[#FFF5DC]' : 'text-white/80'
+                            isHovered ? 'text-[#FFF5DC]' : 'text-[#F1F2EE]/80'
                           }`}
                         >
                           {service.title}
                         </h3>
-                        <p className="text-xs text-white/50 font-light truncate hidden sm:block">
+                        <p className="text-xs text-[#F1F2EE]/50 font-light truncate hidden sm:block">
                           {service.subtitle}
                         </p>
                       </div>
@@ -136,8 +136,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center transition-all shrink-0 ${
                         isHovered
-                          ? 'bg-[#D4AF37] text-[#08090B] translate-x-1 -translate-y-0.5'
-                          : 'bg-white/[0.03] text-white/30'
+                          ? 'bg-[#D4AF37] text-[#05080D] translate-x-1 -translate-y-0.5'
+                          : 'bg-white/[0.03] text-[#F1F2EE]/30'
                       }`}
                     >
                       <ArrowUpRight className="w-4 h-4" />
@@ -146,7 +146,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
                   {/* Expanded description on mobile or when active */}
                   <div
-                    className={`mt-4 pt-3 border-t border-white/[0.06] text-xs text-white/60 space-y-3 transition-all ${
+                    className={`mt-4 pt-3 border-t border-white/[0.06] text-xs text-[#F1F2EE]/60 space-y-3 transition-all ${
                       isHovered ? 'block' : 'hidden lg:hidden'
                     }`}
                   >
@@ -155,7 +155,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                       {service.technologies.slice(0, 4).map((tech) => (
                         <span
                           key={tech}
-                          className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-[10px] text-white/70 font-mono"
+                          className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-[10px] text-[#F1F2EE]/70 font-mono"
                         >
                           {tech}
                         </span>
@@ -177,7 +177,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               {/* Service Meta Tag */}
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="text-[#D4AF37] font-semibold">{activeService.number} // DEEP DIVE</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-white/[0.05] text-white/60 border border-white/10">
+                <span className="px-2.5 py-0.5 rounded-full bg-white/[0.05] text-[#F1F2EE]/60 border border-white/10">
                   {activeService.featuredStat || 'Enterprise Ready'}
                 </span>
               </div>
@@ -188,19 +188,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                   {activeService.title}
                 </h4>
                 <p className="text-xs text-[#E5C378] font-mono">{activeService.subtitle}</p>
-                <p className="text-sm text-white/70 font-light leading-relaxed pt-2">
+                <p className="text-sm text-[#F1F2EE]/70 font-light leading-relaxed pt-2">
                   {activeService.description}
                 </p>
               </div>
 
               {/* Core Deliverables List */}
               <div className="space-y-3 pt-2">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-white/40 block">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#F1F2EE]/40 block">
                   Core Architectural Deliverables
                 </span>
                 <div className="space-y-2">
                   {activeService.deliverables.map((deliv, i) => (
-                    <div key={i} className="flex items-start gap-2.5 text-xs text-white/80">
+                    <div key={i} className="flex items-start gap-2.5 text-xs text-[#F1F2EE]/80">
                       <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 mt-0.5" />
                       <span>{deliv}</span>
                     </div>
@@ -210,7 +210,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
               {/* Tech Stack Chips */}
               <div className="space-y-2 pt-2 border-t border-white/[0.06]">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-white/40 block">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#F1F2EE]/40 block">
                   Technologies Deployed
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -230,7 +230,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 <button
                   id={`consult-service-${activeService.id}-btn`}
                   onClick={() => onSelectService(activeService.id)}
-                  className="w-full py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#08090B] font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] cursor-pointer"
+                  className="w-full py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] cursor-pointer"
                 >
                   <span>Commission {activeService.title}</span>
                   <ArrowUpRight className="w-4 h-4" />

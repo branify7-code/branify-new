@@ -1,25 +1,117 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   BRANIFY GLOBAL DESIGN SYSTEM
+   Deep Black + Subtle Deep Navy + Metallic Champagne Gold
+   Typography: Sora (display) · Inter (body) · JetBrains Mono (code)
+   ========================================================================== */
+
+@theme {
+  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Deep black / navy background scale */
+  --color-ink-950: #020305;
+  --color-ink-900: #05080D;
+  --color-ink-850: #070A0F;
+  --color-ink-800: #080C12;
+  --color-ink-700: #0C1118;
+
+  /* Metallic champagne gold scale (never yellow / never orange) */
+  --color-gold-700: #8F6B2D;
+  --color-gold-500: #C9A45C;
+  --color-gold-400: #D4AF37;
+  --color-gold-300: #E7C978;
+  --color-gold-200: #E9CF79;
+
+  /* Text system */
+  --color-ivory: #F1F2EE;
+  --color-mist: #E3E5E0;
+  --color-steel: #A7AFBA;
+  --color-steel-muted: #727B87;
+}
+
 @layer base {
   :root {
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-    --gold-primary: #D4AF37;
-    --gold-light: #F3E5AB;
-    --gold-dark: #997A15;
-    --bg-dark: #08090B;
+
+    /* Global background scale */
+    --bg-primary: #020305;
+    --bg-secondary: #05080D;
+    --bg-surface: #080C12;
+    --bg-elevated: #0C1118;
+    --bg-input: #070A0F;
+
+    /* Global gold palette (metallic, not yellow) */
+    --gold-primary: #C9A45C;
+    --gold-metallic: #D4AF37;
+    --gold-highlight: #E9CF79;
+    --gold-champagne: #E7C978;
+    --gold-deep: #8F6B2D;
+
+    /* Global text scale */
+    --text-primary: #F1F2EE;
+    --text-offwhite: #E3E5E0;
+    --text-secondary: #A7AFBA;
+    --text-muted: #727B87;
+
+    /* Borders, dividers & atmosphere */
+    --border-soft: rgba(255, 255, 255, 0.08);
+    --divider: rgba(255, 255, 255, 0.07);
+    --gold-glow-ambient: rgba(201, 164, 92, 0.14);
+    --gold-glow-border: rgba(201, 164, 92, 0.35);
+
+    /* Legacy aliases (existing components reference these) */
+    --gold-light: #E9CF79;
+    --gold-dark: #8F6B2D;
+    --bg-dark: #020305;
+
+    /* BRANIFY metallic button metal — cylindrical brushed gold (reference: START A PROJECT pill)
+       Dark rim -> specular band -> deep gold, exactly like polished metal under light */
+    --gold-metal-grad: linear-gradient(180deg, #C6993A 0%, #E7C258 14%, #F6DF84 32%, #EFD268 45%, #D9AC33 64%, #B3841F 84%, #9A6F1E 100%);
+    --gold-metal-grad-bright: linear-gradient(180deg, #D2A741 0%, #EDCB63 16%, #FBEB96 34%, #F2DC70 48%, #DDB23B 68%, #BA8E26 86%, #A07422 100%);
+    --gold-text-bright: #E9CF79;
   }
 
   body {
     font-family: var(--font-body);
-    background-color: #08090B;
-    color: #E6E1D6;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, .font-display {
     font-family: var(--font-display);
+  }
+
+  /* Global form controls (components may override with utilities) */
+  input, textarea, select {
+    background-color: var(--bg-input);
+    border-color: rgba(255, 255, 255, 0.10);
+    color: var(--text-offwhite);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: none;
+    border-color: rgba(201, 164, 92, 0.60);
+    box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.08);
+  }
+
+  /* Visible keyboard focus everywhere */
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible, summary:focus-visible {
+    outline: 2px solid rgba(233, 207, 121, 0.75);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgba(201, 164, 92, 0.30);
+    color: #F1F2EE;
   }
 
   .font-mono-code {
@@ -29,7 +121,7 @@
 
 /* Custom Luxury Gradients & Effects */
 .bg-mesh-radial {
-  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08) 0%, rgba(13, 14, 18, 0) 65%);
+  background: radial-gradient(circle at 50% 20%, rgba(201, 164, 92, 0.08) 0%, rgba(13, 14, 18, 0) 65%);
 }
 
 .bg-metallic-surface {
@@ -37,13 +129,31 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.bg-gold-glow {
-  background: radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0) 70%);
+/* ============================================================================
+   BRANIFY CARD SYSTEM — default → gold hover (200–350ms, no dramatic motion)
+   ========================================================================== */
+.branify-card {
+  background-color: #080C12;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background-color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.branify-card:hover {
+  background-color: #0C1118;
+  border-color: rgba(201, 164, 92, 0.35);
+  box-shadow: 0 0 26px -8px rgba(201, 164, 92, 0.20);
 }
 
+/* Subtle atmospheric gold lighting (hero / CTA / important sections) */
+.bg-gold-glow {
+  background: radial-gradient(circle at center, rgba(201, 164, 92, 0.14) 0%, rgba(201, 164, 92, 0) 70%);
+}
+
+/* Metallic gold text gradient — hero emphasis, key metrics, selected headings */
 .text-gold-gradient {
-  background: linear-gradient(135deg, #FFF6D6 0%, #E5C378 40%, #C5A059 80%, #9A7B38 100%);
+  /* Brushed metal sweep taken from the gold-foil reference (dark -> bright band -> core -> deep) */
+  background: linear-gradient(100deg, #B9963A 0%, #E9CF79 32%, #D4AF37 60%, #A9821F 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -75,7 +185,7 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #08090B;
+  background: #05080D;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(212, 175, 55, 0.25);
@@ -98,15 +208,19 @@
 ========================================= */
 
 :root {
-  --branify-black: #020407;
-  --branify-black-2: #05080c;
-  --branify-surface: #080d14;
+  --branify-black: #020305;
+  --branify-black-2: #05080d;
+  --branify-surface: #080c12;
+  --branify-elevated: #0c1118;
   --branify-gold: #c9a45c;
-  --branify-gold-bright: #f3d27a;
+  --branify-gold-metallic: #d4af37;
+  --branify-gold-bright: #e9cf79;
   --branify-gold-dark: #8f6b2d;
-  --branify-white: #f7f7f3;
+  --branify-white: #f1f2ee;
+  --branify-offwhite: #e3e5e0;
   --branify-text: #a7afba;
-  --branify-border: rgba(201, 164, 92, 0.2);
+  --branify-muted: #727b87;
+  --branify-border: rgba(201, 164, 92, 0.18);
   --branify-border-soft: rgba(255, 255, 255, 0.08);
 }
 
@@ -200,7 +314,7 @@
 
 .announcement-action:hover {
   color: #fff5dc;
-  text-shadow: 0 0 10px rgba(243, 210, 122, 0.5);
+  text-shadow: 0 0 10px rgba(233, 207, 121, 0.5);
 }
 
 .announcement-message strong {
@@ -211,7 +325,7 @@
   color: var(--branify-gold-bright);
 
   text-shadow:
-    0 0 12px rgba(243, 210, 122, 0.45);
+    0 0 12px rgba(233, 207, 121, 0.45);
 }
 
 .announcement-dot {
@@ -329,11 +443,21 @@
 .header-inner {
   width: min(100% - 48px, 1460px);
   min-height: 78px;
-
   margin: 0 auto;
 
   display: flex;
   align-items: center;
+}
+
+/* Tiny screens: slimmer header gutters so actions never clip (320px+) */
+@media (max-width: 420px) {
+  .header-inner {
+    width: min(100% - 20px, 1460px);
+  }
+
+  .brand-logo-image {
+    width: 128px;
+  }
 }
 
 /* =========================================
@@ -510,7 +634,7 @@
     linear-gradient(
       135deg,
       #c9a45c,
-      #f3d27a
+      #d4af37
     );
 
   color: #141414;
@@ -522,7 +646,7 @@
 }
 
 .ai-badge {
-  background: #f3d27a;
+  background: #d4af37;
 }
 
 /* =========================================
@@ -675,7 +799,7 @@
   transform: translateY(-1px);
 
   border-color:
-    rgba(243, 210, 122, 0.72);
+    rgba(233, 207, 121, 0.72);
 
   box-shadow:
     0 0 18px rgba(201, 164, 92, 0.16);
@@ -803,8 +927,8 @@
 
 .mobile-curr-pill:hover,
 .mobile-curr-pill.active {
-  color: #0d0e10;
-  background: linear-gradient(135deg, #c9a45c, #f3d27a);
+  color: #1a1206;
+  background: linear-gradient(135deg, #c9a45c, #d4af37);
   border-color: transparent;
 }
 
@@ -813,17 +937,11 @@
 
   padding: 0 16px;
 
-  border: 1px solid rgba(243, 210, 122, 0.2);
+  border: 1px solid rgba(122, 86, 18, 0.55);
 
-  background:
-    linear-gradient(
-      135deg,
-      #c9a45c 0%,
-      #f3d27a 50%,
-      #c9a45c 100%
-    );
+  background: var(--gold-metal-grad);
 
-  color: #0d0e10;
+  color: #1a1206;
 
   text-decoration: none;
 
@@ -831,15 +949,26 @@
   font-weight: 900;
 
   box-shadow:
-    0 0 24px rgba(201, 164, 92, 0.18);
+    inset 0 1px 1px rgba(255, 246, 205, 0.5),
+    inset 0 -2px 4px rgba(96, 66, 10, 0.28),
+    0 0 24px rgba(212, 175, 55, 0.28);
 }
 
 .consult-btn:hover {
   transform: translateY(-2px);
 
+  background: var(--gold-metal-grad-bright);
+
   box-shadow:
-    0 10px 28px rgba(201, 164, 92, 0.2),
-    0 0 25px rgba(243, 210, 122, 0.14);
+    inset 0 1px 1px rgba(255, 248, 214, 0.65),
+    inset 0 -2px 4px rgba(96, 66, 10, 0.28),
+    0 10px 28px rgba(201, 164, 92, 0.35),
+    0 0 30px rgba(233, 207, 121, 0.3);
+}
+
+.consult-btn:active {
+  transform: translateY(0) scale(0.99);
+  filter: brightness(0.97);
 }
 
 /* =========================================
@@ -1010,16 +1139,11 @@
 }
 
 .mobile-consult {
-  color: #101114;
+  color: #1a1206;
 
-  border-color: transparent;
+  border-color: rgba(122, 86, 18, 0.55);
 
-  background:
-    linear-gradient(
-      135deg,
-      #c9a45c,
-      #f3d27a
-    );
+  background: var(--gold-metal-grad);
 }
 
 /* =========================================
@@ -1222,36 +1346,60 @@
 
 
 /* =========================================
-   GOLD PRIMARY BUTTON (matches branify.store)
+   GOLD PRIMARY BUTTON — BRANIFY metallic gold
+   Subtle continuous breathing glow (3s, never flashing)
 ========================================= */
+/* Metal rim + warm halo stay inside the keyframes so the brushed-metal
+   look survives the breathing pulse (3s, never flashing). */
 .btn-gold-primary {
-  background: linear-gradient(135deg, #fff6e5 0%, #e2c27b 35%, #c9a45c 75%, #a88133 100%);
-  color: #05080c;
-  border: 1px solid rgba(230, 203, 145, 0.8);
+  background: var(--gold-metal-grad);
+  color: #1A1206;
+  border: 1px solid rgba(122, 86, 18, 0.55);
   box-shadow:
-    0 5px 27px 1px rgba(231, 204, 146, 0.45),
-    0 0 22px 0 rgba(205, 169, 97, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    inset 0 1px 1px rgba(255, 246, 205, 0.55),
+    inset 0 -2px 5px rgba(96, 66, 10, 0.32),
+    0 5px 22px 1px rgba(201, 164, 92, 0.35),
+    0 0 30px rgba(212, 175, 55, 0.25);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease, box-shadow 0.25s ease;
+  animation: branifyGoldPulse 3s ease-in-out infinite;
 }
 .btn-gold-primary:hover {
-  filter: brightness(1.07);
-  transform: translateY(-1px);
+  animation: none;
+  background: var(--gold-metal-grad-bright);
+  transform: translateY(-2px);
   box-shadow:
-    0 8px 32px 2px rgba(231, 204, 146, 0.55),
-    0 0 30px 0 rgba(205, 169, 97, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    inset 0 1px 1px rgba(255, 248, 214, 0.7),
+    inset 0 -2px 5px rgba(96, 66, 10, 0.32),
+    0 10px 30px 2px rgba(201, 164, 92, 0.5),
+    0 0 44px rgba(233, 207, 121, 0.35);
 }
 .btn-gold-primary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.99);
   filter: brightness(0.97);
 }
 
+@keyframes branifyGoldPulse {
+  0%, 100% {
+    box-shadow:
+      inset 0 1px 1px rgba(255, 246, 205, 0.55),
+      inset 0 -2px 5px rgba(96, 66, 10, 0.32),
+      0 0 16px rgba(212, 175, 55, 0.22),
+      0 0 32px rgba(212, 175, 55, 0.08);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 1px rgba(255, 248, 214, 0.65),
+      inset 0 -2px 5px rgba(96, 66, 10, 0.32),
+      0 0 24px rgba(233, 207, 121, 0.38),
+      0 0 55px rgba(212, 175, 55, 0.14);
+  }
+}
+
 /* =========================================
-   LUXURY SERIF DISPLAY FONT
+   LUXURY DISPLAY FONT
 ========================================= */
 .font-serif-luxury {
-  font-family: "Syne", "Georgia", serif;
+  font-family: "Sora", ui-sans-serif, system-ui, sans-serif;
   letter-spacing: -0.01em;
 }
 
@@ -1277,30 +1425,36 @@
 
 @media (prefers-reduced-motion: reduce) {
   .btn-gold-primary,
+  .btn-gradient-primary,
   .mega-panel-enter,
   .mobile-menu-slide {
-    animation: none;
-    transition: none;
+    animation: none !important;
+  }
+  /* hover/focus states stay active — only continuous motion is disabled */
+  .btn-gold-primary:hover,
+  .btn-gradient-primary:hover {
+    transform: none;
   }
 }
 
 /* =========================================
-   GRADIENT PRIMARY BUTTON (matches branify.store)
+   GRADIENT PRIMARY BUTTON — BRANIFY metallic gold
 ========================================= */
 .btn-gradient-primary {
-  color: #05080c;
-  will-change: transform, box-shadow, background-position;
-  background: linear-gradient(135deg, #fff6e5, #e2c27b 35%, #c9a45c 75%, #a88133) 0 0 / 200% 200%;
-  border: 1px solid rgba(255, 246, 229, 0.6);
+  color: #1A1206;
+  will-change: transform, box-shadow;
+  background: var(--gold-metal-grad);
+  border: 1px solid rgba(122, 86, 18, 0.55);
   font-weight: 800;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: 3.2s ease-in-out infinite glow-pulse-gold-primary;
+  animation: 3s ease-in-out infinite branifyGoldPulse;
   position: relative;
   overflow: hidden;
   box-shadow:
+    inset 0 1px 1px rgba(255, 246, 205, 0.55),
+    inset 0 -2px 5px rgba(96, 66, 10, 0.32),
     0 4px 20px -2px rgba(201, 164, 92, 0.45),
-    0 0 15px rgba(226, 194, 123, 0.25),
-    inset 0 1px 2px rgba(255, 255, 255, 0.7);
+    0 0 15px rgba(212, 175, 55, 0.25);
 }
 .btn-gradient-primary::after {
   content: '';
@@ -1315,38 +1469,57 @@
   transform: translate(-100%) rotate(25deg);
 }
 .btn-gradient-primary:hover {
-  color: #000;
-  background: linear-gradient(135deg, #fff, #f0d9a3 30%, #e2c27b, #c9a45c);
-  border-color: #fff;
+  color: #1A1206;
+  background: var(--gold-metal-grad-bright);
+  border-color: rgba(122, 86, 18, 0.7);
   animation: none;
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-2px) scale(1.01);
   box-shadow:
-    0 10px 30px rgba(201, 164, 92, 0.6),
-    0 0 35px rgba(226, 194, 123, 0.5),
-    inset 0 1px 3px rgba(255, 255, 255, 0.9);
+    inset 0 1px 1px rgba(255, 248, 214, 0.7),
+    inset 0 -2px 5px rgba(96, 66, 10, 0.32),
+    0 10px 30px rgba(201, 164, 92, 0.55),
+    0 0 38px rgba(233, 207, 121, 0.4);
 }
 .btn-gradient-primary:hover::after {
   transform: translate(100%) rotate(25deg);
 }
 .btn-gradient-primary:active {
-  transform: translateY(-1px) scale(0.99);
+  transform: translateY(0) scale(0.99);
   box-shadow: 0 4px 15px rgba(201, 164, 92, 0.4);
 }
-@keyframes glow-pulse-gold-primary {
-  0%,
-  100% {
-    border-color: rgba(201, 164, 92, 0.6);
-    box-shadow:
-      0 4px 20px -2px rgba(201, 164, 92, 0.4),
-      0 0 16px rgba(226, 194, 123, 0.25),
-      0 0 35px rgba(201, 164, 92, 0.15);
-  }
-  50% {
-    border-color: rgba(240, 217, 163, 0.9);
-    box-shadow:
-      0 6px 30px 2px rgba(240, 217, 163, 0.65),
-      0 0 25px rgba(201, 164, 92, 0.5),
-      0 0 50px rgba(226, 194, 123, 0.3);
+
+/* =========================================
+   METAL BUTTON — same cylindrical gold as .btn-gold-primary
+   but without the breathing pulse (small / inline CTAs & active filters)
+========================================= */
+.btn-metal {
+  color: #1A1206;
+  background: var(--gold-metal-grad);
+  border: 1px solid rgba(122, 86, 18, 0.55);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 246, 205, 0.5),
+    inset 0 -2px 4px rgba(96, 66, 10, 0.28),
+    0 3px 14px rgba(201, 164, 92, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.18);
+  transition: filter 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-metal:hover {
+  background: var(--gold-metal-grad-bright);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 248, 214, 0.65),
+    inset 0 -2px 4px rgba(96, 66, 10, 0.28),
+    0 8px 24px rgba(201, 164, 92, 0.45),
+    0 0 30px rgba(233, 207, 121, 0.3);
+}
+.btn-metal:active {
+  transform: translateY(0) scale(0.99);
+  filter: brightness(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-metal:hover {
+    transform: none;
   }
 }
 

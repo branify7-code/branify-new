@@ -73,7 +73,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, onClick }) => {
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
       aria-label="Run tool online"
-      className="tilt-card-wrapper relative rounded-2xl bg-[#080B14]/85 backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/40 shadow-xl shadow-black/60 overflow-hidden transition-all duration-300 cursor-pointer p-6 h-full flex flex-col justify-between space-y-6 group focus:outline-none focus-visible:border-[#F27D26]/60"
+      className="tilt-card-wrapper relative rounded-2xl bg-[#080C12]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#C9A45C]/35 hover:bg-[#0C1118] shadow-xl shadow-black/60 overflow-hidden transition-all duration-300 cursor-pointer p-6 h-full flex flex-col justify-between space-y-6 group focus:outline-none focus-visible:border-[#C9A45C]/60"
       style={{ transform, transition: 'transform 0.35s ease-out', willChange: 'transform' }}
     >
       {/* mouse-following glow */}
@@ -81,7 +81,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, onClick }) => {
         className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
         style={{
           opacity: glow.o,
-          background: `radial-gradient(420px circle at ${glow.x}% ${glow.y}%, rgba(139,92,246,0.14), transparent 45%)`,
+          background: `radial-gradient(420px circle at ${glow.x}% ${glow.y}%, rgba(201,164,92,0.14), transparent 45%)`,
         }}
       />
       <div className="relative z-10 h-full flex flex-col justify-between space-y-6">{children}</div>
@@ -134,17 +134,17 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[420px] bg-[#F27D26]/[0.07] blur-[120px] rounded-full" />
-          <div className="absolute top-20 -left-40 w-[420px] h-[320px] bg-violet-500/[0.05] blur-[110px] rounded-full" />
+          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[420px] bg-[#C9A45C]/[0.07] blur-[120px] rounded-full" />
+          <div className="absolute top-20 -left-40 w-[420px] h-[320px] bg-[#C9A45C]/[0.05] blur-[110px] rounded-full" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10 space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#F27D26]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#D4AF37]">
             <Sparkles className="w-3.5 h-3.5" />
             100% Free Online Web Utilities
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-[1.05]">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F1F2EE] uppercase tracking-tight leading-[1.05]">
             100+ Free Online
-            <span className="block bg-gradient-to-r from-[#F27D26] via-amber-400 to-[#F27D26] bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-[#C9A45C] via-[#E9CF79] to-[#D4AF37] bg-clip-text text-transparent">
               Developer &amp; Marketing Tools
             </span>
           </h1>
@@ -161,7 +161,7 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search PDF merge, background remover, password generator, UTM builder, invoice generator..."
               aria-label="Search tools"
-              className="w-full pl-12 pr-4 py-3 bg-zinc-950 border border-white/10 rounded-xl text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#F27D26]/60 transition-colors"
+              className="w-full pl-12 pr-4 py-3 bg-[#070A0F] border border-white/10 rounded-xl text-xs sm:text-sm text-[#E3E5E0] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
             />
             {query && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-zinc-500 uppercase">
@@ -186,12 +186,12 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
                   onClick={() => setActiveCategory(cat)}
                   className={`px-4 py-2 rounded-full font-extrabold uppercase text-[11px] tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 ${
                     active
-                      ? 'bg-gradient-to-r from-[#F27D26] to-orange-600 text-black shadow-lg shadow-[#F27D26]/25'
-                      : 'bg-white/[0.04] text-zinc-400 border border-white/10 hover:border-white/25 hover:text-white'
+                      ? 'bg-gradient-to-b from-[#F6DF84] via-[#D4AF37] to-[#B3841F] text-[#1A1206] shadow-lg shadow-[#C9A45C]/25'
+                      : 'bg-white/[0.04] text-[#A7AFBA] border border-white/10 hover:border-[#C9A45C]/45 hover:text-[#E9CF79]'
                   }`}
                 >
                   {cat}
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded ${active ? 'bg-black/20 text-black' : 'bg-white/10 text-zinc-400'}`}>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded ${active ? 'bg-[#090A0C]/20 text-[#090A0C]' : 'bg-white/10 text-[#A7AFBA]'}`}>
                     {categoryCount(cat)}
                   </span>
                 </button>
@@ -207,11 +207,11 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
           <div className="text-center space-y-4 py-20">
             <SearchIcon className="w-12 h-12 text-zinc-700 mx-auto" />
             <p className="text-zinc-400 text-sm">
-              No tools match <span className="text-white font-bold">"{query}"</span> in {activeCategory}.
+              No tools match <span className="text-[#F1F2EE] font-bold">"{query}"</span> in {activeCategory}.
             </p>
             <button
               onClick={() => { setQuery(''); setActiveCategory('All'); }}
-              className="text-[#F27D26] text-xs font-extrabold uppercase tracking-widest hover:underline"
+              className="text-[#D4AF37] text-xs font-extrabold uppercase tracking-widest hover:underline"
             >
               Clear filters &amp; browse all 136 tools
             </button>
@@ -223,7 +223,7 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
                 <TiltCard key={t.slug} onClick={() => openTool(t.slug)}>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-extrabold text-[#F27D26] uppercase tracking-widest px-2.5 py-1 bg-white/10 rounded-md border border-white/10">
+                      <span className="text-[10px] font-extrabold text-[#D4AF37] uppercase tracking-widest px-2.5 py-1 bg-white/10 rounded-md border border-white/10">
                         {t.category}
                       </span>
                       <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase whitespace-nowrap">
@@ -232,17 +232,17 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="shrink-0 w-9 h-9 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center mt-0.5">
-                        <IconFor name={t.iconName} className="w-4.5 h-4.5 w-[18px] h-[18px] text-[#F27D26]" />
+                        <IconFor name={t.iconName} className="w-4.5 h-4.5 w-[18px] h-[18px] text-[#A7AFBA] group-hover:text-[#E9CF79] transition-colors" />
                       </div>
-                      <h3 className="text-base font-black text-white group-hover:text-[#F27D26] transition-colors uppercase tracking-tight leading-snug">
+                      <h3 className="text-base font-black text-[#F1F2EE] group-hover:text-[#E9CF79] transition-colors uppercase tracking-tight leading-snug">
                         {t.name}
                       </h3>
                     </div>
                     <p className="text-zinc-400 text-xs leading-relaxed line-clamp-3">{t.description}</p>
                   </div>
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-white group-hover:text-[#F27D26] transition-colors">
+                  <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#F1F2EE] group-hover:text-[#E9CF79] transition-colors">
                     <span className="uppercase tracking-wider">Run Tool Online</span>
-                    <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-[#F27D26] group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="w-4 h-4 text-[#727B87] group-hover:text-[#E9CF79] group-hover:translate-x-1 transition-all" />
                   </div>
                 </TiltCard>
               ))}
@@ -257,20 +257,20 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
       {/* PWA CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0A0C14] to-[#080808] p-8 sm:p-12">
-          <div className="absolute -top-24 right-0 w-80 h-80 bg-[#F27D26]/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute -top-24 right-0 w-80 h-80 bg-[#C9A45C]/[0.08] blur-[100px] rounded-full pointer-events-none" />
           <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             <div className="space-y-3 max-w-xl">
-              <div className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#F27D26]">
+              <div className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#D4AF37]">
                 <SmartphoneIcon className="w-4 h-4" /> Progressive Web App
               </div>
-              <h2 className="text-2xl font-black text-white uppercase tracking-tight">Get Branify on your Mobile &amp; Desktop device</h2>
+              <h2 className="text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">Get Branify on your Mobile &amp; Desktop device</h2>
               <p className="text-zinc-400 text-sm leading-relaxed">
                 Install the official BRANIFY app for instant offline access to 100+ free online tools, service quotes, and digital templates.
               </p>
             </div>
             <button
               onClick={() => (onOpenPWA ? onOpenPWA() : openTool('password-generator'))}
-              className="shrink-0 px-8 py-4 bg-[#F27D26] hover:bg-orange-500 text-black font-extrabold text-xs uppercase tracking-widest rounded-full shadow-lg shadow-[#F27D26]/25 transition-colors"
+              className="btn-metal shrink-0 px-8 py-4 font-extrabold text-xs uppercase tracking-widest rounded-full"
             >
               Install App
             </button>

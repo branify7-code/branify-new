@@ -3,7 +3,7 @@ import { Sparkles } from 'lucide-react';
 
 export const HeroTransition: React.FC = () => {
   return (
-    <section className="relative py-28 sm:py-36 md:py-44 w-full bg-[#08090B] overflow-hidden border-y border-white/[0.05]">
+    <section className="relative py-28 sm:py-36 md:py-44 w-full bg-[#05080D] overflow-hidden border-y border-white/[0.05]">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] bg-mesh-radial pointer-events-none" />
       <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
@@ -23,7 +23,7 @@ export const HeroTransition: React.FC = () => {
         </h2>
 
         {/* Narrative Subtitle */}
-        <p className="text-base sm:text-xl text-white/60 font-light max-w-2xl mx-auto leading-relaxed pt-2">
+        <p className="text-base sm:text-xl text-[#F1F2EE]/60 font-light max-w-2xl mx-auto leading-relaxed pt-2">
           From concept to code, we engineer digital ecosystems where high aesthetic standards converge with relentless computational power.
         </p>
 

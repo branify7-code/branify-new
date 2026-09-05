@@ -45,7 +45,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
         {/* Primary Impact Headline with Metallic Gold Accent */}
         <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-black tracking-[-0.02em] leading-[1.08] text-[#E7E8E3] max-w-4xl mx-auto">
           Your{' '}
-          <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#C9A45C] via-[#F3D27A] to-[#D4AF37] drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]">
+          <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#C9A45C] via-[#E9CF79] to-[#D4AF37] drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]">
             Long-Term Growth
           </span>{' '}
           Partner
@@ -83,7 +83,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                   <stop offset="0%" stopColor="#C9A45C" stopOpacity="0" />
                   <stop offset="20%" stopColor="#C9A45C" stopOpacity="0.25" />
                   <stop offset="38%" stopColor="#D4AF37" stopOpacity="0.8" />
-                  <stop offset="50%" stopColor="#F3D27A" stopOpacity="0.95" />
+                  <stop offset="50%" stopColor="#E9CF79" stopOpacity="0.95" />
                   <stop offset="62%" stopColor="#D4AF37" stopOpacity="0.8" />
                   <stop offset="80%" stopColor="#C9A45C" stopOpacity="0.25" />
                   <stop offset="100%" stopColor="#C9A45C" stopOpacity="0" />
@@ -93,7 +93,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 <linearGradient id="horizonAtmoGold" x1="0%" y1="100%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#07101A" stopOpacity="0" />
                   <stop offset="25%" stopColor="#C9A45C" stopOpacity="0.12" />
-                  <stop offset="50%" stopColor="#F3D27A" stopOpacity="0.4" />
+                  <stop offset="50%" stopColor="#E9CF79" stopOpacity="0.4" />
                   <stop offset="75%" stopColor="#C9A45C" stopOpacity="0.12" />
                   <stop offset="100%" stopColor="#07101A" stopOpacity="0" />
                 </linearGradient>
@@ -160,7 +160,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
           </div>
 
           {/* Central Refined Gold Corona Glint (Subtle & Elegant) */}
-          <div className="absolute top-[32%] w-[360px] h-[26px] bg-[#F3D27A] rounded-full blur-[24px] opacity-50" />
+          <div className="absolute top-[32%] w-[360px] h-[26px] bg-[#D4AF37] rounded-full blur-[24px] opacity-50" />
         </div>
       </div>
 
@@ -173,7 +173,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
         </h2>
 
         {/* Subheader: Turning Challenges into Digital Success */}
-        <p className="font-display text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#C9A45C] via-[#F3D27A] to-[#D4AF37] drop-shadow-[0_0_20px_rgba(212,175,55,0.25)]">
+        <p className="font-display text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#C9A45C] via-[#E9CF79] to-[#D4AF37] drop-shadow-[0_0_20px_rgba(212,175,55,0.25)]">
           Turning Challenges into Digital Success
         </p>
 
@@ -187,11 +187,11 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
           <button
             id="hero-inquiry-cta"
             onClick={onStartProject}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#C9A45C] via-[#D4AF37] to-[#F3D27A] hover:from-[#D4AF37] hover:to-[#FFF0C2] text-[#080D14] font-bold text-xs uppercase tracking-widest shadow-[0_0_25px_rgba(201,164,92,0.3)] hover:shadow-[0_0_35px_rgba(243,210,122,0.45)] transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer"
+            className="btn-gold-primary w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2.5 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#080D14]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#1A1206]" />
             <span>START A PROJECT</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#080D14]" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#1A1206]" />
           </button>
 
           <button
@@ -200,7 +200,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
             className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-[#E7E8E3]/20 bg-[#080D14]/80 hover:bg-[#07101A] hover:border-[#C9A45C]/50 text-[#E7E8E3] font-medium text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <span>EXPLORE OUR WORK</span>
-            <ArrowDown className="w-3.5 h-3.5 text-[#F3D27A]" />
+            <ArrowDown className="w-3.5 h-3.5 text-[#E9CF79]" />
           </button>
         </div>
 

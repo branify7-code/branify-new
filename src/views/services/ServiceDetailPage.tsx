@@ -151,7 +151,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
       <div className="relative w-full max-w-2xl bg-[#080808] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-[#F1F2EE] hover:bg-white/10 transition-colors"
           aria-label="Close dialog"
         >
           <X className="w-5 h-5" />
@@ -163,16 +163,16 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tight">Inquiry Received Successfully!</h3>
+              <h3 className="text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">Inquiry Received Successfully!</h3>
               <p className="text-zinc-400 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-                Thank you, <strong className="text-white">{name}</strong>. Our senior technical strategist is reviewing your requirements for{' '}
-                <strong className="text-[#F27D26]">
+                Thank you, <strong className="text-[#F1F2EE]">{name}</strong>. Our senior technical strategist is reviewing your requirements for{' '}
+                <strong className="text-[#D4AF37]">
                   {serviceName} ({packageTier})
                 </strong>
                 . We will email your tailored proposal and quotation shortly.
               </p>
             </div>
-            <div className="p-4 bg-zinc-950 border border-white/10 rounded-2xl space-y-3 max-w-md mx-auto">
+            <div className="p-4 bg-[#070A0F] border border-white/10 rounded-2xl space-y-3 max-w-md mx-auto">
               <div className="text-xs font-bold text-zinc-300">Want an instant response or immediate consultation?</div>
               <a
                 href={`https://wa.me/${waNumber}?text=${waMessage}`}
@@ -197,11 +197,11 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
         ) : (
           <>
             <div className="space-y-2 pr-8">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#F27D26] text-[10px] font-extrabold uppercase tracking-widest">
-                <FileText className="w-3.5 h-3.5 text-[#F27D26]" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#D4AF37] text-[10px] font-extrabold uppercase tracking-widest">
+                <FileText className="w-3.5 h-3.5 text-[#D4AF37]" />
                 {packageTier === 'Client On-Demand' ? 'Custom Scope Inquiry' : 'Service Quotation Request'}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">{service ? service.name : 'Service Inquiry'}</h2>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#F1F2EE] uppercase tracking-tight">{service ? service.name : 'Service Inquiry'}</h2>
               <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">
                 {packageTier === 'Client On-Demand'
                   ? 'Describe your exact project specifications and our senior solutions architects will formulate a tailored package and quotation.'
@@ -213,7 +213,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
-                    Full Name <span className="text-[#F27D26]">*</span>
+                    Full Name <span className="text-[#D4AF37]">*</span>
                   </label>
                   <input
                     type="text"
@@ -221,12 +221,12 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Alex Morgan"
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
-                    Work Email <span className="text-[#F27D26]">*</span>
+                    Work Email <span className="text-[#D4AF37]">*</span>
                   </label>
                   <input
                     type="email"
@@ -234,7 +234,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="alex@company.com"
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -244,7 +244,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                     value={whatsapp}
                     onChange={(e) => setWhatsapp(e.target.value)}
                     placeholder="+1 555 019 2834"
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -254,7 +254,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                     placeholder="e.g. Acme Media / Your Brand"
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -262,7 +262,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   <select
                     value={serviceName}
                     onChange={(e) => setServiceName(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#5A8DFF] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] focus:outline-none focus:border-[#C9A45C]/60 transition-colors"
                   >
                     {servicesRegistry.map((s) => (
                       <option key={s.id} value={s.name}>
@@ -276,7 +276,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   <select
                     value={packageTier}
                     onChange={(e) => setPackageTier(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   >
                     <option value="Basic">Basic Package</option>
                     <option value="Professional">Professional Package</option>
@@ -289,7 +289,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   <select
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   >
                     <option value="Under $500">Under $500</option>
                     <option value="$500 – $1,000">$500 – $1,000</option>
@@ -304,7 +304,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   <select
                     value={timeline}
                     onChange={(e) => setTimeline(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#F27D26] transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                   >
                     <option value="Urgent (< 1 Week)">Urgent (&lt; 1 Week)</option>
                     <option value="1–2 Weeks">1–2 Weeks</option>
@@ -324,13 +324,13 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   value={referenceUrl}
                   onChange={(e) => setReferenceUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26] transition-colors"
+                  className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">
-                  Project Description &amp; Requirements <span className="text-[#F27D26]">*</span>
+                  Project Description &amp; Requirements <span className="text-[#D4AF37]">*</span>
                 </label>
                 <textarea
                   required
@@ -338,7 +338,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Please describe your core goals, desired pages/features, target audience, and any specific technology or design requirements..."
-                  className="w-full px-4 py-2.5 bg-zinc-950 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-[#F27D26] transition-colors resize-none"
+                  className="w-full px-4 py-2.5 bg-[#070A0F] border border-white/10 rounded-xl text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors resize-none"
                 />
               </div>
 
@@ -348,7 +348,7 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
 
               <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
                 <div className="text-[11px] text-zinc-400 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#F27D26]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37]" />
                   NDA &amp; Confidentiality Guaranteed
                 </div>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -362,11 +362,11 @@ const ServiceInquiryModal: React.FC<ServiceInquiryModalProps> = ({ isOpen, onClo
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 sm:flex-none px-7 py-3 bg-[#F27D26] hover:bg-orange-500 text-black font-black text-xs uppercase tracking-widest rounded-full transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="btn-metal flex-1 sm:flex-none px-7 py-3 font-black text-xs uppercase tracking-widest rounded-full flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        <div className="w-3.5 h-3.5 border-2 border-[#090A0C] border-t-transparent rounded-full animate-spin" />
                         Sending...
                       </>
                     ) : (
@@ -452,43 +452,43 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
       {/* Back */}
       <button
         onClick={() => onNavigate('/services')}
-        className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-[#F1F2EE] transition-colors"
       >
-        <ArrowLeft className="w-4 h-4 text-[#5A8DFF]" />
+        <ArrowLeft className="w-4 h-4 text-[#D4AF37]" />
         Back to All Services
       </button>
 
       {/* Hero */}
       <div className="bg-[#080808] border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-6 relative overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/10 text-[#5A8DFF] text-xs font-extrabold uppercase tracking-widest">
-            <Sparkles className="w-3.5 h-3.5 text-[#5A8DFF]" />
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/10 text-[#D4AF37] text-xs font-extrabold uppercase tracking-widest">
+            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
             {service.category.toUpperCase()} SERVICE
           </div>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-900 border border-white/10 rounded-full text-xs text-zinc-300">
             <span>{currencyInfo.flag}</span>
             <span>
-              Pricing converted to <strong className="text-white">{currency}</strong>
+              Pricing converted to <strong className="text-[#F1F2EE]">{currency}</strong>
             </span>
           </div>
         </div>
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter">{service.name}</h1>
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#F1F2EE] uppercase tracking-tighter">{service.name}</h1>
         <p className="text-zinc-300 text-sm sm:text-base leading-relaxed max-w-4xl">{service.tagline}</p>
         <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed max-w-4xl">{service.fullDescription}</p>
         <div className="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap items-center gap-6">
             <div>
               <div className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-widest">Standard Timeline</div>
-              <div className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-                <Clock className="w-4 h-4 text-[#5A8DFF]" />
+              <div className="text-sm font-extrabold text-[#F1F2EE] uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                <Clock className="w-4 h-4 text-[#D4AF37]" />
                 {service.deliveryTimeline}
               </div>
             </div>
             <div className="h-8 w-px bg-white/10 hidden sm:block" />
             <div>
               <div className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-widest">Pricing Structure</div>
-              <div className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
-                <Layers className="w-4 h-4 text-[#5A8DFF]" />
+              <div className="text-sm font-extrabold text-[#F1F2EE] uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                <Layers className="w-4 h-4 text-[#D4AF37]" />
                 4 Transparent Packages
               </div>
             </div>
@@ -508,10 +508,10 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
       {/* Packages */}
       <div className="space-y-8">
         <div className="text-center space-y-2 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-white text-[10px] font-extrabold uppercase tracking-widest">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#F1F2EE] text-[10px] font-extrabold uppercase tracking-widest">
             Service Packages
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-white uppercase tracking-tight">Choose Your Preferred Scope</h2>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#F1F2EE] uppercase tracking-tight">Choose Your Preferred Scope</h2>
           <p className="text-zinc-400 text-xs sm:text-sm">
             All 4 tiers are engineered to fit distinct stages of growth — from initial launches to bespoke enterprise systems.
           </p>
@@ -527,9 +527,9 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
                 key={pkg.id}
                 className={`relative rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 ${
                   isHighlighted
-                    ? 'bg-gradient-to-b from-[#0e1626] to-[#0a0a0d] border-2 border-[#5A8DFF] shadow-2xl shadow-[#5A8DFF]/15 scale-[1.02] z-10'
+                    ? 'bg-gradient-to-b from-[#12100B] to-[#090806] border-2 border-[#C9A45C] shadow-2xl shadow-[#C9A45C]/15 scale-[1.02] z-10'
                     : isOnDemand
-                      ? 'bg-gradient-to-b from-zinc-900/90 to-[#080808] border border-[#5A8DFF]/30'
+                      ? 'bg-gradient-to-b from-zinc-900/90 to-[#080808] border border-[#C9A45C]/30'
                       : 'bg-[#080808] border border-white/10 hover:border-white/20'
                 }`}
               >
@@ -537,7 +537,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span
                       className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md ${
-                        isHighlighted ? 'bg-[#5A8DFF] text-black font-extrabold' : 'bg-zinc-800 border border-white/10 text-zinc-300'
+                        isHighlighted ? 'bg-gradient-to-b from-[#F6DF84] via-[#D4AF37] to-[#B3841F] text-[#1A1206] font-extrabold' : 'bg-zinc-800 border border-white/10 text-zinc-300'
                       }`}
                     >
                       {pkg.badge}
@@ -546,38 +546,38 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
                 )}
                 <div className="space-y-6 pt-2">
                   <div className="space-y-2">
-                    <h3 className="text-xl font-black text-white uppercase tracking-tight">{pkg.name}</h3>
+                    <h3 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight">{pkg.name}</h3>
                     <p className="text-zinc-400 text-xs leading-relaxed min-h-[36px]">{pkg.description}</p>
                   </div>
-                  <div className="p-4 bg-zinc-950/80 border border-white/10 rounded-2xl space-y-1">
+                  <div className="p-4 bg-[#070A0F]/80 border border-white/10 rounded-2xl space-y-1">
                     <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">{isOnDemand ? 'Pricing Model' : 'Investment'}</div>
                     {isOnDemand ? (
-                      <div className="text-xl font-black text-white uppercase">Custom Quote</div>
+                      <div className="text-xl font-black text-[#F1F2EE] uppercase">Custom Quote</div>
                     ) : hasPrice ? (
                       <div className="space-y-0.5">
-                        <div className="text-2xl sm:text-3xl font-black text-[#5A8DFF]">{format(pkg.priceUSD)}</div>
+                        <div className="text-2xl sm:text-3xl font-black text-[#D4AF37]">{format(pkg.priceUSD)}</div>
                         <div className="text-[10px] text-zinc-400 font-medium">
                           Converted to {currency} ({currencyInfo.symbol.trim()})
                         </div>
                       </div>
                     ) : (
                       <div className="space-y-0.5">
-                        <div className="text-lg font-extrabold text-white">Contact for Quote</div>
+                        <div className="text-lg font-extrabold text-[#F1F2EE]">Contact for Quote</div>
                         <div className="text-[10px] text-zinc-500">Flat-rate pricing on request</div>
                       </div>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10 text-[11px]">
-                    <div className="p-2.5 bg-zinc-950 rounded-xl border border-white/5 space-y-0.5">
+                    <div className="p-2.5 bg-[#070A0F] rounded-xl border border-white/5 space-y-0.5">
                       <div className="text-zinc-500 font-bold uppercase text-[9px] flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-[#5A8DFF]" />
+                        <Clock className="w-3 h-3 text-[#D4AF37]" />
                         Timeline
                       </div>
                       <div className="font-extrabold text-zinc-200">{pkg.deliveryTime}</div>
                     </div>
-                    <div className="p-2.5 bg-zinc-950 rounded-xl border border-white/5 space-y-0.5">
+                    <div className="p-2.5 bg-[#070A0F] rounded-xl border border-white/5 space-y-0.5">
                       <div className="text-zinc-500 font-bold uppercase text-[9px] flex items-center gap-1">
-                        <RefreshCw className="w-3 h-3 text-[#5A8DFF]" />
+                        <RefreshCw className="w-3 h-3 text-[#D4AF37]" />
                         Revisions
                       </div>
                       <div className="font-extrabold text-zinc-200">{pkg.revisions}</div>
@@ -588,7 +588,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
                     <ul className="space-y-2 text-xs">
                       {pkg.features.map((feature, i) => (
                         <li key={i} className="flex items-start gap-2.5 text-zinc-300 font-medium leading-tight">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#5A8DFF] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -603,7 +603,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
                         ? 'btn-gradient-primary text-black'
                         : isOnDemand
                           ? 'bg-white hover:bg-zinc-200 text-black'
-                          : 'bg-zinc-900 hover:bg-zinc-800 text-white border border-white/10'
+                          : 'bg-zinc-900 hover:bg-zinc-800 text-[#F1F2EE] border border-white/10'
                     }`}
                   >
                     {isOnDemand ? 'Request Custom Quote' : hasPrice ? `Order Package (${format(pkg.priceUSD)})` : 'Inquire for Quote'}
@@ -621,14 +621,14 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
         <div className="lg:col-span-8 space-y-8">
           {/* Why choose */}
           <div className="bg-[#080808] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-            <h2 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#5A8DFF]" />
+            <h2 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#D4AF37]" />
               Why Choose BRANIFY For {service.name}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {service.benefits.map((benefit, i) => (
-                <div key={i} className="p-4 bg-zinc-950 border border-white/10 rounded-2xl text-xs font-semibold text-zinc-200 flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#5A8DFF]/10 border border-[#5A8DFF]/30 flex items-center justify-center shrink-0 text-[#5A8DFF] font-bold text-[11px]">
+                <div key={i} className="p-4 bg-[#070A0F] border border-white/10 rounded-2xl text-xs font-semibold text-zinc-200 flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-[#C9A45C]/10 border border-[#C9A45C]/30 flex items-center justify-center shrink-0 text-[#D4AF37] font-bold text-[11px]">
                     ✓
                   </div>
                   <span className="mt-0.5">{benefit}</span>
@@ -639,13 +639,13 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
 
           {/* 5-stage framework */}
           <div className="bg-[#080808] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-            <h2 className="text-xl font-black text-white uppercase tracking-tight">Our 5-Stage Execution Framework</h2>
+            <h2 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight">Our 5-Stage Execution Framework</h2>
             <div className="space-y-3">
               {service.processSteps.map((step, i) => (
-                <div key={i} className="p-4 bg-zinc-950 border border-white/10 rounded-2xl flex items-start gap-4 hover:border-white/20 transition-colors">
-                  <span className="text-lg font-black text-[#5A8DFF] shrink-0 font-mono">{step.step}</span>
+                <div key={i} className="p-4 bg-[#070A0F] border border-white/10 rounded-2xl flex items-start gap-4 hover:border-white/20 transition-colors">
+                  <span className="text-lg font-black text-[#D4AF37] shrink-0 font-mono">{step.step}</span>
                   <div>
-                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">{step.title}</h3>
+                    <h3 className="text-xs font-bold text-[#F1F2EE] uppercase tracking-wider">{step.title}</h3>
                     <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
@@ -655,21 +655,21 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
 
           {/* FAQ */}
           <div className="bg-[#080808] border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-            <h2 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-[#5A8DFF]" />
+            <h2 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight flex items-center gap-2">
+              <HelpCircle className="w-5 h-5 text-[#D4AF37]" />
               Frequently Asked Questions
             </h2>
             <div className="space-y-2.5">
               {service.faqs.map((faq, i) => {
                 const isOpen = openFaq === i;
                 return (
-                  <div key={i} className="bg-zinc-950 border border-white/10 rounded-2xl overflow-hidden transition-colors">
+                  <div key={i} className="bg-[#070A0F] border border-white/10 rounded-2xl overflow-hidden transition-colors">
                     <button
                       onClick={() => setOpenFaq(isOpen ? -1 : i)}
-                      className="w-full p-4 text-left text-xs font-bold text-white flex items-center justify-between gap-3 uppercase tracking-wide"
+                      className="w-full p-4 text-left text-xs font-bold text-[#F1F2EE] flex items-center justify-between gap-3 uppercase tracking-wide"
                     >
                       <span>{faq.question}</span>
-                      <ChevronDown className={`w-4 h-4 text-zinc-400 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-[#5A8DFF]' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-zinc-400 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-[#D4AF37]' : ''}`} />
                     </button>
                     {isOpen && <div className="px-4 pb-4 text-xs text-zinc-400 border-t border-white/10 pt-3 leading-relaxed">{faq.answer}</div>}
                   </div>
@@ -683,14 +683,14 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-[#080808] border border-white/10 rounded-3xl p-6 space-y-6 sticky top-28">
             <div className="space-y-4">
-              <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-                <PackageCheck className="w-4 h-4 text-[#5A8DFF]" />
+              <h3 className="text-xs font-black text-[#F1F2EE] uppercase tracking-widest flex items-center gap-2">
+                <PackageCheck className="w-4 h-4 text-[#D4AF37]" />
                 Final Deliverables
               </h3>
               <ul className="space-y-2.5 text-xs text-zinc-300">
                 {service.deliverables.map((item, i) => (
                   <li key={i} className="flex items-start gap-2.5 font-medium leading-snug">
-                    <CheckCircle2 className="w-4 h-4 text-[#5A8DFF] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -702,7 +702,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
                 <div className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-widest">Technologies &amp; Frameworks</div>
                 <div className="flex flex-wrap gap-1.5">
                   {service.techStack.map((tech, i) => (
-                    <span key={i} className="px-2.5 py-1 bg-zinc-950 border border-white/10 rounded-lg text-[11px] font-bold text-zinc-300 uppercase font-mono">
+                    <span key={i} className="px-2.5 py-1 bg-[#070A0F] border border-white/10 rounded-lg text-[11px] font-bold text-zinc-300 uppercase font-mono">
                       {tech}
                     </span>
                   ))}
@@ -711,7 +711,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
             )}
 
             <div className="pt-5 border-t border-white/10 space-y-3">
-              <div className="text-xs font-bold text-white">Need a bespoke scope or NDA?</div>
+              <div className="text-xs font-bold text-[#F1F2EE]">Need a bespoke scope or NDA?</div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Our solutions engineering team can craft a custom contract, milestone billing plan, and dedicated SLA for your team.
               </p>
@@ -731,12 +731,12 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
       <div className="pt-12 border-t border-white/10 space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-xl font-black text-white uppercase tracking-tight">Explore Other Agency Services</h3>
+            <h3 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight">Explore Other Agency Services</h3>
             <p className="text-zinc-400 text-xs">Complete digital ecosystem support under one trusted roof.</p>
           </div>
           <button
             onClick={() => onNavigate('/services')}
-            className="text-xs font-bold uppercase tracking-wider text-[#5A8DFF] hover:text-[#3B6EF6] transition-colors flex items-center gap-1"
+            className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] hover:text-[#E9CF79] transition-colors flex items-center gap-1"
           >
             All {servicesRegistry.length} Services
             <ArrowRight className="w-3.5 h-3.5" />
@@ -747,14 +747,14 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
             <div
               key={rel.id}
               onClick={() => onNavigate(`/services/${rel.slug}`)}
-              className="p-6 bg-[#080808] border border-white/10 hover:border-[#5A8DFF]/40 rounded-3xl space-y-4 cursor-pointer group transition-all"
+              className="p-6 bg-[#080808] border border-white/10 hover:border-[#C9A45C]/35 rounded-3xl space-y-4 cursor-pointer group transition-all"
             >
-              <div className="text-xs font-extrabold text-[#5A8DFF] uppercase tracking-widest">{rel.category}</div>
-              <h4 className="text-base font-black text-white uppercase tracking-tight group-hover:text-[#5A8DFF] transition-colors">{rel.name}</h4>
+              <div className="text-xs font-extrabold text-[#D4AF37] uppercase tracking-widest">{rel.category}</div>
+              <h4 className="text-base font-black text-[#F1F2EE] uppercase tracking-tight group-hover:text-[#E9CF79] transition-colors">{rel.name}</h4>
               <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed">{rel.shortDescription}</p>
               <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
                 <span className="text-zinc-500 font-medium">4 Tier Options</span>
-                <span className="text-[#5A8DFF] font-bold flex items-center gap-1 uppercase tracking-wider text-[11px]">
+                <span className="text-[#D4AF37] font-bold flex items-center gap-1 uppercase tracking-wider text-[11px]">
                   Explore
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </span>

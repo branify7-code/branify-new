@@ -30,7 +30,7 @@ export interface FreeTemplateDetailPageProps {
 /* ------------------------------------------------------------------ */
 
 const TemplateNotFound: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate }) => (
-  <div className="min-h-screen bg-[#0A0A0D] text-white py-24 px-4 flex items-center justify-center">
+  <div className="min-h-screen bg-[#0A0A0D] text-[#F1F2EE] py-24 px-4 flex items-center justify-center">
     <Seo
       title="Free Template Not Found | BRANIFY"
       description="The free template you are looking for does not exist. Browse all free BRANIFY templates."
@@ -38,7 +38,7 @@ const TemplateNotFound: React.FC<{ onNavigate: (path: string) => void }> = ({ on
     />
     <div className="text-center space-y-4 max-w-md">
       <FileText className="w-10 h-10 text-zinc-600 mx-auto" />
-      <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">Template not found</h1>
+      <h1 className="text-2xl sm:text-3xl font-black text-[#F1F2EE] uppercase tracking-tight">Template not found</h1>
       <p className="text-sm text-zinc-400">
         The template you are looking for may have been moved or is no longer available. Browse the full library instead.
       </p>
@@ -93,7 +93,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0D] text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0A0A0D] text-[#F1F2EE] py-12 px-4 sm:px-6 lg:px-8">
       <Seo title={tpl.seoTitle} description={tpl.metaDescription} canonicalPath={`/free-templates/${tpl.slug}`} />
 
       <div className="max-w-7xl mx-auto space-y-8">
@@ -133,7 +133,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
         {/* Title */}
         <div className="space-y-2">
           <span className="uppercase text-[10px] font-black text-[#E2C27B] tracking-wider">{tpl.category}</span>
-          <h1 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight leading-tight">{tpl.title}</h1>
+          <h1 className="text-3xl sm:text-4xl font-black text-[#F1F2EE] uppercase tracking-tight leading-tight">{tpl.title}</h1>
           <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed">{tpl.shortDescription}</p>
         </div>
 
@@ -162,7 +162,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-xs transition cursor-pointer ${
                 linkCopied
                   ? 'border-emerald-500/40 text-emerald-400'
-                  : 'border-white/15 text-zinc-300 hover:border-[#C9A45C]/50 hover:text-white'
+                  : 'border-white/15 text-zinc-300 hover:border-[#C9A45C]/50 hover:text-[#F1F2EE]'
               }`}
             >
               <Share2 className="w-3.5 h-3.5" />
@@ -209,7 +209,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
               )}
 
               <div className="rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/5 p-4 space-y-2">
-                <h3 className="text-sm font-extrabold text-white">Need this customized for your business?</h3>
+                <h3 className="text-sm font-extrabold text-[#F1F2EE]">Need this customized for your business?</h3>
                 <p className="text-xs text-zinc-400 leading-relaxed">
                   Our team can tailor any template into a full production system for your brand.
                 </p>
@@ -228,7 +228,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
 
         {/* Key features */}
         <div className="space-y-4 pt-2">
-          <h2 className="text-xs font-black uppercase tracking-widest text-white">Key Features</h2>
+          <h2 className="text-xs font-black uppercase tracking-widest text-[#F1F2EE]">Key Features</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {tpl.features.map((feature, i) => (
               <div key={`feature-${i}`} className="flex items-center gap-2.5 text-xs text-zinc-300">
@@ -242,7 +242,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
         {/* What's included */}
         {tpl.whatsIncluded.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-xs font-black uppercase tracking-widest text-white">What&apos;s Included</h2>
+            <h2 className="text-xs font-black uppercase tracking-widest text-[#F1F2EE]">What&apos;s Included</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {tpl.whatsIncluded.map((item, i) => (
                 <div key={`included-${i}`} className="flex items-center gap-2.5 text-xs text-zinc-300">
@@ -256,7 +256,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
 
         {/* Full description */}
         <div className="space-y-4">
-          <h2 className="text-xs font-black uppercase tracking-widest text-white">Full Description</h2>
+          <h2 className="text-xs font-black uppercase tracking-widest text-[#F1F2EE]">Full Description</h2>
           <div className="space-y-3">
             {tpl.fullDescription.split('\n\n').map((paragraph, i) => (
               <p key={`desc-${i}`} className="text-sm text-zinc-400 leading-relaxed">
@@ -268,7 +268,7 @@ export const FreeTemplateDetailPage: React.FC<FreeTemplateDetailPageProps> = ({ 
 
         {/* Explore more */}
         <div className="space-y-5 pt-4">
-          <h2 className="text-sm font-black uppercase tracking-widest text-white">Explore More Free Templates</h2>
+          <h2 className="text-sm font-black uppercase tracking-widest text-[#F1F2EE]">Explore More Free Templates</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {related.map((template) => (
               <FreeTemplateCard key={template.id} template={template} onNavigate={onNavigate} />

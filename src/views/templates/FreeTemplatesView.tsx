@@ -45,7 +45,7 @@ const TemplatePreviewLightbox: React.FC<TemplatePreviewLightboxProps> = ({ templ
           type="button"
           onClick={onClose}
           aria-label="Close preview"
-          className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/70 backdrop-blur border border-white/20 flex items-center justify-center text-zinc-300 hover:text-white hover:border-[#C9A45C]/60 transition cursor-pointer"
+          className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/70 backdrop-blur border border-white/20 flex items-center justify-center text-zinc-300 hover:text-[#F1F2EE] hover:border-[#C9A45C]/60 transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -56,7 +56,7 @@ const TemplatePreviewLightbox: React.FC<TemplatePreviewLightboxProps> = ({ templ
         />
         <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-white/10">
           <div className="space-y-0.5">
-            <p className="text-white font-extrabold text-sm leading-snug">{template.title}</p>
+            <p className="text-[#F1F2EE] font-extrabold text-sm leading-snug">{template.title}</p>
             <p className="text-[10px] text-zinc-500 uppercase tracking-wider">
               {template.fileFormat} · {template.fileSize}
             </p>
@@ -111,7 +111,7 @@ export const FreeTemplateCard: React.FC<FreeTemplateCardProps> = ({ template, on
           <button
             type="button"
             onClick={() => setPreviewOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-full text-xs font-bold text-white hover:bg-white/20 transition cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-full text-xs font-bold text-[#F1F2EE] hover:bg-white/20 transition cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5" />
             Quick Preview
@@ -133,7 +133,7 @@ export const FreeTemplateCard: React.FC<FreeTemplateCardProps> = ({ template, on
         </div>
         <h3
           onClick={() => onNavigate(`/free-templates/${template.slug}`)}
-          className="text-white font-extrabold leading-snug group-hover:text-[#E2C27B] transition-colors cursor-pointer"
+          className="text-[#F1F2EE] font-extrabold leading-snug group-hover:text-[#E2C27B] transition-colors cursor-pointer"
         >
           {template.title}
         </h3>
@@ -147,7 +147,7 @@ export const FreeTemplateCard: React.FC<FreeTemplateCardProps> = ({ template, on
           <button
             type="button"
             onClick={() => onNavigate(`/free-templates/${template.slug}`)}
-            className="px-4 py-2 rounded-full border border-white/15 text-xs text-zinc-300 hover:border-[#C9A45C]/50 hover:text-white transition cursor-pointer shrink-0"
+            className="px-4 py-2 rounded-full border border-white/15 text-xs text-zinc-300 hover:border-[#C9A45C]/50 hover:text-[#F1F2EE] transition cursor-pointer shrink-0"
           >
             Details
           </button>
@@ -211,7 +211,7 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0D] text-white py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+    <div className="min-h-screen bg-[#0A0A0D] text-[#F1F2EE] py-12 px-4 sm:px-6 lg:px-8 space-y-12">
       <Seo
         title="Free Templates for Business & Creators | BRANIFY"
         description="Free Website & Design Templates | BRANIFY"
@@ -224,7 +224,7 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
           <Gift className="w-3.5 h-3.5" />
           <span>100% Free Assets &amp; Starters</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-black text-white uppercase tracking-tight">Free Templates</h1>
+        <h1 className="text-4xl sm:text-5xl font-black text-[#F1F2EE] uppercase tracking-tight">Free Templates</h1>
         <p className="text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto">
           Professional templates you can download, customize and use for free.
         </p>
@@ -236,7 +236,7 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Search Free Templates"
-            className="w-full rounded-full bg-white/[0.04] border border-[#C9A45C]/25 pl-11 pr-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#C9A45C]/60 transition"
+            className="w-full rounded-full bg-white/[0.04] border border-[#C9A45C]/25 pl-11 pr-4 py-3 text-sm text-[#F1F2EE] placeholder-zinc-500 focus:outline-none focus:border-[#C9A45C]/60 transition"
           />
         </div>
       </div>
@@ -250,8 +250,8 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
             onClick={() => setActiveCategory(cat.slug)}
             className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
               activeCategory === cat.slug
-                ? 'bg-[#C9A45C] text-[#05080C] shadow-lg shadow-[#C9A45C]/20'
-                : 'bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-white hover:border-[#C9A45C]/40'
+                ? 'bg-[#C9A45C] text-[#090A0C] shadow-lg shadow-[#C9A45C]/20'
+                : 'bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-[#F1F2EE] hover:border-[#C9A45C]/40'
             }`}
           >
             {cat.label}
@@ -263,7 +263,7 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div className="space-y-1">
-            <h2 className="text-sm font-black uppercase tracking-widest text-white">{activeLabel}</h2>
+            <h2 className="text-sm font-black uppercase tracking-widest text-[#F1F2EE]">{activeLabel}</h2>
             <p className="text-sm text-zinc-400">
               Real downloads and verified resources for modern creators, developers, and founders.
             </p>

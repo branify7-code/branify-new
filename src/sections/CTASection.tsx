@@ -8,7 +8,7 @@ interface CTASectionProps {
 
 export const CTASection: React.FC<CTASectionProps> = ({ onStartProject, onViewWork }) => {
   return (
-    <section id="contact" className="relative py-32 sm:py-44 bg-[#08090B] text-white overflow-hidden">
+    <section id="contact" className="relative py-32 sm:py-44 bg-[#05080D] text-[#F1F2EE] overflow-hidden">
       {/* Cinematic Continuation of the 3D Hero Atmosphere */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-mesh-radial pointer-events-none" />
       <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-[#D4AF37]/8 rounded-full blur-[180px] pointer-events-none" />
@@ -35,7 +35,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ onStartProject, onViewWo
         </h2>
 
         {/* Supporting Copy */}
-        <p className="text-base sm:text-xl text-white/70 font-light max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base sm:text-xl text-[#F1F2EE]/70 font-light max-w-2xl mx-auto leading-relaxed">
           Let's create something meaningful, beautiful and built for growth. Reach out directly to begin your project discovery.
         </p>
 
@@ -44,7 +44,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ onStartProject, onViewWo
           <button
             id="cta-start-project-btn"
             onClick={onStartProject}
-            className="w-full sm:w-auto px-10 py-5 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#08090B] font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-[0_0_40px_rgba(212,175,55,0.4)] hover:shadow-[0_0_60px_rgba(212,175,55,0.6)] flex items-center justify-center gap-3 cursor-pointer"
+            className="w-full sm:w-auto px-10 py-5 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-[0_0_40px_rgba(212,175,55,0.4)] hover:shadow-[0_0_60px_rgba(212,175,55,0.6)] flex items-center justify-center gap-3 cursor-pointer"
           >
             <span>Start a Project</span>
             <ArrowRight className="w-4 h-4" />
@@ -61,7 +61,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ onStartProject, onViewWo
         </div>
 
         {/* Direct Channel Info */}
-        <div className="pt-10 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-white/40">
+        <div className="pt-10 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-[#F1F2EE]/40">
           <span>Direct Inquiries: <a href="mailto:hello@branify.agency" className="text-[#D4AF37] hover:underline">hello@branify.agency</a></span>
           <span>•</span>
           <span>Response SLA: &lt; 24 Hours</span>

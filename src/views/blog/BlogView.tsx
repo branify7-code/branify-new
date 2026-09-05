@@ -99,7 +99,7 @@ const renderInline = (text: string): React.ReactNode[] => {
     .filter((part) => part !== '')
     .map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="text-white">{part.slice(2, -2)}</strong>;
+        return <strong key={i} className="text-[#F1F2EE]">{part.slice(2, -2)}</strong>;
       }
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
@@ -118,7 +118,7 @@ const renderMarkdown = (content: string): React.ReactNode[] => {
     switch (block.kind) {
       case 'heading2':
         return (
-          <h2 key={i} className="text-2xl sm:text-3xl font-black text-white uppercase mt-10 mb-4">
+          <h2 key={i} className="text-2xl sm:text-3xl font-black text-[#F1F2EE] uppercase mt-10 mb-4">
             {renderInline(block.text)}
           </h2>
         );
@@ -130,7 +130,7 @@ const renderMarkdown = (content: string): React.ReactNode[] => {
         );
       case 'heading4':
         return (
-          <h4 key={i} className="text-base sm:text-lg font-extrabold text-white mt-6 mb-2">
+          <h4 key={i} className="text-base sm:text-lg font-extrabold text-[#F1F2EE] mt-6 mb-2">
             {renderInline(block.text)}
           </h4>
         );
@@ -158,7 +158,7 @@ const renderMarkdown = (content: string): React.ReactNode[] => {
 /* ------------------------------------------------------------------ */
 
 const CategoryBadge: React.FC<{ category: string }> = ({ category }) => (
-  <span className="absolute top-4 left-4 bg-[#C9A45C] text-[#05080C] text-[10px] font-black uppercase rounded-full px-3 py-1 tracking-wider">
+  <span className="absolute top-4 left-4 bg-[#C9A45C] text-[#090A0C] text-[10px] font-black uppercase rounded-full px-3 py-1 tracking-wider">
     {category}
   </span>
 );
@@ -185,7 +185,7 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
           <span className="inline-flex px-4 py-1.5 rounded-full bg-[#C9A45C]/10 border border-[#C9A45C]/30 text-[#E2C27B] text-xs font-extrabold uppercase tracking-widest mb-6">
             Industry Insights &amp; Strategies
           </span>
-          <h1 className="font-black text-white uppercase text-4xl sm:text-5xl tracking-tight mb-5">
+          <h1 className="font-black text-[#F1F2EE] uppercase text-4xl sm:text-5xl tracking-tight mb-5">
             Engineering &amp; Digital Growth Blog
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
@@ -209,7 +209,7 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
               <CategoryBadge category={featured.category} />
             </div>
             <div className="p-6 sm:p-8 space-y-4 flex flex-col justify-center">
-              <h2 className="text-xl sm:text-2xl font-black text-white uppercase leading-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-[#F1F2EE] uppercase leading-tight">
                 {featured.title}
               </h2>
               <p className="text-[11px] text-zinc-500 uppercase tracking-wider">
@@ -243,7 +243,7 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
                   <p className="text-[11px] text-zinc-500 uppercase tracking-wider">
                     {post.publishedAt} • {post.readTime}
                   </p>
-                  <h3 className="text-lg font-extrabold text-white uppercase leading-snug">
+                  <h3 className="text-lg font-extrabold text-[#F1F2EE] uppercase leading-snug">
                     {post.title}
                   </h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">{post.excerpt}</p>
@@ -257,7 +257,7 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
 
           {/* Newsletter-style CTA strip */}
           <div className="bg-[#080B14] border border-white/[0.08] rounded-2xl p-6 text-center">
-            <p className="text-sm sm:text-base font-bold text-white mb-5">
+            <p className="text-sm sm:text-base font-bold text-[#F1F2EE] mb-5">
               Want strategies like these applied to your business?
             </p>
             <button
@@ -297,7 +297,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
           canonicalPath="/blog"
         />
         <section className="px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
-          <h1 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl font-black text-[#F1F2EE] uppercase tracking-tight mb-6">
             Article not found
           </h1>
           <p className="text-sm text-zinc-400 mb-8 max-w-md mx-auto">
@@ -346,7 +346,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
                 loading="lazy"
               />
               <div>
-                <p className="uppercase text-xs font-black text-white tracking-wider">{post.author.name}</p>
+                <p className="uppercase text-xs font-black text-[#F1F2EE] tracking-wider">{post.author.name}</p>
                 <p className="text-[11px] text-zinc-500">
                   {post.author.role} • {post.publishedAt} • {post.readTime}
                 </p>
@@ -354,7 +354,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
             </div>
 
             {/* Title H1 (from post.title, not markdown) */}
-            <h1 className="text-3xl sm:text-4xl font-black text-white uppercase leading-tight mb-8">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#F1F2EE] uppercase leading-tight mb-8">
               {post.title}
             </h1>
 
@@ -384,7 +384,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
 
           {/* More insights — the other posts */}
           <div className="border-t border-white/[0.08] mt-14 pt-10">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6">
+            <h2 className="text-sm font-black text-[#F1F2EE] uppercase tracking-widest mb-6">
               More Insights
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -397,7 +397,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
                   <p className="text-[10px] text-zinc-500 uppercase tracking-wider">
                     {other.category} • {other.readTime}
                   </p>
-                  <h3 className="text-sm font-extrabold text-white uppercase leading-snug">
+                  <h3 className="text-sm font-extrabold text-[#F1F2EE] uppercase leading-snug">
                     {other.title}
                   </h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">{other.excerpt}</p>

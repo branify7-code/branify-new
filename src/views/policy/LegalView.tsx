@@ -31,7 +31,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
           <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black uppercase text-[#FFF5DC]">
             Legal Governance & Policies
           </h1>
-          <p className="text-xs text-white/50 font-mono">
+          <p className="text-xs text-[#F1F2EE]/50 font-mono">
             Last Updated: January 1, 2026 | Effective for all global operations
           </p>
         </div>
@@ -43,8 +43,8 @@ export const LegalView: React.FC<LegalViewProps> = ({
           onClick={() => setActiveTab('privacy')}
           className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'privacy'
-              ? 'bg-[#D4AF37] text-[#08090B] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-              : 'text-white/70 hover:text-white'
+              ? 'bg-[#D4AF37] text-[#05080D] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+              : 'text-[#F1F2EE]/70 hover:text-[#F1F2EE]'
           }`}
         >
           <Lock className="w-3.5 h-3.5" />
@@ -55,8 +55,8 @@ export const LegalView: React.FC<LegalViewProps> = ({
           onClick={() => setActiveTab('terms')}
           className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'terms'
-              ? 'bg-[#D4AF37] text-[#08090B] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-              : 'text-white/70 hover:text-white'
+              ? 'bg-[#D4AF37] text-[#05080D] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+              : 'text-[#F1F2EE]/70 hover:text-[#F1F2EE]'
           }`}
         >
           <FileText className="w-3.5 h-3.5" />
@@ -67,8 +67,8 @@ export const LegalView: React.FC<LegalViewProps> = ({
           onClick={() => setActiveTab('refund')}
           className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'refund'
-              ? 'bg-[#D4AF37] text-[#08090B] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-              : 'text-white/70 hover:text-white'
+              ? 'bg-[#D4AF37] text-[#05080D] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+              : 'text-[#F1F2EE]/70 hover:text-[#F1F2EE]'
           }`}
         >
           <RefreshCw className="w-3.5 h-3.5" />
@@ -79,8 +79,8 @@ export const LegalView: React.FC<LegalViewProps> = ({
           onClick={() => setActiveTab('cookies')}
           className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'cookies'
-              ? 'bg-[#D4AF37] text-[#08090B] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-              : 'text-white/70 hover:text-white'
+              ? 'bg-[#D4AF37] text-[#05080D] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+              : 'text-[#F1F2EE]/70 hover:text-[#F1F2EE]'
           }`}
         >
           <Cookie className="w-3.5 h-3.5" />
@@ -91,8 +91,8 @@ export const LegalView: React.FC<LegalViewProps> = ({
           onClick={() => setActiveTab('disclaimer')}
           className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'disclaimer'
-              ? 'bg-[#D4AF37] text-[#08090B] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-              : 'text-white/70 hover:text-white'
+              ? 'bg-[#D4AF37] text-[#05080D] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+              : 'text-[#F1F2EE]/70 hover:text-[#F1F2EE]'
           }`}
         >
           <AlertCircle className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
       </div>
 
       {/* Legal Content Body */}
-      <div className="rounded-3xl bg-[#0F1015] border border-white/10 p-8 sm:p-12 text-sm text-white/80 font-light leading-relaxed space-y-8">
+      <div className="rounded-3xl bg-[#0F1015] border border-white/10 p-8 sm:p-12 text-sm text-[#F1F2EE]/80 font-light leading-relaxed space-y-8">
         {activeTab === 'privacy' && (
           <div className="space-y-6">
             <h2 className="font-display text-2xl font-bold text-[#FFF5DC]">

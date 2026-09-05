@@ -151,7 +151,7 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
             title="Copy email"
             aria-label={`Copy ${r.email}`}
             onClick={() => void copyEmail(r)}
-            className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#F3D27A]"
+            className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79]"
           >
             <Copy size={14} />
           </button>
@@ -231,7 +231,7 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
                     title="Copy email"
                     aria-label={`Copy ${r.email}`}
                     onClick={() => void copyEmail(r)}
-                    className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#F3D27A]"
+                    className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79]"
                   >
                     <Copy size={14} />
                   </button>

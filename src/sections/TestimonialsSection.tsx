@@ -4,7 +4,7 @@ import { testimonialsData } from '../data/testimonials';
 
 export const TestimonialsSection: React.FC = () => {
   return (
-    <section className="relative py-28 sm:py-36 bg-[#08090B] text-white overflow-hidden">
+    <section className="relative py-28 sm:py-36 bg-[#05080D] text-[#F1F2EE] overflow-hidden">
       {/* Ambient background lighting */}
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
 
@@ -20,12 +20,12 @@ export const TestimonialsSection: React.FC = () => {
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
               Client Feedback
             </h2>
-            <p className="text-base sm:text-lg text-white/60 font-light max-w-xl">
+            <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl">
               Authentic perspectives from founders, CTOs, and brand directors who trusted Branify with their flagship digital platforms.
             </p>
           </div>
 
-          <div className="text-xs font-mono text-white/40">
+          <div className="text-xs font-mono text-[#F1F2EE]/40">
             100% VERIFIED PARTNERS<br />
             CONFIDENTIAL CASE STUDIES AVAILABLE
           </div>
@@ -52,7 +52,7 @@ export const TestimonialsSection: React.FC = () => {
               </div>
 
               {/* Quote Content */}
-              <p className="text-base sm:text-lg text-white/80 font-light leading-relaxed italic">
+              <p className="text-base sm:text-lg text-[#F1F2EE]/80 font-light leading-relaxed italic">
                 "{t.quote}"
               </p>
 
@@ -60,17 +60,17 @@ export const TestimonialsSection: React.FC = () => {
               <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
                 <div className="flex items-center gap-3.5">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E5C378] to-[#997A15] p-[1px]">
-                    <div className="w-full h-full bg-[#08090B] rounded-full flex items-center justify-center font-mono text-xs font-bold text-[#FFF5DC]">
+                    <div className="w-full h-full bg-[#05080D] rounded-full flex items-center justify-center font-mono text-xs font-bold text-[#FFF5DC]">
                       {t.avatarText}
                     </div>
                   </div>
                   <div>
                     <h3 className="font-display text-sm font-bold text-[#FFF5DC]">{t.author}</h3>
-                    <p className="text-xs text-white/50">{t.role}, <span className="text-[#E5C378]">{t.company}</span></p>
+                    <p className="text-xs text-[#F1F2EE]/50">{t.role}, <span className="text-[#E5C378]">{t.company}</span></p>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 hidden sm:block">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#F1F2EE]/40 hidden sm:block">
                   {t.projectType}
                 </span>
               </div>

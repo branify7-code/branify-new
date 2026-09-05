@@ -60,11 +60,11 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#D4AF37]/30 text-xs font-mono text-[#F3E5AB]">
           <button 
             onClick={onNavigateHome} 
-            className="text-white/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
+            className="text-[#F1F2EE]/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
           >
             Home
           </button>
-          <span className="text-white/30">/</span>
+          <span className="text-[#F1F2EE]/30">/</span>
           <span className="text-[#D4AF37]">Selected Work & Case Studies</span>
         </div>
 
@@ -73,7 +73,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
           <span className="text-gold-gradient">Impact & Distinction</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-white/65 font-light leading-relaxed">
+        <p className="text-sm sm:text-base text-[#F1F2EE]/65 font-light leading-relaxed">
           A showcase of recent digital flagships, high-throughput web applications, generative AI orchestration platforms, and luxury interactive experiences.
         </p>
       </div>
@@ -88,8 +88,8 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
               onClick={() => setSelectedFilter(cat.id)}
               className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
                 selectedFilter === cat.id
-                  ? 'bg-[#D4AF37] text-[#08090B] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-                  : 'bg-white/[0.03] text-white/70 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-[#D4AF37] text-[#05080D] font-bold shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+                  : 'bg-white/[0.03] text-[#F1F2EE]/70 hover:text-[#F1F2EE] hover:bg-white/[0.06]'
               }`}
             >
               {cat.label}
@@ -104,7 +104,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             placeholder="Search projects or tech..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/40 focus:border-[#D4AF37] focus:outline-none"
+            className="w-full px-4 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-[#F1F2EE] placeholder-white/40 focus:border-[#D4AF37] focus:outline-none"
           />
         </div>
       </div>
@@ -126,12 +126,12 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                 <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono text-[#D4AF37] uppercase tracking-wider">
                   {project.category}
                 </span>
-                <span className="text-xs font-mono text-white/50">{project.year}</span>
+                <span className="text-xs font-mono text-[#F1F2EE]/50">{project.year}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-white/70">{project.client}</span>
-                <div className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/20 group-hover:border-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-[#08090B] text-white flex items-center justify-center transition-all">
+                <span className="text-xs font-mono text-[#F1F2EE]/70">{project.client}</span>
+                <div className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/20 group-hover:border-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-[#05080D] text-[#F1F2EE] flex items-center justify-center transition-all">
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>
@@ -143,7 +143,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                 <h3 className="font-display text-xl font-bold text-[#FFF5DC] group-hover:text-[#F3E5AB] transition-colors">
                   {project.title}
                 </h3>
-                <p className="text-xs text-white/60 line-clamp-2 leading-relaxed font-light">
+                <p className="text-xs text-[#F1F2EE]/60 line-clamp-2 leading-relaxed font-light">
                   {project.description}
                 </p>
               </div>
@@ -155,7 +155,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                     <span className="block font-mono text-xs font-bold text-[#D4AF37]">
                       {m.value}
                     </span>
-                    <span className="text-[10px] text-white/50 truncate block">
+                    <span className="text-[10px] text-[#F1F2EE]/50 truncate block">
                       {m.label}
                     </span>
                   </div>
@@ -168,7 +168,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
 
       {filteredProjects.length === 0 && (
         <div className="text-center py-16 space-y-3">
-          <p className="text-sm text-white/60">No case studies matched your filter.</p>
+          <p className="text-sm text-[#F1F2EE]/60">No case studies matched your filter.</p>
           <button
             onClick={() => {
               setSelectedFilter('all');
@@ -190,13 +190,13 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#FFF5DC]">
           Ready to Build Your Flagship Product?
         </h2>
-        <p className="text-xs sm:text-sm text-white/70 max-w-xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#F1F2EE]/70 max-w-xl mx-auto leading-relaxed">
           From concept architecture to deployment, partner with our digital studio for unprecedented design fidelity and computational power.
         </p>
         <div>
           <button
             onClick={() => onStartInquiry('Portfolio')}
-            className="px-8 py-4 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#08090B] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(212,175,55,0.4)] cursor-pointer"
+            className="px-8 py-4 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(212,175,55,0.4)] cursor-pointer"
           >
             Schedule a Discovery Session
           </button>

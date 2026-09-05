@@ -342,7 +342,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
               aria-label={`Edit ${config.entity}`}
               disabled={busy}
               onClick={() => openEdit(row)}
-              className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#F3D27A] disabled:opacity-40"
+              className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79] disabled:opacity-40"
             >
               <Pencil size={14} />
             </button>
@@ -377,7 +377,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                   aria-label="Move up"
                   disabled={busy || idx <= 0}
                   onClick={() => void move(row, -1)}
-                  className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#F3D27A] disabled:opacity-25"
+                  className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79] disabled:opacity-25"
                 >
                   <ChevronUp size={14} />
                 </button>
@@ -387,7 +387,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                   aria-label="Move down"
                   disabled={busy || idx < 0 || idx >= rows.length - 1}
                   onClick={() => void move(row, 1)}
-                  className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#F3D27A] disabled:opacity-25"
+                  className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79] disabled:opacity-25"
                 >
                   <ChevronDown size={14} />
                 </button>

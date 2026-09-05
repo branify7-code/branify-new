@@ -89,7 +89,7 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
         <button
           id="close-tool-modal-btn"
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full border border-white/10 hover:border-[#D4AF37]/50 text-white/60 hover:text-white transition-colors"
+          className="absolute top-6 right-6 p-2 rounded-full border border-white/10 hover:border-[#D4AF37]/50 text-[#F1F2EE]/60 hover:text-[#F1F2EE] transition-colors"
           aria-label="Close tool"
         >
           <X className="w-5 h-5" />
@@ -104,14 +104,14 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
           <h2 id="modal-tool-title" className="font-display text-2xl font-bold text-[#FFF5DC]">
             {tool.name}
           </h2>
-          <p className="text-white/60 text-sm">{tool.description}</p>
+          <p className="text-[#F1F2EE]/60 text-sm">{tool.description}</p>
         </div>
 
         {/* Interactive Tool Renderers */}
         <div className="p-4 sm:p-6 rounded-xl bg-white/[0.02] border border-white/10 space-y-6">
           {tool.id === 'password-gen' && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg bg-[#08090B] border border-[#D4AF37]/30">
+              <div className="flex items-center justify-between p-4 rounded-lg bg-[#05080D] border border-[#D4AF37]/30">
                 <span className="font-mono text-sm sm:text-base text-[#F3E5AB] tracking-wider break-all">
                   {generatedPw}
                 </span>
@@ -119,7 +119,7 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
                   <button
                     id="gen-pw-btn"
                     onClick={generatePassword}
-                    className="p-2 rounded-md hover:bg-white/10 text-white/70 hover:text-[#D4AF37] transition-colors"
+                    className="p-2 rounded-md hover:bg-white/10 text-[#F1F2EE]/70 hover:text-[#D4AF37] transition-colors"
                     title="Generate New"
                   >
                     <RefreshCw className="w-4 h-4" />
@@ -136,7 +136,7 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
               </div>
 
               <div className="space-y-2">
-                <div className="flex justify-between text-xs text-white/70">
+                <div className="flex justify-between text-xs text-[#F1F2EE]/70">
                   <span>Length: {pwLength} characters</span>
                   <span className="text-[#D4AF37] font-mono">128-bit Entropy</span>
                 </div>
@@ -150,7 +150,7 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
                 />
               </div>
 
-              <div className="flex gap-4 text-xs text-white/70">
+              <div className="flex gap-4 text-xs text-[#F1F2EE]/70">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
@@ -176,16 +176,16 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
           {tool.id === 'qr-gen' && (
             <div className="space-y-4">
               <div>
-                <label className="block text-xs text-white/60 mb-1">Target URL or Data</label>
+                <label className="block text-xs text-[#F1F2EE]/60 mb-1">Target URL or Data</label>
                 <input
                   type="text"
                   value={qrText}
                   onChange={(e) => setQrText(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg bg-[#08090B] border border-white/15 text-white text-sm focus:border-[#D4AF37] focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-[#05080D] border border-white/15 text-[#F1F2EE] text-sm focus:border-[#D4AF37] focus:outline-none"
                   placeholder="https://example.com"
                 />
               </div>
-              <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl bg-[#08090B] border border-white/10">
+              <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl bg-[#05080D] border border-white/10">
                 <div className="p-3 bg-white rounded-lg shadow-lg">
                   {/* Generated clean SVG QR simulation */}
                   <div className="w-36 h-36 bg-white flex flex-col items-center justify-center p-1 border border-black/10">
@@ -210,9 +210,9 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="space-y-2 text-xs text-white/70 flex-1">
+                <div className="space-y-2 text-xs text-[#F1F2EE]/70 flex-1">
                   <p className="font-semibold text-[#FFF5DC]">Vector Matrix Ready</p>
-                  <p className="text-white/50">Encoded Content: <span className="font-mono text-white/80">{qrText}</span></p>
+                  <p className="text-[#F1F2EE]/50">Encoded Content: <span className="font-mono text-[#F1F2EE]/80">{qrText}</span></p>
                   <button
                     id="copy-qr-url-btn"
                     onClick={() => copyToClipboard(qrText)}
@@ -239,16 +239,16 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
                   type="text"
                   value={hexColor}
                   onChange={(e) => setHexColor(e.target.value)}
-                  className="flex-1 px-4 py-2 rounded-lg bg-[#08090B] border border-white/15 text-white font-mono text-sm uppercase focus:border-[#D4AF37] focus:outline-none"
+                  className="flex-1 px-4 py-2 rounded-lg bg-[#05080D] border border-white/15 text-[#F1F2EE] font-mono text-sm uppercase focus:border-[#D4AF37] focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-[#08090B] border border-white/10">
-                  <span className="text-white/40 font-mono block mb-1">HEX</span>
+                <div className="p-3 rounded-lg bg-[#05080D] border border-white/10">
+                  <span className="text-[#F1F2EE]/40 font-mono block mb-1">HEX</span>
                   <span className="font-mono text-[#D4AF37] text-sm">{hexColor.toUpperCase()}</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#08090B] border border-white/10">
-                  <span className="text-white/40 font-mono block mb-1">WCAG on #08090B</span>
+                <div className="p-3 rounded-lg bg-[#05080D] border border-white/10">
+                  <span className="text-[#F1F2EE]/40 font-mono block mb-1">WCAG on #05080D</span>
                   <span className="font-mono text-emerald-400 text-sm">9.4:1 (AAA Pass)</span>
                 </div>
               </div>
@@ -262,25 +262,25 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
                 value={jsonInput}
                 onChange={(e) => setJsonInput(e.target.value)}
                 placeholder="Paste raw JSON here..."
-                className="w-full p-3 rounded-lg bg-[#08090B] border border-white/15 text-white font-mono text-xs focus:border-[#D4AF37] focus:outline-none"
+                className="w-full p-3 rounded-lg bg-[#05080D] border border-white/15 text-[#F1F2EE] font-mono text-xs focus:border-[#D4AF37] focus:outline-none"
               />
               <div className="flex justify-between items-center">
                 <button
                   id="format-json-btn"
                   onClick={handleFormatJson}
-                  className="px-4 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#E5C378] text-[#08090B] font-semibold text-xs transition-colors"
+                  className="px-4 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-xs transition-colors"
                 >
                   Format & Validate
                 </button>
                 {jsonError && <span className="text-xs text-rose-400">{jsonError}</span>}
               </div>
               {jsonOutput && (
-                <div className="relative p-3 rounded-lg bg-[#08090B] border border-[#D4AF37]/30 max-h-40 overflow-y-auto">
+                <div className="relative p-3 rounded-lg bg-[#05080D] border border-[#D4AF37]/30 max-h-40 overflow-y-auto">
                   <pre className="font-mono text-xs text-[#F3E5AB]">{jsonOutput}</pre>
                   <button
                     id="copy-json-btn"
                     onClick={() => copyToClipboard(jsonOutput)}
-                    className="absolute top-2 right-2 p-1.5 rounded bg-white/10 text-white/70 hover:text-white"
+                    className="absolute top-2 right-2 p-1.5 rounded bg-white/10 text-[#F1F2EE]/70 hover:text-[#F1F2EE]"
                   >
                     <Copy className="w-3.5 h-3.5" />
                   </button>
@@ -296,20 +296,20 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 placeholder="Type or paste prose to analyze metrics..."
-                className="w-full p-3 rounded-lg bg-[#08090B] border border-white/15 text-white text-sm focus:border-[#D4AF37] focus:outline-none"
+                className="w-full p-3 rounded-lg bg-[#05080D] border border-white/15 text-[#F1F2EE] text-sm focus:border-[#D4AF37] focus:outline-none"
               />
               <div className="grid grid-cols-3 gap-3 text-center">
-                <div className="p-3 rounded-lg bg-[#08090B] border border-white/10">
+                <div className="p-3 rounded-lg bg-[#05080D] border border-white/10">
                   <span className="text-2xl font-bold font-mono text-[#D4AF37]">{words}</span>
-                  <span className="block text-[10px] uppercase tracking-wider text-white/50 mt-1">Words</span>
+                  <span className="block text-[10px] uppercase tracking-wider text-[#F1F2EE]/50 mt-1">Words</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#08090B] border border-white/10">
+                <div className="p-3 rounded-lg bg-[#05080D] border border-white/10">
                   <span className="text-2xl font-bold font-mono text-[#FFF5DC]">{chars}</span>
-                  <span className="block text-[10px] uppercase tracking-wider text-white/50 mt-1">Characters</span>
+                  <span className="block text-[10px] uppercase tracking-wider text-[#F1F2EE]/50 mt-1">Characters</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#08090B] border border-white/10">
+                <div className="p-3 rounded-lg bg-[#05080D] border border-white/10">
                   <span className="text-2xl font-bold font-mono text-[#E5C378]">{readingTimeSeconds}s</span>
-                  <span className="block text-[10px] uppercase tracking-wider text-white/50 mt-1">Reading Time</span>
+                  <span className="block text-[10px] uppercase tracking-wider text-[#F1F2EE]/50 mt-1">Reading Time</span>
                 </div>
               </div>
             </div>
@@ -318,10 +318,10 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
           {/* Generic view for other tools */}
           {['image-compressor', 'text-formatter', 'pdf-tools', 'meta-generator'].includes(tool.id) && (
             <div className="space-y-4 text-center py-4">
-              <div className="p-6 rounded-xl border border-dashed border-[#D4AF37]/30 bg-[#08090B]/50 flex flex-col items-center justify-center space-y-3">
+              <div className="p-6 rounded-xl border border-dashed border-[#D4AF37]/30 bg-[#05080D]/50 flex flex-col items-center justify-center space-y-3">
                 <Sparkles className="w-8 h-8 text-[#D4AF37] animate-spin" style={{ animationDuration: '6s' }} />
-                <p className="text-sm text-white/80 font-medium">{tool.name} Engine Active</p>
-                <p className="text-xs text-white/50 max-w-sm">
+                <p className="text-sm text-[#F1F2EE]/80 font-medium">{tool.name} Engine Active</p>
+                <p className="text-xs text-[#F1F2EE]/50 max-w-sm">
                   {tool.tagline}
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 pt-2">
@@ -337,12 +337,12 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="mt-6 flex justify-between items-center text-xs text-white/40">
+        <div className="mt-6 flex justify-between items-center text-xs text-[#F1F2EE]/40">
           <span>Client-Side Local Sandbox</span>
           <button
             id="close-tool-bottom-btn"
             onClick={onClose}
-            className="px-4 py-2 rounded-full border border-white/15 hover:border-white/30 text-white/70 hover:text-white transition-colors"
+            className="px-4 py-2 rounded-full border border-white/15 hover:border-white/30 text-[#F1F2EE]/70 hover:text-[#F1F2EE] transition-colors"
           >
             Close Tool
           </button>

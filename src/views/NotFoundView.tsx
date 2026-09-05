@@ -9,7 +9,7 @@ export const NotFoundView: React.FC<{ path: string; onNavigateHome: () => void; 
 }) => (
   <div className="mx-auto flex max-w-xl flex-col items-center px-6 py-24 text-center">
     <p className="font-display text-[64px] font-extrabold leading-none text-gold-gradient sm:text-[88px]">404</p>
-    <h1 className="mt-3 font-display text-xl font-bold text-white sm:text-2xl">This page doesn’t exist</h1>
+    <h1 className="mt-3 font-display text-xl font-bold text-[#F1F2EE] sm:text-2xl">This page doesn’t exist</h1>
     <p className="mt-2 max-w-md text-sm leading-relaxed text-zinc-400">
       The path <span className="font-mono text-[#D4AF37]">{path}</span> isn’t part of BRANIFY.
       It has been logged so our team can review it.

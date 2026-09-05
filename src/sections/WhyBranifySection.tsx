@@ -13,7 +13,7 @@ const whyIconMap: Record<string, React.ComponentType<{ className?: string }>> = 
 
 export const WhyBranifySection: React.FC = () => {
   return (
-    <section className="relative py-28 sm:py-36 bg-[#0B0C10] text-white overflow-hidden border-t border-white/[0.06]">
+    <section className="relative py-28 sm:py-36 bg-[#0B0C10] text-[#F1F2EE] overflow-hidden border-t border-white/[0.06]">
       {/* Ambient background glow */}
       <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
 
@@ -29,12 +29,12 @@ export const WhyBranifySection: React.FC = () => {
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
               Why Choose Branify?
             </h2>
-            <p className="text-base sm:text-lg text-white/60 font-light max-w-xl">
+            <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl">
               We do not build hollow digital facades. We engineer digital infrastructure that transforms category standing and fuels commercial growth.
             </p>
           </div>
 
-          <div className="text-xs font-mono text-white/40">
+          <div className="text-xs font-mono text-[#F1F2EE]/40">
             RADICAL CLARITY<br />
             ZERO MEDIOCRITY TOLERANCE
           </div>
@@ -56,7 +56,7 @@ export const WhyBranifySection: React.FC = () => {
                   
                   {/* Left Column: Metric & Icon */}
                   <div className={`lg:col-span-4 flex items-center gap-6 ${isEven ? 'order-1' : 'lg:order-2'}`}>
-                    <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#FFF5DC] shrink-0 group-hover:bg-[#D4AF37] group-hover:text-[#08090B] transition-all">
+                    <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#FFF5DC] shrink-0 group-hover:bg-[#D4AF37] group-hover:text-[#05080D] transition-all">
                       <Icon className="w-7 h-7" />
                     </div>
                     <div>
@@ -71,13 +71,13 @@ export const WhyBranifySection: React.FC = () => {
 
                   {/* Right Column: Editorial Headline & Copy */}
                   <div className={`lg:col-span-8 space-y-2 ${isEven ? 'order-2' : 'lg:order-1'}`}>
-                    <span className="text-[11px] font-mono uppercase tracking-widest text-white/40">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-[#F1F2EE]/40">
                       Pillar 0{index + 1} — {item.title}
                     </span>
                     <h3 className="font-display text-xl sm:text-2xl font-bold uppercase text-[#FFF5DC] tracking-tight">
                       {item.headline}
                     </h3>
-                    <p className="text-sm sm:text-base text-white/60 font-light leading-relaxed">
+                    <p className="text-sm sm:text-base text-[#F1F2EE]/60 font-light leading-relaxed">
                       {item.description}
                     </p>
                   </div>

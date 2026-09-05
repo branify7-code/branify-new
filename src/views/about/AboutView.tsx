@@ -31,11 +31,11 @@ export const AboutView: React.FC<AboutViewProps> = ({
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#D4AF37]/30 text-xs font-mono text-[#F3E5AB]">
           <button 
             onClick={onNavigateHome} 
-            className="text-white/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
+            className="text-[#F1F2EE]/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
           >
             Home
           </button>
-          <span className="text-white/30">/</span>
+          <span className="text-[#F1F2EE]/30">/</span>
           <span className="text-[#D4AF37]">The Studio Ethos & Architecture</span>
         </div>
 
@@ -44,7 +44,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
           <span className="text-gold-gradient">Digital Sovereignty</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-white/65 font-light leading-relaxed">
+        <p className="text-sm sm:text-base text-[#F1F2EE]/65 font-light leading-relaxed">
           Branify operates at the intersection of haute couture aesthetic precision and deep-stack computational engineering. We build enduring technological advantages for the world&apos;s most ambitious brands.
         </p>
       </div>
@@ -65,7 +65,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-white/75 font-light leading-relaxed pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-[#F1F2EE]/75 font-light leading-relaxed pt-2">
           <p>
             In an era of homogenized web templates and generic AI copy, distinction is the ultimate competitive moat. We reject digital compromise. Every interface we architect is mathematically tuned for emotional resonance, spatial depth, and frictionless performance.
           </p>
@@ -98,7 +98,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
               <span className="block text-xs font-bold text-[#FFF5DC] uppercase tracking-wider">
                 {stat.label}
               </span>
-              <p className="text-[11px] text-white/50 font-light">
+              <p className="text-[11px] text-[#F1F2EE]/50 font-light">
                 {stat.sublabel}
               </p>
             </div>
@@ -115,7 +115,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
           <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
             Our 5-Phase Methodology
           </h2>
-          <p className="text-xs text-white/60">
+          <p className="text-xs text-[#F1F2EE]/60">
             A deterministic engineering blueprint engineered to eliminate uncertainty and ship on schedule.
           </p>
         </div>
@@ -132,10 +132,10 @@ export const AboutView: React.FC<AboutViewProps> = ({
               <h3 className="font-display text-base font-bold text-[#FFF5DC]">
                 {step.title}
               </h3>
-              <p className="text-xs text-white/60 font-light leading-relaxed">
+              <p className="text-xs text-[#F1F2EE]/60 font-light leading-relaxed">
                 {step.description}
               </p>
-              <div className="pt-2 border-t border-white/5 text-[11px] font-mono text-white/40">
+              <div className="pt-2 border-t border-white/5 text-[11px] font-mono text-[#F1F2EE]/40">
                 Duration: {step.duration}
               </div>
             </div>
@@ -166,12 +166,12 @@ export const AboutView: React.FC<AboutViewProps> = ({
               <h3 className="font-display text-base font-bold text-[#FFF5DC]">
                 {pillar.title}
               </h3>
-              <p className="text-xs text-white/60 font-light leading-relaxed">
+              <p className="text-xs text-[#F1F2EE]/60 font-light leading-relaxed">
                 {pillar.description}
               </p>
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-mono">
                 <span className="text-[#D4AF37] font-bold">{pillar.metric}</span>
-                <span className="text-white/40 text-[10px]">{pillar.metricLabel}</span>
+                <span className="text-[#F1F2EE]/40 text-[10px]">{pillar.metricLabel}</span>
               </div>
             </div>
           ))}
@@ -195,14 +195,14 @@ export const AboutView: React.FC<AboutViewProps> = ({
               key={review.id}
               className="p-6 rounded-2xl bg-[#0F1015] border border-white/10 space-y-4 flex flex-col justify-between"
             >
-              <p className="text-xs text-white/80 leading-relaxed font-light italic">
+              <p className="text-xs text-[#F1F2EE]/80 leading-relaxed font-light italic">
                 &ldquo;{review.quote}&rdquo;
               </p>
 
               <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                 <div>
                   <h4 className="text-xs font-bold text-[#FFF5DC]">{review.author}</h4>
-                  <span className="text-[10px] text-white/50">{review.role}</span>
+                  <span className="text-[10px] text-[#F1F2EE]/50">{review.role}</span>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#D4AF37]/15 text-[#D4AF37]">
                   {review.company}
@@ -237,11 +237,11 @@ export const AboutView: React.FC<AboutViewProps> = ({
                   className="w-full p-5 text-left flex items-center justify-between gap-4 text-sm font-semibold text-[#FFF5DC] hover:text-[#D4AF37] transition-colors cursor-pointer"
                 >
                   <span>{faq.question}</span>
-                  {isOpen ? <ChevronUp className="w-4 h-4 text-[#D4AF37]" /> : <ChevronDown className="w-4 h-4 text-white/50" />}
+                  {isOpen ? <ChevronUp className="w-4 h-4 text-[#D4AF37]" /> : <ChevronDown className="w-4 h-4 text-[#F1F2EE]/50" />}
                 </button>
 
                 {isOpen && (
-                  <div className="p-5 pt-0 text-xs text-white/70 font-light leading-relaxed border-t border-white/5">
+                  <div className="p-5 pt-0 text-xs text-[#F1F2EE]/70 font-light leading-relaxed border-t border-white/5">
                     {faq.answer}
                   </div>
                 )}
@@ -259,7 +259,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
         <div>
           <button
             onClick={onStartInquiry}
-            className="px-8 py-4 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#08090B] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(212,175,55,0.4)] cursor-pointer"
+            className="px-8 py-4 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(212,175,55,0.4)] cursor-pointer"
           >
             Start Your Project Consultation
           </button>

@@ -415,7 +415,7 @@ const LeadDetailModal: React.FC<{
           <div className="flex flex-wrap items-center gap-2">
             <a
               href={lead.email ? `mailto:${lead.email}` : undefined}
-              className={cx('inline-flex h-8 items-center gap-1.5 rounded-lg border border-[rgba(201,164,92,0.25)] px-3 text-xs font-semibold text-[#D8DCE2] transition-colors hover:border-[rgba(201,164,92,0.55)] hover:text-[#F3D27A]', !lead.email && 'pointer-events-none opacity-40')}
+              className={cx('inline-flex h-8 items-center gap-1.5 rounded-lg border border-[rgba(201,164,92,0.25)] px-3 text-xs font-semibold text-[#D8DCE2] transition-colors hover:border-[rgba(201,164,92,0.55)] hover:text-[#E9CF79]', !lead.email && 'pointer-events-none opacity-40')}
             >
               <Mail size={13} /> Email lead
             </a>

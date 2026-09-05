@@ -3,10 +3,9 @@ import Header from './components/Header';
 import { CustomCursor } from './components/CustomCursor';
 import { PWAModal } from './components/PWAModal';
 import { ProjectInquiryModal } from './components/ProjectInquiryModal';
-import { ToolRunnerModal } from './components/ToolRunnerModal';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { usePWA } from './hooks/usePWA';
-import { trackEvent, trackNotFound } from './lib/track';
+import { trackNotFound } from './lib/track';
 import { getSeoOverride, getRedirectTarget } from './lib/contentOverrides';
 
 // Views
@@ -43,7 +42,7 @@ import { TestimonialsSection } from './sections/TestimonialsSection';
 import { FAQSection } from './sections/FAQSection';
 import { CTASection } from './sections/CTASection';
 import { Footer } from './sections/Footer';
-import { Project, DigitalTool } from './types';
+import { Project } from './types';
 
 // Known public SPA routes (everything else → 404 view + monitor log)
 const PUBLIC_ROUTE_PREFIXES = [
@@ -65,7 +64,6 @@ export default function App() {
 
   const [inquiryModalOpen, setInquiryModalOpen] = useState<boolean>(false);
   const [selectedServiceForInquiry, setSelectedServiceForInquiry] = useState<string | undefined>();
-  const [activeToolRunner, setActiveToolRunner] = useState<DigitalTool | null>(null);
   const [activeProjectDetail, setActiveProjectDetail] = useState<Project | null>(null);
 
   // PWA Hook
@@ -126,7 +124,6 @@ export default function App() {
       return;
     }
     if (path !== '/' && !isKnownRoute(path)) trackNotFound(path);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoute]);
   useEffect(() => {
     const legacyToolMap: Record<string, string> = {
@@ -144,9 +141,9 @@ export default function App() {
     if (path === '/tools' || path === '/free-tools') {
       const legacyId = new URLSearchParams(search || '').get('tool');
       const mapped = legacyId ? legacyToolMap[legacyId] : undefined;
+      // eslint-disable-next-line react-hooks/immutability
       if (mapped) navigateTo(`/tools/${mapped}`);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoute]);
 
   const navigateTo = (path: string) => {
@@ -168,11 +165,6 @@ export default function App() {
     setActiveProjectDetail(project);
   };
 
-  const handleRunTool = (tool: DigitalTool) => {
-    trackEvent('tool_launch', { tool: tool.id, name: tool.name });
-    setActiveToolRunner(tool);
-  };
-
   const handleExploreWork = () => {
     navigateTo('/portfolio');
   };
@@ -184,7 +176,7 @@ export default function App() {
   const isKnown = isKnownRoute(pathname);
 
   return (
-    <div className="relative min-h-screen bg-[#08090B] text-[#E6E1D6] selection:bg-[#D4AF37]/30 selection:text-[#FFF5DC] font-sans flex flex-col justify-between">
+    <div className="relative min-h-screen bg-[#05080D] text-[#F1F2EE] selection:bg-[#D4AF37]/30 selection:text-[#FFF5DC] font-sans flex flex-col justify-between">
       {/* Admin app — full control surface, replaces the public chrome entirely */}
       {isAdminRoute && (
         <Suspense
@@ -338,11 +330,11 @@ export default function App() {
               onViewAllWork={handleExploreWork}
             />
 
-            {/* 5. Free Digital Tools Ecosystem */}
-            <ToolsSection onRunTool={handleRunTool} />
+            {/* 5. Free Digital Tools Ecosystem — mirrors the /tools page */}
+            <ToolsSection onNavigate={navigateTo} />
 
-            {/* 6. AI Powered Tools Showcase */}
-            <AIToolsSection onOpenInquiry={(cat) => handleOpenInquiry(cat)} />
+            {/* 6. AI Powered Tools Showcase — mirrors the /ai-tools page */}
+            <AIToolsSection onNavigate={navigateTo} />
 
             {/* 7. 5-Phase Process Timeline */}
             <ProcessSection />
@@ -390,12 +382,6 @@ export default function App() {
         isOpen={inquiryModalOpen}
         onClose={() => setInquiryModalOpen(false)}
         initialService={selectedServiceForInquiry}
-      />
-
-      <ToolRunnerModal
-        isOpen={!!activeToolRunner}
-        tool={activeToolRunner}
-        onClose={() => setActiveToolRunner(null)}
       />
 
       <ProjectDetailModal

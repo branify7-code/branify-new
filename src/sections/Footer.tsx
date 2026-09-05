@@ -163,7 +163,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
               <Sparkles className="w-3.5 h-3.5 text-[#E2C27B]" />
               Progressive Web App
             </div>
-            <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">
               {isPWAInstalled ? 'BRANIFY Is Installed On This Device' : 'Get BRANIFY on Your Mobile & Desktop Device'}
             </h3>
             <p className="text-zinc-400 text-xs sm:text-sm max-w-xl">
@@ -172,10 +172,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
           </div>
           <button
             onClick={onOpenPWA}
-            className="shrink-0 px-7 py-3.5 btn-gold-primary text-[#05080C] font-extrabold text-xs uppercase tracking-widest rounded-full shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+            className="shrink-0 px-7 py-3.5 btn-gold-primary text-[#090A0C] font-extrabold text-xs uppercase tracking-widest rounded-full shadow-lg transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Download className="w-4 h-4 text-[#05080C]" />
-            <span className="text-[#05080C] font-black">{isPWAInstalled ? 'App Info' : 'Install App'}</span>
+            <Download className="w-4 h-4 text-[#090A0C]" />
+            <span className="text-[#090A0C] font-black">{isPWAInstalled ? 'App Info' : 'Install App'}</span>
           </button>
         </div>
 
@@ -190,13 +190,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                 </div>
                 <div className="flex flex-col justify-center">
                   <div className="font-black uppercase flex items-center leading-none font-sans text-3xl tracking-wider">
-                    <span className="text-white">BRAN</span>
+                    <span className="text-[#F1F2EE]">BRAN</span>
                     <span className="text-[#E2C27B]">IFY</span>
                   </div>
                   <div className="flex items-center uppercase font-extrabold text-zinc-400 mt-1 text-[12px] gap-2">
-                    <span className="text-white">BUILD.</span>
+                    <span className="text-[#F1F2EE]">BUILD.</span>
                     <span className="text-[#E2C27B]">BRAND.</span>
-                    <span className="text-white">GROW.</span>
+                    <span className="text-[#F1F2EE]">GROW.</span>
                   </div>
                 </div>
               </div>
@@ -262,7 +262,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* Services */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-white uppercase tracking-wider">Services</h4>
+            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">Services</h4>
             <ul className="space-y-2 text-xs text-zinc-400">
               {serviceLinks.map((item) => (
                 <li key={item.label}>
@@ -276,7 +276,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* Free Resources */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-white uppercase tracking-wider">Free Resources</h4>
+            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">Free Resources</h4>
             <ul className="space-y-2 text-xs text-zinc-400">
               {resourceLinks.map((item) =>
                 item.gold ? (
@@ -298,7 +298,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* 100+ Free Tools */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-white uppercase tracking-wider">100+ Free Tools</h4>
+            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">100+ Free Tools</h4>
             <ul className="space-y-2 text-xs text-zinc-400">
               {toolsLinks.map((item) =>
                 item.gold ? (
@@ -320,7 +320,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* Company & Legal */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-white uppercase tracking-wider">Company &amp; Legal</h4>
+            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">Company &amp; Legal</h4>
             <ul className="space-y-2 text-xs text-zinc-400">
               <li>
                 <button onClick={() => nav('/about')} className="hover:text-[#E2C27B] transition-colors text-left">About Us</button>
@@ -337,7 +337,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
               <li>
                 <button
                   onClick={() => setBrandKitOpen(true)}
-                  className="hover:text-white text-[#E2C27B] font-extrabold transition-colors flex items-center gap-1 cursor-pointer text-left"
+                  className="hover:text-[#F1F2EE] text-[#E2C27B] font-extrabold transition-colors flex items-center gap-1 cursor-pointer text-left"
                 >
                   <Palette className="w-3 h-3" />
                   <span>Logo &amp; Brand Kit</span>
@@ -364,17 +364,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter work email for strategy updates..."
-              className="px-4 py-2.5 bg-white/[0.04] border border-[#C9A45C]/25 rounded-full text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-[#C9A45C] flex-1"
+              className="px-4 py-2.5 bg-white/[0.04] border border-[#C9A45C]/25 rounded-full text-xs text-[#F1F2EE] placeholder-zinc-500 focus:outline-none focus:border-[#C9A45C] flex-1"
               aria-label="Email for newsletter"
               required
             />
             <button
               type="submit"
               disabled={subState === 'loading'}
-              className="px-6 py-2.5 btn-gold-primary text-[#05080C] text-xs font-black uppercase tracking-wider rounded-full transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-md disabled:opacity-60"
+              className="px-6 py-2.5 btn-gold-primary text-[#090A0C] text-xs font-black uppercase tracking-wider rounded-full transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-md disabled:opacity-60"
             >
-              <span className="text-[#05080C] font-black">{subState === 'loading' ? '...' : subState === 'done' ? 'Done' : 'Subscribe'}</span>
-              <Send className="w-3.5 h-3.5 text-[#05080C]" />
+              <span className="text-[#090A0C] font-black">{subState === 'loading' ? '...' : subState === 'done' ? 'Done' : 'Subscribe'}</span>
+              <Send className="w-3.5 h-3.5 text-[#090A0C]" />
             </button>
           </form>
           {subMessage && (
