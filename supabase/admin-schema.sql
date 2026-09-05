@@ -644,10 +644,14 @@ create policy "admins full access templates" on public.templates
 -- active=false categories out of the compiled registry, so the anon client
 -- must be able to SEE those rows to hide them. Template content ships in the
 -- JS bundle regardless — drafts only remove rows from the live site lists.
+-- drop BOTH the legacy pre-rename name and the current name so re-runs stay idempotent
+drop policy if exists "public read template_categories for override merge" on public.template_categories;
 drop policy if exists "public read active template_categories" on public.template_categories;
 create policy "public read template_categories for override merge"
   on public.template_categories for select to anon using (true);
 
+-- drop BOTH the legacy pre-rename name and the current name so re-runs stay idempotent
+drop policy if exists "public read templates for override merge" on public.templates;
 drop policy if exists "public read published templates" on public.templates;
 create policy "public read templates for override merge"
   on public.templates for select to anon using (true);
