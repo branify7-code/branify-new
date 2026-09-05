@@ -2221,7 +2221,31 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/real-estate/aurelia-luxury-estate</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/real-estate/metro-real-estate</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/real-estate/haven-family-homes</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/real-estate/heights-luxury-living</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/fashion-accessories/noire-fashion</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2245,7 +2269,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/fashion-accessories/mode-fashion-marketplace</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/beauty-salon/luxury-beauty-salon</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2281,7 +2311,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/healthcare-medical/aura-skin-clinic</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/interior-design/interior-design-studio</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2311,7 +2347,19 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/interior-design/arc-architecture</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/interior-design/casa-interior-studio</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/fitness-lifestyle/balance-wellness</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2359,7 +2407,37 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/tech-digital/pulse-workspace-saas</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/tech-digital/signal-fintech-saas</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/tech-digital/flow-task-saas</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/tech-digital/nexus-enterprise-platform</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/tech-digital/synapse-ai-platform</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/automotive/automotive-workshop</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2377,7 +2455,19 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/automotive/drive-car-dealership</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/automotive/drive-car-rental</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/home-services/cleaning-company</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2419,7 +2509,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/home-services/fresh-cleaning</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/education/nexa-tutoring</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2455,7 +2551,19 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/education/skillup-career-courses</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/education/verba-ielts-english</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/business-services/consulting-firm</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2521,7 +2629,31 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/business-services/ledger-accounting</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/business-services/alpha-tech-law</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/business-services/wealth-private-capital</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/business-services/consult-global-advisory</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/pet-care/pet-grooming-studio</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -2545,7 +2677,19 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
+    <loc>https://branify.store/templates/pet-care/vetiva-pet-hospital</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/pet-care/kindpaws-vet-clinic</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>  <url>
     <loc>https://branify.store/templates/events-creative/stage-event-production</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>

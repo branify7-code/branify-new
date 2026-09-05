@@ -5,7 +5,10 @@
 //   2. public/templates/{slug}-full.jpg  — 1200w preview + OG image
 //   3. src/data/templates/templates.ts   — generated template registry
 // One source of truth: this script curates name/slug/category/description from
-// the ACTUAL supplied files (70 mockups). Re-run after adding new mockups.
+// the ACTUAL supplied files (94 mockups — drop 1: 70, drop 2: 24 new; 48
+// byte-identical re-exports in drop 2 were md5-deduped against drop 1).
+// CURATION (drop 1, tpl-001..070) is FROZEN so existing ids/urls never shift;
+// new drops append to CURATION_V2 with their own explicit category groups.
 // Usage: bun scripts/generate-template-library.mjs [sourceDir]
 // =============================================================================
 import { execFileSync } from 'node:child_process';
@@ -149,23 +152,75 @@ const CURATION = [
   // ---- Catering Services (0 in ZIP — category kept for future uploads)
 ];
 
+// =========================================================== DROP 2 (24 new)
+// Second supplied ZIP ("Sep 04 - 22_48.zip", 72 files → 48 md5-duplicates of
+// drop 1, 24 genuinely new mockups). Grouped in CATEGORY_OF_V2 order below.
+const CURATION_V2 = [
+  // ---- Real Estate +4 (total 5)
+  T('AURELIA_luxury_real_estate_mockup_202609050659.jpeg', 'aurelia-luxury-estate', 'AURELIA Luxury Estates', 'Private-client real estate template with signature collections, penthouse spotlights, global reach stats and enquiry-led viewings.', ['real estate', 'luxury property', 'penthouse', 'collections'], true),
+  T('Real_estate_agency_website_mockup_202609050659.jpeg', 'metro-real-estate', 'METRO Real Estate Agency', 'Metropolitan agency template with buy/rent/sell search, listing grids, agent profiles and market-expertise stats.', ['real estate', 'agency', 'listings', 'agents']),
+  T('Real_estate_website_mockup_design_202609050659.jpeg', 'haven-family-homes', 'HAVEN Family Homes', 'Warm family-home template with neighborhood discovery, homeownership journey steps and trusted-agent storytelling.', ['real estate', 'family homes', 'neighborhoods', 'buyers']),
+  T('Real_estate_website_mockup_layout_202609050659.jpeg', 'heights-luxury-living', 'HEIGHTS Global Properties', 'Sky-high luxury property template with iconic residences, new developments, investment insights and penthouse enquiries.', ['real estate', 'luxury', 'developments', 'investment'], true),
+  // ---- Fashion & Accessories +1 (total 5)
+  T('Fashion_e-commerce_website_mockup_202609050659.jpeg', 'mode-fashion-marketplace', 'MODE Fashion Marketplace', 'Global fashion marketplace template with category storefronts, new-arrival grids, editor edits and journal storytelling.', ['fashion', 'marketplace', 'e-commerce', 'collections'], true),
+  // ---- Healthcare & Medical +1 (total 6)
+  T('Skin_clinic_website_mockup_design_202609050659.jpeg', 'aura-skin-clinic', 'AURA Skin Clinic', 'Dermatology clinic template with treatment collections, skin-concern guides, expert profiles and results galleries.', ['dermatology', 'skin clinic', 'treatments', 'consultation']),
+  // ---- Interior Design +2 (total 7)
+  T('Architecture_website_mockup_design_202609050659.jpeg', 'arc-architecture', 'ARC Architecture', 'Award-led architecture practice template with development grids, studio stats, journal essays and residence showcases.', ['architecture', 'practice', 'developments', 'awards'], true),
+  T('Website_homepage_mockup_design_202609050659_2.jpeg', 'casa-interior-studio', 'CASA Interior Studio', 'Warm contemporary interior template with room collections, before/after transformations and portfolio galleries.', ['interior design', 'contemporary', 'renovation', 'portfolio']),
+  // ---- Tech & Digital +5 (total 8)
+  T('PULSE_SaaS_website_homepage_mockup_202609050659.jpeg', 'pulse-workspace-saas', 'PULSE Workspace SaaS', 'Unified workspace SaaS template with project boards, document hubs, analytics dashboards and integration library.', ['saas', 'workspace', 'productivity', 'collaboration']),
+  T('SIGNAL_SaaS_website_homepage_mockup_202609050659.jpeg', 'signal-fintech-saas', 'SIGNAL Global Payments', 'Fintech payments template with global accounts, instant payouts, API integrations and security storytelling.', ['fintech', 'payments', 'global finance', 'saas'], true),
+  T('SaaS_website_homepage_mockup_202609050659.jpeg', 'flow-task-saas', 'FLOW Task Management', 'Dark-mode task management SaaS with kanban boards, team chat, workflow automation and integration grids.', ['saas', 'task management', 'kanban', 'automation']),
+  T('SaaS_website_homepage_mockup_202609050659_2.jpeg', 'nexus-enterprise-platform', 'NEXUS Enterprise Platform', 'Enterprise data platform template with analytics modules, automation workflows, security sections and pricing tiers.', ['saas', 'enterprise', 'analytics', 'automation']),
+  T('SaaS_website_homepage_mockup_202609050659_3.jpeg', 'synapse-ai-platform', 'SYNAPSE AI Platform', 'AI research platform template with model dashboards, predictive analytics storytelling and performance benchmarks.', ['ai', 'machine learning', 'research', 'platform'], true),
+  // ---- Automotive +2 (total 5)
+  T('Car_dealership_website_mockup_202609050659.jpeg', 'drive-car-dealership', 'DRIVE Car Dealership', 'Modern dealership template with inventory search, EV collection, trade-in valuation and financing funnels.', ['dealership', 'ev', 'inventory', 'financing'], true),
+  T('Car_rental_website_homepage_mockup_202609050659.jpeg', 'drive-car-rental', 'RENTAL Car Hire', 'Car rental template with booking search, fleet categories, destination guides and daily-rate listings.', ['car rental', 'booking', 'fleet', 'travel']),
+  // ---- Home Services +1 (total 8)
+  T('Cleaning_website_mockup_design_202609050659.jpeg', 'fresh-cleaning', 'FRESH Premium Cleaning', 'Premium deep-cleaning template with signature services, method timeline, package pricing and booking call-to-action.', ['cleaning', 'deep clean', 'premium', 'booking']),
+  // ---- Education +2 (total 8)
+  T('SKILLUP_website_homepage_mockup_202609050659.jpeg', 'skillup-career-courses', 'SKILLUP Career Courses', 'Career-focused course platform with learning paths, expert mentors, student dashboards and enrollment funnels.', ['courses', 'career', 'learning paths', 'certificates']),
+  T('VERBA_website_homepage_mockup_202609050659.jpeg', 'verba-ielts-english', 'VERBA IELTS & English', 'IELTS and English-language template with program tiers, study system steps, level assessment and teacher gallery.', ['ielts', 'english', 'language school', 'programs']),
+  // ---- Business & Professional Services +4 (total 15)
+  T('Accounting_firm_website_mockup_202609050659.jpeg', 'ledger-accounting', 'LEDGER Accounting Firm', 'Accounting firm template with bookkeeping and tax services, dashboard visuals, team credentials and resource hubs.', ['accounting', 'bookkeeping', 'tax', 'advisory']),
+  T('Tech_law_firm_homepage_mockup_202609050659.jpeg', 'alpha-tech-law', 'ALPHA Tech Law', 'Technology law template with IP and patent focus, heritage timeline, expertise grids and consultation enquiries.', ['tech law', 'intellectual property', 'patents', 'startups']),
+  T('WEALTH_website_homepage_mockup_202609050659.jpeg', 'wealth-private-capital', 'WEALTH Private Capital', 'Private capital advisory template with portfolio services, engagement methodology and legacy-planning storytelling.', ['wealth management', 'private capital', 'advisory', 'legacy'], true),
+  T('Website_homepage_mockup_design_202609050659.jpeg', 'consult-global-advisory', 'CONSULT Global Advisory', 'Global consulting template with capability grids, advisory board, client-success metrics and worldwide hub maps.', ['consulting', 'advisory', 'transformation', 'global']),
+  // ---- Pet Care +2 (total 6)
+  T('VETIVA_pet_hospital_website_mockup_202609050659.jpeg', 'vetiva-pet-hospital', 'VETIVA Pet Hospital', 'Advanced veterinary hospital template with care centers, specialist profiles, diagnostics storytelling and 24/7 emergency.', ['veterinary', 'animal hospital', 'surgery', 'emergency'], true),
+  T('Veterinary_clinic_website_mockup_202609050659.jpeg', 'kindpaws-vet-clinic', 'KINDPAWS Veterinary Clinic', 'Family-friendly veterinary clinic with wellness plans, puppy and kitten care, care timelines and warm trust-building.', ['veterinary', 'clinic', 'wellness plans', 'family']),
+];
+
 // ------------------------------------------------------------------ helpers
 const slugify = (s) => s.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-');
 const strip = (s) => s.replace(/…/g, '').replace(/_2026\d+\.jpe?g$/i, '');
 
 const categorySlugBySlug = Object.fromEntries(CATEGORIES.map((c) => [c.slug, c.name]));
 
-// Category assignment derived from the curation order above
+// Category assignment derived from the curation order above (drop 1, frozen)
 const CATEGORY_OF = [
   ['restaurant-food', 5], ['real-estate', 1], ['fashion-accessories', 4], ['beauty-salon', 1],
   ['healthcare-medical', 5], ['interior-design', 5], ['fitness-lifestyle', 5], ['tech-digital', 3],
   ['automotive', 3], ['home-services', 7], ['education', 6], ['business-services', 11],
   ['pet-care', 4], ['events-creative', 10],
 ];
+// Drop-2 category groups (explicit — CURATION_V2 must stay grouped in this order)
+const CATEGORY_OF_V2 = [
+  ['real-estate', 4], ['fashion-accessories', 1], ['healthcare-medical', 1], ['interior-design', 2],
+  ['tech-digital', 5], ['automotive', 2], ['home-services', 1], ['education', 2],
+  ['business-services', 4], ['pet-care', 2],
+];
 function categoryFor(index) {
+  if (index < CURATION.length) {
+    let acc = 0;
+    for (const [slug, n] of CATEGORY_OF) { acc += n; if (index < acc) return slug; }
+    return 'events-creative';
+  }
   let acc = 0;
-  for (const [slug, n] of CATEGORY_OF) { acc += n; if (index < acc) return slug; }
-  return 'events-creative';
+  const v2 = index - CURATION.length;
+  for (const [slug, n] of CATEGORY_OF_V2) { acc += n; if (v2 < acc) return slug; }
+  throw new Error(`CURATION_V2 groups sum to less than ${CURATION_V2.length} — fix CATEGORY_OF_V2`);
 }
 
 // ------------------------------------------------------------- images (ffmpeg)
@@ -175,7 +230,7 @@ const slugSet = new Set();
 let missing = 0;
 
 for (const file of files) {
-  const entry = CURATION.find((c) => c.file === file);
+  const entry = CURATION.concat(CURATION_V2).find((c) => c.file === file);
   if (!entry) { console.warn(`!! Unmapped source file: ${file}`); missing++; continue; }
   if (slugSet.has(entry.slug)) throw new Error(`Duplicate slug: ${entry.slug}`);
   slugSet.add(entry.slug);
@@ -217,7 +272,7 @@ const KEYWORDS_EXTRA = {
 
 let order = 0;
 const catCounter = {};
-const rows = CURATION.map((c, i) => {
+const rows = CURATION.concat(CURATION_V2).map((c, i) => {
   const categorySlug = categoryFor(i);
   catCounter[categorySlug] = (catCounter[categorySlug] || 0) + 1;
   const idx = catCounter[categorySlug];
