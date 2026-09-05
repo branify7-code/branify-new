@@ -1,7 +1,7 @@
 /* =========================================================
    BRANIFY — TEMPLATE LIBRARY data layer (public source of truth)
    • templatesRegistry (generated from the supplied Flow AI mockups)
-   • 16 canonical categories with SEO/category-page copy
+   • 15 canonical categories with SEO/category-page copy
    • Query helpers used by the library, category pages, detail pages,
      homepage showcase, sitemap, related templates and admin.
    Admin edits arrive via contentOverrides (published rows merge over
@@ -25,11 +25,7 @@ export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     tagline: 'Fine dining, bistros and street food brands.',
     heroDescription: 'Explore responsive restaurant website templates designed for modern dining businesses, cafés, food brands and hospitality companies — with menu presentation, reservations and gallery sections built in.',
   },
-  {
-    slug: 'cafe-coffee', name: 'Café & Coffee',
-    tagline: 'Warm café and specialty coffee experiences.',
-    heroDescription: 'Explore café and coffee shop website templates crafted for specialty roasters, espresso bars and neighborhood cafés — with menu boards, store info and warm, inviting layouts.',
-  },
+  // cafe-coffee (Café & Coffee) REMOVED by owner request (2026-09) — do not re-add.
   {
     slug: 'real-estate', name: 'Real Estate',
     tagline: 'Property listings and luxury real estate.',

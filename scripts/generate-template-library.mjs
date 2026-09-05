@@ -5,14 +5,17 @@
 //   2. public/templates/{slug}-full.jpg  — 1200w preview + OG image
 //   3. src/data/templates/templates.ts   — generated template registry
 // One source of truth: this script curates name/slug/category/description from
-// the ACTUAL supplied files (94 mockups — drop 1: 70, drop 2: 24 new; 48
-// byte-identical re-exports in drop 2 were md5-deduped against drop 1).
-// CURATION (drop 1, tpl-001..070) is FROZEN so existing ids/urls never shift;
-// new drops append to CURATION_V2 with their own explicit category groups.
+// the ACTUAL supplied files (drop 1: 70, drop 2: 24 new, drop 3 "bts.zip": 12
+// new — 40 byte-identical re-exports in drop 3 were md5-deduped against drops
+// 1+2). Owner removals live in REMOVED_SLUGS (kado-steakhouse, cafe-coffee
+// category) — removed rows keep their frozen ids/urls for the remaining set.
+// CURATION (drop 1) is FROZEN so existing ids/urls never shift; new drops
+// append to CURATION_V2/V3 with their own explicit category groups.
+// Also syncs the template section of public/sitemap.xml (auto-injected block).
 // Usage: bun scripts/generate-template-library.mjs [sourceDir]
 // =============================================================================
 import { execFileSync } from 'node:child_process';
-import { readdirSync, mkdirSync, writeFileSync, existsSync, statSync } from 'node:fs';
+import { readdirSync, mkdirSync, writeFileSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
 const ROOT = join(import.meta.dir, '..');
@@ -26,7 +29,7 @@ mkdirSync(OUT_DATA, { recursive: true });
 // Canonical BRANIFY category order (spec §2). counts are derived from data.
 export const CATEGORIES = [
   { slug: 'restaurant-food', name: 'Restaurant & Food', tagline: 'Fine dining, bistros and street food brands with menus, reservations and gallery sections.' },
-  { slug: 'cafe-coffee', name: 'Café & Coffee', tagline: 'Warm café and specialty coffee experiences with menu boards and store info.' },
+  // cafe-coffee REMOVED by owner request (2026-09) — do not re-add.
   { slug: 'real-estate', name: 'Real Estate', tagline: 'Property listings, agencies and luxury real estate presentations.' },
   { slug: 'fashion-accessories', name: 'Fashion & Accessories', tagline: 'Editorial fashion houses, e-commerce and jewelry collections.' },
   { slug: 'beauty-salon', name: 'Beauty & Salon', tagline: 'Salons, spas and beauty studios with service menus and booking flows.' },
@@ -43,20 +46,26 @@ export const CATEGORIES = [
   { slug: 'catering-services', name: 'Catering Services', tagline: 'Caterers and private chefs with menus, packages and enquiry flows.' },
 ];
 
+// Owner-removed template slugs (registry rows are suppressed but indices stay
+// frozen so no other id/order/url ever shifts).
+const REMOVED_SLUGS = new Set(['kado-steakhouse']);
+
 // ------------------------------------------------- curation: file → template
 // name = display name · s = shortDescription (unique, category-specific)
 // f = featured (homepage rotation) · tags = search keywords
 const T = (file, slug, name, s, tags, f = false) => ({ file, slug, name, s, tags, f });
 
 const CURATION = [
-  // ---- Restaurant & Food (5)
+  // ---- Restaurant & Food (4 after kado-steakhouse removal)
   T('Restaurant_website_homepage_mock…_202609050531.jpeg', 'modern-restaurant', 'Modern Restaurant', 'Polished restaurant homepage with menu presentation, reservations, location and gallery sections for modern dining businesses.', ['restaurant', 'dining', 'menu', 'reservations'], true),
   T('SORA_restaurant_website_mockup_d…_202609050531.jpeg', 'sora-restaurant', 'SORA Restaurant', 'Editorial restaurant design with tasting-menu storytelling, chef profile and elegant food photography layouts.', ['restaurant', 'tasting menu', 'chef', 'editorial']),
+  // REMOVED by owner (2026-09): kado-steakhouse — entry kept in place ONLY to
+  // preserve frozen indices; suppressed everywhere via REMOVED_SLUGS.
   T('KADO_website_homepage_mockup_202609050531.jpeg', 'kado-steakhouse', 'KADO Steakhouse', 'Bold steakhouse template with signature menu grid, chef story, interior gallery and reservation call-to-action.', ['steakhouse', 'fine dining', 'menu', 'reservations'], true),
   T('MAISON_website_homepage_mockup_202609050531.jpeg', 'maison-fine-dining', 'MAISON French Dining', 'Refined French fine-dining template with tasting menus, private dining section and editorial serif typography.', ['french', 'fine dining', 'tasting menu', 'private dining'], true),
   T('Website_homepage_mockup_for_STREET_202609050531.jpeg', 'street-street-food', 'STREET Street Food', 'High-energy street food template with best-seller menu, brand story and online ordering call-to-action.', ['street food', 'burger', 'ordering', 'casual dining']),
 
-  // ---- Café & Coffee (0 in ZIP — category kept for future uploads)
+  // ---- Café & Coffee — REMOVED by owner request (2026-09); category retired.
 
   // ---- Real Estate (1)
   T('ESTATE_luxury_property_website_m…_202609050531.jpeg', 'estate-luxury-property', 'ESTATE Luxury Property', 'Luxury property showcase with hero listings, neighborhood highlights and enquiry-first lead capture.', ['real estate', 'property', 'luxury listings', 'agency'], true),
@@ -192,6 +201,32 @@ const CURATION_V2 = [
   T('Veterinary_clinic_website_mockup_202609050659.jpeg', 'kindpaws-vet-clinic', 'KINDPAWS Veterinary Clinic', 'Family-friendly veterinary clinic with wellness plans, puppy and kitten care, care timelines and warm trust-building.', ['veterinary', 'clinic', 'wellness plans', 'family']),
 ];
 
+// =========================================================== DROP 3 (12 new)
+// Third supplied ZIP ("bts.zip", 52 files → 40 md5-duplicates of drops 1+2,
+// 12 genuinely new mockups). Grouped in CATEGORY_OF_V3 order below.
+const CURATION_V3 = [
+  // ---- Tech & Digital +3 (total 11)
+  T('CLOUD9_SaaS_website_mockup_202609050823.jpeg', 'cloud9-cloud-platform', 'CLOUD9 Cloud Platform', 'Light cloud infrastructure SaaS template with deploy-monitor-scale steps, live dashboards, developer docs and pricing tiers.', ['saas', 'cloud', 'infrastructure', 'developer'], true),
+  T('CORE_SaaS_homepage_mockup_design_202609050823.jpeg', 'core-cloud-infrastructure', 'CORE Cloud Infrastructure', 'Industrial-grade cloud platform template with uptime stats, feature grids, global backbone map and deployment workflow.', ['saas', 'cloud', 'infrastructure', 'dark mode'], true),
+  T('CYBER_SaaS_homepage_mockup_202609050823.jpeg', 'cyber-security-saas', 'CYBER Security SaaS', 'Cybersecurity SaaS template with threat detection dashboard, endpoint protection, compliance sections and enterprise trust walls.', ['cybersecurity', 'saas', 'threat detection', 'enterprise']),
+  // ---- Events & Creative +2 (total 12)
+  T('CRAFT_event_website_mockup_202609050823.jpeg', 'craft-luxury-events', 'CRAFT Luxury Events', 'Luxury event production template with weddings, galas and brand launches, showcase galleries, creative team profiles and enquiry journeys.', ['events', 'weddings', 'galas', 'event planning'], true),
+  T('GALA_website_homepage_mockup_202609050823.jpeg', 'gala-celebration-events', 'GALA Celebration Events', 'Elegant celebration planning template with event types, design showcase, planning process steps and inspiration journal.', ['events', 'celebrations', 'parties', 'planning']),
+  // ---- Business & Professional Services +2 (total 17)
+  T('Consulting_firm_homepage_mockup_202609050823.jpeg', 'strategy-consulting-firm', 'STRATEGY Consulting Firm', 'Strategy consulting template with capability areas, industry expertise, engagement roadmap and global office locations.', ['consulting', 'strategy', 'b2b', 'advisory']),
+  T('FINCOUNT_website_homepage_mockup_202609050823.jpeg', 'fincount-accounting', 'FINCOUNT Accounting & Advisory', 'Accounting firm template with audit, CFO advisory, business structuring, client journey timeline and reporting hub.', ['accounting', 'audit', 'cfo advisory', 'finance']),
+  // ---- Education +1 (total 9)
+  T('EDORA_website_homepage_mockup_202609050823.jpeg', 'edora-online-learning', 'EDORA Online Learning', 'Premium learning platform template with curated courses, learning paths, expert instructors and certification pricing tiers.', ['courses', 'e-learning', 'learning paths', 'certificates'], true),
+  // ---- Home Services +1 (total 9)
+  T('FIXO_website_homepage_mockup_202609050823.jpeg', 'fixo-home-repairs', 'FIXO Home Repairs', 'Plumbing and electrical repair template with service grids, 24/7 emergency banner, booking forms and certified technician trust sections.', ['repairs', 'plumbing', 'electrical', 'booking']),
+  // ---- Fashion & Accessories +1 (total 6)
+  T('Footwear_e-commerce_website_mockup_202609050823.jpeg', 'sole-footwear-ecommerce', 'SOLE Footwear E-Commerce', 'Editorial footwear storefront with category collections, best sellers, craftsmanship storytelling and brand journal.', ['footwear', 'e-commerce', 'sneakers', 'shop']),
+  // ---- Automotive +1 (total 6)
+  T('GARAGE_website_homepage_mockup_202609050823.jpeg', 'garage-auto-service', 'GARAGE Auto Service', 'Precision auto service template with maintenance pillars, booking scheduler, service pricing plans and certified technician sections.', ['garage', 'auto repair', 'maintenance', 'booking']),
+  // ---- Fitness & Lifestyle +1 (total 6)
+  T('Gym_website_homepage_mockup_202609050823.jpeg', 'forge-strength-gym', 'FORGE Strength Gym', 'Gritty strength gym template with training programs, coach profiles, weekly class schedule, membership tiers and transformation results.', ['gym', 'strength', 'classes', 'membership'], true),
+];
+
 // ------------------------------------------------------------------ helpers
 const slugify = (s) => s.toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-');
 const strip = (s) => s.replace(/…/g, '').replace(/_2026\d+\.jpe?g$/i, '');
@@ -211,16 +246,27 @@ const CATEGORY_OF_V2 = [
   ['tech-digital', 5], ['automotive', 2], ['home-services', 1], ['education', 2],
   ['business-services', 4], ['pet-care', 2],
 ];
+// Drop-3 category groups (explicit — CURATION_V3 must stay grouped in this order)
+const CATEGORY_OF_V3 = [
+  ['tech-digital', 3], ['events-creative', 2], ['business-services', 2], ['education', 1],
+  ['home-services', 1], ['fashion-accessories', 1], ['automotive', 1], ['fitness-lifestyle', 1],
+];
 function categoryFor(index) {
   if (index < CURATION.length) {
     let acc = 0;
     for (const [slug, n] of CATEGORY_OF) { acc += n; if (index < acc) return slug; }
     return 'events-creative';
   }
-  let acc = 0;
-  const v2 = index - CURATION.length;
-  for (const [slug, n] of CATEGORY_OF_V2) { acc += n; if (v2 < acc) return slug; }
-  throw new Error(`CURATION_V2 groups sum to less than ${CURATION_V2.length} — fix CATEGORY_OF_V2`);
+  let rel = index - CURATION.length;
+  for (const [groups, list] of [[CATEGORY_OF_V2, CURATION_V2], [CATEGORY_OF_V3, CURATION_V3]]) {
+    if (rel < list.length) {
+      let acc = 0;
+      for (const [slug, n] of groups) { acc += n; if (rel < acc) return slug; }
+      throw new Error(`Category groups sum to less than ${list.length} — fix groups`);
+    }
+    rel -= list.length;
+  }
+  throw new Error(`No category for curation index ${index}`);
 }
 
 // ------------------------------------------------------------- images (ffmpeg)
@@ -230,8 +276,9 @@ const slugSet = new Set();
 let missing = 0;
 
 for (const file of files) {
-  const entry = CURATION.concat(CURATION_V2).find((c) => c.file === file);
+  const entry = CURATION.concat(CURATION_V2, CURATION_V3).find((c) => c.file === file);
   if (!entry) { console.warn(`!! Unmapped source file: ${file}`); missing++; continue; }
+  if (REMOVED_SLUGS.has(entry.slug)) continue; // owner-removed: no assets, no registry row
   if (slugSet.has(entry.slug)) throw new Error(`Duplicate slug: ${entry.slug}`);
   slugSet.add(entry.slug);
 
@@ -272,7 +319,7 @@ const KEYWORDS_EXTRA = {
 
 let order = 0;
 const catCounter = {};
-const rows = CURATION.concat(CURATION_V2).map((c, i) => {
+const rows = CURATION.concat(CURATION_V2, CURATION_V3).map((c, i) => {
   const categorySlug = categoryFor(i);
   catCounter[categorySlug] = (catCounter[categorySlug] || 0) + 1;
   const idx = catCounter[categorySlug];
@@ -301,7 +348,7 @@ const rows = CURATION.concat(CURATION_V2).map((c, i) => {
     seoDescription: seoDesc,
     seoKeywords: [...c.tags, ...KEYWORDS_EXTRA[categorySlug]],
   };
-});
+}).filter((r) => !REMOVED_SLUGS.has(r.slug)); // frozen indices preserved — only the removed row drops out
 
 const ts = `// =============================================================================
 // AUTO-GENERATED by scripts/generate-template-library.mjs — DO NOT EDIT BY HAND.
@@ -357,6 +404,30 @@ ${rows.map((r) => `  {
 export default templatesRegistry;
 `;
 writeFileSync(join(OUT_DATA, 'templates.ts'), ts);
+
+// ------------------------------------------------------------ sitemap sync
+// Regenerates the "TEMPLATE LIBRARY (auto-injected)" block of public/sitemap.xml
+// from the live registry (hub + populated categories + every template URL).
+const SITEMAP_PATH = join(ROOT, 'public', 'sitemap.xml');
+const SITEMAP_MARK = '<!-- TEMPLATE LIBRARY (auto-injected) -->';
+if (existsSync(SITEMAP_PATH)) {
+  const xml = readFileSync(SITEMAP_PATH, 'utf8');
+  const cut = xml.indexOf(SITEMAP_MARK);
+  if (cut === -1) {
+    console.warn('!! sitemap.xml has no template block marker — template URLs NOT synced');
+  } else {
+    const today = new Date().toISOString().slice(0, 10);
+    const url = (loc, priority) => `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>\n`;
+    let section = url('https://branify.store/templates', '0.9');
+    for (const c of CATEGORIES) {
+      if (!rows.some((r) => r.categorySlug === c.slug)) continue; // empty/removed categories stay out
+      section += url(`https://branify.store/templates/${c.slug}`, '0.8');
+    }
+    for (const r of rows) section += url(`https://branify.store/templates/${r.categorySlug}/${r.slug}`, '0.7');
+    writeFileSync(SITEMAP_PATH, `${xml.slice(0, cut + SITEMAP_MARK.length)}\n${section}\n</urlset>\n`);
+    console.log(`Sitemap template block synced: 1 hub + ${CATEGORIES.filter((c) => rows.some((r) => r.categorySlug === c.slug)).length} categories + ${rows.length} templates`);
+  }
+}
 
 console.log(`Generated templates.ts with ${rows.length} templates`);
 const counts = {};
