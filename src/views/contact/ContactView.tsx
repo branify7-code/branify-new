@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Send, Sparkles, CheckCircle2, MessageSquare, 
   Clock, ShieldCheck, Mail, MapPin, Phone, ArrowRight, Calendar
@@ -6,6 +6,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import { trackEvent } from '../../lib/track';
 import { mirrorLeadToPreview } from '../../lib/leadCapture';
+import { getTemplateBySlug, getCategoryBySlug } from '../../data/templates';
 
 interface ContactViewProps {
   onNavigateHome: () => void;
@@ -21,6 +22,31 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Lead capture context: /contact?template=<slug> (template detail CTA),
+  // /contact?category=<slug> (category "Request Custom Design") or
+  // /contact?source=… (library/home CTAs). Prefills the message so the
+  // sales inbox knows exactly which template the lead is interested in.
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const templateSlug = params.get('template');
+      const categorySlug = params.get('category');
+      if (templateSlug) {
+        const t = getTemplateBySlug(templateSlug);
+        if (t) {
+          setSelectedServices((prev) => (prev.includes('Web Development') ? prev : [...prev, 'Web Development']));
+          setMessage(`I'd like to start with the "${t.name}" website template (${t.category}).\n\nPlease tailor it to my brand and share the next steps.`);
+        }
+      } else if (categorySlug) {
+        const c = getCategoryBySlug(categorySlug);
+        if (c) {
+          setSelectedServices((prev) => (prev.includes('Web Development') ? prev : [...prev, 'Web Development']));
+          setMessage(`I'm interested in a website for my ${c.name.toLowerCase()} business${categorySlug.endsWith('-food') || categorySlug === 'catering-services' ? '' : ''}. A template from your ${c.name} collection could be a great starting point.`);
+        }
+      }
+    } catch { /* prefill is best-effort */ }
+  }, []);
 
   const availableServices = [
     'Web Development',

@@ -26,6 +26,8 @@ import { PortfolioManager } from './pages/managers/PortfolioManager';
 import { ToolsManager } from './pages/managers/ToolsManager';
 import { AIToolsManager } from './pages/managers/AIToolsManager';
 import { ProductsManager } from './pages/managers/ProductsManager';
+import { TemplatesManager } from './pages/managers/TemplatesManager';
+import { TemplateCategoriesManager } from './pages/managers/TemplateCategoriesManager';
 import { BlogManager } from './pages/managers/BlogManager';
 import { LeadsPage } from './pages/managers/LeadsPage';
 import { ContactsPage } from './pages/managers/ContactsPage';
@@ -204,6 +206,8 @@ const AdminShell: React.FC<{
       case '/tools': return <ToolsManager {...pageProps} />;
       case '/ai-tools': return <AIToolsManager {...pageProps} />;
       case '/products': return <ProductsManager {...pageProps} />;
+      case '/templates': return <TemplatesManager {...pageProps} />;
+      case '/template-categories': return <TemplateCategoriesManager {...pageProps} />;
       case '/blog': return <BlogManager {...pageProps} />;
       case '/leads': return <LeadsPage {...pageProps} />;
       case '/customers': return <CustomersPage {...pageProps} />;
@@ -386,6 +390,7 @@ const AdminShell: React.FC<{
                   ['New Tool', '/tools?new=1'],
                   ['New AI Tool', '/ai-tools?new=1'],
                   ['New Product', '/products?new=1'],
+                  ['New Template', '/templates?new=1'],
                   ['New Blog Post', '/blog?new=1'],
                   ['New Redirect', '/seo/redirects?new=1'],
                   ['Edit Homepage SEO', '/seo?page=/'],

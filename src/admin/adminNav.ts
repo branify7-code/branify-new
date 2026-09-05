@@ -1,17 +1,18 @@
 // =============================================================================
 // BRANIFY ADMIN — navigation model (sidebar groups, titles, breadcrumbs)
-// Order follows the product spec §4:
+// Order follows the product spec §4 (+ template library extension):
 //   Dashboard · Services · Portfolio · Free Tools · AI Tools · Products ·
-//   Blog · Customers · Leads · Payments · SEO · Analytics · Performance ·
-//   Media · Settings   (+ bottom: Admin Profile · Logout, rendered in shell)
+//   Templates · Template Categories · Blog · Customers · Leads · Payments ·
+//   SEO · Analytics · Performance · Media · Settings
+//   (+ bottom: Admin Profile · Logout, rendered in shell)
 // SEO sub-modules (Sitemap / Redirects / 404 Monitor) are reached from the
 // SEO Center hub; PWA lives as a Settings tab. Both keep deep-link routes.
 // =============================================================================
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity, BarChart3, Briefcase, CreditCard, FileText,
-  FolderKanban, Gauge, HeartPulse, Image as ImageIcon, LayoutDashboard,
-  Search, Settings, ShoppingBag, Sparkles, Users, Wrench,
+  FolderKanban, FolderTree, Gauge, HeartPulse, Image as ImageIcon, LayoutDashboard,
+  LayoutTemplate, Search, Settings, ShoppingBag, Sparkles, Users, Wrench,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -42,6 +43,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { path: '/tools', label: 'Free Tools', icon: Wrench },
       { path: '/ai-tools', label: 'AI Tools', icon: Sparkles },
       { path: '/products', label: 'Products', icon: ShoppingBag },
+      { path: '/templates', label: 'Templates', icon: LayoutTemplate },
+      { path: '/template-categories', label: 'Template Categories', icon: FolderTree },
       { path: '/blog', label: 'Blog', icon: FileText },
     ],
   },

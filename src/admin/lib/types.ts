@@ -25,6 +25,8 @@ export type CollectionKey =
   | 'ai_tools'
   | 'products'
   | 'blog_posts'
+  | 'templates'
+  | 'template_categories'
   | 'inquiries'
   | 'newsletter_subscribers'
   | 'payments'
@@ -183,6 +185,44 @@ export interface BlogRow {
   updated_at: string;
 }
 
+// ---------------------------------------------------------------- template library
+// Mirrors supabase/admin-schema.sql §13 (template_categories / templates).
+// Templates hide from the public site via status='draft' (no archived column).
+export interface TemplateRow {
+  id: string;
+  slug: string;
+  name: string;
+  category_slug: string;
+  short_description: string;
+  description: string;
+  thumbnail: string;
+  preview_image: string;
+  demo_url: string;
+  tags: string[];
+  featured: boolean;
+  status: 'published' | 'draft' | string;
+  sort_order: number;
+  seo: SeoMeta;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TemplateCategoryRow {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  hero_description: string;
+  image: string;
+  seo_title: string;
+  seo_description: string;
+  og_image: string;
+  active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost';
 
 export interface LeadRow {
@@ -314,6 +354,8 @@ export interface DashboardData {
     tools: number;
     ai_tools: number;
     products: number;
+    templates: number;
+    template_categories: number;
     blog_published: number;
     blog_drafts: number;
     leads_total: number;

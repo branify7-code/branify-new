@@ -30,6 +30,7 @@ const serviceLinks: Array<{ label: string; route: string }> = [
 ];
 
 const resourceLinks: Array<{ label: string; route: string; gold?: boolean }> = [
+  { label: 'Website Templates', route: '/templates', gold: true },
   { label: 'Free Templates', route: '/free-templates' },
   { label: 'Website Starters', route: '/free-templates/website' },
   { label: 'Business Docs', route: '/free-templates/business' },

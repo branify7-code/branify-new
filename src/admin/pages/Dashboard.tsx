@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle, Bot, Briefcase, CheckCircle2, Crown, FileText, FolderKanban,
-  Image as ImageIcon, LogIn, Mail, Package, Pencil, Plus, RefreshCw, Search,
+  Image as ImageIcon, LayoutTemplate, LogIn, Mail, Package, Pencil, Plus, RefreshCw, Search,
   Server, Settings, Trash2, UserPlus, Users, Wrench,
 } from 'lucide-react';
 import type { AdminPageProps } from '../lib/auth';
@@ -235,6 +235,7 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
     { label: 'AI Tools', value: c.ai_tools, icon: Bot, sub: <span className="text-[#6B7280]">Curated AI directory</span> },
     { label: 'Free Tools', value: c.tools, icon: Wrench, sub: <span className="text-[#6B7280]">Utility tools live</span> },
     { label: 'Products', value: c.products, icon: Package, sub: <span className="text-[#6B7280]">Digital products</span> },
+    { label: 'Templates', value: c.templates, icon: LayoutTemplate, sub: <span className="text-[#6B7280]">{c.template_categories} categories</span> },
     { label: 'Blog Posts', value: c.blog_published, icon: FileText, sub: <span className="text-[#6B7280]">{c.blog_drafts} draft{c.blog_drafts === 1 ? '' : 's'}</span> },
     { label: 'Subscribers', value: c.subscribers, icon: Mail, sub: <span className="text-[#6B7280]">Newsletter list</span> },
   ];

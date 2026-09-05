@@ -583,3 +583,85 @@ end $$;
 -- ==============================================================================
 -- DONE. Next steps: run admin-seed.sql (optional), then sign in at /admin.
 -- ==============================================================================
+
+-- ==============================================================================
+-- 13. TEMPLATE LIBRARY (public /templates — 16 canonical categories)
+--     Appended section: mirrors the conventions above. Content tables avoid
+--     FKs, so templates.category_slug is a plain text reference to
+--     template_categories.slug kept in sync by the admin dashboard.
+--     Templates hide from the public site via status='draft' (no archived
+--     column); categories via active=false.
+-- ==============================================================================
+create table if not exists public.template_categories (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  tagline text default '',
+  hero_description text default '',
+  image text default '',
+  seo_title text default '',
+  seo_description text default '',
+  og_image text default '',
+  active boolean not null default true,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.templates (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  category_slug text not null,                  -- references template_categories(slug) logically (no FK, like the rest of the content tables)
+  short_description text default '',
+  description text default '',
+  thumbnail text default '',
+  preview_image text default '',
+  demo_url text default '',
+  tags text[] not null default '{}',
+  featured boolean not null default false,
+  status text not null default 'published' check (status in ('published','draft')),
+  sort_order integer not null default 0,
+  seo jsonb not null default '{}'::jsonb,       -- { title, description, og_image }
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.template_categories enable row level security;
+alter table public.templates enable row level security;
+
+-- Admin-only writes/reads for the dashboard (allowlisted admins via the helper)
+drop policy if exists "admins full access template_categories" on public.template_categories;
+create policy "admins full access template_categories" on public.template_categories
+  for all to authenticated using (public.branify_is_admin()) with check (public.branify_is_admin());
+
+drop policy if exists "admins full access templates" on public.templates;
+create policy "admins full access templates" on public.templates
+  for all to authenticated using (public.branify_is_admin()) with check (public.branify_is_admin());
+
+-- Public site: anon reads ALL template-library rows (drafts included). The
+-- public site's boot-time override merge splices status='draft' templates and
+-- active=false categories out of the compiled registry, so the anon client
+-- must be able to SEE those rows to hide them. Template content ships in the
+-- JS bundle regardless — drafts only remove rows from the live site lists.
+drop policy if exists "public read active template_categories" on public.template_categories;
+create policy "public read template_categories for override merge"
+  on public.template_categories for select to anon using (true);
+
+drop policy if exists "public read published templates" on public.templates;
+create policy "public read templates for override merge"
+  on public.templates for select to anon using (true);
+
+create index if not exists template_categories_sort_idx on public.template_categories (sort_order);
+create index if not exists templates_sort_idx on public.templates (sort_order);
+create index if not exists templates_category_idx on public.templates (category_slug, sort_order);
+create index if not exists templates_status_idx on public.templates (status, sort_order);
+
+-- updated_at touch trigger (same helper as section 12)
+drop trigger if exists template_categories_touch on public.template_categories;
+create trigger template_categories_touch before update on public.template_categories
+  for each row execute function public.branify_touch_updated_at();
+
+drop trigger if exists templates_touch on public.templates;
+create trigger templates_touch before update on public.templates
+  for each row execute function public.branify_touch_updated_at();

@@ -1,3 +1,5 @@
+import { templateCount } from './templates';
+
 export interface DropdownItem {
   id: string;
   title: string;
@@ -91,6 +93,13 @@ export const navItemsWithDropdowns: NavCategory[] = [
         iconName: 'Cloud'
       }
     ]
+  },
+  {
+    id: 'templates',
+    label: 'Templates',
+    href: '#templates',
+    route: '/templates',
+    badge: `${templateCount()}`,
   },
   {
     id: 'portfolio',

@@ -17,6 +17,8 @@ const { aiToolsDirectory } = await import(join(ROOT, 'src/data/aiToolsDirectory.
 const { projectsData } = await import(join(ROOT, 'src/data/projects.ts'));
 const { blogPosts } = await import(join(ROOT, 'src/data/blogPosts.ts'));
 const { freeTemplates } = await import(join(ROOT, 'src/data/freeTemplatesRegistry.ts'));
+const { templatesRegistry } = await import(join(ROOT, 'src/data/templates/templates.ts'));
+const { TEMPLATE_CATEGORIES } = await import(join(ROOT, 'src/data/templates/index.ts'));
 
 const SITE_URL = 'https://branify-new.vercel.app';
 
@@ -137,6 +139,43 @@ const posts = blogPosts.map((p) => ({
   seo: { title: `${p.title} | BRANIFY Blog`, description: p.excerpt || '' },
 }));
 
+// -------------------------------------------------- map: template_categories
+// The 16 canonical /templates categories (public data layer = source of truth).
+const templateCategories = TEMPLATE_CATEGORIES.map((c, i) => ({
+  slug: c.slug,
+  name: c.name,
+  tagline: c.tagline || '',
+  hero_description: c.heroDescription || '',
+  image: '',
+  seo_title: `${c.name} Website Templates — BRANIFY`,
+  seo_description: c.heroDescription || c.tagline || '',
+  og_image: '',
+  active: true,
+  sort_order: i,
+}));
+
+// --------------------------------------------------------- map: templates
+// 70 generated TemplateRecord entries (Flow AI mockups).
+const templates = templatesRegistry.map((t, i) => ({
+  slug: t.slug,
+  name: t.name,
+  category_slug: t.categorySlug,
+  short_description: t.shortDescription || '',
+  description: t.description || '',
+  thumbnail: t.thumbnail || '',
+  preview_image: t.previewImage || '',
+  demo_url: '',
+  tags: t.tags || [],
+  featured: Boolean(t.featured),
+  status: t.status === 'draft' ? 'draft' : 'published',
+  sort_order: t.order ?? i,
+  seo: {
+    title: t.seo?.title || '',
+    description: t.seo?.description || '',
+    og_image: t.seo?.ogImage || '',
+  },
+}));
+
 // ------------------------------------------------------------------- settings
 const settings = {
   general: {
@@ -215,6 +254,12 @@ sqlParts.push('\n');
 sqlParts.push(rows('blog_posts', posts, (r) =>
   `${q(r.slug)}, ${q(r.title)}, ${q(r.excerpt)}, ${q(r.content)}, ${q(r.cover_image)}, ${q(r.author_name)}, ${q(r.author_role)}, ${qtstz(r.published_at)}, ${q(r.category)}, ${qarr(r.tags)}, ${q(r.status)}, ${r.featured}, ${qjson(r.seo)}`));
 sqlParts.push('\n');
+sqlParts.push(rows('template_categories', templateCategories, (r) =>
+  `${q(r.slug)}, ${q(r.name)}, ${q(r.tagline)}, ${q(r.hero_description)}, ${q(r.image)}, ${q(r.seo_title)}, ${q(r.seo_description)}, ${q(r.og_image)}, ${r.active}, ${r.sort_order}`));
+sqlParts.push('\n');
+sqlParts.push(rows('templates', templates, (r) =>
+  `${q(r.slug)}, ${q(r.name)}, ${q(r.category_slug)}, ${q(r.short_description)}, ${q(r.description)}, ${q(r.thumbnail)}, ${q(r.preview_image)}, ${q(r.demo_url)}, ${qarr(r.tags)}, ${r.featured}, ${q(r.status)}, ${r.sort_order}, ${qjson(r.seo)}`));
+sqlParts.push('\n');
 
 // settings — insert per-key
 const settingRows = Object.entries(settings)
@@ -238,6 +283,8 @@ const seedJson = {
   portfolio_projects: withCols(portfolio, ['slug','title','category','client','description','hero_image','gallery','technologies','challenge','solution','outcome','live_url','featured','published','sort_order','seo']),
   products: withCols(products, ['slug','name','category','description','image','price','currency','status','delivery_info','file_url','featured','sort_order','seo']),
   blog_posts: withCols(posts, ['slug','title','excerpt','content','cover_image','author_name','author_role','published_at','category','tags','status','featured','seo']),
+  template_categories: withCols(templateCategories, ['slug','name','tagline','hero_description','image','seo_title','seo_description','og_image','active','sort_order']),
+  templates: withCols(templates, ['slug','name','category_slug','short_description','description','thumbnail','preview_image','demo_url','tags','featured','status','sort_order','seo']),
   settings,
 };
 
@@ -247,6 +294,6 @@ writeFileSync(join(apiDir, 'seed.json'), JSON.stringify(seedJson, null, 2));
 
 console.log(
   `Seed generated:\n` +
-  `  supabase/admin-seed.sql (${services.length} services, ${tools.length} tools, ${aiTools.length} ai_tools, ${portfolio.length} portfolio, ${products.length} products, ${posts.length} posts, ${Object.keys(settings).length} settings)\n` +
+  `  supabase/admin-seed.sql (${services.length} services, ${tools.length} tools, ${aiTools.length} ai_tools, ${portfolio.length} portfolio, ${products.length} products, ${posts.length} posts, ${templateCategories.length} template_categories, ${templates.length} templates, ${Object.keys(settings).length} settings)\n` +
   `  mini-services/branify-admin-api/seed.json`
 );

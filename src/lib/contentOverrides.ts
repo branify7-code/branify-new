@@ -13,6 +13,8 @@ import { aiToolsDirectory } from '../data/aiToolsDirectory';
 import { projectsData } from '../data/projects';
 import { blogPosts } from '../data/blogPosts';
 import { freeTemplates } from '../data/freeTemplatesRegistry';
+import { templatesRegistry } from '../data/templates/templates';
+import { TEMPLATE_CATEGORIES } from '../data/templates';
 
 const LOCAL_ENABLED = Boolean((import.meta as { env?: Record<string, unknown> }).env?.DEV);
 const CACHE_KEY = 'branify_public_overrides_v1';
@@ -20,12 +22,14 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 
 interface OverridesPayload {
   fetchedAt: number;
+  template_categories?: Array<Record<string, unknown>>;
   services: Array<Record<string, unknown>>;
   tools: Array<Record<string, unknown>>;
   ai_tools: Array<Record<string, unknown>>;
   products: Array<Record<string, unknown>>;
   portfolio_projects: Array<Record<string, unknown>>;
   blog_posts: Array<Record<string, unknown>>;
+  templates: Array<Record<string, unknown>>;
   redirects: Array<Record<string, unknown>>;
   seo_overrides: Array<Record<string, unknown>>;
 }
@@ -121,6 +125,49 @@ function applyOverrides(p: OverridesPayload): void {
     if (str(o.excerpt)) b.excerpt = str(o.excerpt);
   }
 
+  // ---- template library categories (tagline/hero/name + deactivation)
+  for (const o of p.template_categories || []) {
+    const c = TEMPLATE_CATEGORIES.find((x) => x.slug === str(o.slug));
+    if (!c) continue;
+    if (bool(o.active) === false) {
+      // Category deactivated → its templates leave the public registry too
+      // (library grid, homepage showcase, detail routes).
+      for (let i = templatesRegistry.length - 1; i >= 0; i--) {
+        if (templatesRegistry[i].categorySlug === c.slug) templatesRegistry.splice(i, 1);
+      }
+      continue;
+    }
+    if (str(o.name)) c.name = str(o.name);
+    if (str(o.tagline)) c.tagline = str(o.tagline);
+    if (str(o.hero_description)) c.heroDescription = str(o.hero_description);
+  }
+
+  // ---- template library
+  for (const o of p.templates || []) {
+    const t = templatesRegistry.find((x) => x.slug === str(o.slug));
+    if (!t) continue;
+    if (str(o.status) === 'draft') {
+      const i = templatesRegistry.indexOf(t);
+      if (i >= 0) templatesRegistry.splice(i, 1);
+      continue;
+    }
+    if (str(o.name)) t.name = str(o.name);
+    if (str(o.short_description)) t.shortDescription = str(o.short_description);
+    if (str(o.description)) t.description = str(o.description);
+    if (str(o.thumbnail)) t.thumbnail = str(o.thumbnail);
+    if (str(o.preview_image)) t.previewImage = str(o.preview_image);
+    if (str(o.demo_url)) t.previewImage = str(o.demo_url);
+    if (bool(o.featured) !== undefined) t.featured = bool(o.featured);
+    const seo = o.seo as { title?: string; description?: string } | null;
+    if (seo && typeof seo === 'object') {
+      if (seo.title) t.seo.title = seo.title;
+      if (seo.description) t.seo.description = seo.description;
+      if (seo.title || seo.description) {
+        t.seo.keywords = t.seo.keywords;
+      }
+    }
+  }
+
   // ---- SEO overrides exposed for the Seo component (runtime meta refresh)
   (window as unknown as { __BRANIFY_SEO_OVERRIDES__?: Record<string, Record<string, string>> }).__BRANIFY_SEO_OVERRIDES__ =
     Object.fromEntries(
@@ -161,12 +208,12 @@ function readCache(): OverridesPayload | null {
 }
 
 async function fetchOverrides(): Promise<OverridesPayload | null> {
-  const empty: OverridesPayload = { fetchedAt: Date.now(), services: [], tools: [], ai_tools: [], products: [], portfolio_projects: [], blog_posts: [], redirects: [], seo_overrides: [] };
+  const empty: OverridesPayload = { fetchedAt: Date.now(), template_categories: [], services: [], tools: [], ai_tools: [], products: [], portfolio_projects: [], blog_posts: [], templates: [], redirects: [], seo_overrides: [] };
 
   // Production → Supabase directly
   if (!LOCAL_ENABLED) {
     try {
-      const tables: Array<keyof Omit<OverridesPayload, 'fetchedAt'>> = ['services', 'tools', 'ai_tools', 'products', 'portfolio_projects', 'blog_posts', 'redirects', 'seo_overrides'];
+      const tables: Array<keyof Omit<OverridesPayload, 'fetchedAt'>> = ['template_categories', 'services', 'tools', 'ai_tools', 'products', 'portfolio_projects', 'blog_posts', 'templates', 'redirects', 'seo_overrides'];
       const results = await Promise.all(
         tables.map((t) =>
           supabase

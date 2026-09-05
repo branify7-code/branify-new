@@ -8,6 +8,7 @@
 // =============================================================================
 
 import type { SeoOverrideRow, SiteSettings } from '../lib/types';
+import { TEMPLATE_CATEGORIES, allTemplates, templateCount } from '../../data/templates';
 
 // ------------------------------------------------------------------ row shape
 /** Minimal structural shape of content rows fetched via listRows(). */
@@ -46,6 +47,7 @@ export type PageKind =
   | 'ai_tools'
   | 'templates_hub'
   | 'template'
+  | 'template_category'
   | 'blog_hub'
   | 'blog'
   | 'portfolio_hub'
@@ -74,6 +76,7 @@ export const PAGE_KIND_LABEL: Record<PageKind, string> = {
   tool: 'Tool',
   ai_tools: 'AI directory',
   templates_hub: 'Templates hub',
+  template_category: 'Template category',
   template: 'Template',
   blog_hub: 'Blog hub',
   blog: 'Blog post',
@@ -249,6 +252,37 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
       sourceTitle: seo.title,
       sourceDescription: seo.description || (r.description || '').trim() || undefined,
       sourceUpdated: r.updated_at,
+    });
+  }
+
+  // --- template library (hub + categories + templates) ---
+  // Source of truth: src/data/templates (static Flow AI mockup registry with
+  // admin contentOverrides applied at runtime). Preview routes are excluded:
+  // they are viewer chrome for an image, not unique indexable content.
+  pages.push({
+    path: '/templates',
+    kind: 'templates_hub',
+    label: 'Website Templates',
+    sourceTitle: 'Website Templates for Modern Businesses',
+    sourceDescription: `Explore ${templateCount()} professionally designed, responsive website templates for restaurants, real estate, healthcare, technology, fashion, services and more.`,
+  });
+  for (const c of TEMPLATE_CATEGORIES) {
+    if (allTemplates().filter((t) => t.categorySlug === c.slug).length === 0) continue; // empty categories: not in sitemap yet
+    pages.push({
+      path: `/templates/${c.slug}`,
+      kind: 'template_category',
+      label: `${c.name} Templates`,
+      sourceTitle: `${c.name} Website Templates`,
+      sourceDescription: c.heroDescription,
+    });
+  }
+  for (const t of allTemplates()) {
+    pages.push({
+      path: `/templates/${t.categorySlug}/${t.slug}`,
+      kind: 'template',
+      label: `${t.name} Template`,
+      sourceTitle: t.seo.title,
+      sourceDescription: t.seo.description,
     });
   }
 
@@ -546,6 +580,7 @@ const SITEMAP_POLICY: Record<PageKind, { changefreq: string; priority: string }>
   ai_tools: { changefreq: 'weekly', priority: '0.7' },
   templates_hub: { changefreq: 'weekly', priority: '0.9' },
   template: { changefreq: 'weekly', priority: '0.7' },
+  template_category: { changefreq: 'weekly', priority: '0.8' },
   blog_hub: { changefreq: 'weekly', priority: '0.8' },
   blog: { changefreq: 'monthly', priority: '0.6' },
   portfolio_hub: { changefreq: 'weekly', priority: '0.8' },

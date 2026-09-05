@@ -81,6 +81,20 @@ async function probeLocal(): Promise<boolean> {
 
 export async function detectMode(): Promise<AdminMode> {
   if (cachedMode) return cachedMode;
+  // Sandbox/QA escape hatch (dev builds only): sessionStorage
+  // 'branify_admin_mode' = 'local' forces the local preview API. Harmless in
+  // production — LOCAL_ENABLED is compiled out of prod bundles, so the local
+  // probe/transport can never be reached there.
+  if (LOCAL_ENABLED) {
+    try {
+      if (sessionStorage.getItem(MODE_CACHE_KEY) === 'local') {
+        if (await probeLocal()) {
+          cachedMode = 'local';
+          return cachedMode;
+        }
+      }
+    } catch { /* noop */ }
+  }
   const mode: AdminMode = (await probeSupabase()) ? 'supabase' : (await probeLocal()) ? 'local' : 'none';
   setMode(mode);
   return mode;
@@ -129,6 +143,8 @@ const TABLES: Record<CollectionKey, string> = {
   ai_tools: 'ai_tools',
   products: 'products',
   blog_posts: 'blog_posts',
+  templates: 'templates',
+  template_categories: 'template_categories',
   inquiries: 'inquiries',
   newsletter_subscribers: 'newsletter_subscribers',
   payments: 'payments',
@@ -147,6 +163,8 @@ const SEARCHABLE: Partial<Record<CollectionKey, string[]>> = {
   ai_tools: ['slug', 'name', 'category', 'description'],
   products: ['slug', 'name', 'category', 'description'],
   blog_posts: ['slug', 'title', 'excerpt', 'category'],
+  templates: ['slug', 'name', 'category_slug', 'short_description', 'description'],
+  template_categories: ['slug', 'name'],
   inquiries: ['name', 'email', 'company', 'details'],
   newsletter_subscribers: ['email'],
   payments: ['provider', 'transaction_id', 'customer_email', 'customer_name'],
@@ -161,6 +179,7 @@ const SEARCHABLE: Partial<Record<CollectionKey, string[]>> = {
 const DEFAULT_SORT: Partial<Record<CollectionKey, string>> = {
   services: 'sort_order', portfolio_projects: 'sort_order', tools: 'sort_order',
   ai_tools: 'sort_order', products: 'sort_order', blog_posts: 'created_at',
+  templates: 'sort_order', template_categories: 'sort_order',
   inquiries: 'created_at', newsletter_subscribers: 'created_at', payments: 'created_at',
   seo_overrides: 'page_path',
   redirects: 'created_at', media_assets: 'created_at', analytics_events: 'created_at',
@@ -473,7 +492,8 @@ export async function getDashboard(): Promise<DashboardData> {
     return count || 0;
   };
   const [
-    customers, services, portfolio, tools, aiTools, products, blogPublished, blogDrafts,
+    customers, services, portfolio, tools, aiTools, products, templates, templateCategories,
+    blogPublished, blogDrafts,
     leadsTotal, leadsNew, subscribers, media, redirects, notFound,
   ] = await Promise.all([
     (async () => {
@@ -484,7 +504,8 @@ export async function getDashboard(): Promise<DashboardData> {
     })(),
     countOf('services', { archived: false }), countOf('portfolio_projects', { archived: false }),
     countOf('tools', { archived: false }), countOf('ai_tools', { archived: false }),
-    countOf('products', { archived: false }), countOf('blog_posts', { archived: false, status: 'published' }),
+    countOf('products', { archived: false }), countOf('templates'), countOf('template_categories', { active: true }),
+    countOf('blog_posts', { archived: false, status: 'published' }),
     countOf('blog_posts', { archived: false, status: 'draft' }), countOf('inquiries'),
     countOf('inquiries', { status: 'new', archived: false }), countOf('newsletter_subscribers'),
     countOf('media_assets'), countOf('redirects', { active: true }), countOf('not_found_log'),
@@ -513,6 +534,7 @@ export async function getDashboard(): Promise<DashboardData> {
   return {
     counts: {
       customers, services, portfolio, tools, ai_tools: aiTools, products,
+      templates, template_categories: templateCategories,
       blog_published: blogPublished, blog_drafts: blogDrafts,
       leads_total: leadsTotal, leads_new: leadsNew, subscribers,
       media, redirects, not_found: notFound,
@@ -543,6 +565,8 @@ export async function globalSearch(q: string): Promise<SearchHit[]> {
     ['ai_tools', 'name', 'AI Tool', '/admin/ai-tools'],
     ['products', 'name', 'Product', '/admin/products'],
     ['blog_posts', 'title', 'Blog', '/admin/blog'],
+    ['templates', 'name', 'Template', '/admin/templates'],
+    ['template_categories', 'name', 'Template Category', '/admin/template-categories'],
     ['inquiries', 'name', 'Lead', '/admin/leads'],
     ['newsletter_subscribers', 'email', 'Subscriber', '/admin/customers?tab=newsletter'],
     ['seo_overrides', 'page_path', 'SEO', '/admin/seo/pages'],

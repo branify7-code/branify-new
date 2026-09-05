@@ -20,10 +20,15 @@ import { AboutView } from './views/about/AboutView';
 import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageView';
 import { FreeTemplatesView } from './views/templates/FreeTemplatesView';
 import { FreeTemplateDetailPage } from './views/templates/FreeTemplateDetailPage';
+import TemplatesLibraryView from './views/library/TemplatesLibraryView';
+import TemplatesCategoryView from './views/library/TemplatesCategoryView';
+import TemplateDetailPage from './views/library/TemplateDetailPage';
+import TemplatePreviewPage from './views/library/TemplatePreviewPage';
 import { BlogIndex, BlogPostPage } from './views/blog/BlogView';
 import { NotFoundView } from './views/NotFoundView';
 import { WhatsAppFab } from './components/WhatsAppFab';
 import { freeTemplates } from './data/freeTemplatesRegistry';
+import { getCategoryBySlug, getTemplateBySlug } from './data/templates';
 
 // Admin dashboard — lazy-loaded, never downloaded by public pages
 const AdminApp = lazy(() => import('./admin/AdminApp'));
@@ -35,6 +40,7 @@ import { ServicesSection } from './sections/ServicesSection';
 import { PortfolioSection } from './sections/PortfolioSection';
 import { ToolsSection } from './sections/ToolsSection';
 import { AIToolsSection } from './sections/AIToolsSection';
+import { TemplatesSection } from './sections/TemplatesSection';
 import { ProcessSection } from './sections/ProcessSection';
 import { WhyBranifySection } from './sections/WhyBranifySection';
 import { StatsSection } from './sections/StatsSection';
@@ -48,7 +54,7 @@ import { Project } from './types';
 const PUBLIC_ROUTE_PREFIXES = [
   '/', '/services', '/portfolio', '/tools', '/free-tools', '/ai-tools', '/pricing',
   '/contact', '/about', '/privacypolicy', '/termsandconditions', '/refundpolicy',
-  '/cookiespolicy', '/disclaimer', '/free-templates', '/blog', '/admin',
+  '/cookiespolicy', '/disclaimer', '/free-templates', '/blog', '/admin', '/templates',
 ];
 function isKnownRoute(pathname: string): boolean {
   return PUBLIC_ROUTE_PREFIXES.some((p) => (p === '/' ? pathname === '/' : pathname === p || pathname.startsWith(`${p}/`)));
@@ -253,6 +259,41 @@ export default function App() {
 
         {pathname === '/pricing' && <ServicesView onNavigate={navigateTo} />}
 
+        {/* Template Library — /templates, /templates/:category, /templates/:category/:slug, + /preview */}
+        {pathname === '/templates' && (
+          <TemplatesLibraryView
+            onNavigate={navigateTo}
+            initialCategory={queryParams.get('category')}
+            initialQuery={queryParams.get('q') || undefined}
+          />
+        )}
+
+        {pathname.startsWith('/templates/') && (() => {
+          const segs = pathname.replace('/templates/', '').split('/').filter(Boolean).map((s) => decodeURIComponent(s));
+          if (segs.length === 1) {
+            const [a] = segs;
+            if (getCategoryBySlug(a)) {
+              return <TemplatesCategoryView categorySlug={a} onNavigate={navigateTo} />;
+            }
+            const bySlug = getTemplateBySlug(a);
+            if (bySlug) {
+              return <TemplateDetailPage categorySlug={bySlug.categorySlug} templateSlug={bySlug.slug} onNavigate={navigateTo} />;
+            }
+            return <NotFoundView path={pathname} onNavigateHome={() => navigateTo('/')} onExploreTools={() => navigateTo('/templates')} />;
+          }
+          const [a, b, c] = segs;
+          if (segs.length === 2 && b === 'preview') {
+            const bySlug = getTemplateBySlug(a);
+            return bySlug
+              ? <TemplatePreviewPage categorySlug={bySlug.categorySlug} templateSlug={bySlug.slug} onNavigate={navigateTo} />
+              : <NotFoundView path={pathname} onNavigateHome={() => navigateTo('/')} onExploreTools={() => navigateTo('/templates')} />;
+          }
+          if (segs.length >= 3 && c === 'preview') {
+            return <TemplatePreviewPage categorySlug={a} templateSlug={b} onNavigate={navigateTo} />;
+          }
+          return <TemplateDetailPage categorySlug={a} templateSlug={b} onNavigate={navigateTo} />;
+        })()}
+
         {pathname === '/contact' && (
           <ContactView onNavigateHome={() => navigateTo('/')} />
         )}
@@ -324,34 +365,37 @@ export default function App() {
             {/* 3. Specialized Digital Services (01 to 10) */}
             <ServicesSection onSelectService={handleSelectService} />
 
-            {/* 4. Selected Work / Portfolio Case Studies */}
+            {/* 4. Website Template Library showcase — featured from central registry */}
+            <TemplatesSection onNavigate={navigateTo} />
+
+            {/* 5. Selected Work / Portfolio Case Studies */}
             <PortfolioSection
               onSelectProject={handleSelectProject}
               onViewAllWork={handleExploreWork}
             />
 
-            {/* 5. Free Digital Tools Ecosystem — mirrors the /tools page */}
+            {/* 6. Free Digital Tools Ecosystem — mirrors the /tools page */}
             <ToolsSection onNavigate={navigateTo} />
 
-            {/* 6. AI Powered Tools Showcase — mirrors the /ai-tools page */}
+            {/* 7. AI Powered Tools Showcase — mirrors the /ai-tools page */}
             <AIToolsSection onNavigate={navigateTo} />
 
-            {/* 7. 5-Phase Process Timeline */}
+            {/* 8. 5-Phase Process Timeline */}
             <ProcessSection />
 
-            {/* 8. Why Choose Branify Editorial Value Pillars */}
+            {/* 9. Why Choose Branify Editorial Value Pillars */}
             <WhyBranifySection />
 
-            {/* 9. Verified Precision Stats Counter Strip */}
+            {/* 10. Verified Precision Stats Counter Strip */}
             <StatsSection />
 
-            {/* 10. Client Feedback & Executive Testimonials */}
+            {/* 11. Client Feedback & Executive Testimonials */}
             <TestimonialsSection />
 
-            {/* 11. Frequently Asked Questions Accordion */}
+            {/* 12. Frequently Asked Questions Accordion */}
             <FAQSection />
 
-            {/* 12. Final Cinematic CTA Banner */}
+            {/* 13. Final Cinematic CTA Banner */}
             <CTASection
               onStartProject={() => handleOpenInquiry()}
               onViewWork={handleExploreWork}

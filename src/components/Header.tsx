@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCurrency } from "../lib/currency";
+import { templateCount } from "../data/templates";
 import {
   ChevronDown,
   ChevronRight,
@@ -476,6 +477,8 @@ export default function Header({
     pathname.startsWith("/tools/");
   const isAiToolsActive =
     pathname === "/ai-tools" || pathname.startsWith("/ai-tools/");
+  const isTemplatesActive =
+    pathname === "/templates" || pathname.startsWith("/templates/");
   const isContactActive = pathname === "/contact";
 
   const currency = currencies[currencyIndex];
@@ -782,6 +785,19 @@ export default function Header({
               }`}
             />
             {isServicesActive && activeUnderline}
+          </button>
+
+          {/* TEMPLATES (direct link) */}
+          <button
+            type="button"
+            className={`${navLinkClass(isTemplatesActive)} gap-1.5 whitespace-nowrap`}
+            onClick={(e) => handleNavClick(e, "/templates")}
+          >
+            <span>TEMPLATES</span>
+            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono 2xl:hidden">
+              {templateCount()}
+            </span>
+            {isTemplatesActive && activeUnderline}
           </button>
 
           {/* PORTFOLIO */}
@@ -1307,6 +1323,23 @@ export default function Header({
                 </div>
               )}
             </div>
+
+            {/* TEMPLATES (direct link) */}
+            <button
+              type="button"
+              className={`w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider cursor-pointer ${
+                isTemplatesActive ? "text-[#E2C27B] bg-[#101620]" : "text-zinc-200 hover:bg-[#101620]"
+              }`}
+              onClick={(e) => handleNavClick(e, "/templates")}
+            >
+              <span className="flex items-center gap-2">
+                Templates
+                <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/35 rounded-full font-mono">
+                  {templateCount()}
+                </span>
+              </span>
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+            </button>
 
             {/* PORTFOLIO ACCORDION */}
             <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#0B0F15]">

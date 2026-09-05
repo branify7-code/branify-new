@@ -78,13 +78,16 @@ export interface CrudConfig<T extends { id: string; archived?: boolean }> {
   filter?: { param: string; label: string; options: FieldOption[] };
   columns: Column<T>[];
   fields: FieldDef[];
-  /** renders the collapsible SEO block; keywords enables the keywords chips */
-  seo?: { keywords?: boolean };
+  /** renders the collapsible SEO block; keywords enables the keywords chips,
+   *  ogImage enables the OG image input (stored as seo.og_image) */
+  seo?: { keywords?: boolean; ogImage?: boolean };
   defaults: () => Record<string, unknown>;
   /** map the API row into form values (default: shallow copy + coercion) */
   rowToForm?: (row: T) => Record<string, unknown>;
   /** final tweak of the payload before it hits the API */
   payloadFrom?: (payload: Record<string, unknown>, mode: 'create' | 'edit') => Record<string, unknown>;
+  /** collection has no `archived` column — hides archive UI and skips the filter */
+  noArchive?: boolean;
   inlineToggles?: InlineToggle<T>[];
   emptyTitle?: string;
   emptyHint?: string;
@@ -100,6 +103,10 @@ function normalizeFormValues(values: Record<string, unknown>, fields: FieldDef[]
     description: asStr(seo.description),
     keywords: asArr(seo.keywords),
   };
+  // preserve the optional OG image slot across row→form normalization
+  if (typeof (seo as { og_image?: unknown }).og_image === 'string') {
+    (out.seo as Record<string, unknown>).og_image = (seo as { og_image: string }).og_image;
+  }
   for (const f of fields) {
     if (f.kind === 'toggle') out[f.key] = asBool(out[f.key]);
     else if (f.kind === 'chips') out[f.key] = asArr(out[f.key]);
@@ -132,6 +139,9 @@ function buildPayload<T extends { id: string; archived?: boolean }>(
     description: asStr(seo.description).trim(),
     keywords: asArr(seo.keywords).map((k) => k.trim()).filter(Boolean),
   };
+  if (config.seo?.ogImage) {
+    (payload.seo as Record<string, unknown>).og_image = asStr((seo as { og_image?: unknown }).og_image).trim();
+  }
   return config.payloadFrom ? config.payloadFrom(payload, mode) : payload;
 }
 
@@ -181,7 +191,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
           pageSize: PAGE_SIZE,
           sort,
           dir,
-          archived: archivedMode === 'all' ? '' : archivedMode === 'archived',
+          archived: config.noArchive || archivedMode === 'all' ? '' : archivedMode === 'archived',
         };
         if (search) params.search = search;
         if (config.filter && filterVal) params[config.filter.param] = filterVal;
@@ -307,7 +317,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
     }, [rows, config.collection, load, push]);
 
     const canReorder = sort === 'sort_order' && dir === 'asc' && archivedMode !== 'archived';
-    const hasFilters = Boolean(search) || Boolean(filterVal) || archivedMode !== 'active';
+    const hasFilters = Boolean(search) || Boolean(filterVal) || (!config.noArchive && archivedMode !== 'active');
 
     const actionsColumn: Column<T> = {
       key: '__actions',
@@ -346,7 +356,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
             >
               <Pencil size={14} />
             </button>
-            {row.archived ? (
+            {!config.noArchive && (row.archived ? (
               <button
                 type="button"
                 title="Unarchive"
@@ -368,7 +378,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
               >
                 <Archive size={14} />
               </button>
-            )}
+            ))}
             {canReorder && (
               <>
                 <button
@@ -456,16 +466,18 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                 ))}
               </Select>
             )}
-            <Select
-              value={archivedMode}
-              onChange={(e) => { setArchivedMode(e.target.value as 'active' | 'archived' | 'all'); setPage(1); }}
-              aria-label="Show archived"
-              className="h-9 w-36"
-            >
-              <option value="active">Active only</option>
-              <option value="archived">Archived</option>
-              <option value="all">All records</option>
-            </Select>
+            {!config.noArchive && (
+              <Select
+                value={archivedMode}
+                onChange={(e) => { setArchivedMode(e.target.value as 'active' | 'archived' | 'all'); setPage(1); }}
+                aria-label="Show archived"
+                className="h-9 w-36"
+              >
+                <option value="active">Active only</option>
+                <option value="archived">Archived</option>
+                <option value="all">All records</option>
+              </Select>
+            )}
             <Btn variant="gold" icon={Plus} onClick={openCreate}>New {config.entity}</Btn>
           </div>
         </div>
@@ -799,6 +811,19 @@ function CrudFormModal<T extends { id: string; archived?: boolean }>({ config, i
                         hint="Press Enter or comma to add each keyword."
                       />
                     </div>
+                  )}
+                  {config.seo.ogImage && (
+                    <Field
+                      label="OG image"
+                      hint="Social share image (Open Graph) — stored with the SEO meta."
+                      className="sm:col-span-2"
+                    >
+                      <Input
+                        value={asStr((seo as { og_image?: unknown }).og_image)}
+                        onChange={(e) => setSeo({ og_image: e.target.value })}
+                        placeholder="https://… or /templates/…"
+                      />
+                    </Field>
                   )}
                 </div>
               )}
