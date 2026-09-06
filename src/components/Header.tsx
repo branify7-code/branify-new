@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCurrency } from "../lib/currency";
-import { templateCount } from "../data/templates";
+import { templateCount, TEMPLATE_CATEGORIES, categoryCounts, categoryHref } from "../data/templates";
 import {
   ChevronDown,
   ChevronRight,
@@ -338,7 +338,7 @@ const currencies: Currency[] = [
   { code: "HKD", flag: "🇭🇰", symbol: "HK$", region: "Hong Kong" },
 ];
 
-type OpenMenu = "services" | "portfolio" | "tools" | null;
+type OpenMenu = "services" | "templates" | "portfolio" | "tools" | null;
 
 /* =========================================================
    BRAND LOGO MARK — gold "B" emblem (same as branify.store)
@@ -465,6 +465,7 @@ export default function Header({
   const currencyMenuRef = useRef<HTMLDivElement>(null);
 
   const pathname = currentRoute.split("?")[0] || "/";
+  const templateCategoryCounts = categoryCounts();
   const isHomeActive = pathname === "/";
   const isAboutActive = pathname === "/about";
   const isServicesActive =
@@ -751,20 +752,11 @@ export default function Header({
           <button
             type="button"
             className={navLinkClass(isHomeActive)}
+            onMouseEnter={() => schedulePanelClose()}
             onClick={(e) => handleNavClick(e, "/")}
           >
             <span>HOME</span>
             {isHomeActive && activeUnderline}
-          </button>
-
-          {/* ABOUT */}
-          <button
-            type="button"
-            className={navLinkClass(isAboutActive)}
-            onClick={(e) => handleNavClick(e, "/about")}
-          >
-            <span>ABOUT</span>
-            {isAboutActive && activeUnderline}
           </button>
 
           {/* SERVICES */}
@@ -787,13 +779,23 @@ export default function Header({
             {isServicesActive && activeUnderline}
           </button>
 
-          {/* TEMPLATES (direct link) */}
+          {/* TEMPLATES */}
           <button
             type="button"
-            className={`${navLinkClass(isTemplatesActive)} gap-1.5 whitespace-nowrap`}
+            className={`${navLinkClass(isTemplatesActive)} gap-1 whitespace-nowrap`}
+            aria-expanded={openMenu === "templates"}
+            onMouseEnter={() => openPanel("templates")}
+            onFocus={() => openPanel("templates")}
             onClick={(e) => handleNavClick(e, "/templates")}
           >
             <span>TEMPLATES</span>
+            <ChevronDown
+              size={14}
+              strokeWidth={2}
+              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-zinc-400 ${
+                openMenu === "templates" ? "rotate-180" : ""
+              }`}
+            />
             <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono 2xl:hidden">
               {templateCount()}
             </span>
@@ -847,6 +849,7 @@ export default function Header({
           <button
             type="button"
             className={`${navLinkClass(isAiToolsActive)} gap-1.5 whitespace-nowrap`}
+            onMouseEnter={() => schedulePanelClose()}
             onClick={(e) => handleNavClick(e, "/ai-tools")}
           >
             <span>AI TOOLS</span>
@@ -856,10 +859,22 @@ export default function Header({
             {isAiToolsActive && activeUnderline}
           </button>
 
+          {/* ABOUT */}
+          <button
+            type="button"
+            className={navLinkClass(isAboutActive)}
+            onMouseEnter={() => schedulePanelClose()}
+            onClick={(e) => handleNavClick(e, "/about")}
+          >
+            <span>ABOUT</span>
+            {isAboutActive && activeUnderline}
+          </button>
+
           {/* CONTACT */}
           <button
             type="button"
             className={navLinkClass(isContactActive)}
+            onMouseEnter={() => schedulePanelClose()}
             onClick={(e) => handleNavClick(e, "/contact")}
           >
             CONTACT
@@ -1085,6 +1100,66 @@ export default function Header({
       )}
 
       {/* =========================================
+          MEGA MENU: TEMPLATES
+      ========================================== */}
+      {openMenu === "templates" && (
+        <div
+          className="absolute top-full left-0 w-full bg-[#07090D]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
+          role="menu"
+          onMouseEnter={() => openPanel("templates")}
+          onMouseLeave={schedulePanelClose}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1">
+              {TEMPLATE_CATEGORIES.map((cat) => {
+                const n = templateCategoryCounts[cat.slug] || 0;
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    className="w-full text-left px-3 py-2.5 rounded-xl transition-all duration-200 group hover:bg-[#101620] border border-transparent hover:border-[#C9A45C]/30 flex items-center justify-between gap-3 cursor-pointer"
+                    onClick={(e) => handleNavClick(e, categoryHref(cat.slug))}
+                  >
+                    <span className="flex flex-col min-w-0">
+                      <span className="text-sm font-bold text-zinc-100 group-hover:text-[#E2C27B] transition-colors truncate">
+                        {cat.name}
+                      </span>
+                      <span className="text-[11px] text-zinc-500 group-hover:text-zinc-400 truncate">
+                        {cat.tagline}
+                      </span>
+                    </span>
+                    <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/15 text-[#E2C27B] border border-[#C9A45C]/30 rounded-full shrink-0 font-mono">
+                      {n}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
+              <div>
+                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
+                  <span className="text-[#FFF6E5]">{templateCount()} ready-made templates</span>
+                  <span className="text-zinc-500">·</span>
+                  <span>{TEMPLATE_CATEGORIES.length} industries</span>
+                </div>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  Every template ships responsive, editable and launch-ready.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="px-6 py-2.5 btn-gold-primary uppercase tracking-wider rounded-xl text-xs flex items-center gap-2 shrink-0 font-extrabold cursor-pointer"
+                onClick={(e) => handleNavClick(e, "/templates")}
+              >
+                <span>Browse All Templates →</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================
           MEGA MENU: PORTFOLIO
       ========================================== */}
       {openMenu === "portfolio" && (
@@ -1254,16 +1329,6 @@ export default function Header({
               onClick={(e) => handleNavClick(e, "/")}
             >
               <span>Home</span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
-            </button>
-
-            {/* ABOUT */}
-            <button
-              type="button"
-              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-zinc-200 hover:bg-[#101620] cursor-pointer"
-              onClick={(e) => handleNavClick(e, "/about")}
-            >
-              <span>About</span>
               <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
             </button>
 
@@ -1455,6 +1520,16 @@ export default function Header({
               onClick={(e) => handleNavClick(e, "/ai-tools")}
             >
               <span>AI Tools</span>
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+            </button>
+
+            {/* ABOUT */}
+            <button
+              type="button"
+              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-zinc-200 hover:bg-[#101620] cursor-pointer"
+              onClick={(e) => handleNavClick(e, "/about")}
+            >
+              <span>About</span>
               <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
             </button>
 
