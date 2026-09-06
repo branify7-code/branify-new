@@ -2205,7 +2205,19 @@
   </url>
   <url>
     <loc>https://branify.store/templates/restaurant-food/street-street-food</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/restaurant-food/cantina-trattoria</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://branify.store/templates/restaurant-food/ember-steakhouse</loc>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
