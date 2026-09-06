@@ -120,10 +120,10 @@ const TemplatesLibraryView: React.FC<TemplatesLibraryViewProps> = ({ onNavigate,
         </div>
       </section>
 
-      {/* Category filter pills */}
-      <section className="sticky top-[64px] z-30 bg-[#05080D]/90 backdrop-blur-xl border-y border-white/5">
+      {/* Category filter pills — full wrap: all categories visible at once */}
+      <section className="relative z-30 bg-[#05080D]/95 backdrop-blur-xl border-y border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="Template categories">
+          <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label="Template categories">
             <button
               role="tab"
               aria-selected={category === 'All'}
