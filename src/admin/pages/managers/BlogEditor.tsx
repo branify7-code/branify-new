@@ -32,6 +32,7 @@ import {
 import { FeaturedImagePanel } from './BlogEditorMedia';
 import { HtmlSourceEditor, VisualEditor } from './BlogEditorVisual';
 import { BlogArticleBody } from '../../../components/BlogArticleBody';
+import { BlogImportStrip, type BlogImportPayload } from './BlogEditorImport';
 
 const SITE_URL = 'https://branify.store';
 
@@ -390,6 +391,21 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
     void save({ statusOverride: 'draft', successMsg: 'Post moved back to draft — the public URL now returns "not found".' });
   };
 
+  // document import (Word .docx / PDF) — additive feature, body content only.
+  // The import strip guards unsaved content itself; we just apply the result.
+  const handleImported = useCallback((payload: BlogImportPayload) => {
+    const cur = formRef.current;
+    const patch: Partial<BlogForm> = { contentHtml: payload.html };
+    if (!cur.title.trim()) {
+      // fall back to the document's own title, then the file name — keeps
+      // autosave healthy and gives the user something to edit
+      const fallback = payload.suggestedTitle.trim() || 'Imported article';
+      patch.title = fallback;
+      if (!slugTouched.current) patch.slug = slugify(fallback);
+    }
+    update(patch);
+  }, [update]);
+
   // ---------------------------------------------------------------- render
   if (loading) {
     return <Card><LoadingBlock label="Loading the post editor…" /></Card>;
@@ -478,6 +494,12 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
           </p>
         )}
       </Card>
+
+      {/* ============ document import (Word / PDF) ============ */}
+      <BlogImportStrip
+        onImported={handleImported}
+        warnUnsaved={Boolean(f.contentHtml.trim() || f.title.trim() || f.excerpt.trim()) || saveState === 'dirty'}
+      />
 
       {/* ============ body grid ============ */}
       <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_384px]">
