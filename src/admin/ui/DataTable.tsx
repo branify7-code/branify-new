@@ -46,10 +46,10 @@ export function DataTable<T extends { id?: string }>({
     <div className="flex flex-col gap-3">
       {toolbar}
       {/* Desktop table */}
-      <div className="hidden overflow-x-auto rounded-xl border border-white/[0.07] md:block">
+      <div className="hidden overflow-x-auto rounded-xl border border-[#0F172A]/[0.10] md:block">
         <table className="w-full min-w-[640px] border-collapse text-left">
           <thead>
-            <tr className="border-b border-white/[0.07] bg-white/[0.02]">
+            <tr className="border-b border-[#0F172A]/[0.10] bg-[#0F172A]/[0.03]">
               {columns.map((c) => (
                 <th key={c.key} className={cx('px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#475569]', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
                   {c.sortable && onSort ? (
@@ -79,12 +79,12 @@ export function DataTable<T extends { id?: string }>({
                 key={row.id || i}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
                 className={cx(
-                  'border-b border-white/[0.05] transition-colors last:border-0 hover:bg-white/[0.03]',
+                  'border-b border-[#0F172A]/[0.07] transition-colors last:border-0 hover:bg-[#0F172A]/[0.03]',
                   onRowClick && 'cursor-pointer',
                 )}
               >
                 {columns.map((c) => (
-                  <td key={c.key} className={cx('px-4 align-middle text-[13px] text-[#94A3B8]', dense ? 'py-2' : 'py-3', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
+                  <td key={c.key} className={cx('px-4 align-middle text-[13px] text-[#3B4A61]', dense ? 'py-2' : 'py-3', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
                     {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '—')}
                   </td>
                 ))}
@@ -106,8 +106,8 @@ export function DataTable<T extends { id?: string }>({
             key={row.id || i}
             onClick={onRowClick ? () => onRowClick(row) : undefined}
             className={cx(
-              'rounded-xl border border-white/[0.07] bg-white/[0.02] p-3',
-              onRowClick && 'cursor-pointer active:bg-white/[0.05]',
+              'rounded-xl border border-[#0F172A]/[0.10] bg-white/[0.5] p-3',
+              onRowClick && 'cursor-pointer active:bg-[#0F172A]/[0.05]',
             )}
           >
             {mobileCard ? mobileCard(row) : (
@@ -115,7 +115,7 @@ export function DataTable<T extends { id?: string }>({
                 {columns.filter((c) => !c.hideOnMobile).map((c) => (
                   <div key={c.key} className="flex items-start justify-between gap-3 text-xs">
                     <span className="text-[#64748B]">{c.label}</span>
-                    <span className="text-right text-[#94A3B8]">{c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '—')}</span>
+                    <span className="text-right text-[#3B4A61]">{c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '—')}</span>
                   </div>
                 ))}
               </div>

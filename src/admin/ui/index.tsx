@@ -48,7 +48,7 @@ export const Card: React.FC<{
     {(title || actions) && (
       <header className="flex items-center justify-between gap-3 px-4 pt-4 pb-3 sm:px-5">
         <div className="min-w-0">
-          {title && <h2 className="text-[13px] font-bold uppercase tracking-[0.14em] text-[#E9DCBF]">{title}</h2>}
+          {title && <h2 className="text-[13px] font-bold uppercase tracking-[0.14em] text-[#8F6B2D]">{title}</h2>}
           {subtitle && <p className="mt-0.5 text-xs text-[#475569]">{subtitle}</p>}
         </div>
         {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
@@ -90,7 +90,7 @@ export const Field: React.FC<{ label: string; hint?: string; error?: string; cou
     </span>
     {children}
     {error ? (
-      <span className="mt-1 block text-[11px] font-medium text-red-300">{error}</span>
+      <span className="mt-1 block text-[11px] font-medium text-red-600">{error}</span>
     ) : hint ? (
       <span className="mt-1 block text-[11px] text-[#64748B]">{hint}</span>
     ) : null}
@@ -144,7 +144,7 @@ export const ChipsInput: React.FC<{ value: string[]; onChange: (v: string[]) => 
         {value.map((t) => (
           <span key={t} className="inline-flex items-center gap-1 rounded-md bg-[#C9A45C]/15 px-2 py-0.5 text-xs text-[#8F6B2D]">
             {t}
-            <button type="button" aria-label={`Remove ${t}`} onClick={() => onChange(value.filter((x) => x !== t))} className="text-[#475569] hover:text-red-300">
+            <button type="button" aria-label={`Remove ${t}`} onClick={() => onChange(value.filter((x) => x !== t))} className="text-[#475569] hover:text-red-600">
               <X size={11} />
             </button>
           </span>
@@ -178,8 +178,8 @@ export const LoadingBlock: React.FC<{ label?: string }> = ({ label = 'Loading…
 
 export const ErrorBlock: React.FC<{ title?: string; message?: string; onRetry?: () => void }> = ({ title = 'Something went wrong', message, onRetry }) => (
   <div className="flex flex-col items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/[0.05] px-6 py-10 text-center">
-    <AlertTriangle className="text-red-300" size={22} />
-    <p className="text-sm font-bold text-red-200">{title}</p>
+    <AlertTriangle className="text-red-500" size={22} />
+    <p className="text-sm font-bold text-red-700">{title}</p>
     {message && <p className="max-w-md text-xs text-[#475569]">{message}</p>}
     {onRetry && <Btn size="sm" variant="outline" className="mt-2" onClick={onRetry}>Try again</Btn>}
   </div>
@@ -188,7 +188,7 @@ export const ErrorBlock: React.FC<{ title?: string; message?: string; onRetry?: 
 export const EmptyState: React.FC<{ icon?: React.ComponentType<{ size?: number | string; className?: string }>; title: string; hint?: string; action?: React.ReactNode }> = ({ icon: Icon, title, hint, action }) => (
   <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
     {Icon && <Icon size={26} className="text-[#8F6B2D]/60" />}
-    <p className="text-sm font-bold text-[#CBD5E1]">{title}</p>
+    <p className="text-sm font-bold text-[#334155]">{title}</p>
     {hint && <p className="max-w-md text-xs leading-relaxed text-[#475569]">{hint}</p>}
     {action && <div className="mt-2">{action}</div>}
   </div>
@@ -220,17 +220,17 @@ export const Modal: React.FC<{
         className={cx('flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl border border-[rgba(201,164,92,0.22)] bg-[#F8FAFC] shadow-2xl sm:rounded-2xl', w)}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-white/[0.06] px-5 py-4">
+        <header className="flex items-start justify-between gap-4 border-b border-[#0F172A]/[0.08] px-5 py-4">
           <div className="min-w-0">
             <h3 className="truncate font-display text-base font-bold text-[#111827]">{title}</h3>
             {subtitle && <p className="mt-0.5 text-xs text-[#475569]">{subtitle}</p>}
           </div>
-          <button onClick={onClose} aria-label="Close dialog" className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.06] hover:text-white">
+          <button onClick={onClose} aria-label="Close dialog" className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-[#0F172A]/[0.06] hover:text-[#0F172A]">
             <X size={16} />
           </button>
         </header>
         <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
-        {footer && <footer className="flex items-center justify-end gap-2 border-t border-white/[0.06] bg-black/20 px-5 py-3">{footer}</footer>}
+        {footer && <footer className="flex items-center justify-end gap-2 border-t border-[#0F172A]/[0.08] bg-[#0F172A]/[0.03] px-5 py-3">{footer}</footer>}
       </div>
     </div>,
     document.body,
@@ -260,8 +260,8 @@ export const ConfirmDialog: React.FC<{
     }
   >
     <div className="flex items-start gap-3">
-      <AlertTriangle size={18} className={danger ? 'mt-0.5 shrink-0 text-red-300' : 'mt-0.5 shrink-0 text-[#8F6B2D]'} />
-      <div className="text-sm leading-relaxed text-[#94A3B8]">{message}</div>
+      <AlertTriangle size={18} className={danger ? 'mt-0.5 shrink-0 text-red-500' : 'mt-0.5 shrink-0 text-[#8F6B2D]'} />
+      <div className="text-sm leading-relaxed text-[#3B4A61]">{message}</div>
     </div>
   </Modal>
 );

@@ -244,8 +244,8 @@ const AdminShell: React.FC<{
         <img src="/branify-icon.png" alt="BRANIFY logo" className="h-9 w-9 shrink-0" />
         {!compact && (
           <div className="min-w-0 leading-tight">
-            <p className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-[#111827]">BRANIFY</p>
-            <p className="text-[8.5px] font-bold uppercase tracking-[0.3em] text-[#8F6B2D]">Admin Panel</p>
+            <p className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-white">BRANIFY</p>
+            <p className="text-[8.5px] font-bold uppercase tracking-[0.3em] text-[#DDBB6E]">Admin Panel</p>
           </div>
         )}
       </div>
@@ -273,7 +273,7 @@ const AdminShell: React.FC<{
                     <span className="rounded-full bg-[#C9A45C] px-1.5 py-px text-[9.5px] font-black tabular-nums text-[#1A1206]">{count}</span>
                   )}
                   {!compact && (item.path === '/services' || item.path === '/portfolio') && (
-                    <ChevronRight size={12} className="text-[#64748B]" />
+                    <ChevronRight size={12} className="text-[#7E8DA6]" />
                   )}
                 </button>
               );
@@ -285,8 +285,8 @@ const AdminShell: React.FC<{
       {!compact && (
         <div className="border-t border-white/[0.06] p-3">
           <div className="rounded-xl border border-[#C9A45C]/25 bg-gradient-to-br from-[#C9A45C]/[0.12] to-transparent p-3">
-            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#8F6B2D]">BRANIFY Control Center</p>
-            <p className="mt-0.5 text-[10px] leading-snug text-[#475569]">{modeLabel(mode)}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#DDBB6E]">BRANIFY Control Center</p>
+            <p className="mt-0.5 text-[10px] leading-snug text-[#A9B6CB]">{modeLabel(mode)}</p>
           </div>
           <button className="adm-nav-item mt-1.5 w-full" onClick={() => navigate('/profile')}>
             <UserCircle size={16} />
@@ -323,7 +323,7 @@ const AdminShell: React.FC<{
         <div className="fixed inset-0 z-[90] lg:hidden" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
           <aside className="adm-sidebar absolute inset-y-0 left-0 w-72 max-w-[85vw]">
-            <button className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-[#475569] hover:bg-[#F1F5F9]" onClick={() => setDrawerOpen(false)} aria-label="Close navigation">
+            <button className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-[#A9B6CB] hover:bg-white/10 hover:text-white" onClick={() => setDrawerOpen(false)} aria-label="Close navigation">
               <X size={16} />
             </button>
             <SidebarInner />
@@ -335,27 +335,27 @@ const AdminShell: React.FC<{
       <div className={cx('flex min-h-screen w-full min-w-0 flex-col transition-[padding] duration-200', collapsed ? 'lg:pl-[68px]' : 'lg:pl-60')}>
         {/* Header */}
         <header className="adm-header sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 px-3 sm:gap-3 sm:px-4">
-          <button className="rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white lg:hidden" onClick={() => setDrawerOpen(true)} aria-label="Open navigation">
+          <button className="rounded-lg p-2 text-[#A9B6CB] hover:bg-white/[0.06] hover:text-white lg:hidden" onClick={() => setDrawerOpen(true)} aria-label="Open navigation">
             <Menu size={18} />
           </button>
-          <button className="hidden rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white lg:block" onClick={() => setCollapsed((c) => !c)} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+          <button className="hidden rounded-lg p-2 text-[#A9B6CB] hover:bg-white/[0.06] hover:text-white lg:block" onClick={() => setCollapsed((c) => !c)} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
             <Menu size={18} />
           </button>
 
           <div className="min-w-0 flex-1">
-            <nav className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[#64748B]" aria-label="Breadcrumb">
+            <nav className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[#8D9CB5]" aria-label="Breadcrumb">
               {crumbs.map((c, i) => (
                 <span key={i} className="flex items-center gap-1">
                   {i > 0 && <ChevronRight size={10} className="opacity-50" />}
                   {c.path !== undefined && i < crumbs.length - 1 ? (
-                    <button className="hover:text-[#8F6B2D]" onClick={() => navigate(c.path!)}>{c.label}</button>
+                    <button className="hover:text-[#DDBB6E]" onClick={() => navigate(c.path!)}>{c.label}</button>
                   ) : (
-                    <span className={cx(i === crumbs.length - 1 && 'text-[#8F6B2D]')}>{c.label}</span>
+                    <span className={cx(i === crumbs.length - 1 && 'text-[#DDBB6E]')}>{c.label}</span>
                   )}
                 </span>
               ))}
             </nav>
-            <h1 className="truncate font-display text-[15px] font-bold leading-tight text-[#111827]">
+            <h1 className="truncate font-display text-[15px] font-bold leading-tight text-white">
               {active?.item.label || (subPath === '/' ? 'Dashboard' : subPath.replace('/', '').replace(/-/g, ' '))}
             </h1>
           </div>
@@ -363,14 +363,14 @@ const AdminShell: React.FC<{
           {/* Global search */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs text-[#64748B] transition-colors hover:border-[#C9A45C]/40 hover:text-[#475569] sm:flex sm:w-56 md:w-72"
+            className="hidden items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs text-[#8D9CB5] transition-colors hover:border-[#C9A45C]/40 hover:text-[#F4F7FB] sm:flex sm:w-56 md:w-72"
             aria-label="Open global search"
           >
             <Search size={14} />
             <span className="flex-1 text-left">Search anything…</span>
             <Kbd>⌘K</Kbd>
           </button>
-          <button className="rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white sm:hidden" onClick={() => setSearchOpen(true)} aria-label="Search">
+          <button className="rounded-lg p-2 text-[#A9B6CB] hover:bg-white/[0.06] hover:text-white sm:hidden" onClick={() => setSearchOpen(true)} aria-label="Search">
             <Search size={17} />
           </button>
 
@@ -379,7 +379,7 @@ const AdminShell: React.FC<{
             <button className="hidden items-center gap-1.5 rounded-xl border border-[#C9A45C]/35 bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] px-3 py-2 text-xs font-bold text-[#1A1206] shadow hover:brightness-110 md:flex" onClick={() => setQaOpen((o) => !o)} aria-expanded={qaOpen}>
               <Zap size={13} /> Quick Actions
             </button>
-            <button className="rounded-lg border border-[#C9A45C]/35 p-2 text-[#8F6B2D] md:hidden" onClick={() => setQaOpen((o) => !o)} aria-label="Quick actions">
+            <button className="rounded-lg border border-[#C9A45C]/35 p-2 text-[#DDBB6E] md:hidden" onClick={() => setQaOpen((o) => !o)} aria-label="Quick actions">
               <Plus size={16} />
             </button>
             {qaOpen && (
@@ -395,7 +395,7 @@ const AdminShell: React.FC<{
                   ['New Redirect', '/seo/redirects?new=1'],
                   ['Edit Homepage SEO', '/seo?page=/'],
                 ].map(([label, href]) => (
-                  <button key={href} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#8F6B2D]" onClick={() => { setQaOpen(false); navigate(href); }}>
+                  <button key={href} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#3B4A61] hover:bg-[#0F172A]/[0.05] hover:text-[#8F6B2D]" onClick={() => { setQaOpen(false); navigate(href); }}>
                     <Plus size={13} className="text-[#8F6B2D]" /> {label}
                   </button>
                 ))}
@@ -405,7 +405,7 @@ const AdminShell: React.FC<{
 
           {/* Notifications */}
           <div className="relative" data-dropdown>
-            <button className="relative rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white" onClick={() => setNotifOpen((o) => !o)} aria-label={`Notifications (${notifications.length})`}>
+            <button className="relative rounded-lg p-2 text-[#A9B6CB] hover:bg-white/[0.06] hover:text-white" onClick={() => setNotifOpen((o) => !o)} aria-label={`Notifications (${notifications.length})`}>
               <Bell size={17} />
               {notifications.length > 0 && (
                 <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#C9A45C] px-1 text-[9px] font-black text-[#1A1206]">
@@ -415,10 +415,10 @@ const AdminShell: React.FC<{
             </button>
             {notifOpen && (
               <div className="absolute right-0 top-full mt-2 w-80 max-w-[92vw] overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#F8FAFC] shadow-2xl">
-                <p className="border-b border-white/[0.06] px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#475569]">Notifications</p>
+                <p className="border-b border-[#0F172A]/[0.08] px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#475569]">Notifications</p>
                 <div className="max-h-80 overflow-y-auto adm-scroll">
                   {notifications.map((n) => (
-                    <button key={n.id} className="flex w-full items-start gap-2.5 border-b border-white/[0.04] px-4 py-3 text-left last:border-0 hover:bg-white/[0.04]" onClick={() => { setNotifOpen(false); navigate(n.href); }}>
+                    <button key={n.id} className="flex w-full items-start gap-2.5 border-b border-[#0F172A]/[0.06] px-4 py-3 text-left last:border-0 hover:bg-[#0F172A]/[0.04]" onClick={() => { setNotifOpen(false); navigate(n.href); }}>
                       <span className={cx('mt-1.5 h-2 w-2 shrink-0 rounded-full', n.tone === 'gold' && 'bg-[#C9A45C]', n.tone === 'red' && 'bg-red-400', n.tone === 'green' && 'bg-emerald-400')} />
                       <span className="min-w-0">
                         <span className="block text-[13px] font-semibold text-[#111827]">{n.title}</span>
@@ -438,25 +438,25 @@ const AdminShell: React.FC<{
                 {initials(user.name || user.email)}
               </span>
               <span className="hidden text-left leading-tight xl:block">
-                <span className="block max-w-[120px] truncate text-xs font-bold text-[#111827]">{user.name || user.email}</span>
-                <span className="block text-[9.5px] font-bold uppercase tracking-wider text-[#8F6B2D]">{user.role.replace('_', ' ')}</span>
+                <span className="block max-w-[120px] truncate text-xs font-bold text-white">{user.name || user.email}</span>
+                <span className="block text-[9.5px] font-bold uppercase tracking-wider text-[#DDBB6E]">{user.role.replace('_', ' ')}</span>
               </span>
-              <ChevronDown size={13} className="text-[#475569]" />
+              <ChevronDown size={13} className="text-[#A9B6CB]" />
             </button>
             {profileOpen && (
               <div className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#F8FAFC] shadow-2xl">
-                <div className="border-b border-white/[0.06] px-4 py-3">
+                <div className="border-b border-[#0F172A]/[0.08] px-4 py-3">
                   <p className="truncate text-[13px] font-bold text-[#111827]">{user.name || user.email}</p>
                   <p className="truncate text-[11px] text-[#475569]">{user.email}</p>
                   <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-[#8F6B2D]">{modeLabel(mode)}</p>
                 </div>
-                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05]" onClick={() => { setProfileOpen(false); navigate('/profile'); }}>
+                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#3B4A61] hover:bg-[#0F172A]/[0.05]" onClick={() => { setProfileOpen(false); navigate('/profile'); }}>
                   <UserCircle size={14} /> Admin profile
                 </button>
-                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05]" onClick={() => { setProfileOpen(false); navigate('/system'); }}>
+                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#3B4A61] hover:bg-[#0F172A]/[0.05]" onClick={() => { setProfileOpen(false); navigate('/system'); }}>
                   <ShieldQuestion size={14} /> System health
                 </button>
-                <a className="flex w-full items-center gap-2 border-t border-white/[0.06] px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05]" href="/" target="_blank" rel="noreferrer">
+                <a className="flex w-full items-center gap-2 border-t border-[#0F172A]/[0.08] px-4 py-2.5 text-left text-[13px] text-[#3B4A61] hover:bg-[#0F172A]/[0.05]" href="/" target="_blank" rel="noreferrer">
                   <ExternalLink size={14} /> View public site
                 </a>
                 <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-red-300 hover:bg-red-500/10" onClick={() => void logout()}>
@@ -508,7 +508,7 @@ const SearchPalette: React.FC<{ onClose: () => void; navigate: (p: string) => vo
   return (
     <div className="fixed inset-0 z-[150] flex items-start justify-center bg-black/70 p-4 pt-[12vh] backdrop-blur-sm" onMouseDown={onClose} role="dialog" aria-modal="true" aria-label="Global search">
       <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-[rgba(201,164,92,0.3)] bg-[#F8FAFC] shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-2.5 border-b border-white/[0.07] px-4">
+        <div className="flex items-center gap-2.5 border-b border-[#0F172A]/[0.08] px-4">
           <Search size={16} className="text-[#8F6B2D]" />
           <input
             ref={inputRef}
@@ -534,7 +534,7 @@ const SearchPalette: React.FC<{ onClose: () => void; navigate: (p: string) => vo
           {hits.map((h, i) => (
             <button
               key={`${h.type}-${h.id}`}
-              className={cx('flex w-full items-center gap-3 border-b border-white/[0.04] px-4 py-2.5 text-left last:border-0', i === cursor ? 'bg-white/[0.05]' : 'hover:bg-white/[0.03]')}
+              className={cx('flex w-full items-center gap-3 border-b border-[#0F172A]/[0.05] px-4 py-2.5 text-left last:border-0', i === cursor ? 'bg-[#0F172A]/[0.05]' : 'hover:bg-[#0F172A]/[0.03]')}
               onMouseEnter={() => setCursor(i)}
               onClick={() => go(h)}
             >

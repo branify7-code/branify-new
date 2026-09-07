@@ -55,9 +55,9 @@ export const LoginScreen: React.FC<{
 
         <div className="rounded-2xl border border-[rgba(201,164,92,0.2)] bg-[#F8FAFC]/85 p-6 shadow-2xl backdrop-blur">
           {mode === 'none' ? (
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-4 text-xs leading-relaxed text-amber-200">
+            <div className="rounded-xl border border-amber-500/40 bg-amber-500/[0.08] p-4 text-xs leading-relaxed text-amber-800">
               <p className="mb-1 font-bold uppercase tracking-wider">Admin database not connected</p>
-              Run <code className="rounded bg-black/40 px-1.5 py-0.5 font-mono">supabase/admin-schema.sql</code> in the Supabase SQL editor,
+              Run <code className="rounded bg-[#0F172A] px-1.5 py-0.5 font-mono text-amber-100">supabase/admin-schema.sql</code> in the Supabase SQL editor,
               create your admin user under <span className="font-semibold">Authentication → Users → Add User</span>, then reload this page.
               Full instructions are at the top of that file.
             </div>
@@ -71,7 +71,7 @@ export const LoginScreen: React.FC<{
               </Field>
 
               {error && (
-                <p role="alert" className="flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/[0.07] px-3 py-2 text-xs font-semibold text-red-300">
+                <p role="alert" className="flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/[0.07] px-3 py-2 text-xs font-semibold text-red-700">
                   <ShieldAlert size={14} className="mt-0.5 shrink-0" /> {error}
                 </p>
               )}
