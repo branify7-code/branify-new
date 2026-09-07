@@ -34,9 +34,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   const categories = [
     { id: 'all', label: 'All Deployments' },
     { id: 'e-commerce', label: 'E-Commerce' },
-    { id: 'ai', label: 'AI & Machine Learning' },
     { id: 'web', label: 'Web Applications' },
-    { id: 'brand', label: 'Brand & Spatial 3D' },
   ];
 
   const filteredProjects = projectsData.filter((project) => {

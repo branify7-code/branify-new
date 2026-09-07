@@ -14,7 +14,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
-  const categories = ['All', 'E-Commerce Experience', 'AI Platform', 'Luxury Brand Website', 'Digital Marketplace', 'Technology Dashboard'];
+  const categories = ['All', 'E-Commerce Experience', 'Digital Marketplace'];
 
   const filteredProjects =
     activeCategory === 'All'
