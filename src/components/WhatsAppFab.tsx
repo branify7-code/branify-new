@@ -12,7 +12,7 @@ const DEFAULT_MESSAGE =
   'Hi BRANIFY, I am visiting your website and would like to discuss a project / custom quote.';
 
 const WHATSAPP_LINES: Array<{ number: string; label: string; flag: string }> = [
-  { number: '+880 1879-176373', label: 'WhatsApp — Bangladesh', flag: '🇧🇩' },
+  { number: '+44 7412 831132', label: 'WhatsApp — United Kingdom', flag: '🇬🇧' },
   { number: '+92 332 1029333', label: 'WhatsApp — Pakistan', flag: '🇵🇰' },
 ];
 

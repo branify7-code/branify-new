@@ -152,25 +152,43 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
             </p>
 
             <div className="space-y-3.5 text-xs text-slate-400 pt-1">
-              {/* Head Office (USA) */}
+              {/* Head Office (UK) */}
               <div className="p-2.5 rounded-xl bg-white/[0.03] border border-[#C9A45C]/20 space-y-1">
                 <div className="flex items-center gap-1.5 text-[#E7C978] font-extrabold uppercase text-[10px] tracking-wider">
                   <Building2 className="w-3 h-3" />
-                  <span>Head Office (USA)</span>
+                  <span>Head Office (UK)</span>
                 </div>
                 <div className="flex items-start gap-2 text-slate-400 text-[11px] leading-snug pl-0.5">
                   <MapPin className="w-3.5 h-3.5 text-[#E7C978] shrink-0 mt-0.5" />
-                  <span>111, Elm AVE, Glen Cove, New York</span>
+                  <span>13 Church Way, Bradford, BD1 7ZE, United Kingdom</span>
                 </div>
                 <div className="flex items-center gap-2 pl-0.5 pt-0.5">
                   <Phone className="w-3 h-3 text-[#E7C978] shrink-0" />
-                  <a href="tel:+8801879176373" className="text-slate-400 hover:text-[#E7C978] text-[11px] font-semibold transition-colors">
-                    +880 1879-176373
+                  <a href="tel:+447412831132" className="text-slate-400 hover:text-[#E7C978] text-[11px] font-semibold transition-colors">
+                    +44 7412 831132
                   </a>
                 </div>
               </div>
 
-              {/* Bangladesh Branch */}
+              {/* Pakistan Office */}
+              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-[#C9A45C]/30 transition-colors space-y-1">
+                <div className="flex items-center gap-1.5 text-[#E7C978] font-extrabold uppercase text-[10px] tracking-wider">
+                  <Building2 className="w-3 h-3" />
+                  <span>Pakistan Office</span>
+                </div>
+                <div className="flex items-start gap-2 text-slate-400 text-[11px] leading-snug pl-0.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#E7C978] shrink-0 mt-0.5" />
+                  <span>House 6, Street 2, Nearby PMA, Pakistan</span>
+                </div>
+                <div className="flex items-center gap-2 pl-0.5 pt-0.5">
+                  <Phone className="w-3 h-3 text-[#E7C978] shrink-0" />
+                  <a href="tel:+923321029333" className="text-slate-400 hover:text-[#E7C978] text-[11px] font-semibold transition-colors">
+                    +92 332 1029333
+                  </a>
+                </div>
+              </div>
+
+              {/* Bangladesh Branch — Opening Soon */}
               <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-[#C9A45C]/30 transition-colors space-y-1">
                 <div className="flex items-center gap-1.5 text-[#E7C978] font-extrabold uppercase text-[10px] tracking-wider">
                   <Building2 className="w-3 h-3" />
@@ -178,7 +196,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                 </div>
                 <div className="flex items-start gap-2 text-slate-400 text-[11px] leading-snug pl-0.5">
                   <MapPin className="w-3.5 h-3.5 text-[#E7C978] shrink-0 mt-0.5" />
-                  <span>House 18 Road -7, Gulshan 2. Dhaka, Bangladesh.</span>
+                  <span>Opening Soon — New Location Announcing Shortly</span>
                 </div>
               </div>
 
