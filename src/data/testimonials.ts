@@ -2,16 +2,6 @@ import { Testimonial } from '../types';
 
 export const testimonialsData: Testimonial[] = [
   {
-    id: 'test-1',
-    quote: 'Branify transformed our digital flagship into an emotional work of art. The 3D spatial experience and instant page speed contributed directly to a 54% conversion rate surge within 90 days of launch.',
-    author: 'Elena Rostova',
-    role: 'Chief Brand Officer',
-    company: 'Aethel Horology Group',
-    projectType: 'Luxury E-Commerce & 3D Showroom',
-    rating: 5,
-    avatarText: 'ER'
-  },
-  {
     id: 'test-2',
     quote: 'Working with Branify was unlike any traditional agency engagement. They understood our complex AI orchestration architecture instantly and designed an interface that elevated our brand to market leadership.',
     author: 'Marcus Vance',

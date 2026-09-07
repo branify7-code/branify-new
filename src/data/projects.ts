@@ -2,24 +2,6 @@ import { Project } from '../types';
 
 export const projectsData: Project[] = [
   {
-    id: 'aethel-luxury',
-    title: 'Aethel Luxury Timepieces',
-    client: 'Aethel Horology Group',
-    category: 'E-Commerce Experience',
-    serviceType: 'Web Design & 3D Commerce',
-    year: '2025',
-    description: 'An interactive 3D virtual showroom and bespoke checkout experience engineered for a Swiss independent luxury horology maison.',
-    impactMetrics: [
-      { label: 'Conversion Uplift', value: '+54%' },
-      { label: 'Avg Time on Site', value: '4m 18s' },
-      { label: 'Annual Digital Volume', value: '$18.4M' }
-    ],
-    deliverables: ['Web 3D Interactive Viewer', 'Custom Shopify Plus Store', 'Global Multi-Currency Engine', 'VIP Private Client Portal'],
-    heroImage: 'linear-gradient(135deg, #181920 0%, #2A261B 50%, #0F1014 100%)',
-    accentColor: '#D4AF37',
-    isFeatured: true
-  },
-  {
     id: 'taqder-jts',
     title: 'Premium Fashion Clothing Storefront',
     client: 'TAQDER BY JTS',
@@ -35,7 +17,7 @@ export const projectsData: Project[] = [
     deliverables: ['Premium Fashion Storefront UI', 'Curated Collections Architecture', 'Installable PWA + WhatsApp Orders', 'Ordering Guide & Client Reviews'],
     heroImage: 'url(/portfolio/taqder-cover.jpg) left center / cover no-repeat',
     accentColor: '#E0446B',
-    isFeatured: false
+    isFeatured: true
   },
   {
     id: 'tatka-bazar',
