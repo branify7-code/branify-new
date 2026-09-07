@@ -199,6 +199,60 @@ export function withHeadingAnchors(
   return { html: host.innerHTML, headings };
 }
 
+// ------------------------------------------------------------------ Task 2-d — image alt auto-populate
+
+/**
+ * First meaningful sentence of the article body (headings skipped).
+ * Falls back to the first ~160 characters when no sentence terminator exists.
+ */
+export function extractFirstSentence(sanitizedHtml: string): string {
+  const text = htmlToPlainText(sanitizedHtml);
+  const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+  const bodyLine = lines.find((l) => l.length > 12) || lines[0] || '';
+  const cleaned = bodyLine.replace(/^#+\s*/, '').trim();
+  if (!cleaned) return '';
+  const m = cleaned.match(/^([\s\S]{10,320}?[.!?…])(\s|$)/);
+  if (m) return m[1].trim();
+  return cleaned.length > 160 ? `${cleaned.slice(0, 157).trimEnd()}…` : cleaned;
+}
+
+/**
+ * Task 2-d — alt auto-populate: give every BODY image without alt text the
+ * article's first sentence. Body images only — the featured image lives in
+ * cover_image/seo.cover_alt and is never touched here. Images that already
+ * carry alt text are left exactly as written. Runs on SANITIZED html.
+ * Returns [html, number of images backfilled].
+ */
+export function backfillArticleAlt(
+  sanitizedHtml: string,
+  fallbackAlt?: string,
+): [string, number] {
+  if (!sanitizedHtml || !/<img\b/i.test(sanitizedHtml)) return [sanitizedHtml, 0];
+  let filled = 0;
+  const host = document.createElement('div');
+  host.innerHTML = sanitizedHtml; // input is already sanitized
+  const fallback =
+    (fallbackAlt || '').trim() || extractFirstSentence(sanitizedHtml);
+  if (!fallback) return [sanitizedHtml, 0];
+  host.querySelectorAll('img').forEach((img) => {
+    if (!(img.getAttribute('src') || '').trim()) return;
+    if ((img.getAttribute('alt') || '').trim()) return;
+    img.setAttribute('alt', fallback);
+    filled += 1;
+  });
+  return filled ? [host.innerHTML, filled] : [sanitizedHtml, 0];
+}
+
+/**
+ * Canonical save/publish pipeline (admin BlogEditor):
+ *   raw editor HTML → sanitize → alt backfill (Task 2-d) → stored HTML.
+ */
+export function finalizeArticleHtml(rawHtml: string): { html: string; altBackfilled: number } {
+  const clean = sanitizeArticleHtml(rawHtml);
+  const [html, altBackfilled] = backfillArticleAlt(clean);
+  return { html, altBackfilled };
+}
+
 // ------------------------------------------------------------------ markdown → html
 // Legacy blog rows (and the 3 seeded posts) store Markdown in `content`.
 // The editor converts that exact subset to sanitized HTML once, on first open:

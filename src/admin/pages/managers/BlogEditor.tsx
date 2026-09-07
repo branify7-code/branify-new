@@ -23,7 +23,7 @@ import {
   LoadingBlock, Modal, Select, Tabs, Textarea, Toggle, cx, useToast,
 } from '../../ui';
 import { slugify } from '../../lib/format';
-import { sanitizeArticleHtml } from '../../../lib/sanitizeHtml';
+import { finalizeArticleHtml, sanitizeArticleHtml } from '../../../lib/sanitizeHtml';
 import { analyzeArticle, suggestMetaDescription, type BlogAuditReport } from '../../lib/blogAudit';
 import {
   AuditPanel, DEFAULT_ROBOTS, LinkCheckPanel, ReadabilityPanel, SearchPerformancePanel,
@@ -100,12 +100,14 @@ function rowToForm(r: BlogRow): BlogForm {
   };
 }
 
-function buildPayload(f: BlogForm, statusOverride?: string): Record<string, unknown> {
-  return {
+function buildPayload(f: BlogForm, statusOverride?: string): { payload: Record<string, unknown>; altBackfilled: number } {
+  // Task 2-d pipeline: raw editor HTML → sanitize → alt auto-populate → store
+  const finalized = finalizeArticleHtml(f.contentHtml);
+  const payload = {
     title: f.title.trim(),
     slug: f.slug.trim(),
     excerpt: f.excerpt.trim(),
-    content: sanitizeArticleHtml(f.contentHtml),
+    content: finalized.html,
     cover_image: f.coverImage.trim(),
     author_name: f.authorName.trim() || 'BRANIFY Team',
     author_role: f.authorRole.trim(),
@@ -128,6 +130,7 @@ function buildPayload(f: BlogForm, statusOverride?: string): Record<string, unkn
       cover_alt: f.coverAlt.trim(),
     },
   };
+  return { payload, altBackfilled: finalized.altBackfilled };
 }
 
 // ------------------------------------------------------------------ component
@@ -270,7 +273,7 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
     setSaveState('saving');
     const payloadSnapshot = JSON.stringify({ ...formRef.current, status: opts.statusOverride || formRef.current.status });
     try {
-      const payload = buildPayload(formRef.current, opts.statusOverride);
+      const { payload, altBackfilled } = buildPayload(formRef.current, opts.statusOverride);
       const saved = postId
         ? await updateRow<BlogRow>('blog_posts', postId, payload)
         : await createRow<BlogRow>('blog_posts', payload);
@@ -279,6 +282,9 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
       setLastSaved(new Date());
       const stale = JSON.stringify(formRef.current) !== snapshotRef.current;
       setSaveState(stale ? 'dirty' : 'saved');
+      if (altBackfilled > 0 && !opts.silent) {
+        push('info', `Alt auto-populate: ${altBackfilled} image${altBackfilled === 1 ? '' : 's'} backfilled from the article's first sentence.`);
+      }
       if (opts.successMsg) push('success', opts.successMsg);
       else if (!opts.silent) push('success', postId ? 'Post saved.' : 'Draft created.');
       void loadOthers(saved.id);
@@ -496,7 +502,7 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
               className="border-[#E2E8F0] bg-black/[0.04]"
             />
             <p className="hidden text-[10.5px] text-[#64748B] sm:block">
-              {mode === 'visual' ? 'Click any image in the article to edit alt, caption or alignment.' : 'Raw HTML — sanitized before save and preview.'}
+              {mode === 'visual' ? 'Click any image in the article to edit alt, caption or alignment. Empty alt is auto-filled from the article\u2019s first sentence on save.' : 'Raw HTML — sanitized before save and preview.'}
             </p>
           </div>
 

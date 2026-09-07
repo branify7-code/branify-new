@@ -288,7 +288,7 @@ export function analyzeArticle(input: BlogAuditInput): BlogAuditReport {
 
   if (imgTotal === 0) add('image_alt', 'Image alt text', 'warn', 6, 'No inline images to describe yet.');
   else if (imgMissingAlt === 0) add('image_alt', 'Image alt text', 'pass', 6, 'Every inline image has alt text.');
-  else add('image_alt', 'Image alt text', 'fail', 6, `${imgMissingAlt} of ${imgTotal} image${imgTotal === 1 ? '' : 's'} missing alt text.`);
+  else add('image_alt', 'Image alt text', 'fail', 6, `${imgMissingAlt} of ${imgTotal} image${imgTotal === 1 ? '' : 's'} missing alt text \u2014 missing ones are auto-filled from the article's first sentence on save.`);
 
   add('featured_image', 'Featured (cover) image', coverImage ? 'pass' : 'fail', 4,
     coverImage ? '' : 'Listing cards, social shares and the article header use it.');
