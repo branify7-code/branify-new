@@ -384,7 +384,6 @@ export default function Header({
 
   const pathname = currentRoute.split("?")[0] || "/";
   const templateCategoryCounts = categoryCounts();
-  const isHomeActive = pathname === "/";
   const isAboutActive = pathname === "/about";
   const isServicesActive =
     pathname === "/services" || pathname.startsWith("/services/");
@@ -396,6 +395,8 @@ export default function Header({
     pathname.startsWith("/tools/");
   const isAiToolsActive =
     pathname === "/ai-tools" || pathname.startsWith("/ai-tools/");
+  const isBlogActive =
+    pathname === "/blog" || pathname.startsWith("/blog/");
   const isTemplatesActive =
     pathname === "/templates" || pathname.startsWith("/templates/");
   const isContactActive = pathname === "/contact";
@@ -661,17 +662,6 @@ export default function Header({
           className="hidden xl:flex items-center gap-1 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-slate-600 tracking-wide uppercase font-sans"
           aria-label="Main Navigation"
         >
-          {/* HOME */}
-          <button
-            type="button"
-            className={navLinkClass(isHomeActive)}
-            onMouseEnter={() => schedulePanelClose()}
-            onClick={(e) => handleNavClick(e, "/")}
-          >
-            <span>HOME</span>
-            {isHomeActive && activeUnderline}
-          </button>
-
           {/* SERVICES */}
           <button
             type="button"
@@ -770,6 +760,17 @@ export default function Header({
               27+
             </span>
             {isAiToolsActive && activeUnderline}
+          </button>
+
+          {/* BLOG (direct link) */}
+          <button
+            type="button"
+            className={navLinkClass(isBlogActive)}
+            onMouseEnter={() => schedulePanelClose()}
+            onClick={(e) => handleNavClick(e, "/blog")}
+          >
+            <span>BLOG</span>
+            {isBlogActive && activeUnderline}
           </button>
 
           {/* ABOUT */}
@@ -1235,16 +1236,6 @@ export default function Header({
       {mobileOpen && (
         <div className="xl:hidden bg-[#F8FAFC] border-b border-[#C9A45C]/25 px-4 py-6 space-y-3 max-h-[85vh] overflow-y-auto mobile-menu-slide">
           <div className="space-y-1">
-            {/* HOME */}
-            <button
-              type="button"
-              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-slate-700 hover:bg-[#F8FAFC] cursor-pointer"
-              onClick={(e) => handleNavClick(e, "/")}
-            >
-              <span>Home</span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
-            </button>
-
             {/* SERVICES ACCORDION */}
             <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#F8FAFC]">
               <div className="flex items-center justify-between p-1">
@@ -1433,6 +1424,16 @@ export default function Header({
               onClick={(e) => handleNavClick(e, "/ai-tools")}
             >
               <span>AI Tools</span>
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
+            </button>
+
+            {/* BLOG (direct) */}
+            <button
+              type="button"
+              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-slate-700 hover:bg-[#F8FAFC] cursor-pointer"
+              onClick={(e) => handleNavClick(e, "/blog")}
+            >
+              <span>Blog</span>
               <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
             </button>
 
