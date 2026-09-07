@@ -99,11 +99,11 @@ const renderInline = (text: string): React.ReactNode[] => {
     .filter((part) => part !== '')
     .map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="text-[#F1F2EE]">{part.slice(2, -2)}</strong>;
+        return <strong key={i} className="text-[#111827]">{part.slice(2, -2)}</strong>;
       }
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <code key={i} className="font-mono text-[#E2C27B] text-[0.9em] bg-white/5 px-1.5 py-0.5 rounded">
+          <code key={i} className="font-mono text-[#8F6B2D] text-[0.9em] bg-[#F8FAFC] border border-[#E2E8F0] px-1.5 py-0.5 rounded">
             {part.slice(1, -1)}
           </code>
         );
@@ -118,25 +118,25 @@ const renderMarkdown = (content: string): React.ReactNode[] => {
     switch (block.kind) {
       case 'heading2':
         return (
-          <h2 key={i} className="text-2xl sm:text-3xl font-black text-[#F1F2EE] uppercase mt-10 mb-4">
+          <h2 key={i} className="font-display text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight mt-10 mb-4">
             {renderInline(block.text)}
           </h2>
         );
       case 'heading3':
         return (
-          <h3 key={i} className="text-xl font-extrabold text-[#E2C27B] mt-8 mb-3">
+          <h3 key={i} className="font-display text-xl font-extrabold text-[#111827] tracking-tight mt-8 mb-3">
             {renderInline(block.text)}
           </h3>
         );
       case 'heading4':
         return (
-          <h4 key={i} className="text-base sm:text-lg font-extrabold text-[#F1F2EE] mt-6 mb-2">
+          <h4 key={i} className="text-base sm:text-lg font-extrabold text-[#111827] mt-6 mb-2">
             {renderInline(block.text)}
           </h4>
         );
       case 'list':
         return (
-          <ul key={i} className="list-disc list-inside text-zinc-300 text-sm mb-2 space-y-1.5">
+          <ul key={i} className="list-disc list-inside text-[#475569] text-sm mb-2 space-y-1.5">
             {block.items.map((item, j) => (
               <li key={j}>{renderInline(item)}</li>
             ))}
@@ -145,7 +145,7 @@ const renderMarkdown = (content: string): React.ReactNode[] => {
       case 'paragraph':
       default:
         return (
-          <p key={i} className="text-sm sm:text-base text-zinc-300 leading-relaxed mb-5">
+          <p key={i} className="text-sm sm:text-base text-[#334155] leading-relaxed mb-5">
             {renderInline(block.text)}
           </p>
         );
@@ -158,7 +158,7 @@ const renderMarkdown = (content: string): React.ReactNode[] => {
 /* ------------------------------------------------------------------ */
 
 const CategoryBadge: React.FC<{ category: string }> = ({ category }) => (
-  <span className="absolute top-4 left-4 bg-[#C9A45C] text-[#090A0C] text-[10px] font-black uppercase rounded-full px-3 py-1 tracking-wider">
+  <span className="absolute top-4 left-4 bg-[#EEF2FF]/95 backdrop-blur text-[#5B5FEF] border border-[#E0E7FF] shadow-sm text-[10px] font-bold uppercase rounded-full px-3 py-1 tracking-wider">
     {category}
   </span>
 );
@@ -182,42 +182,42 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
       <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         {/* Hero */}
         <div className="max-w-3xl mx-auto text-center mb-14 sm:mb-16">
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-[#C9A45C]/10 border border-[#C9A45C]/30 text-[#E2C27B] text-xs font-extrabold uppercase tracking-widest mb-6">
+          <span className="inline-flex px-4 py-1.5 rounded-full bg-[#C9A45C]/10 border border-[#C9A45C]/30 text-[#8F6B2D] text-xs font-extrabold uppercase tracking-widest mb-6">
             Industry Insights &amp; Strategies
           </span>
-          <h1 className="font-black text-[#F1F2EE] uppercase text-4xl sm:text-5xl tracking-tight mb-5">
+          <h1 className="font-display font-extrabold text-[#111827] text-4xl sm:text-5xl tracking-[-0.03em] leading-[1.08] mb-5">
             Engineering &amp; Digital Growth Blog
           </h1>
-          <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          <p className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
             Actionable guides on web performance, Gemini AI automation, branding conversion strategies, and scaling digital products.
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Featured article — large horizontal card */}
+        <div className="max-w-7xl mx-auto space-y-14">
+          {/* Featured article — large editorial, text below (NOT boxed) */}
           <article
             onClick={() => onNavigate(`/blog/${featured.slug}`)}
-            className="grid lg:grid-cols-2 bg-[#080B14] border border-white/[0.08] rounded-3xl overflow-hidden hover:border-[#C9A45C]/40 transition cursor-pointer"
+            className="group cursor-pointer"
           >
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
               <img
                 src={featured.coverImage}
                 alt={featured.title}
-                className="aspect-video lg:aspect-auto object-cover w-full h-full"
+                className="aspect-[2/1] sm:aspect-[21/9] object-cover w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 loading="lazy"
               />
               <CategoryBadge category={featured.category} />
             </div>
-            <div className="p-6 sm:p-8 space-y-4 flex flex-col justify-center">
-              <h2 className="text-xl sm:text-2xl font-black text-[#F1F2EE] uppercase leading-tight">
-                {featured.title}
-              </h2>
-              <p className="text-[11px] text-zinc-500 uppercase tracking-wider">
+            <div className="pt-6 space-y-3 max-w-3xl">
+              <p className="text-[11px] font-mono uppercase tracking-wider text-[#64748B]">
                 {featured.publishedAt} • {featured.readTime}
               </p>
-              <p className="text-sm text-zinc-400 leading-relaxed">{featured.excerpt}</p>
-              <span className="inline-flex items-center gap-1.5 text-xs font-black text-[#E2C27B] tracking-wider uppercase">
-                Read Full Article <ArrowRight className="w-3.5 h-3.5" />
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight leading-tight group-hover:text-[#5B5FEF] transition-colors">
+                {featured.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#475569] leading-relaxed">{featured.excerpt}</p>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5B5FEF] tracking-wider">
+                Read Full Article <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
             </div>
           </article>
@@ -228,27 +228,27 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
               <article
                 key={post.slug}
                 onClick={() => onNavigate(`/blog/${post.slug}`)}
-                className="bg-[#080B14] border border-white/[0.08] rounded-3xl overflow-hidden hover:border-[#C9A45C]/40 transition cursor-pointer flex flex-col"
+                className="group bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden hover:border-[#C9A45C]/40 hover:shadow-[0_14px_34px_-14px_rgba(15,23,42,0.14)] hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
               >
                 <div className="relative overflow-hidden">
                   <img
                     src={post.coverImage}
                     alt={post.title}
-                    className="aspect-video object-cover w-full"
+                    className="aspect-video object-cover w-full transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
                   <CategoryBadge category={post.category} />
                 </div>
-                <div className="p-5 space-y-3 flex flex-col flex-1">
-                  <p className="text-[11px] text-zinc-500 uppercase tracking-wider">
+                <div className="p-6 space-y-3 flex flex-col flex-1">
+                  <p className="text-[11px] font-mono uppercase tracking-wider text-[#94A3B8]">
                     {post.publishedAt} • {post.readTime}
                   </p>
-                  <h3 className="text-lg font-extrabold text-[#F1F2EE] uppercase leading-snug">
+                  <h3 className="font-display text-lg font-extrabold text-[#111827] tracking-tight leading-snug group-hover:text-[#5B5FEF] transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{post.excerpt}</p>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-black text-[#E2C27B] tracking-wider uppercase mt-auto pt-1">
-                    Read Full Article <ArrowRight className="w-3.5 h-3.5" />
+                  <p className="text-xs text-[#64748B] leading-relaxed">{post.excerpt}</p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5B5FEF] tracking-wider mt-auto pt-1">
+                    Read Full Article <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </div>
               </article>
@@ -256,8 +256,8 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
           </div>
 
           {/* Newsletter-style CTA strip */}
-          <div className="bg-[#080B14] border border-white/[0.08] rounded-2xl p-6 text-center">
-            <p className="text-sm sm:text-base font-bold text-[#F1F2EE] mb-5">
+          <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-8 text-center">
+            <p className="font-display text-base sm:text-lg font-bold text-[#111827] mb-5">
               Want strategies like these applied to your business?
             </p>
             <button
@@ -297,16 +297,16 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
           canonicalPath="/blog"
         />
         <section className="px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
-          <h1 className="text-3xl sm:text-4xl font-black text-[#F1F2EE] uppercase tracking-tight mb-6">
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight mb-6">
             Article not found
           </h1>
-          <p className="text-sm text-zinc-400 mb-8 max-w-md mx-auto">
+          <p className="text-sm text-[#64748B] mb-8 max-w-md mx-auto">
             The insight you are looking for may have been moved or no longer exists. Explore our latest articles instead.
           </p>
           <button
             type="button"
             onClick={() => onNavigate('/blog')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 text-xs font-black uppercase tracking-widest text-zinc-300 hover:text-[#E2C27B] hover:border-[#C9A45C]/40 transition cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#E2E8F0] text-xs font-bold uppercase tracking-widest text-[#334155] shadow-[0_2px_10px_rgba(15,23,42,0.04)] hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] transition cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Insights Blog
           </button>
@@ -331,7 +331,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
           <button
             type="button"
             onClick={() => onNavigate('/blog')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 text-[11px] font-black uppercase tracking-widest text-zinc-400 hover:text-[#E2C27B] hover:border-[#C9A45C]/40 transition cursor-pointer mb-10"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-[11px] font-bold uppercase tracking-widest text-[#475569] hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] transition cursor-pointer mb-10"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Insights Blog
           </button>
@@ -342,19 +342,19 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
               <img
                 src={post.author.avatar}
                 alt={post.author.name}
-                className="w-11 h-11 rounded-full border border-[#C9A45C]/40 object-cover"
+                className="w-11 h-11 rounded-full border border-[#E2E8F0] object-cover"
                 loading="lazy"
               />
               <div>
-                <p className="uppercase text-xs font-black text-[#F1F2EE] tracking-wider">{post.author.name}</p>
-                <p className="text-[11px] text-zinc-500">
+                <p className="uppercase text-xs font-black text-[#111827] tracking-wider">{post.author.name}</p>
+                <p className="text-[11px] text-[#64748B]">
                   {post.author.role} • {post.publishedAt} • {post.readTime}
                 </p>
               </div>
             </div>
 
             {/* Title H1 (from post.title, not markdown) */}
-            <h1 className="text-3xl sm:text-4xl font-black text-[#F1F2EE] uppercase leading-tight mb-8">
+            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight leading-[1.15] mb-8">
               {post.title}
             </h1>
 
@@ -362,7 +362,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
             <img
               src={post.coverImage}
               alt={post.title}
-              className="rounded-2xl border border-white/10 w-full aspect-video object-cover mb-10"
+              className="rounded-2xl border border-[#E2E8F0] shadow-[0_1px_2px_rgba(15,23,42,0.04)] w-full aspect-video object-cover mb-10"
               loading="lazy"
             />
 
@@ -374,7 +374,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="uppercase text-[11px] font-bold text-[#E2C27B] bg-[#C9A45C]/10 border border-[#C9A45C]/25 rounded-full px-3 py-1 tracking-wider"
+                  className="uppercase text-[11px] font-bold text-[#8F6B2D] bg-[#C9A45C]/10 border border-[#C9A45C]/25 rounded-full px-3 py-1 tracking-wider"
                 >
                   # {tag}
                 </span>
@@ -383,8 +383,8 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
           </article>
 
           {/* More insights — the other posts */}
-          <div className="border-t border-white/[0.08] mt-14 pt-10">
-            <h2 className="text-sm font-black text-[#F1F2EE] uppercase tracking-widest mb-6">
+          <div className="border-t border-[#E2E8F0] mt-14 pt-10">
+            <h2 className="font-display text-base font-extrabold text-[#111827] tracking-wide mb-6">
               More Insights
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -392,17 +392,17 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
                 <article
                   key={other.slug}
                   onClick={() => onNavigate(`/blog/${other.slug}`)}
-                  className="bg-[#080B14] border border-white/[0.08] rounded-2xl p-5 hover:border-[#C9A45C]/40 transition cursor-pointer flex flex-col space-y-2.5"
+                  className="group bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#C9A45C]/40 hover:shadow-[0_14px_34px_-14px_rgba(15,23,42,0.14)] transition-all duration-300 cursor-pointer flex flex-col space-y-2.5"
                 >
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8]">
                     {other.category} • {other.readTime}
                   </p>
-                  <h3 className="text-sm font-extrabold text-[#F1F2EE] uppercase leading-snug">
+                  <h3 className="text-sm font-extrabold text-[#111827] tracking-tight leading-snug group-hover:text-[#5B5FEF] transition-colors">
                     {other.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{other.excerpt}</p>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-[#E2C27B] tracking-wider uppercase mt-auto pt-1">
-                    Read <ArrowRight className="w-3 h-3" />
+                  <p className="text-xs text-[#64748B] leading-relaxed">{other.excerpt}</p>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#5B5FEF] tracking-wider mt-auto pt-1">
+                    Read <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-0.5" />
                   </span>
                 </article>
               ))}

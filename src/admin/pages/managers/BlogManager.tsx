@@ -21,8 +21,8 @@ const columns: Column<BlogRow>[] = [
     sortable: true,
     render: (r) => (
       <div className="min-w-0">
-        <p className="truncate font-semibold text-[#F5F6F2]">{r.title}</p>
-        <p className="truncate text-[11px] text-[#6B7280]">By {r.author_name || '—'}</p>
+        <p className="truncate font-semibold text-[#111827]">{r.title}</p>
+        <p className="truncate text-[11px] text-[#64748B]">By {r.author_name || '—'}</p>
       </div>
     ),
   },
@@ -43,13 +43,13 @@ const columns: Column<BlogRow>[] = [
     label: 'Published',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="text-[#A7AFBA]">{fmtDate(r.published_at)}</span>,
+    render: (r) => <span className="text-[#475569]">{fmtDate(r.published_at)}</span>,
   },
   {
     key: 'featured',
     label: 'Featured',
     render: (r) => (
-      <Star size={14} className={r.featured ? 'fill-[#E8C97C] text-[#E8C97C]' : 'text-[#566072]'} />
+      <Star size={14} className={r.featured ? 'fill-[#E8C97C] text-[#8F6B2D]' : 'text-[#64748B]'} />
     ),
   },
   {
@@ -57,7 +57,7 @@ const columns: Column<BlogRow>[] = [
     label: 'Updated',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="text-[#A7AFBA]">{timeAgo(r.updated_at)}</span>,
+    render: (r) => <span className="text-[#475569]">{timeAgo(r.updated_at)}</span>,
   },
 ];
 

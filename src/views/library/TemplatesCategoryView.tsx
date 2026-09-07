@@ -42,7 +42,7 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
   const related = TEMPLATE_CATEGORIES.filter((c) => c.slug !== category.slug && (getTemplatesByCategory(c.slug).length > 0)).slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-[#05080D]">
+    <div className="min-h-screen bg-[#FAFAFA]">
       <Seo
         title={`${category.name} Website Templates`}
         description={`Browse responsive ${category.name.toLowerCase()} website templates from BRANIFY. ${category.heroDescription}`}
@@ -57,12 +57,12 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
 
       {/* Breadcrumbs */}
       <nav aria-label="Breadcrumb" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <ol className="flex items-center flex-wrap gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#727B87]">
-          <li><button onClick={() => onNavigate('/')} className="hover:text-[#E9CF79] transition-colors cursor-pointer">Home</button></li>
+        <ol className="flex items-center flex-wrap gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
+          <li><button onClick={() => onNavigate('/')} className="hover:text-[#8F6B2D] transition-colors cursor-pointer">Home</button></li>
           <li aria-hidden="true"><ChevronRight className="w-3 h-3" /></li>
-          <li><button onClick={() => onNavigate('/templates')} className="hover:text-[#E9CF79] transition-colors cursor-pointer">Templates</button></li>
+          <li><button onClick={() => onNavigate('/templates')} className="hover:text-[#8F6B2D] transition-colors cursor-pointer">Templates</button></li>
           <li aria-hidden="true"><ChevronRight className="w-3 h-3" /></li>
-          <li aria-current="page" className="text-[#D4AF37]">{category.name}</li>
+          <li aria-current="page" className="text-[#8F6B2D]">{category.name}</li>
         </ol>
       </nav>
 
@@ -72,27 +72,27 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
           <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[420px] bg-[#C9A45C]/[0.07] blur-[120px] rounded-full" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10 space-y-5 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#D4AF37]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#8F6B2D]">
             <LayoutTemplate className="w-3.5 h-3.5" />
             {templates.length} {templates.length === 1 ? 'Template' : 'Templates'}
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F1F2EE] uppercase tracking-tight leading-[1.05]">
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#111827] tracking-[-0.02em] leading-[1.08]">
             {category.name}
             <span className="block bg-gradient-to-r from-[#C9A45C] via-[#E9CF79] to-[#D4AF37] bg-clip-text text-transparent">
               Website Templates
             </span>
           </h1>
-          <p className="text-[#A7AFBA] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">{category.heroDescription}</p>
+          <p className="text-[#475569] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">{category.heroDescription}</p>
 
           <div className="relative max-w-xl mx-auto pt-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#727B87] pointer-events-none" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B] pointer-events-none" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={`Search ${category.name.toLowerCase()} templates...`}
               aria-label={`Search ${category.name} templates`}
-              className="w-full pl-12 pr-4 py-3 bg-[#070A0F] border border-white/10 rounded-xl text-xs sm:text-sm text-[#E3E5E0] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors"
+              className="w-full pl-12 pr-4 py-3 bg-white border border-[#E2E8F0] rounded-xl text-xs sm:text-sm text-[#1E293B] placeholder-[#94A3B8] shadow-[0_2px_10px_rgba(15,23,42,0.04)] focus:outline-none focus:border-[#5B5FEF]/50 focus:shadow-[0_0_0_3px_rgba(91,95,239,0.12)] transition-colors"
             />
           </div>
         </div>
@@ -101,12 +101,12 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
       {/* Grid / empty state */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-10">
         {templates.length === 0 ? (
-          <div className="text-center space-y-4 py-16 rounded-3xl border border-white/[0.08] bg-[#080C12]">
-            <Sparkles className="w-10 h-10 text-[#C9A45C]/60 mx-auto" />
-            <p className="text-[#F1F2EE] font-black uppercase tracking-tight text-lg">
+          <div className="text-center space-y-4 py-16 rounded-3xl border border-[#E2E8F0] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+            <Sparkles className="w-10 h-10 text-[#8F6B2D]/60 mx-auto" />
+            <p className="font-display text-[#111827] font-extrabold tracking-tight text-lg">
               {query ? 'No templates match your search' : 'New templates are landing here soon'}
             </p>
-            <p className="text-[#A7AFBA] text-sm max-w-md mx-auto">
+            <p className="text-[#475569] text-sm max-w-md mx-auto">
               {query
                 ? 'Try a different keyword or browse the full library.'
                 : `Our design team is crafting ${category.name.toLowerCase()} templates right now — in the meantime, explore the rest of the library or start a custom project.`}
@@ -123,7 +123,7 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
               )}
               <button
                 onClick={() => onNavigate(`/contact?category=${category.slug}`)}
-                className="px-6 py-3 rounded-full text-xs font-extrabold uppercase tracking-widest border border-[#C9A45C]/40 text-[#F1F2EE] hover:border-[#C9A45C] hover:text-[#E9CF79] transition-all"
+                className="px-6 py-3 rounded-full text-xs font-extrabold uppercase tracking-widest border border-[#C9A45C]/40 text-[#111827] hover:border-[#C9A45C] hover:text-[#8F6B2D] transition-all"
               >
                 Request Custom Design
               </button>
@@ -141,16 +141,16 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
       {/* Related categories */}
       {related.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-5">
-          <h2 className="font-display text-xl sm:text-2xl font-black uppercase tracking-tight text-[#FFF5DC]">Related Categories</h2>
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-[#111827]">Related Categories</h2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {related.map((c) => (
               <button
                 key={c.slug}
                 onClick={() => onNavigate(categoryHref(c.slug))}
-                className="group text-left p-4 rounded-xl bg-[#080C12] border border-white/[0.08] hover:border-[#C9A45C]/35 transition-all cursor-pointer"
+                className="group text-left p-4 rounded-xl bg-white border border-[#E2E8F0] hover:border-[#C9A45C]/40 hover:shadow-[0_10px_26px_-12px_rgba(15,23,42,0.12)] transition-all cursor-pointer"
               >
-                <span className="text-xs font-black text-[#F1F2EE] uppercase tracking-tight group-hover:text-[#E9CF79] transition-colors">{c.name}</span>
-                <p className="text-[#727B87] text-[11px] mt-1 line-clamp-1">{c.tagline}</p>
+                <span className="font-display text-xs font-bold text-[#111827] tracking-tight group-hover:text-[#8F6B2D] transition-colors">{c.name}</span>
+                <p className="text-[#64748B] text-[11px] mt-1 line-clamp-1">{c.tagline}</p>
               </button>
             ))}
           </div>
@@ -161,7 +161,7 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <button
           onClick={() => onNavigate('/templates')}
-          className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#D4AF37] hover:text-[#E9CF79] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#8F6B2D] hover:text-[#8F6B2D] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" /> Back to All Templates
         </button>
@@ -177,10 +177,10 @@ const CategoryNotFound: React.FC<{ categorySlug: string; onNavigate: (path: stri
     trackNotFound(`/templates/${categorySlug}`);
   }, [categorySlug]);
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 space-y-4 bg-[#05080D]">
-      <span className="font-display text-6xl font-black text-[#D4AF37]/40">404</span>
-      <h1 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight">Template category not found</h1>
-      <p className="text-[#A7AFBA] text-sm">The category “{categorySlug}” doesn’t exist in the BRANIFY template library.</p>
+    <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 space-y-4 bg-white">
+      <span className="font-display text-6xl font-black text-[#5B5FEF]/40">404</span>
+      <h1 className="font-display text-xl font-extrabold text-[#111827] tracking-tight">Template category not found</h1>
+      <p className="text-[#475569] text-sm">The category “{categorySlug}” doesn’t exist in the BRANIFY template library.</p>
       <button onClick={() => onNavigate('/templates')} className="btn-metal px-6 py-3 rounded-full text-xs font-extrabold uppercase tracking-widest mt-2">
         Browse All Templates
       </button>

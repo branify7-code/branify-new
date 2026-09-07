@@ -49,52 +49,6 @@ const toolsLinks: Array<{ label: string; route: string; gold?: boolean }> = [
   { label: 'Invoice Generator', route: '/tools?category=Business+Tools' },
 ];
 
-function BranifyFooterLogo() {
-  return (
-    <svg
-      viewBox="0 0 120 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-11 h-11 transition-all duration-500"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="branify-gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFF9EB">
-            <animate attributeName="stop-color" values="#FFF9EB;#DFBA73;#FFF9EB" dur="4s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="35%" stopColor="#E2C27B"></stop>
-          <stop offset="70%" stopColor="#C9A45C"></stop>
-          <stop offset="100%" stopColor="#8A6827"></stop>
-        </linearGradient>
-        <linearGradient id="branify-silver-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#F5F5F2"></stop>
-          <stop offset="50%" stopColor="#C9A45C"></stop>
-          <stop offset="100%" stopColor="#8A6827"></stop>
-        </linearGradient>
-        <filter id="gold-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3.5" result="blur"></feGaussianBlur>
-          <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
-        </filter>
-      </defs>
-      <circle
-        cx="60"
-        cy="60"
-        r="48"
-        fill="none"
-        stroke="url(#branify-gold-grad)"
-        strokeWidth="1"
-        strokeDasharray="6 6"
-        opacity="0.25"
-        className="origin-center animate-[spin_20s_linear_infinite]"
-      ></circle>
-      <path d="M 18 36 L 42 14 H 80 C 98 14 110 25 110 41 C 110 54 99 63 83 67 L 40 40 L 18 36 Z" fill="url(#branify-gold-grad)" filter="url(#gold-glow)"></path>
-      <path d="M 48 26 H 75 C 83 26 89 30 89 37 C 89 44 83 48 73 48 L 41 28 L 48 26 Z" fill="#07090D"></path>
-      <path d="M 38 41 L 83 67 L 76 72 L 30 46 Z" fill="#07090D"></path>
-      <path d="M 14 78 L 52 53 H 84 C 102 53 114 64 114 80 C 114 98 98 106 74 106 H 32 C 22 106 18 98 28 98 L 72 98 C 86 98 94 91 94 80 C 94 69 86 63 70 63 L 40 81 L 14 78 Z" fill="url(#branify-silver-grad)"></path>
-    </svg>
-  );
-}
 
 const socials: Array<{ label: string; href: string; Icon: React.FC<{ className?: string }> }> = [
   { label: 'Instagram', href: 'https://www.instagram.com/branify001', Icon: Instagram },
@@ -152,22 +106,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
   };
 
   return (
-    <footer className="bg-[#05080C] text-zinc-300 border-t border-[#C9A45C]/20 pt-16 pb-12 relative overflow-hidden">
+    <footer className="bg-[#0B1120] text-slate-400 border-t border-[#C9A45C]/20 pt-16 pb-12 relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[1.5px] bg-gradient-to-r from-transparent via-[#C9A45C]/60 to-transparent"></div>
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#C9A45C]/5 rounded-full blur-[140px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
         {/* PWA Install Banner */}
-        <div className="bg-[#090D14]/90 border border-[#C9A45C]/25 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+        <div className="bg-white/[0.04] border border-[#C9A45C]/25 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
           <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#C9A45C]/10 border border-[#C9A45C]/30 text-[#E2C27B] text-[10px] font-extrabold uppercase tracking-widest">
-              <Sparkles className="w-3.5 h-3.5 text-[#E2C27B]" />
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#C9A45C]/10 border border-[#C9A45C]/30 text-[#E7C978] text-[10px] font-extrabold uppercase tracking-widest">
+              <Sparkles className="w-3.5 h-3.5 text-[#E7C978]" />
               Progressive Web App
             </div>
-            <h3 className="text-xl sm:text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-black text-[#F1F5F9] uppercase tracking-tight">
               {isPWAInstalled ? 'BRANIFY Is Installed On This Device' : 'Get BRANIFY on Your Mobile & Desktop Device'}
             </h3>
-            <p className="text-zinc-400 text-xs sm:text-sm max-w-xl">
+            <p className="text-slate-500 text-xs sm:text-sm max-w-xl">
               Install the official BRANIFY app for instant offline access to 100+ free online tools, service quotes, and digital templates.
             </p>
           </div>
@@ -186,40 +140,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
           <div className="col-span-2 space-y-4">
             <button onClick={() => nav('/')} className="text-left focus:outline-none cursor-pointer">
               <div className="flex items-center gap-3 group">
-                <div className="relative shrink-0 transition-transform duration-300 group-hover:scale-105">
-                  <BranifyFooterLogo />
-                </div>
-                <div className="flex flex-col justify-center">
-                  <div className="font-black uppercase flex items-center leading-none font-sans text-3xl tracking-wider">
-                    <span className="text-[#F1F2EE]">BRAN</span>
-                    <span className="text-[#E2C27B]">IFY</span>
-                  </div>
-                  <div className="flex items-center uppercase font-extrabold text-zinc-400 mt-1 text-[12px] gap-2">
-                    <span className="text-[#F1F2EE]">BUILD.</span>
-                    <span className="text-[#E2C27B]">BRAND.</span>
-                    <span className="text-[#F1F2EE]">GROW.</span>
-                  </div>
-                </div>
+                <img
+                  src="/branify-logo-horizontal.svg"
+                  alt="BRANIFY — Build. Brand. Grow."
+                  className="h-12 w-auto transition-transform duration-300 group-hover:scale-[1.03] drop-shadow-[0_0_18px_rgba(91,95,239,0.35)]"
+                />
               </div>
             </button>
-            <p className="text-zinc-400 text-xs leading-relaxed max-w-sm">
+            <p className="text-slate-500 text-xs leading-relaxed max-w-sm">
               International digital agency &amp; technology partner helping ambitious startups and enterprise brands look better, work smarter, and scale faster.
             </p>
 
-            <div className="space-y-3.5 text-xs text-zinc-300 pt-1">
+            <div className="space-y-3.5 text-xs text-slate-400 pt-1">
               {/* Head Office (USA) */}
               <div className="p-2.5 rounded-xl bg-white/[0.03] border border-[#C9A45C]/20 space-y-1">
-                <div className="flex items-center gap-1.5 text-[#E2C27B] font-extrabold uppercase text-[10px] tracking-wider">
+                <div className="flex items-center gap-1.5 text-[#E7C978] font-extrabold uppercase text-[10px] tracking-wider">
                   <Building2 className="w-3 h-3" />
                   <span>Head Office (USA)</span>
                 </div>
-                <div className="flex items-start gap-2 text-zinc-300 text-[11px] leading-snug pl-0.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#C9A45C] shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 text-slate-400 text-[11px] leading-snug pl-0.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#E7C978] shrink-0 mt-0.5" />
                   <span>111, Elm AVE, Glen Cove, New York</span>
                 </div>
                 <div className="flex items-center gap-2 pl-0.5 pt-0.5">
-                  <Phone className="w-3 h-3 text-[#C9A45C] shrink-0" />
-                  <a href="tel:+8801879176373" className="text-zinc-300 hover:text-[#E2C27B] text-[11px] font-semibold transition-colors">
+                  <Phone className="w-3 h-3 text-[#E7C978] shrink-0" />
+                  <a href="tel:+8801879176373" className="text-slate-400 hover:text-[#E7C978] text-[11px] font-semibold transition-colors">
                     +880 1879-176373
                   </a>
                 </div>
@@ -227,12 +172,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
               {/* Bangladesh Branch */}
               <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-[#C9A45C]/30 transition-colors space-y-1">
-                <div className="flex items-center gap-1.5 text-[#E2C27B] font-extrabold uppercase text-[10px] tracking-wider">
+                <div className="flex items-center gap-1.5 text-[#E7C978] font-extrabold uppercase text-[10px] tracking-wider">
                   <Building2 className="w-3 h-3" />
                   <span>Bangladesh Branch</span>
                 </div>
-                <div className="flex items-start gap-2 text-zinc-300 text-[11px] leading-snug pl-0.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#C9A45C] shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 text-slate-400 text-[11px] leading-snug pl-0.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#E7C978] shrink-0 mt-0.5" />
                   <span>House 18 Road -7, Gulshan 2. Dhaka, Bangladesh.</span>
                 </div>
               </div>
@@ -245,15 +190,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                     href="https://wa.me/923321029333"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-300 hover:text-emerald-400 text-xs font-bold transition-colors flex items-center gap-1.5"
+                    className="text-slate-400 hover:text-emerald-400 text-xs font-bold transition-colors flex items-center gap-1.5"
                   >
                     <span>WhatsApp: +92 332 1029333</span>
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-[#E2C27B] shrink-0" />
-                  <a href="mailto:admin@branify.store" className="text-zinc-300 hover:text-[#E2C27B] text-xs transition-colors">
+                  <Mail className="w-3.5 h-3.5 text-[#E7C978] shrink-0" />
+                  <a href="mailto:admin@branify.store" className="text-slate-400 hover:text-[#E7C978] text-xs transition-colors">
                     admin@branify.store
                   </a>
                 </div>
@@ -263,11 +208,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* Services */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">Services</h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <h4 className="text-xs font-black text-[#F1F5F9] uppercase tracking-wider">Services</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
               {serviceLinks.map((item) => (
                 <li key={item.label}>
-                  <button onClick={() => nav(item.route)} className="hover:text-[#E2C27B] transition-colors text-left">
+                  <button onClick={() => nav(item.route)} className="hover:text-[#E7C978] transition-colors text-left">
                     {item.label}
                   </button>
                 </li>
@@ -277,18 +222,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* Free Resources */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">Free Resources</h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <h4 className="text-xs font-black text-[#F1F5F9] uppercase tracking-wider">Free Resources</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
               {resourceLinks.map((item) =>
                 item.gold ? (
                   <li key={item.label}>
-                    <button onClick={() => nav(item.route)} className="hover:text-[#FFF6E5] transition-colors text-[#E2C27B] font-bold flex items-center gap-1 text-left">
+                    <button onClick={() => nav(item.route)} className="hover:text-[#F1F5F9] transition-colors text-[#E7C978] font-bold flex items-center gap-1 text-left">
                       {item.label} <ArrowUpRight className="w-3 h-3" />
                     </button>
                   </li>
                 ) : (
                   <li key={item.label}>
-                    <button onClick={() => nav(item.route)} className="hover:text-[#E2C27B] transition-colors text-left">
+                    <button onClick={() => nav(item.route)} className="hover:text-[#E7C978] transition-colors text-left">
                       {item.label}
                     </button>
                   </li>
@@ -299,18 +244,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* 100+ Free Tools */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">100+ Free Tools</h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <h4 className="text-xs font-black text-[#F1F5F9] uppercase tracking-wider">100+ Free Tools</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
               {toolsLinks.map((item) =>
                 item.gold ? (
                   <li key={item.label}>
-                    <button onClick={() => nav(item.route)} className="hover:text-[#FFF6E5] transition-colors text-[#E2C27B] font-bold flex items-center gap-1 text-left">
-                      {item.label} <Sparkles className="w-3 h-3 text-[#E2C27B]" />
+                    <button onClick={() => nav(item.route)} className="hover:text-[#F1F5F9] transition-colors text-[#E7C978] font-bold flex items-center gap-1 text-left">
+                      {item.label} <Sparkles className="w-3 h-3 text-[#E7C978]" />
                     </button>
                   </li>
                 ) : (
                   <li key={item.label}>
-                    <button onClick={() => nav(item.route)} className="hover:text-[#E2C27B] transition-colors text-left">
+                    <button onClick={() => nav(item.route)} className="hover:text-[#E7C978] transition-colors text-left">
                       {item.label}
                     </button>
                   </li>
@@ -321,37 +266,37 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
 
           {/* Company & Legal */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-[#F1F2EE] uppercase tracking-wider">Company &amp; Legal</h4>
-            <ul className="space-y-2 text-xs text-zinc-400">
+            <h4 className="text-xs font-black text-[#F1F5F9] uppercase tracking-wider">Company &amp; Legal</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
               <li>
-                <button onClick={() => nav('/about')} className="hover:text-[#E2C27B] transition-colors text-left">About Us</button>
+                <button onClick={() => nav('/about')} className="hover:text-[#E7C978] transition-colors text-left">About Us</button>
               </li>
               <li>
-                <button onClick={() => nav('/portfolio')} className="hover:text-[#E2C27B] transition-colors text-left">Case Studies</button>
+                <button onClick={() => nav('/portfolio')} className="hover:text-[#E7C978] transition-colors text-left">Case Studies</button>
               </li>
               <li>
-                <button onClick={() => nav('/blog')} className="hover:text-[#E2C27B] transition-colors text-left">Insights Blog</button>
+                <button onClick={() => nav('/blog')} className="hover:text-[#E7C978] transition-colors text-left">Insights Blog</button>
               </li>
               <li>
-                <button onClick={() => nav('/pricing')} className="hover:text-[#E2C27B] transition-colors text-left">Transparent Pricing</button>
+                <button onClick={() => nav('/pricing')} className="hover:text-[#E7C978] transition-colors text-left">Transparent Pricing</button>
               </li>
               <li>
                 <button
                   onClick={() => setBrandKitOpen(true)}
-                  className="hover:text-[#F1F2EE] text-[#E2C27B] font-extrabold transition-colors flex items-center gap-1 cursor-pointer text-left"
+                  className="hover:text-[#F1F5F9] text-[#E7C978] font-extrabold transition-colors flex items-center gap-1 cursor-pointer text-left"
                 >
                   <Palette className="w-3 h-3" />
                   <span>Logo &amp; Brand Kit</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => nav('/privacypolicy')} className="hover:text-[#E2C27B] transition-colors text-left">Privacy Policy</button>
+                <button onClick={() => nav('/privacypolicy')} className="hover:text-[#E7C978] transition-colors text-left">Privacy Policy</button>
               </li>
               <li>
-                <button onClick={() => nav('/termsandconditions')} className="hover:text-[#E2C27B] transition-colors text-left">Terms of Service</button>
+                <button onClick={() => nav('/termsandconditions')} className="hover:text-[#E7C978] transition-colors text-left">Terms of Service</button>
               </li>
               <li>
-                <button onClick={() => nav('/refundpolicy')} className="hover:text-[#E2C27B] transition-colors text-left">Refund Policy</button>
+                <button onClick={() => nav('/refundpolicy')} className="hover:text-[#E7C978] transition-colors text-left">Refund Policy</button>
               </li>
             </ul>
           </div>
@@ -365,7 +310,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter work email for strategy updates..."
-              className="px-4 py-2.5 bg-white/[0.04] border border-[#C9A45C]/25 rounded-full text-xs text-[#F1F2EE] placeholder-zinc-500 focus:outline-none focus:border-[#C9A45C] flex-1"
+              className="px-4 py-2.5 bg-white/[0.04] border border-[#C9A45C]/25 rounded-full text-xs text-[#F1F5F9] placeholder-zinc-500 focus:outline-none focus:border-[#C9A45C] flex-1"
               aria-label="Email for newsletter"
               required
             />
@@ -390,7 +335,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 bg-white/[0.04] hover:bg-[#C9A45C]/20 text-zinc-400 hover:text-[#E2C27B] rounded-full border border-white/[0.08] hover:border-[#C9A45C]/40 transition-colors"
+                className="p-2.5 bg-white/[0.04] hover:bg-[#C9A45C]/20 text-slate-500 hover:text-[#E7C978] rounded-full border border-white/[0.08] hover:border-[#C9A45C]/40 transition-colors"
                 title={label}
                 aria-label={label}
               >
@@ -401,13 +346,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
         </div>
 
         {/* Bottom Bar */}
-        <div className="text-center text-xs text-zinc-500 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="text-center text-xs text-slate-500 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>© {new Date().getFullYear()} BRANIFY (branify.store). All rights reserved.</div>
           <div className="flex items-center gap-4 text-[11px]">
             <button onClick={() => nav('/privacypolicy')} className="hover:underline cursor-pointer">Privacy</button>
             <button onClick={() => nav('/termsandconditions')} className="hover:underline cursor-pointer">Terms</button>
             <button onClick={() => nav('/disclaimer')} className="hover:underline cursor-pointer">Disclaimer</button>
-            <button onClick={() => nav('/admin')} className="text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer">Admin</button>
+            <button onClick={() => nav('/admin')} className="text-slate-500 hover:text-slate-500 transition-colors cursor-pointer">Admin</button>
           </div>
         </div>
       </div>

@@ -65,28 +65,29 @@ export const ToolsSection: React.FC<ToolsSectionProps> = ({ onNavigate }) => {
       : `/tools?category=${encodeURIComponent(activeCategory)}`;
 
   return (
-    <section id="tools" className="relative py-28 sm:py-36 bg-[#05080D] text-[#F1F2EE] overflow-hidden">
-      {/* Background radial glow */}
+    <section id="tools" className="relative py-28 sm:py-36 bg-white text-[#111827] overflow-hidden">
+      {/* Background radial glow + soft teal atmosphere */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-mesh-radial pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[440px] h-[440px] bg-[#CCFBF1]/60 rounded-full blur-[130px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-8 border-b border-white/[0.08] gap-6">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#D4AF37]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-8 border-b border-[#E2E8F0] gap-6">
+          <div className="space-y-4">
+            <div className="eyebrow-label">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{'// Free Online Web Utilities'}</span>
             </div>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.03em] text-[#111827]">
               Free Digital Tools
             </h2>
-            <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl">
+            <p className="text-base sm:text-lg text-[#64748B] max-w-xl leading-relaxed">
               {allTools.length}+ fast, privacy-first utilities running directly inside your browser. No registration or credit card required.
             </p>
           </div>
 
-          <div className="font-mono text-xs text-[#D4AF37] px-4 py-2 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 self-start md:self-auto">
+          <div className="font-mono text-[11px] uppercase tracking-widest text-[#0F766E] px-4 py-2 rounded-full bg-[#F0FDFA] border border-[#99F6E4] self-start md:self-auto">
             100% Client-Side Privacy
           </div>
         </div>
@@ -101,14 +102,14 @@ export const ToolsSection: React.FC<ToolsSectionProps> = ({ onNavigate }) => {
                 role="tab"
                 aria-selected={active}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full font-extrabold uppercase text-[11px] tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-full font-extrabold uppercase text-[11px] tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
                   active
-                    ? 'bg-gradient-to-b from-[#F6DF84] via-[#D4AF37] to-[#B3841F] text-[#1A1206] shadow-lg shadow-[#C9A45C]/25'
-                    : 'bg-white/[0.04] text-[#A7AFBA] border border-white/10 hover:border-[#C9A45C]/45 hover:text-[#E9CF79]'
+                    ? 'bg-gradient-to-b from-[#2DD4BF] to-[#14B8A6] text-white shadow-lg shadow-[#14B8A6]/25'
+                    : 'bg-white text-[#475569] border border-[#E2E8F0] hover:border-[#14B8A6]/45 hover:text-[#0D9488]'
                 }`}
               >
                 {cat}
-                <span className={`text-[9px] px-1.5 py-0.5 rounded ${active ? 'bg-[#090A0C]/20 text-[#090A0C]' : 'bg-white/10 text-[#A7AFBA]'}`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded ${active ? 'bg-white/20 text-white' : 'bg-[#F1F5F9] text-[#64748B]'}`}>
                   {categoryCount(cat)}
                 </span>
               </button>
@@ -116,38 +117,39 @@ export const ToolsSection: React.FC<ToolsSectionProps> = ({ onNavigate }) => {
           })}
         </div>
 
-        {/* Tools grid — same cards as the /tools page */}
+        {/* Tools grid — same cards as the /tools page (first card = featured highlight) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((t) => (
+          {filtered.map((t, idx) => (
             <TiltCard
               key={t.slug}
               onClick={() => openTool(t.slug)}
               className="group h-full"
               ariaLabel={`Open ${t.name}`}
+              style={idx === 0 ? { boxShadow: '0 0 0 1px rgba(20,184,166,0.35), 0 14px 34px -14px rgba(15,23,42,0.14)' } : {}}
             >
-              <div id={`tool-card-${t.slug}`} className="h-full flex flex-col justify-between space-y-6 p-6 text-left">
+              <div id={`tool-card-${t.slug}`} className={`h-full flex flex-col justify-between space-y-6 p-6 text-left ${idx === 0 ? 'bg-gradient-to-br from-[#F0FDFA]/70 to-transparent' : ''}`}>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-extrabold text-[#D4AF37] uppercase tracking-widest px-2.5 py-1 bg-white/10 rounded-md border border-white/10">
+                    <span className="text-[10px] font-extrabold text-[#0F766E] uppercase tracking-widest px-2.5 py-1 bg-[#F0FDFA] rounded-md border border-[#99F6E4]">
                       {t.category}
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase whitespace-nowrap">
+                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded uppercase whitespace-nowrap">
                       Instant Free
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="shrink-0 w-9 h-9 rounded-lg bg-white/[0.06] border border-white/10 flex items-center justify-center mt-0.5">
-                      <IconFor name={t.iconName} className="w-[18px] h-[18px] text-[#A7AFBA] group-hover:text-[#E9CF79] transition-colors" />
+                    <div className="shrink-0 w-9 h-9 rounded-lg bg-[#F0FDFA] border border-[#99F6E4]/70 flex items-center justify-center mt-0.5">
+                      <IconFor name={t.iconName} className="w-[18px] h-[18px] text-[#0D9488] group-hover:text-[#0F766E] transition-colors" />
                     </div>
-                    <h3 className="text-base font-black text-[#F1F2EE] group-hover:text-[#E9CF79] transition-colors uppercase tracking-tight leading-snug">
+                    <h3 className="text-base font-extrabold text-[#111827] group-hover:text-[#0F766E] transition-colors tracking-tight leading-snug">
                       {t.name}
                     </h3>
                   </div>
-                  <p className="text-[#A7AFBA] text-xs leading-relaxed line-clamp-3">{t.description}</p>
+                  <p className="text-[#64748B] text-xs leading-relaxed line-clamp-3">{t.description}</p>
                 </div>
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#F1F2EE] group-hover:text-[#E9CF79] transition-colors">
+                <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs font-bold text-[#334155] group-hover:text-[#0F766E] transition-colors">
                   <span className="uppercase tracking-wider">Run Tool Online</span>
-                  <ArrowRight className="w-4 h-4 text-[#727B87] group-hover:text-[#E9CF79] group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#0D9488] group-hover:translate-x-1 transition-all" />
                 </div>
               </div>
             </TiltCard>
@@ -156,7 +158,7 @@ export const ToolsSection: React.FC<ToolsSectionProps> = ({ onNavigate }) => {
 
         {/* Footer note + full catalog CTA */}
         <div className="mt-12 flex flex-col items-center gap-6">
-          <p className="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-[#727B87]">
+          <p className="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-[#94A3B8]">
             Showing {filtered.length} of {categoryCount(activeCategory)} {activeCategory === 'All' ? 'free tools' : `${activeCategory.toLowerCase()}`} — more added every month
           </p>
           <button

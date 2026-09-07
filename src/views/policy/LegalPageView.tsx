@@ -122,7 +122,7 @@ function renderText(text: string): React.ReactNode {
   return (
     <>
       {before}
-      <a href={href} className="text-[#D4AF37] hover:underline font-bold">
+      <a href={href} className="text-[#8F6B2D] hover:underline font-semibold">
         {label}
       </a>
       {after}
@@ -140,19 +140,19 @@ export const LegalPageView: React.FC<LegalPageViewProps> = ({ docPath, onNavigat
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
         <button
           onClick={onNavigateHome}
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-[#F1F2EE] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#64748B] hover:text-[#111827] transition-colors cursor-pointer"
         >
           ← Back to Home
         </button>
 
-        <div className="bg-[#080808] border border-white/10 rounded-3xl p-8 sm:p-12 space-y-6 shadow-2xl">
-          <h1 className="text-3xl font-black text-[#F1F2EE] uppercase tracking-tight">{doc.title}</h1>
-          <div className="text-xs text-zinc-500 font-bold uppercase">Last Updated: January 1, 2026</div>
-          <div className="text-xs text-zinc-300 leading-relaxed space-y-4 font-normal">
+        <div className="bg-white border border-[#E2E8F0] rounded-3xl p-8 sm:p-12 space-y-6 shadow-[0_24px_60px_-30px_rgba(15,23,42,0.15)]">
+          <h1 className="font-display text-3xl font-extrabold text-[#111827] tracking-tight">{doc.title}</h1>
+          <div className="text-xs text-[#94A3B8] font-bold uppercase">Last Updated: January 1, 2026</div>
+          <div className="text-sm text-[#334155] leading-relaxed space-y-4">
             {body.map((section, i) => (
               <React.Fragment key={i}>
                 {section.heading ? (
-                  <h3 className="text-sm font-bold text-[#F1F2EE] uppercase pt-2">{section.heading}</h3>
+                  <h3 className="font-display text-base font-bold text-[#111827] pt-2">{section.heading}</h3>
                 ) : null}
                 <p>{renderText(section.text)}</p>
               </React.Fragment>

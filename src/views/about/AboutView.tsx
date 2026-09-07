@@ -25,47 +25,48 @@ export const AboutView: React.FC<AboutViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-20">
+    <div className="min-h-screen pt-28 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24 sm:space-y-28">
       {/* Header Breadcrumbs & Hero Title */}
-      <div className="space-y-4 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#D4AF37]/30 text-xs font-mono text-[#F3E5AB]">
+      <div className="space-y-6 text-center max-w-3xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-xs font-mono text-[#8F6B2D]">
           <button 
             onClick={onNavigateHome} 
-            className="text-[#F1F2EE]/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
+            className="text-[#64748B] hover:text-[#111827] transition-colors cursor-pointer"
           >
             Home
           </button>
-          <span className="text-[#F1F2EE]/30">/</span>
-          <span className="text-[#D4AF37]">The Studio Ethos & Architecture</span>
+          <span className="text-[#CBD5E1]">/</span>
+          <span className="text-[#8F6B2D]">The Studio Ethos & Architecture</span>
         </div>
 
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] leading-[1.08] text-[#111827]">
           The Standard For <br />
           <span className="text-gold-gradient">Digital Sovereignty</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-[#F1F2EE]/65 font-light leading-relaxed">
+        <p className="text-sm sm:text-lg text-[#475569] font-light leading-relaxed">
           Branify operates at the intersection of haute couture aesthetic precision and deep-stack computational engineering. We build enduring technological advantages for the world&apos;s most ambitious brands.
         </p>
       </div>
 
       {/* The Manifesto Section */}
-      <div id="manifesto" className="rounded-3xl bg-[#0F1015] border border-[#D4AF37]/25 p-8 sm:p-12 space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center">
+      <div id="manifesto" className="relative rounded-3xl bg-gradient-to-b from-[#F8FAFC] to-white border border-[#E2E8F0] p-8 sm:p-12 space-y-8 overflow-hidden">
+        <div className="absolute -top-24 -right-16 w-[340px] h-[220px] bg-[#EEF2FF] blur-[100px] rounded-full pointer-events-none" />
+        <div className="relative flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] border border-[#E0E7FF] text-[#5B5FEF] flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase text-[#D4AF37] tracking-widest">
+            <span className="eyebrow-label">
               Foundational Philosophy
             </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#FFF5DC]">
+            <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-[#111827]">
               The Branify Manifesto
             </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-[#F1F2EE]/75 font-light leading-relaxed pt-2">
+        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 text-sm sm:text-base text-[#334155] leading-relaxed pt-2">
           <p>
             In an era of homogenized web templates and generic AI copy, distinction is the ultimate competitive moat. We reject digital compromise. Every interface we architect is mathematically tuned for emotional resonance, spatial depth, and frictionless performance.
           </p>
@@ -76,29 +77,29 @@ export const AboutView: React.FC<AboutViewProps> = ({
       </div>
 
       {/* Verified Stats Track Record */}
-      <div id="stats" className="space-y-6">
+      <div id="stats" className="space-y-10">
         <div className="text-center space-y-2">
-          <span className="text-xs font-mono uppercase text-[#D4AF37] tracking-widest">
+          <span className="eyebrow-label">
             Quantitative Precision
           </span>
-          <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-[#111827]">
             Verified Track Record
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12 lg:divide-x lg:divide-[#E2E8F0]">
           {statsData.map((stat, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-2xl bg-[#0F1015] border border-white/10 text-center space-y-2"
+              className="px-4 sm:px-6 text-center space-y-2"
             >
-              <span className="block font-display text-3xl sm:text-4xl font-extrabold text-[#D4AF37]">
+              <span className="block font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#111827]">
                 {stat.value}{stat.suffix}
               </span>
-              <span className="block text-xs font-bold text-[#FFF5DC] uppercase tracking-wider">
+              <span className="block text-xs font-bold text-[#64748B] uppercase tracking-wider">
                 {stat.label}
               </span>
-              <p className="text-[11px] text-[#F1F2EE]/50 font-light">
+              <p className="text-[11px] text-[#94A3B8] font-light">
                 {stat.sublabel}
               </p>
             </div>
@@ -107,35 +108,35 @@ export const AboutView: React.FC<AboutViewProps> = ({
       </div>
 
       {/* 5-Phase Methodology */}
-      <div id="process" className="space-y-8">
-        <div className="text-center space-y-2 max-w-2xl mx-auto">
-          <span className="text-xs font-mono uppercase text-[#D4AF37] tracking-widest">
+      <div id="process" className="space-y-10">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="eyebrow-label">
             Rigorous Delivery
           </span>
-          <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#111827]">
             Our 5-Phase Methodology
           </h2>
-          <p className="text-xs text-[#F1F2EE]/60">
+          <p className="text-sm text-[#64748B]">
             A deterministic engineering blueprint engineered to eliminate uncertainty and ship on schedule.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
           {processStepsData.map((step) => (
             <div
               key={step.number}
-              className="p-6 rounded-2xl bg-[#0F1015] border border-white/10 space-y-3 relative hover:border-[#D4AF37]/40 transition-colors"
+              className="p-6 rounded-2xl bg-white border border-[#E2E8F0] space-y-3 relative hover:border-[#5B5FEF]/40 hover:shadow-[0_14px_34px_-14px_rgba(15,23,42,0.14)] transition-all duration-300"
             >
-              <span className="text-xs font-mono text-[#D4AF37] font-bold">
+              <span className="text-xs font-mono text-[#5B5FEF] font-bold tracking-widest">
                 PHASE {step.number}
               </span>
-              <h3 className="font-display text-base font-bold text-[#FFF5DC]">
+              <h3 className="font-display text-base font-bold text-[#111827]">
                 {step.title}
               </h3>
-              <p className="text-xs text-[#F1F2EE]/60 font-light leading-relaxed">
+              <p className="text-xs text-[#64748B] leading-relaxed">
                 {step.description}
               </p>
-              <div className="pt-2 border-t border-white/5 text-[11px] font-mono text-[#F1F2EE]/40">
+              <div className="pt-2 border-t border-[#E2E8F0] text-[11px] font-mono text-[#94A3B8]">
                 Duration: {step.duration}
               </div>
             </div>
@@ -144,12 +145,12 @@ export const AboutView: React.FC<AboutViewProps> = ({
       </div>
 
       {/* Why Choose Branify Pillars */}
-      <div id="why" className="space-y-8">
-        <div className="text-center space-y-2 max-w-2xl mx-auto">
-          <span className="text-xs font-mono uppercase text-[#D4AF37] tracking-widest">
+      <div id="why" className="space-y-10">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="eyebrow-label">
             The Branify Standard
           </span>
-          <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#111827]">
             Why Industry Leaders Choose Branify
           </h2>
         </div>
@@ -158,20 +159,20 @@ export const AboutView: React.FC<AboutViewProps> = ({
           {whyBranifyData.map((pillar) => (
             <div
               key={pillar.id}
-              className="p-6 rounded-2xl bg-[#0F1015] border border-white/10 space-y-3"
+              className="p-7 rounded-2xl bg-white border border-[#E2E8F0] space-y-3 shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-[0_14px_34px_-14px_rgba(15,23,42,0.14)] hover:border-[#5B5FEF]/40 transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-[#D4AF37] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] border border-[#E0E7FF] text-[#5B5FEF] flex items-center justify-center">
                 <Shield className="w-5 h-5" />
               </div>
-              <h3 className="font-display text-base font-bold text-[#FFF5DC]">
+              <h3 className="font-display text-base font-bold text-[#111827]">
                 {pillar.title}
               </h3>
-              <p className="text-xs text-[#F1F2EE]/60 font-light leading-relaxed">
+              <p className="text-sm text-[#64748B] leading-relaxed">
                 {pillar.description}
               </p>
-              <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-mono">
-                <span className="text-[#D4AF37] font-bold">{pillar.metric}</span>
-                <span className="text-[#F1F2EE]/40 text-[10px]">{pillar.metricLabel}</span>
+              <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between text-xs font-mono">
+                <span className="text-[#8F6B2D] font-bold">{pillar.metric}</span>
+                <span className="text-[#94A3B8] text-[10px]">{pillar.metricLabel}</span>
               </div>
             </div>
           ))}
@@ -179,12 +180,12 @@ export const AboutView: React.FC<AboutViewProps> = ({
       </div>
 
       {/* Client Testimonials */}
-      <div id="testimonials" className="space-y-8">
-        <div className="text-center space-y-2 max-w-2xl mx-auto">
-          <span className="text-xs font-mono uppercase text-[#D4AF37] tracking-widest">
+      <div id="testimonials" className="space-y-10">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="eyebrow-label">
             Executive Endorsements
           </span>
-          <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#111827]">
             What Founders & Leaders Say
           </h2>
         </div>
@@ -193,18 +194,19 @@ export const AboutView: React.FC<AboutViewProps> = ({
           {testimonialsData.map((review) => (
             <div
               key={review.id}
-              className="p-6 rounded-2xl bg-[#0F1015] border border-white/10 space-y-4 flex flex-col justify-between"
+              className="p-7 rounded-2xl bg-white border border-[#E2E8F0] space-y-4 flex flex-col justify-between shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-[0_14px_34px_-14px_rgba(15,23,42,0.14)] hover:border-[#C9A45C]/40 transition-all duration-300"
             >
-              <p className="text-xs text-[#F1F2EE]/80 leading-relaxed font-light italic">
+              <span className="font-serif text-5xl leading-none text-[#C9A45C]/40 select-none" aria-hidden="true">&ldquo;</span>
+              <p className="text-sm text-[#334155] leading-relaxed -mt-4">
                 &ldquo;{review.quote}&rdquo;
               </p>
 
-              <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+              <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between">
                 <div>
-                  <h4 className="text-xs font-bold text-[#FFF5DC]">{review.author}</h4>
-                  <span className="text-[10px] text-[#F1F2EE]/50">{review.role}</span>
+                  <h4 className="text-xs font-bold text-[#111827]">{review.author}</h4>
+                  <span className="text-[10px] text-[#64748B]">{review.role}</span>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#D4AF37]/15 text-[#D4AF37]">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#C9A45C]/10 text-[#8F6B2D]">
                   {review.company}
                 </span>
               </div>
@@ -214,34 +216,33 @@ export const AboutView: React.FC<AboutViewProps> = ({
       </div>
 
       {/* FAQ Accordion */}
-      <div id="faq" className="space-y-6 max-w-3xl mx-auto">
+      <div id="faq" className="space-y-8 max-w-3xl mx-auto">
         <div className="text-center space-y-2">
-          <span className="text-xs font-mono uppercase text-[#D4AF37] tracking-widest">
+          <span className="eyebrow-label">
             Transparency & Clarity
           </span>
-          <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#111827]">
             Frequently Asked Questions
           </h2>
         </div>
 
-        <div className="space-y-3">
+        <div className="divide-y divide-[#E2E8F0] border-y border-[#E2E8F0]">
           {faqsData.map((faq, index) => {
             const isOpen = openFaqIndex === index;
             return (
               <div
                 key={faq.id || index}
-                className="rounded-2xl bg-[#0F1015] border border-white/10 overflow-hidden"
               >
                 <button
                   onClick={() => toggleFaq(index)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 text-sm font-semibold text-[#FFF5DC] hover:text-[#D4AF37] transition-colors cursor-pointer"
+                  className="w-full py-5 text-left flex items-center justify-between gap-4 font-display text-base sm:text-lg font-semibold text-[#111827] hover:text-[#8F6B2D] transition-colors cursor-pointer"
                 >
                   <span>{faq.question}</span>
-                  {isOpen ? <ChevronUp className="w-4 h-4 text-[#D4AF37]" /> : <ChevronDown className="w-4 h-4 text-[#F1F2EE]/50" />}
+                  {isOpen ? <ChevronUp className="w-4 h-4 text-[#5B5FEF] shrink-0" /> : <ChevronDown className="w-4 h-4 text-[#94A3B8] shrink-0" />}
                 </button>
 
                 {isOpen && (
-                  <div className="p-5 pt-0 text-xs text-[#F1F2EE]/70 font-light leading-relaxed border-t border-white/5">
+                  <div className="pb-6 pr-8 sm:pr-12 text-sm text-[#475569] leading-relaxed">
                     {faq.answer}
                   </div>
                 )}
@@ -252,14 +253,15 @@ export const AboutView: React.FC<AboutViewProps> = ({
       </div>
 
       {/* Bottom CTA */}
-      <div className="rounded-3xl bg-gradient-to-r from-[#12131A] via-[#1A1810] to-[#12131A] border border-[#D4AF37]/30 p-8 sm:p-12 text-center space-y-6 shadow-2xl">
-        <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#FFF5DC]">
+      <div className="relative rounded-3xl bg-gradient-to-b from-[#EEF2FF] to-white border border-[#E2E8F0] p-8 sm:p-14 text-center space-y-6 overflow-hidden">
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[440px] h-[220px] bg-[#C9A45C]/10 blur-[90px] rounded-full pointer-events-none" />
+        <h2 className="relative font-display text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111827]">
           Ready to Elevate Your Digital Footprint?
         </h2>
-        <div>
+        <div className="relative">
           <button
             onClick={onStartInquiry}
-            className="px-8 py-4 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(212,175,55,0.4)] cursor-pointer"
+            className="btn-gold-primary px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all cursor-pointer"
           >
             Start Your Project Consultation
           </button>

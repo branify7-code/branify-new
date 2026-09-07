@@ -178,20 +178,20 @@ export const RedirectsPage: React.FC<AdminPageProps> = ({ query, navigate }) => 
   };
 
   const columns: Column<RedirectRow>[] = [
-    { key: 'source', label: 'Source', render: (r) => <span className="font-mono text-xs text-[#E8C97C]" title={r.source}>{truncate(r.source, 38)}</span> },
+    { key: 'source', label: 'Source', render: (r) => <span className="font-mono text-xs text-[#8F6B2D]" title={r.source}>{truncate(r.source, 38)}</span> },
     {
       key: 'destination',
       label: 'Destination',
       render: (r) => (
-        <span className="flex items-center gap-1.5 font-mono text-xs text-[#C9CED6]">
-          <ArrowRight size={11} className="shrink-0 text-[#566072]" />
+        <span className="flex items-center gap-1.5 font-mono text-xs text-[#94A3B8]">
+          <ArrowRight size={11} className="shrink-0 text-[#64748B]" />
           <span title={r.destination}>{truncate(r.destination, 38)}</span>
         </span>
       ),
     },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 301 ? 'green' : 'amber'}>{r.status === 301 ? '301 permanent' : '302 temporary'}</Badge> },
     { key: 'active', label: 'Active', render: (r) => <Toggle checked={Boolean(r.active)} onChange={(v) => void toggleActive(r, v)} label={`Toggle redirect ${r.source}`} /> },
-    { key: 'created_at', label: 'Created', hideOnMobile: true, render: (r) => <span className="text-xs text-[#A7AFBA]">{fmtDate(r.created_at)}</span> },
+    { key: 'created_at', label: 'Created', hideOnMobile: true, render: (r) => <span className="text-xs text-[#475569]">{fmtDate(r.created_at)}</span> },
     {
       key: 'actions',
       label: '',
@@ -208,8 +208,8 @@ export const RedirectsPage: React.FC<AdminPageProps> = ({ query, navigate }) => 
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">Redirects</h1>
-          <p className="text-xs text-[#A7AFBA]">301/302 URL redirects with duplicate, loop and chain validation</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">Redirects</h1>
+          <p className="text-xs text-[#475569]">301/302 URL redirects with duplicate, loop and chain validation</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge tone="gold">{total} redirect{total === 1 ? '' : 's'}</Badge>
@@ -243,12 +243,12 @@ export const RedirectsPage: React.FC<AdminPageProps> = ({ query, navigate }) => 
                 />
               </div>
             )}
-            <div className="rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-4 py-3 text-xs leading-relaxed text-[#C9CED6]">
-              <span className="font-bold uppercase tracking-[0.12em] text-[#E8C97C]">Enforcement · </span>
+            <div className="rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-4 py-3 text-xs leading-relaxed text-[#94A3B8]">
+              <span className="font-bold uppercase tracking-[0.12em] text-[#8F6B2D]">Enforcement · </span>
               Active rules are applied live by the website itself — visitors hitting a
               redirected path land on the destination instantly (no extra history entry,
               301-style). For crawler-visible 301 status codes at the CDN edge, mirror the
-              rule in <code className="rounded bg-black/40 px-1 py-px font-mono text-[10px] text-[#E8C97C]">vercel.json</code> too —
+              rule in <code className="rounded bg-black/40 px-1 py-px font-mono text-[10px] text-[#8F6B2D]">vercel.json</code> too —
               the site's rules above always work for people regardless.
             </div>
           </div>
@@ -297,13 +297,13 @@ export const RedirectsPage: React.FC<AdminPageProps> = ({ query, navigate }) => 
             </Field>
             <div className="flex items-end gap-3 pb-1">
               <Toggle checked={draft.active} onChange={(v) => setDraft((d) => ({ ...d, active: v }))} label="Redirect active" />
-              <span className="text-xs text-[#A7AFBA]">{draft.active ? 'Active — rule is enforced' : 'Inactive — rule stored but off'}</span>
+              <span className="text-xs text-[#475569]">{draft.active ? 'Active — rule is enforced' : 'Inactive — rule stored but off'}</span>
             </div>
           </div>
 
           {/* Live validation panel */}
           <div aria-live="polite" className={cx('rounded-xl border p-3.5', validation.errors.length || validation.warnings.length ? 'border-white/[0.08] bg-white/[0.02]' : 'border-emerald-500/25 bg-emerald-500/[0.05]')}>
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#A7AFBA]">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#475569]">
               {validation.errors.length || validation.warnings.length ? 'Validation' : 'All checks passed'}
             </p>
             {validation.errors.length === 0 && validation.warnings.length === 0 && (
@@ -326,7 +326,7 @@ export const RedirectsPage: React.FC<AdminPageProps> = ({ query, navigate }) => 
         onClose={() => setConfirmDelete(null)}
         onConfirm={() => void remove()}
         title="Delete redirect?"
-        message={confirmDelete ? <>Delete <span className="font-mono text-[#E8C97C]">{confirmDelete.source}</span> → <span className="font-mono">{confirmDelete.destination}</span>? Visitors using the old URL will get a 404 again.</> : ''}
+        message={confirmDelete ? <>Delete <span className="font-mono text-[#8F6B2D]">{confirmDelete.source}</span> → <span className="font-mono">{confirmDelete.destination}</span>? Visitors using the old URL will get a 404 again.</> : ''}
         confirmLabel="Delete redirect"
         danger
       />

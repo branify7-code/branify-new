@@ -50,7 +50,7 @@ const SWATCH: React.FC<{ color?: string; label: string }> = ({ color, label }) =
       className="inline-block h-4 w-4 rounded border border-white/25"
       style={{ background: color || 'transparent' }}
     />
-    <span className="font-mono text-[12px] text-[#D8DCE2]">{color || `— (no ${label})`}</span>
+    <span className="font-mono text-[12px] text-[#CBD5E1]">{color || `— (no ${label})`}</span>
   </span>
 );
 
@@ -159,8 +159,8 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
   // ---------------------------------------------------------- icons columns
   const columns: Column<IconCheck>[] = [
     { key: 'src', label: 'Icon path', render: (r) => <span className="font-mono text-[11.5px] text-[#EDEFF2]">{r.src}</span> },
-    { key: 'sizes', label: 'Sizes', hideOnMobile: true, render: (r) => <span className="tabular-nums text-[#A7AFBA]">{r.sizes || '—'}</span> },
-    { key: 'purpose', label: 'Purpose', hideOnMobile: true, render: (r) => <span className="text-[#A7AFBA]">{r.purpose || '—'}</span> },
+    { key: 'sizes', label: 'Sizes', hideOnMobile: true, render: (r) => <span className="tabular-nums text-[#475569]">{r.sizes || '—'}</span> },
+    { key: 'purpose', label: 'Purpose', hideOnMobile: true, render: (r) => <span className="text-[#475569]">{r.purpose || '—'}</span> },
     {
       key: 'status', label: 'Probe result',
       render: (r) => r.ok ? (
@@ -171,7 +171,7 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
         </Badge>
       ),
     },
-    { key: 'contentType', label: 'Content type', hideOnMobile: true, render: (r) => <span className="font-mono text-[10.5px] text-[#566072]">{r.contentType || '—'}</span> },
+    { key: 'contentType', label: 'Content type', hideOnMobile: true, render: (r) => <span className="font-mono text-[10.5px] text-[#64748B]">{r.contentType || '—'}</span> },
   ];
 
   if (loading) {
@@ -192,15 +192,15 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
       {/* ---------------------------------------------------------- header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2] sm:text-2xl">
-            PWA Center <span className="text-[#E8C97C]">— live audit</span>
+          <h1 className="font-display text-xl font-extrabold text-[#111827] sm:text-2xl">
+            PWA Center <span className="text-[#8F6B2D]">— live audit</span>
           </h1>
-          <p className="mt-1 text-xs text-[#A7AFBA] sm:text-sm">
+          <p className="mt-1 text-xs text-[#475569] sm:text-sm">
             Everything below is probed in your browser right now — manifest, icons, service worker, cache storage.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {checkedAt && <span className="text-[11px] tabular-nums text-[#6B7280]">checked {timeAgo(checkedAt)}</span>}
+          {checkedAt && <span className="text-[11px] tabular-nums text-[#64748B]">checked {timeAgo(checkedAt)}</span>}
           <Btn size="sm" variant="outline" icon={RefreshCw} loading={checking} onClick={() => run(true)}>
             Re-run audit
           </Btn>
@@ -225,16 +225,16 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
               ['categories', (manifest.categories || []).length ? manifest.categories!.join(', ') : ''],
             ] as Array<[string, string | undefined]>).map(([k, v]) => (
               <div key={k} className="flex items-baseline justify-between gap-3 border-b border-white/[0.05] pb-2">
-                <dt className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">{k}</dt>
-                <dd className={cx('truncate text-right text-[13px]', v ? 'text-[#F5F6F2]' : 'text-[#566072]')} title={v || ''}>{v || 'N/A'}</dd>
+                <dt className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#475569]">{k}</dt>
+                <dd className={cx('truncate text-right text-[13px]', v ? 'text-[#111827]' : 'text-[#64748B]')} title={v || ''}>{v || 'N/A'}</dd>
               </div>
             ))}
             <div className="flex items-center justify-between gap-3 border-b border-white/[0.05] pb-2">
-              <dt className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">theme_color</dt>
+              <dt className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#475569]">theme_color</dt>
               <dd><SWATCH color={manifest.theme_color} label="theme_color" /></dd>
             </div>
             <div className="flex items-center justify-between gap-3 border-b border-white/[0.05] pb-2">
-              <dt className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">background_color</dt>
+              <dt className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#475569]">background_color</dt>
               <dd><SWATCH color={manifest.background_color} label="background_color" /></dd>
             </div>
           </dl>
@@ -299,7 +299,7 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
                 <p className={cx('text-xs font-bold uppercase tracking-wider', sw.registered ? 'text-emerald-300' : 'text-amber-300')}>
                   {sw.registered ? 'Registered' : 'Not registered'}
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#C9CED6]">{sw.detail}</p>
+                <p className="mt-1 text-xs leading-relaxed text-[#94A3B8]">{sw.detail}</p>
               </div>
             </div>
           ) : (
@@ -313,18 +313,18 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
               <ul className="flex flex-col gap-1.5">
                 {cacheKeys.map((k) => (
                   <li key={k} className="flex items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-                    <Smartphone size={13} className="shrink-0 text-[#C9A45C]" />
-                    <span className="truncate font-mono text-xs text-[#D8DCE2]">{k}</span>
+                    <Smartphone size={13} className="shrink-0 text-[#8F6B2D]" />
+                    <span className="truncate font-mono text-xs text-[#CBD5E1]">{k}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-6 text-center text-xs font-semibold uppercase tracking-widest text-[#6B7280]">
+              <p className="rounded-xl border border-dashed border-[#E2E8F0] bg-black/20 px-4 py-6 text-center text-xs font-semibold uppercase tracking-widest text-[#64748B]">
                 No cache storage entries — consistent with the self-unregistering SW
               </p>
             )
           ) : (
-            <p className="text-xs text-[#6B7280]">Cache Storage API unavailable in this browser.</p>
+            <p className="text-xs text-[#64748B]">Cache Storage API unavailable in this browser.</p>
           )}
         </Card>
       </div>
@@ -347,13 +347,13 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
                 ? <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-emerald-400" />
                 : <XCircle size={15} className="mt-0.5 shrink-0 text-red-400" />}
               <span className="min-w-0">
-                <span className="block text-xs font-semibold text-[#D8DCE2]">{c.label}</span>
-                <span className="block truncate text-[11px] text-[#6B7280]" title={c.detail}>{c.detail}</span>
+                <span className="block text-xs font-semibold text-[#CBD5E1]">{c.label}</span>
+                <span className="block truncate text-[11px] text-[#64748B]" title={c.detail}>{c.detail}</span>
               </span>
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-[10.5px] leading-relaxed text-[#6B7280]">
+        <p className="mt-3 text-[10.5px] leading-relaxed text-[#64748B]">
           Honest verdict: {!ready
             ? 'install prompts are degraded until the missing icon files exist (or the manifest paths are corrected). Everything else is already standalone-ready.'
             : 'this site passes the installability checks.'}

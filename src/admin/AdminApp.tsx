@@ -99,7 +99,7 @@ const AdminApp: React.FC = () => {
       <div className="adm-root flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <img src="/branify-icon.svg" alt="BRANIFY" className="h-10 w-10 animate-pulse" />
-          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C9A45C]">Loading admin…</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8F6B2D]">Loading admin…</p>
         </div>
       </div>
     );
@@ -194,8 +194,8 @@ const AdminShell: React.FC<{
     const pageProps: AdminPageProps = { query: new URLSearchParams(path.split('?')[1] || ''), navigate, refreshBadges };
     const unknown = (
       <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.02] px-6 py-16 text-center">
-        <ShieldQuestion size={28} className="text-[#C9A45C]/60" />
-        <p className="font-display text-lg font-bold text-[#F5F6F2]">Page not found in admin</p>
+        <ShieldQuestion size={28} className="text-[#8F6B2D]/60" />
+        <p className="font-display text-lg font-bold text-[#111827]">Page not found in admin</p>
         <Btn variant="outline" size="sm" onClick={() => navigate('/')}>Back to dashboard</Btn>
       </div>
     );
@@ -244,8 +244,8 @@ const AdminShell: React.FC<{
         <img src="/branify-icon.svg" alt="BRANIFY logo" className="h-9 w-9 shrink-0" />
         {!compact && (
           <div className="min-w-0 leading-tight">
-            <p className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-[#F5F6F2]">BRANIFY</p>
-            <p className="text-[8.5px] font-bold uppercase tracking-[0.3em] text-[#C9A45C]">Admin Panel</p>
+            <p className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-[#111827]">BRANIFY</p>
+            <p className="text-[8.5px] font-bold uppercase tracking-[0.3em] text-[#8F6B2D]">Admin Panel</p>
           </div>
         )}
       </div>
@@ -273,7 +273,7 @@ const AdminShell: React.FC<{
                     <span className="rounded-full bg-[#C9A45C] px-1.5 py-px text-[9.5px] font-black tabular-nums text-[#1A1206]">{count}</span>
                   )}
                   {!compact && (item.path === '/services' || item.path === '/portfolio') && (
-                    <ChevronRight size={12} className="text-[#566072]" />
+                    <ChevronRight size={12} className="text-[#64748B]" />
                   )}
                 </button>
               );
@@ -285,8 +285,8 @@ const AdminShell: React.FC<{
       {!compact && (
         <div className="border-t border-white/[0.06] p-3">
           <div className="rounded-xl border border-[#C9A45C]/25 bg-gradient-to-br from-[#C9A45C]/[0.12] to-transparent p-3">
-            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#E8C97C]">BRANIFY Control Center</p>
-            <p className="mt-0.5 text-[10px] leading-snug text-[#A7AFBA]">{modeLabel(mode)}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#8F6B2D]">BRANIFY Control Center</p>
+            <p className="mt-0.5 text-[10px] leading-snug text-[#475569]">{modeLabel(mode)}</p>
           </div>
           <button className="adm-nav-item mt-1.5 w-full" onClick={() => navigate('/profile')}>
             <UserCircle size={16} />
@@ -323,7 +323,7 @@ const AdminShell: React.FC<{
         <div className="fixed inset-0 z-[90] lg:hidden" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
           <aside className="adm-sidebar absolute inset-y-0 left-0 w-72 max-w-[85vw]">
-            <button className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-[#A7AFBA] hover:bg-white/10" onClick={() => setDrawerOpen(false)} aria-label="Close navigation">
+            <button className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-[#475569] hover:bg-[#F1F5F9]" onClick={() => setDrawerOpen(false)} aria-label="Close navigation">
               <X size={16} />
             </button>
             <SidebarInner />
@@ -335,27 +335,27 @@ const AdminShell: React.FC<{
       <div className={cx('flex min-h-screen w-full min-w-0 flex-col transition-[padding] duration-200', collapsed ? 'lg:pl-[68px]' : 'lg:pl-60')}>
         {/* Header */}
         <header className="adm-header sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 px-3 sm:gap-3 sm:px-4">
-          <button className="rounded-lg p-2 text-[#A7AFBA] hover:bg-white/[0.06] hover:text-white lg:hidden" onClick={() => setDrawerOpen(true)} aria-label="Open navigation">
+          <button className="rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white lg:hidden" onClick={() => setDrawerOpen(true)} aria-label="Open navigation">
             <Menu size={18} />
           </button>
-          <button className="hidden rounded-lg p-2 text-[#A7AFBA] hover:bg-white/[0.06] hover:text-white lg:block" onClick={() => setCollapsed((c) => !c)} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+          <button className="hidden rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white lg:block" onClick={() => setCollapsed((c) => !c)} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
             <Menu size={18} />
           </button>
 
           <div className="min-w-0 flex-1">
-            <nav className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[#566072]" aria-label="Breadcrumb">
+            <nav className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[#64748B]" aria-label="Breadcrumb">
               {crumbs.map((c, i) => (
                 <span key={i} className="flex items-center gap-1">
                   {i > 0 && <ChevronRight size={10} className="opacity-50" />}
                   {c.path !== undefined && i < crumbs.length - 1 ? (
-                    <button className="hover:text-[#C9A45C]" onClick={() => navigate(c.path!)}>{c.label}</button>
+                    <button className="hover:text-[#8F6B2D]" onClick={() => navigate(c.path!)}>{c.label}</button>
                   ) : (
-                    <span className={cx(i === crumbs.length - 1 && 'text-[#C9A45C]')}>{c.label}</span>
+                    <span className={cx(i === crumbs.length - 1 && 'text-[#8F6B2D]')}>{c.label}</span>
                   )}
                 </span>
               ))}
             </nav>
-            <h1 className="truncate font-display text-[15px] font-bold leading-tight text-[#F5F6F2]">
+            <h1 className="truncate font-display text-[15px] font-bold leading-tight text-[#111827]">
               {active?.item.label || (subPath === '/' ? 'Dashboard' : subPath.replace('/', '').replace(/-/g, ' '))}
             </h1>
           </div>
@@ -363,14 +363,14 @@ const AdminShell: React.FC<{
           {/* Global search */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs text-[#566072] transition-colors hover:border-[#C9A45C]/40 hover:text-[#A7AFBA] sm:flex sm:w-56 md:w-72"
+            className="hidden items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs text-[#64748B] transition-colors hover:border-[#C9A45C]/40 hover:text-[#475569] sm:flex sm:w-56 md:w-72"
             aria-label="Open global search"
           >
             <Search size={14} />
             <span className="flex-1 text-left">Search anything…</span>
             <Kbd>⌘K</Kbd>
           </button>
-          <button className="rounded-lg p-2 text-[#A7AFBA] hover:bg-white/[0.06] hover:text-white sm:hidden" onClick={() => setSearchOpen(true)} aria-label="Search">
+          <button className="rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white sm:hidden" onClick={() => setSearchOpen(true)} aria-label="Search">
             <Search size={17} />
           </button>
 
@@ -379,11 +379,11 @@ const AdminShell: React.FC<{
             <button className="hidden items-center gap-1.5 rounded-xl border border-[#C9A45C]/35 bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] px-3 py-2 text-xs font-bold text-[#1A1206] shadow hover:brightness-110 md:flex" onClick={() => setQaOpen((o) => !o)} aria-expanded={qaOpen}>
               <Zap size={13} /> Quick Actions
             </button>
-            <button className="rounded-lg border border-[#C9A45C]/35 p-2 text-[#E8C97C] md:hidden" onClick={() => setQaOpen((o) => !o)} aria-label="Quick actions">
+            <button className="rounded-lg border border-[#C9A45C]/35 p-2 text-[#8F6B2D] md:hidden" onClick={() => setQaOpen((o) => !o)} aria-label="Quick actions">
               <Plus size={16} />
             </button>
             {qaOpen && (
-              <div className="absolute right-0 top-full mt-2 w-60 overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#07101A] shadow-2xl">
+              <div className="absolute right-0 top-full mt-2 w-60 overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#F8FAFC] shadow-2xl">
                 {[
                   ['New Service', '/services?new=1'],
                   ['New Portfolio Project', '/portfolio?new=1'],
@@ -395,8 +395,8 @@ const AdminShell: React.FC<{
                   ['New Redirect', '/seo/redirects?new=1'],
                   ['Edit Homepage SEO', '/seo?page=/'],
                 ].map(([label, href]) => (
-                  <button key={href} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#C9CED6] hover:bg-white/[0.05] hover:text-[#E9CF79]" onClick={() => { setQaOpen(false); navigate(href); }}>
-                    <Plus size={13} className="text-[#C9A45C]" /> {label}
+                  <button key={href} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#8F6B2D]" onClick={() => { setQaOpen(false); navigate(href); }}>
+                    <Plus size={13} className="text-[#8F6B2D]" /> {label}
                   </button>
                 ))}
               </div>
@@ -405,7 +405,7 @@ const AdminShell: React.FC<{
 
           {/* Notifications */}
           <div className="relative" data-dropdown>
-            <button className="relative rounded-lg p-2 text-[#A7AFBA] hover:bg-white/[0.06] hover:text-white" onClick={() => setNotifOpen((o) => !o)} aria-label={`Notifications (${notifications.length})`}>
+            <button className="relative rounded-lg p-2 text-[#475569] hover:bg-white/[0.06] hover:text-white" onClick={() => setNotifOpen((o) => !o)} aria-label={`Notifications (${notifications.length})`}>
               <Bell size={17} />
               {notifications.length > 0 && (
                 <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#C9A45C] px-1 text-[9px] font-black text-[#1A1206]">
@@ -414,15 +414,15 @@ const AdminShell: React.FC<{
               )}
             </button>
             {notifOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 max-w-[92vw] overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#07101A] shadow-2xl">
-                <p className="border-b border-white/[0.06] px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#A7AFBA]">Notifications</p>
+              <div className="absolute right-0 top-full mt-2 w-80 max-w-[92vw] overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#F8FAFC] shadow-2xl">
+                <p className="border-b border-white/[0.06] px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[#475569]">Notifications</p>
                 <div className="max-h-80 overflow-y-auto adm-scroll">
                   {notifications.map((n) => (
                     <button key={n.id} className="flex w-full items-start gap-2.5 border-b border-white/[0.04] px-4 py-3 text-left last:border-0 hover:bg-white/[0.04]" onClick={() => { setNotifOpen(false); navigate(n.href); }}>
                       <span className={cx('mt-1.5 h-2 w-2 shrink-0 rounded-full', n.tone === 'gold' && 'bg-[#C9A45C]', n.tone === 'red' && 'bg-red-400', n.tone === 'green' && 'bg-emerald-400')} />
                       <span className="min-w-0">
-                        <span className="block text-[13px] font-semibold text-[#F5F6F2]">{n.title}</span>
-                        <span className="block text-[11px] leading-snug text-[#A7AFBA]">{n.detail}</span>
+                        <span className="block text-[13px] font-semibold text-[#111827]">{n.title}</span>
+                        <span className="block text-[11px] leading-snug text-[#475569]">{n.detail}</span>
                       </span>
                     </button>
                   ))}
@@ -438,25 +438,25 @@ const AdminShell: React.FC<{
                 {initials(user.name || user.email)}
               </span>
               <span className="hidden text-left leading-tight xl:block">
-                <span className="block max-w-[120px] truncate text-xs font-bold text-[#F5F6F2]">{user.name || user.email}</span>
-                <span className="block text-[9.5px] font-bold uppercase tracking-wider text-[#C9A45C]">{user.role.replace('_', ' ')}</span>
+                <span className="block max-w-[120px] truncate text-xs font-bold text-[#111827]">{user.name || user.email}</span>
+                <span className="block text-[9.5px] font-bold uppercase tracking-wider text-[#8F6B2D]">{user.role.replace('_', ' ')}</span>
               </span>
-              <ChevronDown size={13} className="text-[#A7AFBA]" />
+              <ChevronDown size={13} className="text-[#475569]" />
             </button>
             {profileOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#07101A] shadow-2xl">
+              <div className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-xl border border-[rgba(201,164,92,0.25)] bg-[#F8FAFC] shadow-2xl">
                 <div className="border-b border-white/[0.06] px-4 py-3">
-                  <p className="truncate text-[13px] font-bold text-[#F5F6F2]">{user.name || user.email}</p>
-                  <p className="truncate text-[11px] text-[#A7AFBA]">{user.email}</p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-[#C9A45C]">{modeLabel(mode)}</p>
+                  <p className="truncate text-[13px] font-bold text-[#111827]">{user.name || user.email}</p>
+                  <p className="truncate text-[11px] text-[#475569]">{user.email}</p>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-[#8F6B2D]">{modeLabel(mode)}</p>
                 </div>
-                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#C9CED6] hover:bg-white/[0.05]" onClick={() => { setProfileOpen(false); navigate('/profile'); }}>
+                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05]" onClick={() => { setProfileOpen(false); navigate('/profile'); }}>
                   <UserCircle size={14} /> Admin profile
                 </button>
-                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#C9CED6] hover:bg-white/[0.05]" onClick={() => { setProfileOpen(false); navigate('/system'); }}>
+                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05]" onClick={() => { setProfileOpen(false); navigate('/system'); }}>
                   <ShieldQuestion size={14} /> System health
                 </button>
-                <a className="flex w-full items-center gap-2 border-t border-white/[0.06] px-4 py-2.5 text-left text-[13px] text-[#C9CED6] hover:bg-white/[0.05]" href="/" target="_blank" rel="noreferrer">
+                <a className="flex w-full items-center gap-2 border-t border-white/[0.06] px-4 py-2.5 text-left text-[13px] text-[#94A3B8] hover:bg-white/[0.05]" href="/" target="_blank" rel="noreferrer">
                   <ExternalLink size={14} /> View public site
                 </a>
                 <button className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] text-red-300 hover:bg-red-500/10" onClick={() => void logout()}>
@@ -507,9 +507,9 @@ const SearchPalette: React.FC<{ onClose: () => void; navigate: (p: string) => vo
 
   return (
     <div className="fixed inset-0 z-[150] flex items-start justify-center bg-black/70 p-4 pt-[12vh] backdrop-blur-sm" onMouseDown={onClose} role="dialog" aria-modal="true" aria-label="Global search">
-      <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-[rgba(201,164,92,0.3)] bg-[#07101A] shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-[rgba(201,164,92,0.3)] bg-[#F8FAFC] shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2.5 border-b border-white/[0.07] px-4">
-          <Search size={16} className="text-[#C9A45C]" />
+          <Search size={16} className="text-[#8F6B2D]" />
           <input
             ref={inputRef}
             value={q}
@@ -521,15 +521,15 @@ const SearchPalette: React.FC<{ onClose: () => void; navigate: (p: string) => vo
               if (e.key === 'Enter' && hits[cursor]) go(hits[cursor]);
             }}
             placeholder="Search services, tools, leads, SEO pages…"
-            className="h-12 flex-1 bg-transparent text-sm text-[#F5F6F2] outline-none placeholder-[#566072]"
+            className="h-12 flex-1 bg-transparent text-sm text-[#111827] outline-none placeholder-[#94A3B8]"
             aria-label="Search query"
           />
-          {busy && <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A45C]">…</span>}
+          {busy && <span className="text-[10px] font-bold uppercase tracking-widest text-[#8F6B2D]">…</span>}
           <Kbd>esc</Kbd>
         </div>
         <div className="adm-scroll max-h-[52vh] overflow-y-auto">
           {q.trim().length >= 2 && !busy && hits.length === 0 && (
-            <p className="px-4 py-8 text-center text-xs text-[#566072]">No results for “{q}”</p>
+            <p className="px-4 py-8 text-center text-xs text-[#64748B]">No results for “{q}”</p>
           )}
           {hits.map((h, i) => (
             <button
@@ -540,14 +540,14 @@ const SearchPalette: React.FC<{ onClose: () => void; navigate: (p: string) => vo
             >
               <Badge tone="gold" className="w-20 justify-center shrink-0">{h.type.replace('_', ' ')}</Badge>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13px] font-semibold text-[#F5F6F2]">{h.title}</span>
-                {h.sub && <span className="block truncate text-[11px] text-[#A7AFBA]">{h.sub}</span>}
+                <span className="block truncate text-[13px] font-semibold text-[#111827]">{h.title}</span>
+                {h.sub && <span className="block truncate text-[11px] text-[#475569]">{h.sub}</span>}
               </span>
-              <ChevronRight size={13} className="shrink-0 text-[#566072]" />
+              <ChevronRight size={13} className="shrink-0 text-[#64748B]" />
             </button>
           ))}
           {q.trim().length < 2 && (
-            <p className="px-4 py-8 text-center text-xs text-[#566072]">Type at least 2 characters — searches all content, leads, SEO pages & media.</p>
+            <p className="px-4 py-8 text-center text-xs text-[#64748B]">Type at least 2 characters — searches all content, leads, SEO pages & media.</p>
           )}
         </div>
       </div>

@@ -20,8 +20,8 @@ const columns: Column<TemplateCategoryRow>[] = [
     sortable: true,
     render: (r) => (
       <div className="min-w-0">
-        <p className="truncate font-semibold text-[#F5F6F2]">{r.name}</p>
-        <p className="truncate font-mono text-[10.5px] text-[#6B7280]">/templates/{r.slug}</p>
+        <p className="truncate font-semibold text-[#111827]">{r.name}</p>
+        <p className="truncate font-mono text-[10.5px] text-[#64748B]">/templates/{r.slug}</p>
       </div>
     ),
   },
@@ -29,14 +29,14 @@ const columns: Column<TemplateCategoryRow>[] = [
     key: 'tagline',
     label: 'Tagline',
     hideOnMobile: true,
-    render: (r) => <span className="text-[#A7AFBA]">{r.tagline || '—'}</span>,
+    render: (r) => <span className="text-[#475569]">{r.tagline || '—'}</span>,
   },
   {
     key: 'sort_order',
     label: 'Order',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="tabular-nums text-[#A7AFBA]">{r.sort_order}</span>,
+    render: (r) => <span className="tabular-nums text-[#475569]">{r.sort_order}</span>,
   },
   {
     key: 'active',
@@ -48,7 +48,7 @@ const columns: Column<TemplateCategoryRow>[] = [
     label: 'Updated',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="text-[#A7AFBA]">{timeAgo(r.updated_at)}</span>,
+    render: (r) => <span className="text-[#475569]">{timeAgo(r.updated_at)}</span>,
   },
 ];
 

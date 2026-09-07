@@ -49,11 +49,11 @@ export const LoginScreen: React.FC<{
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#C9A45C]/40 bg-gradient-to-b from-[#E8C97C]/15 to-transparent shadow-[0_0_40px_-12px_rgba(201,164,92,0.55)]">
             <img src="/branify-icon.svg" alt="BRANIFY" className="h-8 w-8" />
           </div>
-          <h1 className="mt-4 font-display text-2xl font-extrabold tracking-[0.22em] text-[#F5F6F2]">BRANIFY</h1>
-          <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.34em] text-[#C9A45C]">Admin Panel</p>
+          <h1 className="mt-4 font-display text-2xl font-extrabold tracking-[0.22em] text-[#111827]">BRANIFY</h1>
+          <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.34em] text-[#8F6B2D]">Admin Panel</p>
         </div>
 
-        <div className="rounded-2xl border border-[rgba(201,164,92,0.2)] bg-[#07101A]/85 p-6 shadow-2xl backdrop-blur">
+        <div className="rounded-2xl border border-[rgba(201,164,92,0.2)] bg-[#F8FAFC]/85 p-6 shadow-2xl backdrop-blur">
           {mode === 'none' ? (
             <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-4 text-xs leading-relaxed text-amber-200">
               <p className="mb-1 font-bold uppercase tracking-wider">Admin database not connected</p>
@@ -88,14 +88,14 @@ export const LoginScreen: React.FC<{
           )}
 
           {mode === 'local' && (
-            <div className="mt-5 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#E8C97C]">
+            <div className="mt-5 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#8F6B2D]">
               <p className="font-bold uppercase tracking-wider">Preview mode</p>
               This sandbox uses a local development API. Production authenticates against Supabase with RLS-protected admin authorization.
             </div>
           )}
         </div>
 
-        <p className="mt-5 text-center text-[10.5px] leading-relaxed text-[#566072]">
+        <p className="mt-5 text-center text-[10.5px] leading-relaxed text-[#64748B]">
           Protected area · all actions are logged · unauthorized access attempts are recorded.
         </p>
       </div>

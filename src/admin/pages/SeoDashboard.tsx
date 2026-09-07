@@ -229,7 +229,7 @@ const SeoEditorModal: React.FC<{
         open={Boolean(path)}
         onClose={requestClose}
         width="lg"
-        title={path ? <>SEO Editor · <span className="font-mono text-sm text-[#E8C97C]">{path}</span></> : 'SEO Editor'}
+        title={path ? <>SEO Editor · <span className="font-mono text-sm text-[#8F6B2D]">{path}</span></> : 'SEO Editor'}
         subtitle={
           override
             ? 'This page has a CUSTOM OVERRIDE stored in seo_overrides.'
@@ -326,19 +326,19 @@ const SeoEditorModal: React.FC<{
 
             {/* Live previews */}
             <div className="grid gap-4 lg:grid-cols-2">
-              <div className="rounded-xl border border-white/10 bg-[#04070C] p-4">
-                <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#6B7280]">
+              <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
+                <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
                   <Search size={11} /> Google result preview
                 </p>
                 <p className="truncate text-xs text-[#8AB4C8]">{origin}{path}</p>
-                <p className="mt-1 line-clamp-2 text-[19px] font-medium leading-snug text-[#F5F6F2]">{previewTitle || '(no title)'}</p>
-                <p className="mt-1 line-clamp-3 text-[13px] leading-relaxed text-[#A7AFBA]">{previewDesc || '(no description)'}</p>
+                <p className="mt-1 line-clamp-2 text-[19px] font-medium leading-snug text-[#111827]">{previewTitle || '(no title)'}</p>
+                <p className="mt-1 line-clamp-3 text-[13px] leading-relaxed text-[#475569]">{previewDesc || '(no description)'}</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-[#04070C] p-4">
-                <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#6B7280]">
+              <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
+                <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
                   <Globe size={11} /> Social share (OG) preview
                 </p>
-                <div className="flex h-32 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.03]">
+                <div className="flex h-32 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white/[0.03]">
                   {previewImage && !ogBroken ? (
                     <img
                       src={resolveAssetUrl(previewImage)}
@@ -347,13 +347,13 @@ const SeoEditorModal: React.FC<{
                       onError={() => setOgBroken(true)}
                     />
                   ) : (
-                    <span className="flex flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#566072]">
+                    <span className="flex flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
                       <Globe size={18} /> {previewImage ? 'Image failed to load' : 'No og:image set'}
                     </span>
                   )}
                 </div>
-                <p className="mt-2 truncate text-sm font-semibold text-[#F5F6F2]">{draft.ogTitle || previewTitle || '(og title)'}</p>
-                <p className="line-clamp-2 text-xs text-[#A7AFBA]">{draft.ogDescription || previewDesc || '(og description)'}</p>
+                <p className="mt-2 truncate text-sm font-semibold text-[#111827]">{draft.ogTitle || previewTitle || '(og title)'}</p>
+                <p className="line-clamp-2 text-xs text-[#475569]">{draft.ogDescription || previewDesc || '(og description)'}</p>
               </div>
             </div>
           </div>
@@ -511,14 +511,14 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
       sortable: false,
       render: (r) => (
         <span className="flex min-w-0 items-center gap-1.5">
-          <span className="truncate font-mono text-xs text-[#E8C97C]" title={r.path}>{r.path}</span>
+          <span className="truncate font-mono text-xs text-[#8F6B2D]" title={r.path}>{r.path}</span>
           <a
             href={r.path}
             target="_blank"
             rel="noreferrer"
             aria-label={`Open ${r.path} on the public site`}
             onClick={(e) => e.stopPropagation()}
-            className="shrink-0 text-[#566072] transition-colors hover:text-[#E8C97C]"
+            className="shrink-0 text-[#64748B] transition-colors hover:text-[#8F6B2D]"
           >
             <ExternalLink size={12} />
           </a>
@@ -533,7 +533,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
       hideOnMobile: true,
       render: (r) => (
         <span className="flex min-w-0 items-baseline gap-2">
-          <span className="truncate text-[#C9CED6]" title={r.title}>{truncate(r.title, 44) || '—'}</span>
+          <span className="truncate text-[#94A3B8]" title={r.title}>{truncate(r.title, 44) || '—'}</span>
           <span className={cx('shrink-0 text-[10px] font-bold tabular-nums', lenTone(r.title.length, 30, 60))}>{r.title.length}</span>
         </span>
       ),
@@ -552,7 +552,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
       key: 'issues',
       label: 'Issues',
       render: (r) => {
-        if (!r.issueCount.w && !r.issueCount.e) return <span className="text-xs text-[#566072]">—</span>;
+        if (!r.issueCount.w && !r.issueCount.e) return <span className="text-xs text-[#64748B]">—</span>;
         return (
           <span className="flex items-center gap-1" title={r.issueHint}>
             {r.issueCount.e > 0 && (
@@ -574,7 +574,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
       label: 'Robots',
       hideOnMobile: true,
       render: (r) => (
-        <span className={cx('font-mono text-[11px]', isNoindex(r.robots) ? 'text-amber-300' : 'text-[#6B7280]')}>{r.robots}</span>
+        <span className={cx('font-mono text-[11px]', isNoindex(r.robots) ? 'text-amber-300' : 'text-[#64748B]')}>{r.robots}</span>
       ),
     },
     {
@@ -586,13 +586,13 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
         </Badge>
       ),
     },
-    { key: 'go', label: '', render: () => <ChevronRight size={14} className="text-[#566072]" /> },
+    { key: 'go', label: '', render: () => <ChevronRight size={14} className="text-[#64748B]" /> },
   ];
 
   const mobileCard = (r: AuditRow) => (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-2">
-        <span className="truncate font-mono text-xs text-[#E8C97C]">{r.path}</span>
+        <span className="truncate font-mono text-xs text-[#8F6B2D]">{r.path}</span>
         <Badge tone={r.status === 'pass' ? 'green' : r.status === 'warning' ? 'amber' : 'red'}>{r.status.toUpperCase()}</Badge>
       </div>
       <div className="flex flex-wrap items-center gap-1.5">
@@ -602,7 +602,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
           <span className="text-[10px] font-bold text-amber-300">{r.issueCount.w} W · {r.issueCount.e} E</span>
         )}
       </div>
-      <p className="truncate text-xs text-[#A7AFBA]">{r.title} <span className="text-[#566072]">({r.title.length})</span></p>
+      <p className="truncate text-xs text-[#475569]">{r.title} <span className="text-[#64748B]">({r.title.length})</span></p>
     </div>
   );
 
@@ -620,8 +620,8 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">SEO Center</h1>
-          <p className="text-xs text-[#A7AFBA]">Real audit across the live site inventory · page-level overrides · technical checks</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">SEO Center</h1>
+          <p className="text-xs text-[#475569]">Real audit across the live site inventory · page-level overrides · technical checks</p>
         </div>
         <div className="flex items-center gap-2">
           <Btn variant="outline" size="sm" icon={RefreshCw} onClick={() => void runAudit()} loading={loading}>Re-run audit</Btn>
@@ -661,35 +661,35 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">robots.txt</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">robots.txt</span>
                 <Badge tone={tech.robotsOk && tech.robotsHasSitemap ? 'green' : 'amber'}>
                   {tech.robotsOk ? (tech.robotsHasSitemap ? 'Sitemap declared' : 'Missing Sitemap:') : 'Unreachable'}
                 </Badge>
               </div>
-              <p className="mt-1.5 text-[11px] text-[#6B7280]">HTTP {tech.robotsOk ? '200' : 'error'} · fetch('/robots.txt')</p>
+              <p className="mt-1.5 text-[11px] text-[#64748B]">HTTP {tech.robotsOk ? '200' : 'error'} · fetch('/robots.txt')</p>
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">sitemap.xml</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">sitemap.xml</span>
                 <Badge tone={tech.sitemapOk && tech.sitemapUrls > 0 ? 'green' : 'amber'}>
                   {tech.sitemapOk ? `${tech.sitemapUrls} URLs` : 'Unreachable'}
                 </Badge>
               </div>
-              <p className="mt-1.5 text-[11px] text-[#6B7280]">
+              <p className="mt-1.5 text-[11px] text-[#64748B]">
                 lastmod sample: <span className="font-mono">{tech.sitemapLastmod || '—'}</span>
               </p>
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">Coverage</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Coverage</span>
                 <Badge tone={tech.sitemapUrls === indexableCount ? 'green' : 'amber'}>
                   {tech.sitemapUrls === indexableCount ? 'Match' : 'Mismatch'}
                 </Badge>
               </div>
-              <p className="mt-1.5 text-[11px] leading-relaxed text-[#6B7280]">
+              <p className="mt-1.5 text-[11px] leading-relaxed text-[#64748B]">
                 sitemap {tech.sitemapUrls} vs {indexableCount} indexable audited pages.
                 {tech.sitemapUrls !== indexableCount && (
-                  <> The shipped file is static — <a className="text-[#E8C97C] underline-offset-2 hover:underline" href="/admin/seo/sitemap">regenerate in Sitemap center</a>.</>
+                  <> The shipped file is static — <a className="text-[#8F6B2D] underline-offset-2 hover:underline" href="/admin/seo/sitemap">regenerate in Sitemap center</a>.</>
                 )}
               </p>
             </div>
@@ -703,15 +703,15 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
           <div className="grid gap-4 lg:grid-cols-2">
             <div>
               <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-300">Duplicate titles ({s.duplicateTitles.length} groups)</p>
-              {s.duplicateTitles.length === 0 ? <p className="text-xs text-[#566072]">None — every page has a unique title.</p> : (
+              {s.duplicateTitles.length === 0 ? <p className="text-xs text-[#64748B]">None — every page has a unique title.</p> : (
                 <ul className="flex flex-col gap-2">
                   {s.duplicateTitles.slice(0, 6).map((g) => (
-                    <li key={g.paths.join('|')} className="rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[#C9CED6]">
+                    <li key={g.paths.join('|')} className="rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[#94A3B8]">
                       <span className="font-semibold text-amber-200">“{truncate(g.value, 60)}”</span>
-                      <span className="ml-1 text-[#A7AFBA]">on {g.paths.length} pages:</span>
+                      <span className="ml-1 text-[#475569]">on {g.paths.length} pages:</span>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {g.paths.slice(0, 5).map((p) => (
-                          <button key={p} className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-[#E8C97C] hover:bg-black/50" onClick={() => setEditorPath(p)}>{p}</button>
+                          <button key={p} className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-[#8F6B2D] hover:bg-black/50" onClick={() => setEditorPath(p)}>{p}</button>
                         ))}
                       </div>
                     </li>
@@ -721,15 +721,15 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
             </div>
             <div>
               <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-300">Duplicate descriptions ({s.duplicateDescriptions.length} groups)</p>
-              {s.duplicateDescriptions.length === 0 ? <p className="text-xs text-[#566072]">None — every page has a unique description.</p> : (
+              {s.duplicateDescriptions.length === 0 ? <p className="text-xs text-[#64748B]">None — every page has a unique description.</p> : (
                 <ul className="flex flex-col gap-2">
                   {s.duplicateDescriptions.slice(0, 6).map((g) => (
-                    <li key={g.paths.join('|')} className="rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[#C9CED6]">
+                    <li key={g.paths.join('|')} className="rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[#94A3B8]">
                       <span className="font-semibold text-amber-200">“{truncate(g.value, 60)}”</span>
-                      <span className="ml-1 text-[#A7AFBA]">on {g.paths.length} pages</span>
+                      <span className="ml-1 text-[#475569]">on {g.paths.length} pages</span>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {g.paths.slice(0, 5).map((p) => (
-                          <button key={p} className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-[#E8C97C] hover:bg-black/50" onClick={() => setEditorPath(p)}>{p}</button>
+                          <button key={p} className="rounded bg-black/30 px-1.5 py-0.5 font-mono text-[10px] text-[#8F6B2D] hover:bg-black/50" onClick={() => setEditorPath(p)}>{p}</button>
                         ))}
                       </div>
                     </li>
@@ -748,13 +748,13 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
         actions={
           <div className="flex flex-wrap items-center justify-end gap-2">
             <div className="relative">
-              <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#566072]" />
+              <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Filter paths…"
                 aria-label="Filter audit results"
-                className="h-8 w-40 rounded-lg border border-white/10 bg-[#04070C]/80 pl-7 pr-2 text-xs text-[#F5F6F2] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
+                className="h-8 w-40 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 pl-7 pr-2 text-xs text-[#111827] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
               />
             </div>
             <Select value={filter} onChange={(e) => setFilter(e.target.value as typeof filter)} aria-label="Filter by status" className="h-8 w-32 text-xs">

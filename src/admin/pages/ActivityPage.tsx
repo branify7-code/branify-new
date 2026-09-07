@@ -108,7 +108,7 @@ export const ActivityPage: React.FC<AdminPageProps> = () => {
         return (
           <span className="flex min-w-0 flex-wrap items-center gap-1.5">
             <Badge tone={cat.tone}>{cat.label}</Badge>
-            <span className="truncate text-[13px] font-semibold text-[#F5F6F2]" title={r.action}>{humanizeAction(r.action)}</span>
+            <span className="truncate text-[13px] font-semibold text-[#111827]" title={r.action}>{humanizeAction(r.action)}</span>
           </span>
         );
       },
@@ -118,18 +118,18 @@ export const ActivityPage: React.FC<AdminPageProps> = () => {
       label: 'Target',
       render: (r) => (
         <span className="flex min-w-0 items-baseline gap-1.5">
-          <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#A7AFBA]">{r.target_type || '—'}</span>
-          <span className="truncate font-mono text-[11px] text-[#6B7280]" title={r.target_id}>{r.target_id ? truncate(r.target_id, 22) : ''}</span>
+          <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#475569]">{r.target_type || '—'}</span>
+          <span className="truncate font-mono text-[11px] text-[#64748B]" title={r.target_id}>{r.target_id ? truncate(r.target_id, 22) : ''}</span>
         </span>
       ),
     },
-    { key: 'user_email', label: 'User', hideOnMobile: true, render: (r) => <span className="truncate text-xs text-[#A7AFBA]" title={r.user_email}>{r.user_email || '—'}</span> },
-    { key: 'meta', label: 'Meta', hideOnMobile: true, render: (r) => <span className="font-mono text-[11px] text-[#566072]" title={metaSummary(r.meta)}>{metaSummary(r.meta)}</span> },
+    { key: 'user_email', label: 'User', hideOnMobile: true, render: (r) => <span className="truncate text-xs text-[#475569]" title={r.user_email}>{r.user_email || '—'}</span> },
+    { key: 'meta', label: 'Meta', hideOnMobile: true, render: (r) => <span className="font-mono text-[11px] text-[#64748B]" title={metaSummary(r.meta)}>{metaSummary(r.meta)}</span> },
     {
       key: 'created_at',
       label: 'When',
       render: (r) => (
-        <span className={cx('text-xs text-[#A7AFBA]')} title={fmtDateTime(r.created_at)}>
+        <span className={cx('text-xs text-[#475569]')} title={fmtDateTime(r.created_at)}>
           {timeAgo(r.created_at)}
         </span>
       ),
@@ -141,11 +141,11 @@ export const ActivityPage: React.FC<AdminPageProps> = () => {
     return (
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-[13px] font-semibold text-[#F5F6F2]">{humanizeAction(r.action)}</span>
+          <span className="truncate text-[13px] font-semibold text-[#111827]">{humanizeAction(r.action)}</span>
           <Badge tone={cat.tone}>{cat.label}</Badge>
         </div>
-        <p className="truncate text-[11px] text-[#A7AFBA]">{r.target_type}{r.target_id ? ` · ${truncate(r.target_id, 18)}` : ''}</p>
-        <p className="text-[11px] text-[#566072]" title={fmtDateTime(r.created_at)}>{timeAgo(r.created_at)} · {r.user_email || 'system'}</p>
+        <p className="truncate text-[11px] text-[#475569]">{r.target_type}{r.target_id ? ` · ${truncate(r.target_id, 18)}` : ''}</p>
+        <p className="text-[11px] text-[#64748B]" title={fmtDateTime(r.created_at)}>{timeAgo(r.created_at)} · {r.user_email || 'system'}</p>
       </div>
     );
   };
@@ -154,8 +154,8 @@ export const ActivityPage: React.FC<AdminPageProps> = () => {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">Activity Log</h1>
-          <p className="text-xs text-[#A7AFBA]">Every admin write and auth event, newest first — proof of who changed what</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">Activity Log</h1>
+          <p className="text-xs text-[#475569]">Every admin write and auth event, newest first — proof of who changed what</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge tone="gold">{filtered.length} entr{filtered.length === 1 ? 'y' : 'ies'}</Badge>
@@ -169,13 +169,13 @@ export const ActivityPage: React.FC<AdminPageProps> = () => {
         actions={
           <div className="flex flex-wrap items-center justify-end gap-2">
             <div className="relative">
-              <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#566072]" />
+              <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search action, user, target…"
                 aria-label="Search activity"
-                className="h-8 w-44 rounded-lg border border-white/10 bg-[#04070C]/80 pl-7 pr-2 text-xs text-[#F5F6F2] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
+                className="h-8 w-44 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 pl-7 pr-2 text-xs text-[#111827] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
               />
             </div>
             <Select value={group} onChange={(e) => setGroup(e.target.value)} aria-label="Filter by category" className="h-8 w-36 text-xs">

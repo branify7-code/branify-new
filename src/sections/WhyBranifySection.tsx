@@ -13,75 +13,68 @@ const whyIconMap: Record<string, React.ComponentType<{ className?: string }>> = 
 
 export const WhyBranifySection: React.FC = () => {
   return (
-    <section className="relative py-28 sm:py-36 bg-[#0B0C10] text-[#F1F2EE] overflow-hidden border-t border-white/[0.06]">
+    <section className="relative py-28 sm:py-36 bg-white text-[#111827] overflow-hidden">
       {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-[#D4AF37]/4 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[600px] h-[500px] bg-[#EEF2FF] rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[480px] h-[420px] bg-[#FDF6E3] rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-8 border-b border-white/[0.08] gap-6">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#D4AF37]">
+
+        {/* Large statement header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-8 border-b border-[#E2E8F0] gap-8">
+          <div className="space-y-5 max-w-3xl">
+            <div className="eyebrow-label">
               <Sparkles className="w-3.5 h-3.5" />
               <span>// Value Proposition</span>
             </div>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.03em] leading-[1.08] text-[#111827]">
               Why Choose Branify?
             </h2>
-            <p className="text-base sm:text-lg text-[#F1F2EE]/60 font-light max-w-xl">
+            <p className="text-base sm:text-lg text-[#64748B] leading-relaxed">
               We do not build hollow digital facades. We engineer digital infrastructure that transforms category standing and fuels commercial growth.
             </p>
           </div>
 
-          <div className="text-xs font-mono text-[#F1F2EE]/40">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] leading-relaxed shrink-0">
             RADICAL CLARITY<br />
             ZERO MEDIOCRITY TOLERANCE
           </div>
         </div>
 
-        {/* Editorial Non-Card Layout: Alternating Staggered Rows with Visual Anchors */}
-        <div className="space-y-12">
+        {/* Supporting benefits as a 2-col editorial checklist — no card grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-12">
           {whyBranifyData.map((item, index) => {
             const Icon = whyIconMap[item.iconName] || Sparkles;
-            const isEven = index % 2 === 0;
 
             return (
               <div
                 key={item.id}
                 id={`why-item-${item.id}`}
-                className="group relative p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-white/[0.02] to-transparent border border-white/[0.06] hover:border-[#D4AF37]/40 transition-all duration-300"
+                className="group flex items-start gap-5"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                  
-                  {/* Left Column: Metric & Icon */}
-                  <div className={`lg:col-span-4 flex items-center gap-6 ${isEven ? 'order-1' : 'lg:order-2'}`}>
-                    <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#FFF5DC] shrink-0 group-hover:bg-[#D4AF37] group-hover:text-[#05080D] transition-all">
-                      <Icon className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <div className="font-display text-3xl sm:text-4xl font-black text-[#FFF5DC] tracking-tight">
-                        {item.metric}
-                      </div>
-                      <div className="text-xs font-mono text-[#D4AF37] uppercase tracking-wider">
-                        {item.metricLabel}
-                      </div>
-                    </div>
-                  </div>
+                {/* Icon in a tinted circle */}
+                <div className="w-12 h-12 rounded-full bg-[#EEF2FF] border border-[#5B5FEF]/15 text-[#5B5FEF] flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:border-[#5B5FEF]/35 transition-all">
+                  <Icon className="w-5 h-5" />
+                </div>
 
-                  {/* Right Column: Editorial Headline & Copy */}
-                  <div className={`lg:col-span-8 space-y-2 ${isEven ? 'order-2' : 'lg:order-1'}`}>
-                    <span className="text-[11px] font-mono uppercase tracking-widest text-[#F1F2EE]/40">
-                      Pillar 0{index + 1} — {item.title}
+                <div className="min-w-0 space-y-1.5">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#94A3B8]">
+                    Pillar 0{index + 1} — {item.title}
+                  </span>
+                  <h3 className="font-display text-lg sm:text-xl font-bold text-[#111827] tracking-tight">
+                    {item.headline}
+                  </h3>
+                  <p className="text-sm text-[#64748B] leading-relaxed">
+                    {item.description}
+                  </p>
+                  <div className="pt-1.5 flex items-baseline gap-2">
+                    <span className="font-display text-2xl font-extrabold text-[#8F6B2D] tracking-tight">
+                      {item.metric}
                     </span>
-                    <h3 className="font-display text-xl sm:text-2xl font-bold uppercase text-[#FFF5DC] tracking-tight">
-                      {item.headline}
-                    </h3>
-                    <p className="text-sm sm:text-base text-[#F1F2EE]/60 font-light leading-relaxed">
-                      {item.description}
-                    </p>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#94A3B8]">
+                      {item.metricLabel}
+                    </span>
                   </div>
-
                 </div>
               </div>
             );

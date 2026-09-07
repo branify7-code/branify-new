@@ -342,7 +342,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                   onClick={() => void toggleInline(row, t)}
                   className="rounded-lg p-1.5 transition-colors hover:bg-white/[0.07] disabled:opacity-40"
                 >
-                  <Icon size={14} className={on ? 'fill-[#E8C97C]/40 text-[#E8C97C]' : 'text-[#566072]'} />
+                  <Icon size={14} className={on ? 'fill-[#E8C97C]/40 text-[#8F6B2D]' : 'text-[#64748B]'} />
                 </button>
               );
             })}
@@ -352,7 +352,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
               aria-label={`Edit ${config.entity}`}
               disabled={busy}
               onClick={() => openEdit(row)}
-              className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79] disabled:opacity-40"
+              className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-[#8F6B2D] disabled:opacity-40"
             >
               <Pencil size={14} />
             </button>
@@ -363,7 +363,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                 aria-label="Unarchive"
                 disabled={busy}
                 onClick={() => void setArchived(row, false)}
-                className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-emerald-300 disabled:opacity-40"
+                className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-emerald-300 disabled:opacity-40"
               >
                 <ArchiveRestore size={14} />
               </button>
@@ -374,7 +374,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                 aria-label="Archive"
                 disabled={busy}
                 onClick={() => void setArchived(row, true)}
-                className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-amber-300 disabled:opacity-40"
+                className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-amber-300 disabled:opacity-40"
               >
                 <Archive size={14} />
               </button>
@@ -387,7 +387,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                   aria-label="Move up"
                   disabled={busy || idx <= 0}
                   onClick={() => void move(row, -1)}
-                  className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79] disabled:opacity-25"
+                  className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-[#8F6B2D] disabled:opacity-25"
                 >
                   <ChevronUp size={14} />
                 </button>
@@ -397,7 +397,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                   aria-label="Move down"
                   disabled={busy || idx < 0 || idx >= rows.length - 1}
                   onClick={() => void move(row, 1)}
-                  className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79] disabled:opacity-25"
+                  className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-[#8F6B2D] disabled:opacity-25"
                 >
                   <ChevronDown size={14} />
                 </button>
@@ -409,7 +409,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
               aria-label="Delete permanently"
               disabled={busy}
               onClick={() => setConfirmDelete(row)}
-              className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-red-500/10 hover:text-red-300 disabled:opacity-40"
+              className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-red-500/10 hover:text-red-300 disabled:opacity-40"
             >
               <Trash2 size={14} />
             </button>
@@ -436,15 +436,15 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2.5">
-              {config.icon && <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]"><config.icon size={15} className="text-[#E8C97C]" /></span>}
-              <h2 className="font-display text-lg font-bold text-[#F5F6F2]">{config.title}</h2>
+              {config.icon && <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]"><config.icon size={15} className="text-[#8F6B2D]" /></span>}
+              <h2 className="font-display text-lg font-bold text-[#111827]">{config.title}</h2>
               <Badge tone="gold">{total.toLocaleString()}</Badge>
             </div>
-            <p className="mt-0.5 text-xs text-[#A7AFBA]">{config.subtitle}</p>
+            <p className="mt-0.5 text-xs text-[#475569]">{config.subtitle}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative">
-              <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#566072]" />
+              <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
               <Input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
@@ -534,7 +534,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
               <p>
                 This will <strong>permanently delete</strong> “{confirmDelete ? asStr((confirmDelete as unknown as Record<string, unknown>)[config.nameKey]) : ''}”.
               </p>
-              <p className="mt-2 text-xs text-[#A7AFBA]">
+              <p className="mt-2 text-xs text-[#475569]">
                 If this record may be referenced by the public site, prefer <strong>Archive</strong> instead — archived records are hidden but recoverable.
               </p>
             </>
@@ -706,14 +706,14 @@ function CrudFormModal<T extends { id: string; archived?: boolean }>({ config, i
       case 'toggle':
         return (
           <div key={f.key} className={spanCls(f)}>
-            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">{f.label}</span>
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">{f.label}</span>
             <div className="flex items-center gap-2.5">
               <Toggle checked={asBool(form[f.key])} onChange={(v) => setField(f.key, v)} label={f.label} />
-              <span className={cx('text-xs font-semibold', asBool(form[f.key]) ? 'text-[#E8C97C]' : 'text-[#6B7280]')}>
+              <span className={cx('text-xs font-semibold', asBool(form[f.key]) ? 'text-[#8F6B2D]' : 'text-[#64748B]')}>
                 {asBool(form[f.key]) ? 'On' : 'Off'}
               </span>
             </div>
-            {f.hint && <p className="mt-1 text-[11px] text-[#6B7280]">{f.hint}</p>}
+            {f.hint && <p className="mt-1 text-[11px] text-[#64748B]">{f.hint}</p>}
           </div>
         );
       case 'chips':
@@ -783,10 +783,10 @@ function CrudFormModal<T extends { id: string; archived?: boolean }>({ config, i
                 aria-expanded={seoOpen}
                 className="flex w-full items-center justify-between rounded-xl border border-white/[0.07] bg-white/[0.02] px-3.5 py-2.5 transition-colors hover:border-[#C9A45C]/35"
               >
-                <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#A7AFBA]">SEO</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#475569]">SEO</span>
                 <span className="flex items-center gap-2">
                   {seoFilled && <Badge tone="gold">Custom</Badge>}
-                  <ChevronDown size={14} className={cx('text-[#A7AFBA] transition-transform', seoOpen && 'rotate-180')} />
+                  <ChevronDown size={14} className={cx('text-[#475569] transition-transform', seoOpen && 'rotate-180')} />
                 </span>
               </button>
               {seoOpen && (
@@ -869,7 +869,7 @@ const CodeArea: React.FC<{
         <button
           type="button"
           onClick={() => setMono((m) => !m)}
-          className="rounded-md border border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#A7AFBA] transition-colors hover:border-[#C9A45C]/40 hover:text-[#E8C97C]"
+          className="rounded-md border border-[#E2E8F0] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#475569] transition-colors hover:border-[#C9A45C]/40 hover:text-[#8F6B2D]"
           aria-pressed={mono}
         >
           {mono ? 'Monospace' : 'Proportional'}

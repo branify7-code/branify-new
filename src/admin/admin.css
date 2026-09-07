@@ -6,8 +6,8 @@
   background:
     radial-gradient(1200px 500px at 85% -10%, rgba(201, 164, 92, 0.06), transparent 60%),
     radial-gradient(900px 420px at -10% 110%, rgba(201, 164, 92, 0.04), transparent 55%),
-    #020407;
-  color: #f5f6f2;
+    #ffffff;
+  color: #0f172a;
   min-height: 100vh;
 }
 
@@ -26,11 +26,11 @@
   padding: 0.5rem 0.7rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #a7afba;
+  color: #475569;
   transition: background 0.15s ease, color 0.15s ease;
   outline: none;
 }
-.adm-nav-item:hover { background: rgba(255, 255, 255, 0.045); color: #f5f6f2; }
+.adm-nav-item:hover { background: rgba(255, 255, 255, 0.045); color: #0f172a; }
 .adm-nav-item:focus-visible { box-shadow: 0 0 0 2px rgba(201, 164, 92, 0.55); }
 .adm-nav-item.active {
   background: linear-gradient(100deg, rgba(201, 164, 92, 0.22), rgba(201, 164, 92, 0.07));
@@ -50,7 +50,7 @@
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #566072;
+  color: #64748b;
   padding: 0.9rem 0.7rem 0.35rem;
 }
 

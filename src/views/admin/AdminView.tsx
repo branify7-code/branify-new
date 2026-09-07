@@ -60,7 +60,7 @@ const asServices = (value: unknown): string => {
 };
 
 const inputClasses =
-  'w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:border-[#C9A45C] focus:outline-none focus:ring-0 transition-colors';
+  'w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-[#E2E8F0] text-xs text-white placeholder-white/30 focus:border-[#C9A45C] focus:outline-none focus:ring-0 transition-colors';
 
 export const AdminView: React.FC = () => {
   /* ---------- session / auth state ---------- */
@@ -189,17 +189,17 @@ export const AdminView: React.FC = () => {
         {checkingSession ? (
           /* Restoring session */
           <div className="flex items-center justify-center py-40">
-            <Loader2 className="w-6 h-6 text-[#C9A45C] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#8F6B2D] animate-spin" />
           </div>
         ) : !adminEmail ? (
           /* ================= AUTH CARD ================= */
           <div className="max-w-md mx-auto">
-            <div className="bg-[#080B14]/90 border border-[#C9A45C]/25 rounded-3xl p-8 shadow-2xl backdrop-blur">
-              <Lock className="w-8 h-8 text-[#E2C27B] mx-auto" />
+            <div className="bg-[#F8FAFC]/90 border border-[#C9A45C]/25 rounded-3xl p-8 shadow-2xl backdrop-blur">
+              <Lock className="w-8 h-8 text-[#8F6B2D] mx-auto" />
               <h1 className="mt-5 font-black uppercase text-white text-2xl text-center tracking-tight">
                 Admin Portal Access
               </h1>
-              <p className="mt-2 text-xs text-zinc-400 text-center">
+              <p className="mt-2 text-xs text-slate-500 text-center">
                 Authenticate using your Supabase Auth Administrator Credentials.
               </p>
 
@@ -211,7 +211,7 @@ export const AdminView: React.FC = () => {
 
               <form onSubmit={handleLogin} className="mt-8 space-y-4">
                 <div className="space-y-1.5">
-                  <label htmlFor="admin-email" className="block text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                  <label htmlFor="admin-email" className="block text-[10px] font-mono uppercase tracking-wider text-slate-500">
                     Admin Email *
                   </label>
                   <input
@@ -227,7 +227,7 @@ export const AdminView: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="admin-password" className="block text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                  <label htmlFor="admin-password" className="block text-[10px] font-mono uppercase tracking-wider text-slate-500">
                     Password *
                   </label>
                   <input
@@ -274,14 +274,14 @@ export const AdminView: React.FC = () => {
                 Management Dashboard
               </h2>
               <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#C9A45C]/25 text-xs font-mono text-[#E2C27B] max-w-[240px] truncate">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#C9A45C]/25 text-xs font-mono text-[#8F6B2D] max-w-[240px] truncate">
                   <Mail className="w-3.5 h-3.5 shrink-0" />
                   <span className="truncate">{adminEmail}</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => void handleLogout()}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 text-[10px] font-black uppercase tracking-wider text-zinc-300 hover:text-white hover:border-red-500/40 hover:bg-red-500/10 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-[#E2E8F0] text-[10px] font-black uppercase tracking-wider text-slate-600 hover:text-white hover:border-red-500/40 hover:bg-red-500/10 transition-all cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Log Out
@@ -305,7 +305,7 @@ export const AdminView: React.FC = () => {
                     className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-all text-xs uppercase tracking-wider font-extrabold cursor-pointer ${
                       isActive
                         ? 'btn-gradient-primary text-white shadow-lg shadow-[#C9A45C]/20'
-                        : 'bg-white/[0.03] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/20'
+                        : 'bg-white/[0.03] border border-white/[0.08] text-slate-500 hover:text-white hover:border-[#CBD5E1]'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -318,8 +318,8 @@ export const AdminView: React.FC = () => {
             {/* Table area */}
             <div className="space-y-4">
               {loading ? (
-                <div className="flex items-center justify-center py-24 rounded-2xl bg-[#080B14] border border-white/[0.08]">
-                  <Loader2 className="w-5 h-5 text-[#C9A45C] animate-spin" />
+                <div className="flex items-center justify-center py-24 rounded-2xl bg-[#F8FAFC] border border-white/[0.08]">
+                  <Loader2 className="w-5 h-5 text-[#8F6B2D] animate-spin" />
                 </div>
               ) : fetchError ? (
                 <div className="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-2xl px-4 py-3 leading-relaxed">
@@ -327,17 +327,17 @@ export const AdminView: React.FC = () => {
                 </div>
               ) : activeTab === 'inquiries' ? (
                 inquiries.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center gap-3 py-24 rounded-2xl bg-[#080B14] border border-white/[0.08]">
-                    <Inbox className="w-6 h-6 text-zinc-600" />
-                    <span className="text-xs text-zinc-500">No rows found.</span>
+                  <div className="flex flex-col items-center justify-center gap-3 py-24 rounded-2xl bg-[#F8FAFC] border border-white/[0.08]">
+                    <Inbox className="w-6 h-6 text-slate-500" />
+                    <span className="text-xs text-slate-500">No rows found.</span>
                   </div>
                 ) : (
-                  <div className="max-h-[60vh] overflow-auto rounded-2xl bg-[#080B14] border border-white/[0.08]">
+                  <div className="max-h-[60vh] overflow-auto rounded-2xl bg-[#F8FAFC] border border-white/[0.08]">
                     <table className="w-full min-w-[980px]">
-                      <thead className="sticky top-0 z-10 bg-[#080B14]">
+                      <thead className="sticky top-0 z-10 bg-[#F8FAFC]">
                         <tr>
                           {['Created', 'Name', 'Email', 'Company', 'Services', 'Budget', 'Timeline', 'Status'].map((h) => (
-                            <th key={h} className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider text-zinc-400 whitespace-nowrap">
+                            <th key={h} className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider text-slate-500 whitespace-nowrap">
                               {h}
                             </th>
                           ))}
@@ -346,19 +346,19 @@ export const AdminView: React.FC = () => {
                       <tbody>
                         {inquiries.map((row, i) => (
                           <tr key={asText(row.id) || `inquiry-${i}`} className="hover:bg-white/[0.02] transition-colors">
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">{asDate(row.created_at)}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap font-medium text-white">{asText(row.name) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">{asText(row.email) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">{asText(row.company) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06]">{asServices(row.services) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">{asText(row.budget) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">{asText(row.timeline) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">{asDate(row.created_at)}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap font-medium text-white">{asText(row.name) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">{asText(row.email) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">{asText(row.company) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06]">{asServices(row.services) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">{asText(row.budget) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">{asText(row.timeline) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">
                               <span
                                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                                   asText(row.status) === 'new'
                                     ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                    : 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30'
+                                    : 'bg-zinc-500/10 text-slate-500 border-zinc-500/30'
                                 }`}
                               >
                                 {asText(row.status) || '—'}
@@ -371,17 +371,17 @@ export const AdminView: React.FC = () => {
                   </div>
                 )
               ) : subscribers.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-3 py-24 rounded-2xl bg-[#080B14] border border-white/[0.08]">
-                  <Users className="w-6 h-6 text-zinc-600" />
-                  <span className="text-xs text-zinc-500">No rows found.</span>
+                <div className="flex flex-col items-center justify-center gap-3 py-24 rounded-2xl bg-[#F8FAFC] border border-white/[0.08]">
+                  <Users className="w-6 h-6 text-slate-500" />
+                  <span className="text-xs text-slate-500">No rows found.</span>
                 </div>
               ) : (
-                <div className="max-h-[60vh] overflow-auto rounded-2xl bg-[#080B14] border border-white/[0.08]">
+                <div className="max-h-[60vh] overflow-auto rounded-2xl bg-[#F8FAFC] border border-white/[0.08]">
                   <table className="w-full min-w-[640px]">
-                    <thead className="sticky top-0 z-10 bg-[#080B14]">
+                    <thead className="sticky top-0 z-10 bg-[#F8FAFC]">
                       <tr>
                         {['Created', 'Email', 'ID'].map((h) => (
-                          <th key={h} className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider text-zinc-400 whitespace-nowrap">
+                          <th key={h} className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider text-slate-500 whitespace-nowrap">
                             {h}
                           </th>
                         ))}
@@ -392,9 +392,9 @@ export const AdminView: React.FC = () => {
                         const id = asText(row.id);
                         return (
                           <tr key={id || `subscriber-${i}`} className="hover:bg-white/[0.02] transition-colors">
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap">{asDate(row.created_at)}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-300 border-t border-white/[0.06] whitespace-nowrap font-medium text-white">{asText(row.email) || '—'}</td>
-                            <td className="px-4 py-3 text-xs text-zinc-500 border-t border-white/[0.06] whitespace-nowrap font-mono">
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap">{asDate(row.created_at)}</td>
+                            <td className="px-4 py-3 text-xs text-slate-600 border-t border-white/[0.06] whitespace-nowrap font-medium text-white">{asText(row.email) || '—'}</td>
+                            <td className="px-4 py-3 text-xs text-slate-500 border-t border-white/[0.06] whitespace-nowrap font-mono">
                               {id ? `${id.slice(0, 12)}${id.length > 12 ? '…' : ''}` : '—'}
                             </td>
                           </tr>
@@ -411,7 +411,7 @@ export const AdminView: React.FC = () => {
                   type="button"
                   onClick={() => void fetchRows(activeTab)}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 text-[10px] font-black uppercase tracking-wider text-zinc-300 hover:text-white hover:border-white/20 transition-all disabled:opacity-50 cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-[#E2E8F0] text-[10px] font-black uppercase tracking-wider text-slate-600 hover:text-white hover:border-[#CBD5E1] transition-all disabled:opacity-50 cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                   Refresh

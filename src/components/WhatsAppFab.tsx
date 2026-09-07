@@ -36,12 +36,12 @@ export const WhatsAppFab: React.FC = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {open && (
-        <div className="w-64 overflow-hidden rounded-2xl border border-[#25D366]/30 bg-[#12131A] shadow-2xl">
-          <div className="border-b border-white/10 bg-black/30 px-4 py-2.5">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-[#25D366]">Chat with us</p>
-            <p className="text-[10px] text-zinc-500">Pick a WhatsApp line</p>
+        <div className="w-64 overflow-hidden rounded-2xl border border-[#25D366]/40 bg-white shadow-2xl">
+          <div className="border-b border-[#E2E8F0] bg-[#F0FDF4] px-4 py-2.5">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#128C7E]">Chat with us</p>
+            <p className="text-[10px] text-[#64748B]">Pick a WhatsApp line</p>
           </div>
-          <ul className="divide-y divide-white/5">
+          <ul className="divide-y divide-[#E2E8F0]">
             {WHATSAPP_LINES.map((line) => (
               <li key={line.number}>
                 <a
@@ -49,12 +49,12 @@ export const WhatsAppFab: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => { trackEvent('whatsapp_click', { line: line.number }); setOpen(false); }}
-                  className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5"
+                  className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[#F8FAFC]"
                 >
                   <span className="text-lg leading-none">{line.flag}</span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-[#F1F2EE]">{line.label}</span>
-                    <span className="block truncate font-mono text-[11px] text-zinc-400">{line.number}</span>
+                    <span className="block truncate text-sm font-semibold text-[#111827]">{line.label}</span>
+                    <span className="block truncate font-mono text-[11px] text-[#64748B]">{line.number}</span>
                   </span>
                   <WhatsAppGlyph className="h-4 w-4 shrink-0 fill-[#25D366]" />
                 </a>
@@ -66,7 +66,7 @@ export const WhatsAppFab: React.FC = () => {
 
       <div className="flex items-center gap-3">
         {hovered && !open && (
-          <div className="hidden sm:flex items-center bg-[#12131A] text-zinc-100 px-3.5 py-2 rounded-xl shadow-2xl border border-[#25D366]/30 text-xs font-semibold animate-fade-in whitespace-nowrap">
+          <div className="hidden sm:flex items-center bg-white text-[#334155] px-3.5 py-2 rounded-xl shadow-2xl border border-[#25D366]/40 text-xs font-semibold animate-fade-in whitespace-nowrap">
             <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse mr-2"></span>
             {DISPLAY_NAME}
           </div>
@@ -79,7 +79,7 @@ export const WhatsAppFab: React.FC = () => {
           aria-label="Chat on WhatsApp"
           aria-expanded={open}
           title={DISPLAY_NAME}
-          className="relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-[#F1F2EE] rounded-full shadow-[0_8px_30px_rgb(37,211,102,0.35)] hover:shadow-[0_12px_40px_rgb(37,211,102,0.5)] transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#25D366]/40 cursor-pointer"
+          className="relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-[0_8px_30px_rgb(37,211,102,0.35)] hover:shadow-[0_12px_40px_rgb(37,211,102,0.5)] transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#25D366]/40 cursor-pointer"
         >
           <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-75 animate-ping pointer-events-none group-hover:animate-none"></span>
           {open ? (

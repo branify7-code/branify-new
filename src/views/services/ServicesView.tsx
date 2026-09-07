@@ -20,8 +20,17 @@ interface ServicesViewProps {
   initialCategory?: string | null;
 }
 
-/* Icon system: steel default, gold on hover (global design system — no rainbow accents) */
-const iconCls = 'w-6 h-6 text-[#A7AFBA] transition-colors duration-300 group-hover:text-[#E9CF79]';
+/* Icon system: color inherited from the accent chip of each card */
+const iconCls = 'w-6 h-6';
+
+/* Strategic accent rotation — one chip color per card (indigo / blue / purple / teal / pink) */
+const accentChips: string[] = [
+  'bg-[#EEF2FF] text-[#5B5FEF] border border-[#E0E7FF]',
+  'bg-[#EFF6FF] text-[#3B82F6] border border-[#DBEAFE]',
+  'bg-[#F5F3FF] text-[#8B5CF6] border border-[#EDE9FE]',
+  'bg-[#F0FDFA] text-[#14B8A6] border border-[#CCFBF1]',
+  'bg-[#FDF2F8] text-[#EC4899] border border-[#FCE7F3]',
+];
 
 const iconMap: Record<string, React.ReactNode> = {
   Globe: <Globe className={iconCls} />,
@@ -115,27 +124,27 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ onNavigate, initialC
       />
 
       {/* Ambient glow */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-3/4 h-80 bg-gradient-to-r from-[#C9A45C]/[0.10] via-[#D4AF37]/[0.06] to-transparent blur-[120px] pointer-events-none" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-3/4 h-80 bg-gradient-to-r from-[#EEF2FF] via-[#F0F6FF]/70 to-transparent blur-[120px] pointer-events-none" />
 
       {/* Hero */}
       <div className="text-center space-y-4 max-w-2xl mx-auto relative z-10">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.12] text-zinc-300 text-[10px] font-extrabold uppercase tracking-widest backdrop-blur-md">
-          <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-[#475569] text-[10px] font-extrabold uppercase tracking-widest">
+          <Sparkles className="w-3.5 h-3.5 text-[#8F6B2D]" />
           Primary Agency Capabilities
         </div>
-        <h1 className="text-4xl sm:text-6xl font-black text-[#F1F2EE] uppercase tracking-tighter">
+        <h1 className="font-display text-4xl sm:text-6xl font-extrabold text-[#111827] tracking-[-0.03em] leading-[1.05]">
           DIGITAL AGENCY{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A45C] via-[#E9CF79] to-[#D4AF37]">SERVICES</span>
+          <span className="text-gold-gradient">SERVICES</span>
         </h1>
-        <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">
+        <p className="text-[#64748B] text-xs sm:text-sm leading-relaxed">
           {servicesRegistry.length} specialized, high-impact digital services designed to help ambitious companies build, brand, and scale
           worldwide. Each service includes 4 transparent package tiers.
         </p>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.04] border border-white/[0.08] rounded-full text-xs text-zinc-300 backdrop-blur-md">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#E2E8F0] rounded-full text-xs text-[#475569] shadow-[0_2px_10px_rgba(15,23,42,0.04)]">
           <span>{currencyInfo.flag}</span>
           <span>
             Displaying live prices in{' '}
-            <strong className="text-[#F1F2EE]">
+            <strong className="text-[#111827]">
               {currency} ({currencyInfo.symbol.trim()})
             </strong>
           </span>
@@ -150,8 +159,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ onNavigate, initialC
             onClick={() => setActiveFilter(tab.id)}
             className={`px-5 py-2.5 rounded-full transition-all text-xs uppercase tracking-wider font-extrabold cursor-pointer ${
               activeFilter === tab.id
-                ? 'btn-gradient-primary text-[#F1F2EE] shadow-lg shadow-[#C9A45C]/25'
-                : 'bg-white/[0.03] border border-white/[0.08] text-zinc-400 hover:text-[#F1F2EE] hover:border-white/20'
+                ? 'btn-gradient-primary text-[#111827] shadow-lg shadow-[#C9A45C]/25'
+                : 'bg-white border border-[#E2E8F0] text-[#475569] hover:text-[#5B5FEF] hover:border-[#5B5FEF]/50 shadow-[0_2px_10px_rgba(15,23,42,0.04)]'
             }`}
           >
             {tab.label}
@@ -161,63 +170,64 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ onNavigate, initialC
 
       {/* Service cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-        {filtered.map((service) => {
+        {filtered.map((service, idx) => {
+          const isFeatured = idx === 0;
           const prices = (service.packages || []).map((p) => p.priceUSD).filter((p) => p > 0);
           const startingFrom = prices.length > 0 ? Math.min(...prices) : 0;
           return (
             <TiltCard
               key={service.id}
               onClick={() => onNavigate(`/services/${service.slug}`)}
-              className="p-6 h-full flex flex-col justify-between space-y-6 group"
+              className={`${isFeatured ? 'md:col-span-2 border-l-4 border-l-[#5B5FEF] sm:p-8' : ''} p-6 h-full flex flex-col justify-between space-y-6 group`}
               ariaLabel={`View ${service.name} packages`}
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/[0.12] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className={`w-12 h-12 rounded-2xl ${accentChips[idx % accentChips.length]} flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300`}>
                     {iconMap[service.iconName] || <Globe className={iconCls} />}
                   </div>
-                  <div className="inline-flex items-center gap-1 px-3 py-1 bg-white/[0.04] border border-white/[0.08] rounded-full text-[10px] font-extrabold uppercase tracking-wider text-zinc-400">
-                    <Layers className="w-3 h-3 text-[#D4AF37]" />
+                  <div className="inline-flex items-center gap-1 px-3 py-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-full text-[10px] font-extrabold uppercase tracking-wider text-[#64748B]">
+                    <Layers className="w-3 h-3 text-[#5B5FEF]" />
                     4 Packages
                   </div>
                 </div>
                 <div style={{ transform: 'translateZ(25px)' }}>
-                  <h2 className="text-lg font-black text-[#F1F2EE] uppercase tracking-tight group-hover:text-[#E9CF79] transition-colors">
+                  <h2 className={`font-display text-lg font-extrabold text-[#111827] tracking-tight group-hover:text-[#8F6B2D] transition-colors ${isFeatured ? 'sm:text-xl' : ''}`}>
                     {service.name}
                   </h2>
-                  <p className="text-zinc-400 text-xs mt-1.5 leading-relaxed line-clamp-2">{service.shortDescription}</p>
+                  <p className="text-[#64748B] text-xs mt-1.5 leading-relaxed line-clamp-2">{service.shortDescription}</p>
                 </div>
                 <div
-                  className="space-y-2 pt-3 border-t border-white/[0.08] text-xs text-zinc-300"
+                  className="space-y-2 pt-3 border-t border-[#E2E8F0] text-xs text-[#475569]"
                   style={{ transform: 'translateZ(20px)' }}
                 >
-                  <div className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-wider">Package Tiers:</div>
-                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-semibold text-zinc-400">
+                  <div className="text-[10px] font-extrabold text-[#64748B] uppercase tracking-wider">Package Tiers:</div>
+                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-semibold text-[#475569]">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#94A3B8]" />
                       Basic
                     </div>
-                    <div className="flex items-center gap-1.5 text-[#D4AF37]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#A7AFBA]" />
+                    <div className="flex items-center gap-1.5 text-[#5B5FEF]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#5B5FEF]" />
                       Professional
                     </div>
-                    <div className="flex items-center gap-1.5 text-[#A7AFBA]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#A7AFBA]" />
+                    <div className="flex items-center gap-1.5 text-[#475569]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C9A45C]" />
                       Premium
                     </div>
-                    <div className="flex items-center gap-1.5 text-zinc-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                    <div className="flex items-center gap-1.5 text-[#475569]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1]" />
                       On-Demand
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between text-xs" style={{ transform: 'translateZ(30px)' }}>
+              <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-xs" style={{ transform: 'translateZ(30px)' }}>
                 <div>
-                  <span className="text-zinc-500 text-[11px]">Starting from </span>
-                  <span className="font-extrabold text-[#D4AF37]">{startingFrom > 0 ? format(startingFrom) : 'Quote on Request'}</span>
+                  <span className="text-[#64748B] text-[11px]">Starting from </span>
+                  <span className="font-extrabold text-[#8F6B2D]">{startingFrom > 0 ? format(startingFrom) : 'Quote on Request'}</span>
                 </div>
-                <div className="text-[#D4AF37] font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1 uppercase tracking-wider text-[11px]">
+                <div className="text-[#8F6B2D] font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1 uppercase tracking-wider text-[11px]">
                   View Packages
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>

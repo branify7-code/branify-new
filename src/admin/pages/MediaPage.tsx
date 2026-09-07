@@ -139,8 +139,8 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">Media Library</h1>
-          <p className="text-xs text-[#A7AFBA]">Images and files used across the site — uploads are real, not mocked</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">Media Library</h1>
+          <p className="text-xs text-[#475569]">Images and files used across the site — uploads are real, not mocked</p>
         </div>
         <Badge tone="gold">{total} asset{total === 1 ? '' : 's'}</Badge>
       </div>
@@ -169,9 +169,9 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
               dragOver ? 'border-[#C9A45C]/70 bg-[#C9A45C]/[0.08]' : 'border-white/12 bg-white/[0.02] hover:border-[#C9A45C]/40',
             )}
           >
-            <UploadCloud size={26} className="text-[#C9A45C]" />
-            <p className="text-sm font-semibold text-[#F5F6F2]">Drop files here or click to browse</p>
-            <p className="text-[11px] text-[#6B7280]">
+            <UploadCloud size={26} className="text-[#8F6B2D]" />
+            <p className="text-sm font-semibold text-[#111827]">Drop files here or click to browse</p>
+            <p className="text-[11px] text-[#64748B]">
               {uploading
                 ? `Uploading ${uploading.done + 1}/${uploading.total}: ${truncate(uploading.name, 34)}…`
                 : 'Multiple files upload sequentially · alt text above is applied to each'}
@@ -198,13 +198,13 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
         subtitle="Newest first"
         actions={
           <div className="relative">
-            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#566072]" />
+            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
             <input
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search filename, alt, mime…"
               aria-label="Search media assets"
-              className="h-8 w-44 rounded-lg border border-white/10 bg-[#04070C]/80 pl-7 pr-2 text-xs text-[#F5F6F2] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
+              className="h-8 w-44 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 pl-7 pr-2 text-xs text-[#111827] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
             />
           </div>
         }
@@ -233,16 +233,16 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <FileIcon size={26} className="text-[#C9A45C]/70" />
+                      <FileIcon size={26} className="text-[#8F6B2D]/70" />
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-1 p-2.5">
-                    <p className="truncate text-xs font-semibold text-[#F5F6F2]" title={row.filename}>{row.filename}</p>
-                    <p className="truncate text-[10px] text-[#6B7280]" title={row.alt || 'No alt text'}>{row.alt || 'No alt text'}</p>
+                    <p className="truncate text-xs font-semibold text-[#111827]" title={row.filename}>{row.filename}</p>
+                    <p className="truncate text-[10px] text-[#64748B]" title={row.alt || 'No alt text'}>{row.alt || 'No alt text'}</p>
                     <div className="flex flex-wrap items-center gap-1">
                       <Badge tone="steel" className="max-w-full"><span className="truncate normal-case tracking-normal">{row.mime || 'file'}</span></Badge>
                     </div>
-                    <p className="text-[10px] text-[#566072]">{fmtBytes(row.size_bytes)} · {timeAgo(row.created_at)}</p>
+                    <p className="text-[10px] text-[#64748B]">{fmtBytes(row.size_bytes)} · {timeAgo(row.created_at)}</p>
                     <div className="mt-auto flex items-center gap-1 pt-1.5">
                       <Btn size="sm" variant="ghost" icon={Copy} onClick={() => void copyUrl(row)} aria-label={`Copy URL of ${row.filename}`} />
                       <Btn size="sm" variant="ghost" icon={Pencil} onClick={() => { setEditRow(row); setEditAlt(row.alt || ''); }} aria-label={`Edit alt text of ${row.filename}`} />
@@ -252,7 +252,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-[#A7AFBA]">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-[#475569]">
               <span className="tabular-nums">{total === 0 ? '0 assets' : `${(page - 1) * PAGE_SIZE + 1}–${Math.min(total, page * PAGE_SIZE)} of ${total}`}</span>
               <div className="flex items-center gap-1.5">
                 <Btn size="sm" variant="ghost" disabled={page <= 1 || loading} onClick={() => setPage(page - 1)} aria-label="Previous page">Prev</Btn>
@@ -291,7 +291,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
         title="Delete asset?"
         message={confirmDelete ? (
           <>
-            Delete <span className="font-mono text-[#E8C97C]">{confirmDelete.filename}</span>?
+            Delete <span className="font-mono text-[#8F6B2D]">{confirmDelete.filename}</span>?
             <span className="mt-2 block text-xs text-amber-300">Check this asset isn&apos;t used in content before deleting — pages or overrides referencing it will show broken media.</span>
           </>
         ) : ''}

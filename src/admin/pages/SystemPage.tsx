@@ -144,8 +144,8 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
       key: 'label', label: 'Collection',
       render: (r) => (
         <span className="flex flex-col">
-          <span className="text-[13px] font-semibold text-[#F5F6F2]">{r.label}</span>
-          <span className="font-mono text-[10.5px] text-[#566072]">{r.key}</span>
+          <span className="text-[13px] font-semibold text-[#111827]">{r.label}</span>
+          <span className="font-mono text-[10.5px] text-[#64748B]">{r.key}</span>
         </span>
       ),
     },
@@ -153,12 +153,12 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
       key: 'count', label: 'Rows',
       className: 'text-right',
       render: (r) => (
-        <span className="font-display text-sm font-bold tabular-nums text-[#E8C97C]">
+        <span className="font-display text-sm font-bold tabular-nums text-[#8F6B2D]">
           {r.count === null ? '—' : fmtNumber(r.count)}
         </span>
       ),
     },
-    { key: 'source', label: 'Source', hideOnMobile: true, render: (r) => <span className="text-[11px] text-[#6B7280]">{r.source}</span> },
+    { key: 'source', label: 'Source', hideOnMobile: true, render: (r) => <span className="text-[11px] text-[#64748B]">{r.source}</span> },
   ];
 
   if (loading) {
@@ -181,15 +181,15 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
       {/* ---------------------------------------------------------- header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2] sm:text-2xl">
-            System Health <span className="text-[#E8C97C]">— live probes</span>
+          <h1 className="font-display text-xl font-extrabold text-[#111827] sm:text-2xl">
+            System Health <span className="text-[#8F6B2D]">— live probes</span>
           </h1>
-          <p className="mt-1 text-xs text-[#A7AFBA] sm:text-sm">
+          <p className="mt-1 text-xs text-[#475569] sm:text-sm">
             Database, auth, public site, SEO files and PWA — checked for real on every run.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {health?.checkedAt && <span className="text-[11px] tabular-nums text-[#6B7280]">last checked {timeAgo(health.checkedAt)}</span>}
+          {health?.checkedAt && <span className="text-[11px] tabular-nums text-[#64748B]">last checked {timeAgo(health.checkedAt)}</span>}
           <Btn size="sm" variant="outline" icon={RefreshCw} loading={checking} onClick={runFullCheck}>
             Run full check
           </Btn>
@@ -221,7 +221,7 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
           <div className="flex flex-col items-center gap-3 py-4">
             <HealthRing value={score} label={score >= 90 ? 'Healthy' : score >= 70 ? 'Degraded' : score >= 40 ? 'Impaired' : 'Critical'} sub={`${health?.items.length ?? 0} probes averaged`} />
             {health?.checkedAt && (
-              <p className="text-[10.5px] tabular-nums text-[#6B7280]">checked {timeAgo(health.checkedAt)}</p>
+              <p className="text-[10.5px] tabular-nums text-[#64748B]">checked {timeAgo(health.checkedAt)}</p>
             )}
           </div>
         </Card>
@@ -234,11 +234,11 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
               return (
                 <li key={it.key} className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#C9A45C]/25 bg-[#C9A45C]/[0.08]">
-                    <Icon size={15} className="text-[#E8C97C]" />
+                    <Icon size={15} className="text-[#8F6B2D]" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13px] font-semibold text-[#F5F6F2]">{it.label}</span>
-                    <span className="block truncate text-[11px] text-[#6B7280]" title={it.detail}>{it.detail}</span>
+                    <span className="block truncate text-[13px] font-semibold text-[#111827]">{it.label}</span>
+                    <span className="block truncate text-[11px] text-[#64748B]" title={it.detail}>{it.detail}</span>
                   </span>
                   <Badge tone={sb.tone} className="shrink-0">{sb.word}</Badge>
                 </li>
@@ -275,10 +275,10 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
             mobileCard={(r) => (
               <div className="flex items-center justify-between gap-3">
                 <span className="flex flex-col">
-                  <span className="text-[13px] font-semibold text-[#F5F6F2]">{r.label}</span>
-                  <span className="font-mono text-[10px] text-[#566072]">{r.key}</span>
+                  <span className="text-[13px] font-semibold text-[#111827]">{r.label}</span>
+                  <span className="font-mono text-[10px] text-[#64748B]">{r.key}</span>
                 </span>
-                <span className="font-display text-sm font-bold tabular-nums text-[#E8C97C]">
+                <span className="font-display text-sm font-bold tabular-nums text-[#8F6B2D]">
                   {r.count === null ? '—' : fmtNumber(r.count)}
                 </span>
               </div>
@@ -286,7 +286,7 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
           />
         )}
         {dashboard && (
-          <p className={cx('mt-3 text-[10.5px] text-[#6B7280]')}>
+          <p className={cx('mt-3 text-[10.5px] text-[#64748B]')}>
             Counts reflect live data ({timeAgo(health?.checkedAt || null)}). Redirects row counts active redirects only; blog posts include drafts.
           </p>
         )}

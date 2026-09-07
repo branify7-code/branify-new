@@ -51,11 +51,11 @@ export function DataTable<T extends { id?: string }>({
           <thead>
             <tr className="border-b border-white/[0.07] bg-white/[0.02]">
               {columns.map((c) => (
-                <th key={c.key} className={cx('px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#A7AFBA]', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
+                <th key={c.key} className={cx('px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#475569]', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
                   {c.sortable && onSort ? (
                     <button
                       onClick={() => onSort(c.key)}
-                      className={cx('inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[#E8C97C]', sort === c.key && 'text-[#E8C97C]')}
+                      className={cx('inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[#8F6B2D]', sort === c.key && 'text-[#8F6B2D]')}
                     >
                       {c.label}
                       {sort === c.key ? (dir === 'asc' ? <ArrowUp size={11} /> : <ArrowDown size={11} />) : <ChevronsUpDown size={11} className="opacity-40" />}
@@ -84,14 +84,14 @@ export function DataTable<T extends { id?: string }>({
                 )}
               >
                 {columns.map((c) => (
-                  <td key={c.key} className={cx('px-4 align-middle text-[13px] text-[#C9CED6]', dense ? 'py-2' : 'py-3', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
+                  <td key={c.key} className={cx('px-4 align-middle text-[13px] text-[#94A3B8]', dense ? 'py-2' : 'py-3', c.hideOnMobile && 'hidden lg:table-cell', c.className)}>
                     {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '—')}
                   </td>
                 ))}
               </tr>
             ))}
             {loading && rows.length > 0 && (
-              <tr><td colSpan={columns.length} className="px-4 py-1"><div className="h-0.5 w-full overflow-hidden rounded bg-white/5"><div className="h-full w-1/3 animate-pulse rounded bg-[#C9A45C]/60" /></div></td></tr>
+              <tr><td colSpan={columns.length} className="px-4 py-1"><div className="h-0.5 w-full overflow-hidden rounded bg-[#F8FAFC]"><div className="h-full w-1/3 animate-pulse rounded bg-[#C9A45C]/60" /></div></td></tr>
             )}
           </tbody>
         </table>
@@ -114,8 +114,8 @@ export function DataTable<T extends { id?: string }>({
               <div className="flex flex-col gap-1">
                 {columns.filter((c) => !c.hideOnMobile).map((c) => (
                   <div key={c.key} className="flex items-start justify-between gap-3 text-xs">
-                    <span className="text-[#6B7280]">{c.label}</span>
-                    <span className="text-right text-[#C9CED6]">{c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '—')}</span>
+                    <span className="text-[#64748B]">{c.label}</span>
+                    <span className="text-right text-[#94A3B8]">{c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '—')}</span>
                   </div>
                 ))}
               </div>
@@ -125,7 +125,7 @@ export function DataTable<T extends { id?: string }>({
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#A7AFBA]">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#475569]">
         <span className="tabular-nums">
           {total === 0 ? '0 records' : `${start}–${end} of ${total.toLocaleString()}`}
         </span>

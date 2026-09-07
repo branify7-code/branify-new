@@ -72,7 +72,7 @@ const STATUS_WORDS: Record<HealthItem['status'], { word: string; cls: string }> 
   operational: { word: 'Operational', cls: 'text-emerald-300' },
   warning: { word: 'Warning', cls: 'text-amber-300' },
   error: { word: 'Error', cls: 'text-red-300' },
-  unknown: { word: 'Unknown', cls: 'text-[#A7AFBA]' },
+  unknown: { word: 'Unknown', cls: 'text-[#475569]' },
 };
 
 const ACTIVITY_ICONS: Array<[RegExp, IconCmp]> = [
@@ -218,26 +218,26 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
   const metrics: Array<{ label: string; value: number; icon: IconCmp; sub: React.ReactNode; spark?: number[] }> = [
     {
       label: 'Customers', value: c.customers, icon: Users,
-      sub: <span className="text-[#6B7280]">Registered accounts</span>,
+      sub: <span className="text-[#64748B]">Registered accounts</span>,
     },
     {
       label: 'Total Leads', value: c.leads_total, icon: UserPlus,
       sub: (
         <span className="flex items-center gap-1.5">
           <Badge tone="gold">{c.leads_new} new</Badge>
-          <span className="text-[#6B7280]">· {leads7d} in 7d</span>
+          <span className="text-[#64748B]">· {leads7d} in 7d</span>
         </span>
       ),
       spark: leadsSeries.map((d) => d.count),
     },
-    { label: 'Active Projects', value: c.portfolio, icon: FolderKanban, sub: <span className="text-[#6B7280]">Portfolio case studies</span> },
-    { label: 'Services', value: c.services, icon: Briefcase, sub: <span className="text-[#6B7280]">Live service pages</span> },
-    { label: 'AI Tools', value: c.ai_tools, icon: Bot, sub: <span className="text-[#6B7280]">Curated AI directory</span> },
-    { label: 'Free Tools', value: c.tools, icon: Wrench, sub: <span className="text-[#6B7280]">Utility tools live</span> },
-    { label: 'Products', value: c.products, icon: Package, sub: <span className="text-[#6B7280]">Digital products</span> },
-    { label: 'Templates', value: c.templates, icon: LayoutTemplate, sub: <span className="text-[#6B7280]">{c.template_categories} categories</span> },
-    { label: 'Blog Posts', value: c.blog_published, icon: FileText, sub: <span className="text-[#6B7280]">{c.blog_drafts} draft{c.blog_drafts === 1 ? '' : 's'}</span> },
-    { label: 'Subscribers', value: c.subscribers, icon: Mail, sub: <span className="text-[#6B7280]">Newsletter list</span> },
+    { label: 'Active Projects', value: c.portfolio, icon: FolderKanban, sub: <span className="text-[#64748B]">Portfolio case studies</span> },
+    { label: 'Services', value: c.services, icon: Briefcase, sub: <span className="text-[#64748B]">Live service pages</span> },
+    { label: 'AI Tools', value: c.ai_tools, icon: Bot, sub: <span className="text-[#64748B]">Curated AI directory</span> },
+    { label: 'Free Tools', value: c.tools, icon: Wrench, sub: <span className="text-[#64748B]">Utility tools live</span> },
+    { label: 'Products', value: c.products, icon: Package, sub: <span className="text-[#64748B]">Digital products</span> },
+    { label: 'Templates', value: c.templates, icon: LayoutTemplate, sub: <span className="text-[#64748B]">{c.template_categories} categories</span> },
+    { label: 'Blog Posts', value: c.blog_published, icon: FileText, sub: <span className="text-[#64748B]">{c.blog_drafts} draft{c.blog_drafts === 1 ? '' : 's'}</span> },
+    { label: 'Subscribers', value: c.subscribers, icon: Mail, sub: <span className="text-[#64748B]">Newsletter list</span> },
   ];
 
   const statusColor = (s: HealthItem['status']) => STATUS_WORDS[s].cls;
@@ -247,10 +247,10 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
       {/* ---------------------------------------------------- welcome row */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2] sm:text-2xl">
-            Welcome back <span className="text-[#E8C97C]">— your command center</span>
+          <h1 className="font-display text-xl font-extrabold text-[#111827] sm:text-2xl">
+            Welcome back <span className="text-[#8F6B2D]">— your command center</span>
           </h1>
-          <p className="mt-1 text-xs text-[#A7AFBA] sm:text-sm">Here's what's happening across BRANIFY today.</p>
+          <p className="mt-1 text-xs text-[#475569] sm:text-sm">Here's what's happening across BRANIFY today.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {quickActions.map((a) => (
@@ -276,14 +276,14 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
         {metrics.map((m) => {
           const Icon = m.icon;
           return (
-            <div key={m.label} className="rounded-2xl border border-[rgba(201,164,92,0.16)] bg-[#07101A]/85 px-3.5 py-3 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]">
+            <div key={m.label} className="rounded-2xl border border-[rgba(201,164,92,0.16)] bg-[#F8FAFC]/85 px-3.5 py-3 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#A7AFBA]">{m.label}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#475569]">{m.label}</span>
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[#C9A45C]/25 bg-[#C9A45C]/[0.08]">
-                  <Icon size={14} className="text-[#E8C97C]" />
+                  <Icon size={14} className="text-[#8F6B2D]" />
                 </span>
               </div>
-              <div className="mt-1 font-display text-2xl font-extrabold tabular-nums text-[#F5F6F2]">
+              <div className="mt-1 font-display text-2xl font-extrabold tabular-nums text-[#111827]">
                 {m.value.toLocaleString()}
               </div>
               <div className="mt-1.5 text-[11px]">{m.sub}</div>
@@ -322,9 +322,9 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
                     return (
                       <li key={s} className="flex items-center gap-2.5 text-xs">
                         <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: LEAD_COLORS[s] }} />
-                        <span className="flex-1 capitalize text-[#C9CED6]">{s}</span>
-                        <span className="tabular-nums text-[#A7AFBA]">{pct}%</span>
-                        <span className="w-8 text-right font-bold tabular-nums text-[#F5F6F2]">{v}</span>
+                        <span className="flex-1 capitalize text-[#94A3B8]">{s}</span>
+                        <span className="tabular-nums text-[#475569]">{pct}%</span>
+                        <span className="w-8 text-right font-bold tabular-nums text-[#111827]">{v}</span>
                       </li>
                     );
                   })}
@@ -350,7 +350,7 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
             emptyLabel="No events recorded yet — events appear as visitors use the site"
           />
           <div className="mt-4">
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#A7AFBA]">Top events</p>
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#475569]">Top events</p>
             <HBars items={topEvents} formatValue={compact} emptyLabel="No events recorded yet — events appear as visitors use the site" />
           </div>
         </Card>
@@ -366,7 +366,7 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
         <div className="flex flex-col items-center gap-6 lg:flex-row">
           <div className="flex shrink-0 flex-col items-center gap-2">
             <HealthRing value={seo?.score ?? 0} label={seo && seo.score >= 90 ? 'Excellent' : seo && seo.score >= 70 ? 'Good' : seo && seo.score >= 40 ? 'Fair' : 'Needs work'} sub="real checks" />
-            <span className="text-[10px] text-[#6B7280]">scored from live probes</span>
+            <span className="text-[10px] text-[#64748B]">scored from live probes</span>
           </div>
           <ul className="grid w-full gap-1.5 sm:grid-cols-2">
             {(seo?.checks || []).map((chk) => (
@@ -375,8 +375,8 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
                   ? <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-emerald-400" />
                   : <AlertTriangle size={15} className="mt-0.5 shrink-0 text-amber-400" />}
                 <span className="min-w-0">
-                  <span className="block text-xs font-semibold text-[#D8DCE2]">{chk.label}</span>
-                  <span className="block truncate text-[11px] text-[#6B7280]" title={chk.detail}>{chk.detail}</span>
+                  <span className="block text-xs font-semibold text-[#CBD5E1]">{chk.label}</span>
+                  <span className="block truncate text-[11px] text-[#64748B]" title={chk.detail}>{chk.detail}</span>
                 </span>
               </li>
             ))}
@@ -397,7 +397,7 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
               key={it.key}
               label={it.label}
               value={<span className={cx('text-base', statusColor(it.status))}>{STATUS_WORDS[it.status].word}</span>}
-              sub={<span className="line-clamp-2 text-[11px] leading-snug text-[#6B7280]" title={it.detail}>{it.detail}</span>}
+              sub={<span className="line-clamp-2 text-[11px] leading-snug text-[#64748B]" title={it.detail}>{it.detail}</span>}
             />
           ))}
         </div>
@@ -426,15 +426,15 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
                     onClick={() => navigate('/customers')}
                     className="flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-white/[0.04]"
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#C9A45C]/25 bg-[#C9A45C]/[0.07] text-[9px] font-bold uppercase text-[#E8C97C]">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#C9A45C]/25 bg-[#C9A45C]/[0.07] text-[9px] font-bold uppercase text-[#8F6B2D]">
                       {(c.name || c.email).slice(0, 2).toUpperCase()}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px] font-semibold text-[#F5F6F2]">{c.name || c.email}</span>
-                      <span className="block truncate font-mono text-[11px] text-[#6B7280]">{c.email}</span>
+                      <span className="block truncate text-[13px] font-semibold text-[#111827]">{c.name || c.email}</span>
+                      <span className="block truncate font-mono text-[11px] text-[#64748B]">{c.email}</span>
                     </span>
                     <Badge tone={c.status === 'active' ? 'green' : c.status === 'blocked' ? 'red' : 'zinc'}>{c.status || 'active'}</Badge>
-                    <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#6B7280]">{c.created_at ? timeAgo(c.created_at) : '—'}</span>
+                    <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#64748B]">{c.created_at ? timeAgo(c.created_at) : '—'}</span>
                   </button>
                 </li>
               ))}
@@ -464,13 +464,13 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
                     className="flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-white/[0.04]"
                   >
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px] font-semibold text-[#F5F6F2]">{lead.name || lead.email || '(unnamed)'}</span>
-                      <span className="block truncate text-[11px] text-[#6B7280]">
+                      <span className="block truncate text-[13px] font-semibold text-[#111827]">{lead.name || lead.email || '(unnamed)'}</span>
+                      <span className="block truncate text-[11px] text-[#64748B]">
                         {lead.services && lead.services.length > 0 ? truncate(lead.services.join(', '), 44) : 'No service selected'}
                       </span>
                     </span>
                     <Badge tone={LEAD_STATUS_TONE[lead.status] || 'zinc'}>{lead.status}</Badge>
-                    <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#6B7280]">{timeAgo(lead.created_at)}</span>
+                    <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#64748B]">{timeAgo(lead.created_at)}</span>
                   </button>
                 </li>
               ))}
@@ -499,14 +499,14 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
                 return (
                   <li key={a.id} className="flex items-center gap-3 rounded-xl px-2 py-2">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03]">
-                      <Icon size={13} className="text-[#C9A45C]" />
+                      <Icon size={13} className="text-[#8F6B2D]" />
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-xs text-[#C9CED6]">
-                      <span className="font-semibold text-[#F5F6F2]">{a.user_email || 'system'}</span>
-                      <span className="text-[#6B7280]"> · {humanized}</span>
-                      {a.target_type && a.target_type !== a.action ? <span className="text-[#6B7280]"> {a.target_type}</span> : null}
+                    <span className="min-w-0 flex-1 truncate text-xs text-[#94A3B8]">
+                      <span className="font-semibold text-[#111827]">{a.user_email || 'system'}</span>
+                      <span className="text-[#64748B]"> · {humanized}</span>
+                      {a.target_type && a.target_type !== a.action ? <span className="text-[#64748B]"> {a.target_type}</span> : null}
                     </span>
-                    <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#6B7280]">{timeAgo(a.created_at)}</span>
+                    <span className="w-16 shrink-0 text-right text-[11px] tabular-nums text-[#64748B]">{timeAgo(a.created_at)}</span>
                   </li>
                 );
               })}
@@ -520,11 +520,11 @@ export const Dashboard: React.FC<AdminPageProps> = ({ navigate }) => {
         <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-[#C9A45C]/[0.07] blur-2xl" aria-hidden="true" />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#C9A45C]/40 bg-[#C9A45C]/10">
-            <Crown size={20} className="text-[#E8C97C]" />
+            <Crown size={20} className="text-[#8F6B2D]" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="font-display text-sm font-extrabold tracking-wide text-[#F5F6F2] sm:text-base">BRANIFY Self-Hosted Control Center</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-[#A7AFBA]">
+            <p className="font-display text-sm font-extrabold tracking-wide text-[#111827] sm:text-base">BRANIFY Self-Hosted Control Center</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-[#475569]">
               You're managing your own platform — content, SEO, leads and analytics in one place.
             </p>
           </div>

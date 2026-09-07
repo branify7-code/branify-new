@@ -182,13 +182,13 @@ export default function App() {
   const isKnown = isKnownRoute(pathname);
 
   return (
-    <div className="relative min-h-screen bg-[#05080D] text-[#F1F2EE] selection:bg-[#D4AF37]/30 selection:text-[#FFF5DC] font-sans flex flex-col justify-between">
+    <div className="relative min-h-screen bg-white text-[#111827] selection:bg-[#D4AF37]/30 selection:text-[#111827] font-sans flex flex-col justify-between">
       {/* Admin app — full control surface, replaces the public chrome entirely */}
       {isAdminRoute && (
         <Suspense
           fallback={
-            <div className="flex min-h-screen items-center justify-center bg-[#020407]">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C9A45C]">Loading admin…</span>
+            <div className="flex min-h-screen items-center justify-center bg-white">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8F6B2D]">Loading admin…</span>
             </div>
           }
         >

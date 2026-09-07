@@ -57,25 +57,25 @@ export const PaymentsPage: React.FC<AdminPageProps> = () => {
   useEffect(() => { void load(); }, [load]);
 
   const columns: Column<PaymentRow>[] = [
-    { key: 'provider', label: 'Provider', render: (r) => <span className="text-xs font-semibold text-[#F5F6F2]">{r.provider || '—'}</span> },
-    { key: 'transaction_id', label: 'Transaction', hideOnMobile: true, render: (r) => <span className="font-mono text-[11px] text-[#A7AFBA]">{r.transaction_id || '—'}</span> },
+    { key: 'provider', label: 'Provider', render: (r) => <span className="text-xs font-semibold text-[#111827]">{r.provider || '—'}</span> },
+    { key: 'transaction_id', label: 'Transaction', hideOnMobile: true, render: (r) => <span className="font-mono text-[11px] text-[#475569]">{r.transaction_id || '—'}</span> },
     {
       key: 'customer_email', label: 'Customer',
       render: (r) => (
         <div className="min-w-0">
-          <p className="truncate text-xs text-[#F5F6F2]">{r.customer_name || '—'}</p>
-          <p className="truncate font-mono text-[11px] text-[#A7AFBA]">{r.customer_email || ''}</p>
+          <p className="truncate text-xs text-[#111827]">{r.customer_name || '—'}</p>
+          <p className="truncate font-mono text-[11px] text-[#475569]">{r.customer_email || ''}</p>
         </div>
       ),
     },
     {
       key: 'amount', label: 'Amount',
-      render: (r) => <span className="font-mono text-xs text-[#E8C97C]">{(r.amount ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })} {r.currency || ''}</span>,
+      render: (r) => <span className="font-mono text-xs text-[#8F6B2D]">{(r.amount ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })} {r.currency || ''}</span>,
     },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'zinc'}>{r.status || 'pending'}</Badge> },
-    { key: 'payment_date', label: 'Date', hideOnMobile: true, render: (r) => <span className="text-xs text-[#A7AFBA]">{r.payment_date ? fmtDateTime(r.payment_date) : '—'}</span> },
-    { key: 'refund_status', label: 'Refund', hideOnMobile: true, render: (r) => <span className="text-xs text-[#A7AFBA]">{r.refund_status || '—'}</span> },
-    { key: 'webhook_status', label: 'Webhook', hideOnMobile: true, render: (r) => <span className="text-xs text-[#A7AFBA]">{r.webhook_status || '—'}</span> },
+    { key: 'payment_date', label: 'Date', hideOnMobile: true, render: (r) => <span className="text-xs text-[#475569]">{r.payment_date ? fmtDateTime(r.payment_date) : '—'}</span> },
+    { key: 'refund_status', label: 'Refund', hideOnMobile: true, render: (r) => <span className="text-xs text-[#475569]">{r.refund_status || '—'}</span> },
+    { key: 'webhook_status', label: 'Webhook', hideOnMobile: true, render: (r) => <span className="text-xs text-[#475569]">{r.webhook_status || '—'}</span> },
   ];
 
   return (
@@ -85,11 +85,11 @@ export const PaymentsPage: React.FC<AdminPageProps> = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]">
-              <CreditCard size={15} className="text-[#E8C97C]" />
+              <CreditCard size={15} className="text-[#8F6B2D]" />
             </span>
-            <h2 className="font-display text-lg font-bold text-[#F5F6F2]">Payments</h2>
+            <h2 className="font-display text-lg font-bold text-[#111827]">Payments</h2>
           </div>
-          <p className="mt-0.5 text-xs text-[#A7AFBA]">Control section for payment providers — future-ready structure.</p>
+          <p className="mt-0.5 text-xs text-[#475569]">Control section for payment providers — future-ready structure.</p>
         </div>
         <Btn variant="outline" size="sm" icon={RefreshCw} onClick={() => void load(true)} loading={refreshing}>Refresh</Btn>
       </div>
@@ -123,8 +123,8 @@ export const PaymentsPage: React.FC<AdminPageProps> = () => {
           {PROVIDERS.map((p) => (
             <div key={p.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
               <div className="min-w-0">
-                <p className="truncate text-xs font-semibold text-[#F5F6F2]">{p.label}</p>
-                <p className="text-[11px] text-[#6B7280]">Provider slot ready</p>
+                <p className="truncate text-xs font-semibold text-[#111827]">{p.label}</p>
+                <p className="text-[11px] text-[#64748B]">Provider slot ready</p>
               </div>
               <Badge tone="zinc">Not Connected</Badge>
             </div>
@@ -150,8 +150,8 @@ export const PaymentsPage: React.FC<AdminPageProps> = () => {
             mobileCard={(r) => (
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-semibold text-[#F5F6F2]">{r.provider || '—'} · {(r.amount ?? 0).toLocaleString()} {r.currency || ''}</p>
-                  <p className="truncate font-mono text-[11px] text-[#A7AFBA]">{r.customer_email || r.transaction_id || ''}</p>
+                  <p className="truncate text-xs font-semibold text-[#111827]">{r.provider || '—'} · {(r.amount ?? 0).toLocaleString()} {r.currency || ''}</p>
+                  <p className="truncate font-mono text-[11px] text-[#475569]">{r.customer_email || r.transaction_id || ''}</p>
                 </div>
                 <Badge tone={STATUS_TONE[r.status] || 'zinc'}>{r.status || 'pending'}</Badge>
               </div>

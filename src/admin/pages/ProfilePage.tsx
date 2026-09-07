@@ -79,8 +79,8 @@ export const ProfilePage: React.FC<AdminPageProps> = () => {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">Profile</h1>
-        <p className="text-xs text-[#A7AFBA]">Your admin identity, password and session</p>
+        <h1 className="font-display text-xl font-extrabold text-[#111827]">Profile</h1>
+        <p className="text-xs text-[#475569]">Your admin identity, password and session</p>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -96,13 +96,13 @@ export const ProfilePage: React.FC<AdminPageProps> = () => {
                   onError={() => setAvatarBroken(true)}
                 />
               ) : (
-                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[#C9A45C]/40 bg-gradient-to-b from-[#E8C97C]/15 to-transparent font-display text-lg font-extrabold text-[#E8C97C]">
+                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[#C9A45C]/40 bg-gradient-to-b from-[#E8C97C]/15 to-transparent font-display text-lg font-extrabold text-[#8F6B2D]">
                   {initials(user.name || user.email)}
                 </span>
               )}
               <div className="min-w-0">
-                <p className="truncate font-display text-base font-bold text-[#F5F6F2]">{user.name || '—'}</p>
-                <p className="truncate text-xs text-[#A7AFBA]">{user.email}</p>
+                <p className="truncate font-display text-base font-bold text-[#111827]">{user.name || '—'}</p>
+                <p className="truncate text-xs text-[#475569]">{user.email}</p>
                 <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                   <Badge tone="gold"><BadgeCheck size={10} /> {user.role || 'admin'}</Badge>
                   <Badge tone={mode === 'supabase' ? 'green' : mode === 'local' ? 'amber' : 'red'}>{modeLabel(mode)}</Badge>
@@ -120,7 +120,7 @@ export const ProfilePage: React.FC<AdminPageProps> = () => {
               <Input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://…/avatar.jpg" className="font-mono text-xs" inputMode="url" />
             </Field>
             <div className="flex items-center justify-between gap-3">
-              <p className="text-[11px] text-[#566072]">Member since: — <span className="opacity-70">(not exposed by the auth layer)</span></p>
+              <p className="text-[11px] text-[#64748B]">Member since: — <span className="opacity-70">(not exposed by the auth layer)</span></p>
               <Btn variant="gold" icon={Save} onClick={() => void saveProfile()} loading={savingProfile} disabled={!profileDirty || !name.trim()}>Save profile</Btn>
             </div>
           </div>
@@ -157,12 +157,12 @@ export const ProfilePage: React.FC<AdminPageProps> = () => {
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/[0.07] bg-white/[0.02] px-3.5 py-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#6B7280]">Mode</p>
-                  <p className="text-sm font-bold text-[#F5F6F2]">{modeLabel(mode)}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">Mode</p>
+                  <p className="text-sm font-bold text-[#111827]">{modeLabel(mode)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#6B7280]">Signed in as</p>
-                  <p className="font-mono text-xs text-[#E8C97C]">{user.email}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">Signed in as</p>
+                  <p className="font-mono text-xs text-[#8F6B2D]">{user.email}</p>
                 </div>
               </div>
               <Btn
@@ -173,7 +173,7 @@ export const ProfilePage: React.FC<AdminPageProps> = () => {
               >
                 Log out
               </Btn>
-              <p className="text-[11px] text-[#566072]">Logging out clears the stored session token immediately.</p>
+              <p className="text-[11px] text-[#64748B]">Logging out clears the stored session token immediately.</p>
             </div>
           </Card>
         </div>
@@ -188,9 +188,9 @@ export const ProfilePage: React.FC<AdminPageProps> = () => {
             { icon: UserCircle, title: 'No stored passwords', body: 'Sessions never store passwords — tokens are managed by the auth provider and cleared on logout.' },
           ].map((item) => (
             <div key={item.title} className={cx('rounded-xl border border-white/[0.07] bg-white/[0.02] p-3.5')}>
-              <item.icon size={16} className="text-[#C9A45C]" />
-              <p className="mt-2 text-xs font-bold text-[#F5F6F2]">{item.title}</p>
-              <p className="mt-1 text-[11px] leading-relaxed text-[#A7AFBA]">{item.body}</p>
+              <item.icon size={16} className="text-[#8F6B2D]" />
+              <p className="mt-2 text-xs font-bold text-[#111827]">{item.title}</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-[#475569]">{item.body}</p>
             </div>
           ))}
         </div>

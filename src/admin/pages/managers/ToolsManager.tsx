@@ -35,8 +35,8 @@ const columns: Column<ToolRow>[] = [
     sortable: true,
     render: (r) => (
       <div className="min-w-0">
-        <p className="truncate font-semibold text-[#F5F6F2]">{r.name}</p>
-        <p className="truncate font-mono text-[10.5px] text-[#6B7280]">{r.url || `/${r.slug}`}</p>
+        <p className="truncate font-semibold text-[#111827]">{r.name}</p>
+        <p className="truncate font-mono text-[10.5px] text-[#64748B]">{r.url || `/${r.slug}`}</p>
       </div>
     ),
   },
@@ -62,7 +62,7 @@ const columns: Column<ToolRow>[] = [
     label: 'Updated',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="text-[#A7AFBA]">{timeAgo(r.updated_at)}</span>,
+    render: (r) => <span className="text-[#475569]">{timeAgo(r.updated_at)}</span>,
   },
 ];
 

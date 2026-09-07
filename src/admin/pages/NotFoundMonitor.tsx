@@ -73,14 +73,14 @@ export const NotFoundMonitor: React.FC<AdminPageProps> = ({ navigate, refreshBad
   };
 
   const columns: Column<NotFoundRow & { id: string }>[] = [
-    { key: 'path', label: 'Path', render: (r) => <span className="font-mono text-xs text-[#E8C97C]" title={r.path}>{truncate(r.path, 44)}</span> },
-    { key: 'hits', label: 'Hits', render: (r) => <span className="font-extrabold tabular-nums text-[#F5F6F2]">{r.hits}</span> },
-    { key: 'first_seen', label: 'First seen', hideOnMobile: true, render: (r) => <span className="text-xs text-[#A7AFBA]">{fmtDateTime(r.first_seen)}</span> },
+    { key: 'path', label: 'Path', render: (r) => <span className="font-mono text-xs text-[#8F6B2D]" title={r.path}>{truncate(r.path, 44)}</span> },
+    { key: 'hits', label: 'Hits', render: (r) => <span className="font-extrabold tabular-nums text-[#111827]">{r.hits}</span> },
+    { key: 'first_seen', label: 'First seen', hideOnMobile: true, render: (r) => <span className="text-xs text-[#475569]">{fmtDateTime(r.first_seen)}</span> },
     {
       key: 'last_seen',
       label: 'Last seen',
       render: (r) => (
-        <span className="text-xs text-[#A7AFBA]" title={fmtDateTime(r.last_seen)}>
+        <span className="text-xs text-[#475569]" title={fmtDateTime(r.last_seen)}>
           {timeAgo(r.last_seen)}
         </span>
       ),
@@ -110,8 +110,8 @@ export const NotFoundMonitor: React.FC<AdminPageProps> = ({ navigate, refreshBad
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">404 Monitor</h1>
-          <p className="text-xs text-[#A7AFBA]">Unknown routes visitors actually hit — turn them into redirects</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">404 Monitor</h1>
+          <p className="text-xs text-[#475569]">Unknown routes visitors actually hit — turn them into redirects</p>
         </div>
         <div className="flex items-center gap-2">
           <Btn variant="outline" size="sm" onClick={() => void fetchRows()} loading={loading}>Refresh</Btn>
@@ -122,7 +122,7 @@ export const NotFoundMonitor: React.FC<AdminPageProps> = ({ navigate, refreshBad
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <StatTile label="Tracked paths" value={rows.length} sub="distinct 404 URLs" icon={<FileQuestion size={15} className="text-[#C9A45C]" />} />
+        <StatTile label="Tracked paths" value={rows.length} sub="distinct 404 URLs" icon={<FileQuestion size={15} className="text-[#8F6B2D]" />} />
         <StatTile label="Total hits" value={totalHits} sub="all recorded visits" />
         <StatTile
           label="Most-hit path"
@@ -161,7 +161,7 @@ export const NotFoundMonitor: React.FC<AdminPageProps> = ({ navigate, refreshBad
         )}
       </Card>
 
-      <div className="flex items-start gap-2 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#E8C97C]">
+      <div className="flex items-start gap-2 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#8F6B2D]">
         <Info size={13} className="mt-0.5 shrink-0" />
         <p>
           <span className="font-bold uppercase tracking-wider">How tracking works. </span>
@@ -172,12 +172,12 @@ export const NotFoundMonitor: React.FC<AdminPageProps> = ({ navigate, refreshBad
       </div>
 
       {rows.length > 0 && (
-        <p className={cx('text-[11px] text-[#566072]')}>
+        <p className={cx('text-[11px] text-[#64748B]')}>
           Tip: paths with many hits should become 301 redirects to the closest matching page — you keep the visitors and the SEO value.
         </p>
       )}
       {rows.length === 0 && !loading && (
-        <p className="text-[11px] text-[#566072]">Zero tracked paths — the log is empty and no action is needed.</p>
+        <p className="text-[11px] text-[#64748B]">Zero tracked paths — the log is empty and no action is needed.</p>
       )}
 
       <ConfirmDialog
@@ -185,7 +185,7 @@ export const NotFoundMonitor: React.FC<AdminPageProps> = ({ navigate, refreshBad
         onClose={() => setConfirmOne(null)}
         onConfirm={() => void clearOne()}
         title="Clear this path?"
-        message={confirmOne ? <>Remove <span className="font-mono text-[#E8C97C]">{confirmOne.path}</span> ({confirmOne.hits} hits) from the 404 log? If visitors hit it again it will be tracked again.</> : ''}
+        message={confirmOne ? <>Remove <span className="font-mono text-[#8F6B2D]">{confirmOne.path}</span> ({confirmOne.hits} hits) from the 404 log? If visitors hit it again it will be tracked again.</> : ''}
         confirmLabel="Clear path"
         loading={busy}
       />

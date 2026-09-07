@@ -131,9 +131,9 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
     return (
       <div className="max-w-3xl mx-auto px-4 py-24 text-center space-y-6">
         <div className="text-7xl">🧭</div>
-        <h1 className="text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">Tool Not Found</h1>
-        <p className="text-zinc-400 text-sm">
-          The tool <span className="text-[#D4AF37] font-bold">/tools/{slug}</span> is not part of the 136-tool catalog.
+        <h1 className="font-display text-2xl font-extrabold text-[#111827] tracking-tight">Tool Not Found</h1>
+        <p className="text-slate-500 text-sm">
+          The tool <span className="text-[#8F6B2D] font-bold">/tools/{slug}</span> is not part of the 136-tool catalog.
         </p>
         <button
           onClick={() => onNavigate('/tools')}
@@ -155,12 +155,12 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
 
   const renderField = (f: ToolField) => {
     const base =
-      'w-full px-3 py-2.5 bg-[#070A0F] border border-white/10 rounded-lg text-xs text-[#F1F2EE] placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors';
+      'w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#111827] placeholder-[#94A3B8] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors';
     switch (f.type) {
       case 'number':
         return (
           <div key={f.name} className="space-y-1.5">
-            <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest">{f.label}</label>
+            <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">{f.label}</label>
             <input
               id={fieldId(f.name)}
               type="number"
@@ -172,13 +172,13 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
               onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value === '' ? '' : Number(e.target.value) }))}
               className={base}
             />
-            {f.hint && <p className="text-[10px] text-zinc-600">{f.hint}</p>}
+            {f.hint && <p className="text-[10px] text-slate-500">{f.hint}</p>}
           </div>
         );
       case 'text':
         return (
           <div key={f.name} className="space-y-1.5">
-            <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest">{f.label}</label>
+            <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">{f.label}</label>
             <input
               id={fieldId(f.name)}
               type="text"
@@ -187,13 +187,13 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
               onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
               className={base}
             />
-            {f.hint && <p className="text-[10px] text-zinc-600">{f.hint}</p>}
+            {f.hint && <p className="text-[10px] text-slate-500">{f.hint}</p>}
           </div>
         );
       case 'select':
         return (
           <div key={f.name} className="space-y-1.5">
-            <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest">{f.label}</label>
+            <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">{f.label}</label>
             <select
               id={fieldId(f.name)}
               value={String(values[f.name] ?? '')}
@@ -201,23 +201,23 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
               className={`${base} appearance-none cursor-pointer`}
             >
               {f.options.map((o) => (
-                <option key={o.value} value={o.value} className="bg-[#070A0F]">{o.label}</option>
+                <option key={o.value} value={o.value} className="bg-[#F8FAFC]">{o.label}</option>
               ))}
             </select>
-            {f.hint && <p className="text-[10px] text-zinc-600">{f.hint}</p>}
+            {f.hint && <p className="text-[10px] text-slate-500">{f.hint}</p>}
           </div>
         );
       case 'checkbox':
         return (
-          <label key={f.name} htmlFor={fieldId(f.name)} className="flex items-center gap-2.5 px-3 py-2.5 bg-[#070A0F] border border-white/10 rounded-lg cursor-pointer hover:border-white/25 transition-colors">
+          <label key={f.name} htmlFor={fieldId(f.name)} className="flex items-center gap-2.5 px-3 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg cursor-pointer hover:border-[#14B8A6]/40 transition-colors">
             <input
               id={fieldId(f.name)}
               type="checkbox"
               checked={!!values[f.name]}
               onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.checked }))}
-              className="w-4 h-4 accent-[#C9A45C] cursor-pointer"
+              className="w-4 h-4 accent-[#14B8A6] cursor-pointer"
             />
-            <span className="text-[11px] font-bold text-zinc-300">{f.label}</span>
+            <span className="text-[11px] font-bold text-slate-600">{f.label}</span>
           </label>
         );
       default:
@@ -230,26 +230,26 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
       <div className="space-y-6" key={resetTick}>
         <button
           onClick={() => onNavigate('/tools')}
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-[#F1F2EE] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-[#111827] transition-colors"
         >
           ← Back to All 100+ Free Tools
         </button>
 
         {/* Tool header card */}
-        <div className="bg-[#080808] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-6">
-          <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
+        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04)] space-y-6">
+          <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#E2E8F0]">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#D4AF37] text-[10px] font-extrabold uppercase tracking-widest mb-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#14B8A6]/10 border border-[#14B8A6]/25 text-[#0F766E] text-[10px] font-extrabold uppercase tracking-widest mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
                 {tool.category} — Free Utility
               </div>
-              <h1 className="text-xl font-black text-[#F1F2EE] uppercase tracking-tight">{tool.name}</h1>
-              <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{tool.description}</p>
+              <h1 className="font-display text-xl sm:text-2xl font-extrabold text-[#111827] tracking-tight">{tool.name}</h1>
+              <p className="text-[#64748B] text-xs mt-1 leading-relaxed">{tool.description}</p>
             </div>
             <button
               onClick={handleReset}
               title="Reset Inputs"
-              className="p-2 text-zinc-400 hover:text-[#F1F2EE] bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1 shrink-0"
+              className="p-2 text-slate-500 hover:text-[#111827] bg-[#F8FAFC] hover:bg-white border border-[#E2E8F0] rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-1 shrink-0"
             >
               <RotateCcw className="w-4 h-4" />
               <span className="hidden sm:inline">Reset</span>
@@ -257,7 +257,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
           </div>
 
           <div className="space-y-4">
-            <label className="block text-xs font-extrabold text-zinc-300 uppercase tracking-widest">Input &amp; Configuration</label>
+            <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-widest">Input &amp; Configuration</label>
 
             {/* Upload zone */}
             {uploadKind && (
@@ -272,7 +272,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                   if (f) handleFile(f);
                 }}
                 className={`relative flex flex-col items-center justify-center gap-2 py-10 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${
-                  dragOver ? 'border-[#C9A45C] bg-[#C9A45C]/5' : 'border-white/15 hover:border-[#C9A45C]/50 bg-[#070A0F]/50'
+                  dragOver ? 'border-[#14B8A6] bg-[#14B8A6]/5' : 'border-[#CBD5E1] hover:border-[#14B8A6]/50 bg-[#F8FAFC]/60'
                 }`}
               >
                 <input
@@ -284,16 +284,16 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                   key={resetTick}
                 />
                 {uploadKind === 'image' && dataUrl ? (
-                  <img src={dataUrl} alt="Uploaded preview" className="max-h-40 rounded-lg border border-white/10" />
+                  <img src={dataUrl} alt="Uploaded preview" className="max-h-40 rounded-lg border border-[#E2E8F0]" />
                 ) : (
-                  <UploadCloud className={`w-10 h-10 ${file ? 'text-[#D4AF37]' : 'text-zinc-500'}`} />
+                  <UploadCloud className={`w-10 h-10 ${file ? 'text-[#0F766E]' : 'text-[#94A3B8]'}`} />
                 )}
-                <p className="text-xs font-extrabold uppercase tracking-widest text-zinc-200">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-slate-700">
                   {file ? file.name : 'Click or drag file to upload'}
                 </p>
-                <p className="text-[10px] text-zinc-500">{definition.fileHint || 'Runs 100% locally in your browser'}</p>
+                <p className="text-[10px] text-slate-500">{definition.fileHint || 'Runs 100% locally in your browser'}</p>
                 {file && (
-                  <p className="text-[10px] text-emerald-400 font-bold">
+                  <p className="text-[10px] text-emerald-600 font-bold">
                     {(file.size / 1024).toFixed(1)} KB loaded — ready to run
                   </p>
                 )}
@@ -310,16 +310,16 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
             {/* Textareas full width */}
             {textareas.map((f) => (
               <div key={f.name} className="space-y-1.5 mt-3">
-                <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest">{f.label}</label>
+                <label htmlFor={fieldId(f.name)} className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-widest">{f.label}</label>
                 <textarea
                   id={fieldId(f.name)}
                   rows={f.rows || 8}
                   value={String(values[f.name] ?? '')}
                   placeholder={f.placeholder}
                   onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                  className="w-full px-3 py-2.5 bg-[#070A0F] border border-white/10 rounded-lg text-xs text-[#F1F2EE] font-mono placeholder-[#727B87] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors resize-y"
+                  className="w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#111827] font-mono placeholder-[#94A3B8] focus:outline-none focus:border-[#C9A45C]/60 focus:shadow-[0_0_0_3px_rgba(201,164,92,0.08)] transition-colors resize-y"
                 />
-                {f.hint && <p className="text-[10px] text-zinc-600">{f.hint}</p>}
+                {f.hint && <p className="text-[10px] text-slate-500">{f.hint}</p>}
               </div>
             ))}
 
@@ -338,24 +338,24 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
 
         {/* Output */}
         {(result || runError) && (
-          <div className="bg-[#080808] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-4">
+          <div className="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04)] space-y-4">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-extrabold text-zinc-300 uppercase tracking-widest">Tool Output Result</label>
+              <label className="text-xs font-extrabold text-slate-600 uppercase tracking-widest">Tool Output Result</label>
               <div className="flex items-center gap-2">
                 {runError && (
-                  <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full">
+                  <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-red-600 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full">
                     <AlertTriangle className="w-3.5 h-3.5" /> Error
                   </span>
                 )}
                 {result && !runError && (
-                  <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">
+                  <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">
                     <Check className="w-3.5 h-3.5" /> Completed
                   </span>
                 )}
                 {result?.imageDataUrl && (
                   <button
                     onClick={downloadResult}
-                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#F1F2EE] flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-1.5 bg-[#F8FAFC] hover:bg-white border border-[#E2E8F0] rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#111827] flex items-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" /> Download Image
                   </button>
@@ -363,7 +363,7 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                 {result?.downloadDataUrl && (
                   <button
                     onClick={downloadResult}
-                    className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#F1F2EE] flex items-center gap-1.5 transition-colors"
+                    className="px-3 py-1.5 bg-[#F8FAFC] hover:bg-white border border-[#E2E8F0] rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#111827] flex items-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" /> Download {result.downloadMime === 'application/pdf' ? 'PDF' : 'File'}
                   </button>
@@ -371,35 +371,35 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                 <button
                   onClick={copyOutput}
                   disabled={!outputText}
-                  className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#F1F2EE] flex items-center gap-1.5 transition-colors disabled:opacity-40"
+                  className="px-3 py-1.5 bg-[#F8FAFC] hover:bg-white border border-[#E2E8F0] rounded-xl text-[10px] font-extrabold uppercase tracking-widest text-[#111827] flex items-center gap-1.5 transition-colors disabled:opacity-40"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   {copied ? 'Copied' : 'Copy Text'}
                 </button>
               </div>
             </div>
 
             {runError ? (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-bold flex items-start gap-2">
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-bold flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                 {runError}
               </div>
             ) : result && (
               <>
                 {result.imageDataUrl && (
-                  <div className="flex justify-center p-4 bg-[#050505] rounded-xl border border-white/10">
+                  <div className="flex justify-center p-4 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
                     <img src={result.imageDataUrl} alt={`${tool.name} output`} className="max-w-full max-h-96 rounded-lg" />
                   </div>
                 )}
 
                 {result.json !== undefined && (
-                  <pre className="p-4 rounded-xl bg-[#050505] border border-white/10 text-emerald-300/90 text-[11px] leading-relaxed font-mono overflow-x-auto max-h-96 overflow-y-auto whitespace-pre">
+                  <pre className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F766E] text-[11px] leading-relaxed font-mono overflow-x-auto max-h-96 overflow-y-auto whitespace-pre">
                     {JSON.stringify(result.json, null, 2)}
                   </pre>
                 )}
 
                 {result.output && (
-                  <div className={`p-4 rounded-xl bg-[#050505] border border-white/10 ${tool.outputType === 'styled' ? '' : ''}`}>
+                  <div className={`p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] ${tool.outputType === 'styled' ? '' : ''}`}>
                     {tool.outputType === 'styled' ? (
                       <div className="space-y-1.5">
                         {result.output.split('\n').map((line, i) => {
@@ -410,20 +410,20 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                           const isCodeLine = /^[<{[]|^(background-image|Content-Security-Policy|<script|<link|<meta|<IfModule|Redirect|RewriteRule|const |function |SELECT|INSERT|UPDATE|<!DOCTYPE|<?xml)/i.test(trimmed);
                           if (isSection) {
                             return (
-                              <p key={i} className="text-[10px] font-extrabold uppercase tracking-widest text-[#D4AF37] pt-2">{trimmed}</p>
+                              <p key={i} className="text-[10px] font-extrabold uppercase tracking-widest text-[#8F6B2D] pt-2">{trimmed}</p>
                             );
                           }
                           if (isCodeLine || tool.outputType === 'textarea' || tool.outputType === 'text' || tool.outputType === 'file') {
                             return (
-                              <pre key={i} className="font-mono text-[11px] leading-relaxed text-zinc-300 whitespace-pre-wrap break-all">{line || ' '}</pre>
+                              <pre key={i} className="font-mono text-[11px] leading-relaxed text-slate-600 whitespace-pre-wrap break-all">{line || ' '}</pre>
                             );
                           }
                           if (isKv) {
                             const idx = trimmed.indexOf(': ');
                             return (
-                              <p key={i} className="text-xs text-zinc-300 flex flex-wrap gap-x-2">
-                                <span className="font-extrabold text-[#F1F2EE] uppercase tracking-wide text-[11px]">{trimmed.slice(0, idx)}:</span>
-                                <span className="text-zinc-200">{trimmed.slice(idx + 2)}</span>
+                              <p key={i} className="text-xs text-slate-600 flex flex-wrap gap-x-2">
+                                <span className="font-extrabold text-[#111827] uppercase tracking-wide text-[11px]">{trimmed.slice(0, idx)}:</span>
+                                <span className="text-slate-700">{trimmed.slice(idx + 2)}</span>
                               </p>
                             );
                           }
@@ -431,27 +431,27 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
                             const idx = trimmed.indexOf(': ');
                             if (idx > 1) {
                               return (
-                                <p key={i} className="text-xs text-zinc-300 flex flex-wrap gap-x-2 pl-1">
-                                  <span className="font-extrabold text-[#F1F2EE] text-[11px]">{trimmed.slice(0, idx)}:</span>
-                                  <span className="text-zinc-200">{trimmed.slice(idx + 2)}</span>
+                                <p key={i} className="text-xs text-slate-600 flex flex-wrap gap-x-2 pl-1">
+                                  <span className="font-extrabold text-[#111827] text-[11px]">{trimmed.slice(0, idx)}:</span>
+                                  <span className="text-slate-700">{trimmed.slice(idx + 2)}</span>
                                 </p>
                               );
                             }
-                            return <p key={i} className="text-xs text-zinc-200">{trimmed}</p>;
+                            return <p key={i} className="text-xs text-slate-700">{trimmed}</p>;
                           }
                           return (
-                            <p key={i} className="text-xs text-zinc-300 whitespace-pre-wrap">{line || '\u00A0'}</p>
+                            <p key={i} className="text-xs text-slate-600 whitespace-pre-wrap">{line || '\u00A0'}</p>
                           );
                         })}
                       </div>
                     ) : (
-                      <pre className="font-mono text-[11px] leading-relaxed text-zinc-300 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">{result.output}</pre>
+                      <pre className="font-mono text-[11px] leading-relaxed text-slate-600 whitespace-pre-wrap break-all max-h-96 overflow-y-auto">{result.output}</pre>
                     )}
                   </div>
                 )}
 
                 {result.note && (
-                  <p className="text-[10px] text-zinc-500 italic flex items-start gap-1.5">
+                  <p className="text-[10px] text-slate-500 italic flex items-start gap-1.5">
                     <FileText className="w-3 h-3 mt-0.5 shrink-0" /> {result.note}
                   </p>
                 )}
@@ -461,10 +461,10 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
         )}
 
         {/* Privacy strip */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-          <span className="flex items-center gap-1.5"><ImageIcon className="w-3.5 h-3.5 text-[#C9A45C]/60" /> 100% Local Processing</span>
-          <span className="flex items-center gap-1.5"><Play className="w-3.5 h-3.5 text-[#C9A45C]/60" /> No Sign-Up Required</span>
-          <span className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5 text-[#C9A45C]/60" /> Instant Free Results</span>
+        <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <span className="flex items-center gap-1.5"><ImageIcon className="w-3.5 h-3.5 text-[#8F6B2D]/60" /> 100% Local Processing</span>
+          <span className="flex items-center gap-1.5"><Play className="w-3.5 h-3.5 text-[#8F6B2D]/60" /> No Sign-Up Required</span>
+          <span className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5 text-[#8F6B2D]/60" /> Instant Free Results</span>
         </div>
       </div>
     </div>

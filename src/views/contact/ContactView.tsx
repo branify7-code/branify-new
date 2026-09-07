@@ -116,53 +116,53 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
       {/* Header Breadcrumbs & Hero Title */}
-      <div className="space-y-4 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-[#D4AF37]/30 text-xs font-mono text-[#F3E5AB]">
+      <div className="space-y-6 text-center max-w-3xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-xs font-mono text-[#8F6B2D]">
           <button 
             onClick={onNavigateHome} 
-            className="text-[#F1F2EE]/60 hover:text-[#FFF5DC] transition-colors cursor-pointer"
+            className="text-[#64748B] hover:text-[#111827] transition-colors cursor-pointer"
           >
             Home
           </button>
-          <span className="text-[#F1F2EE]/30">/</span>
-          <span className="text-[#D4AF37]">Consultation & Project Inquiry</span>
+          <span className="text-[#CBD5E1]">/</span>
+          <span className="text-[#8F6B2D]">Consultation & Project Inquiry</span>
         </div>
 
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#FFF5DC]">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] leading-[1.08] text-[#111827]">
           Initiate Your <br />
           <span className="text-gold-gradient">Digital Sovereignity</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-[#F1F2EE]/65 font-light leading-relaxed">
+        <p className="text-sm sm:text-lg text-[#475569] font-light leading-relaxed">
           Tell us about your brand vision, architectural requirements, or upcoming product launch. Our senior leadership responds within 24 business hours.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Left Side: Interactive Multi-Step Form */}
-        <div className="lg:col-span-8 rounded-3xl bg-[#0F1015] border border-[#D4AF37]/30 p-6 sm:p-10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <div className="lg:col-span-8 rounded-3xl bg-white border border-[#E2E8F0] p-6 sm:p-10 shadow-[0_24px_60px_-30px_rgba(15,23,42,0.15)]">
           {isSubmitted ? (
             <div className="text-center py-16 space-y-6 animate-fade-in">
-              <div className="w-16 h-16 rounded-2xl bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(212,175,55,0.4)]">
+              <div className="w-16 h-16 rounded-2xl bg-[#C9A45C]/10 border border-[#C9A45C]/40 text-[#8F6B2D] flex items-center justify-center mx-auto shadow-[0_10px_30px_-12px_rgba(201,164,92,0.45)]">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
               <div className="space-y-2">
-                <span className="text-xs font-mono uppercase tracking-widest text-[#D4AF37]">
+                <span className="text-xs font-mono uppercase tracking-widest text-[#8F6B2D]">
                   Inquiry Received & Logged
                 </span>
-                <h2 className="font-display text-3xl font-bold text-[#FFF5DC]">
+                <h2 className="font-display text-3xl font-bold text-[#111827]">
                   Thank You, {name || 'Partner'}.
                 </h2>
-                <p className="text-sm text-[#F1F2EE]/70 max-w-md mx-auto leading-relaxed">
-                  Our principal technology team has received your project briefing. We are preparing a preliminary feasibility audit and will connect at <strong className="text-[#FFF5DC]">{email}</strong>.
+                <p className="text-sm text-[#475569] max-w-md mx-auto leading-relaxed">
+                  Our principal technology team has received your project briefing. We are preparing a preliminary feasibility audit and will connect at <strong className="text-[#111827]">{email}</strong>.
                 </p>
               </div>
 
               <div className="pt-4">
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-[#D4AF37] hover:bg-white/10 transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-white border border-[#E2E8F0] text-xs font-mono text-[#334155] hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] transition-colors cursor-pointer shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
                 >
                   Submit Another Inquiry
                 </button>
@@ -172,7 +172,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Step 1: Services Selection */}
               <div className="space-y-3">
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#D4AF37]">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
                   1. Select Capabilities Needed
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -185,8 +185,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                         onClick={() => toggleService(service)}
                         className={`px-3.5 py-2 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer border ${
                           isSelected
-                            ? 'bg-[#D4AF37] text-[#05080D] font-bold border-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.3)]'
-                            : 'bg-white/[0.03] text-[#F1F2EE]/70 border-white/10 hover:text-[#F1F2EE] hover:border-[#D4AF37]/40'
+                            ? 'bg-[#5B5FEF] text-white font-bold border-[#5B5FEF] shadow-[0_8px_20px_-8px_rgba(91,95,239,0.55)]'
+                            : 'bg-white text-[#475569] border-[#E2E8F0] hover:text-[#5B5FEF] hover:border-[#5B5FEF]/50'
                         }`}
                       >
                         {service}
@@ -198,7 +198,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
 
               {/* Step 2: Budget Brackets */}
               <div className="space-y-3">
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#D4AF37]">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
                   2. Anticipated Investment Bracket
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -209,8 +209,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                       onClick={() => setSelectedBudget(budget)}
                       className={`p-3 rounded-xl text-xs font-mono tracking-wider text-left transition-all cursor-pointer border ${
                         selectedBudget === budget
-                          ? 'bg-[#D4AF37]/20 text-[#FFF5DC] font-bold border-[#D4AF37]'
-                          : 'bg-white/[0.03] text-[#F1F2EE]/70 border-white/10 hover:text-[#F1F2EE]'
+                          ? 'bg-[#EEF2FF] text-[#111827] font-bold border-[#5B5FEF]/60'
+                          : 'bg-white text-[#475569] border-[#E2E8F0] hover:text-[#111827] hover:border-[#CBD5E1]'
                       }`}
                     >
                       {budget}
@@ -221,7 +221,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
 
               {/* Step 3: Target Timeline */}
               <div className="space-y-3">
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#D4AF37]">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
                   3. Launch Timeline
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -232,8 +232,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                       onClick={() => setSelectedTimeline(timeline)}
                       className={`p-3 rounded-xl text-xs font-mono tracking-wider text-left transition-all cursor-pointer border ${
                         selectedTimeline === timeline
-                          ? 'bg-[#D4AF37]/20 text-[#FFF5DC] font-bold border-[#D4AF37]'
-                          : 'bg-white/[0.03] text-[#F1F2EE]/70 border-white/10 hover:text-[#F1F2EE]'
+                          ? 'bg-[#EEF2FF] text-[#111827] font-bold border-[#5B5FEF]/60'
+                          : 'bg-white text-[#475569] border-[#E2E8F0] hover:text-[#111827] hover:border-[#CBD5E1]'
                       }`}
                     >
                       {timeline}
@@ -243,56 +243,56 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
               </div>
 
               {/* Step 4: Contact Details */}
-              <div className="space-y-4 pt-4 border-t border-white/10">
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#D4AF37]">
+              <div className="space-y-4 pt-4 border-t border-[#E2E8F0]">
+                <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
                   4. Your Details & Brief
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-[#F1F2EE]/60">Your Name *</label>
+                    <label className="text-[11px] font-mono text-[#64748B]">Your Name *</label>
                     <input
                       required
                       type="text"
                       placeholder="Alexander Vance"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-xs text-[#F1F2EE] placeholder-white/30 focus:border-[#D4AF37] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl input-light text-xs placeholder-[#94A3B8]"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-[#F1F2EE]/60">Work Email *</label>
+                    <label className="text-[11px] font-mono text-[#64748B]">Work Email *</label>
                     <input
                       required
                       type="email"
                       placeholder="alexander@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-xs text-[#F1F2EE] placeholder-white/30 focus:border-[#D4AF37] focus:outline-none"
+                      className="w-full px-4 py-3 rounded-xl input-light text-xs placeholder-[#94A3B8]"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-mono text-[#F1F2EE]/60">Company / Organization (Optional)</label>
+                  <label className="text-[11px] font-mono text-[#64748B]">Company / Organization (Optional)</label>
                   <input
                     type="text"
                     placeholder="Acme Innovations Corp"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 text-xs text-[#F1F2EE] placeholder-white/30 focus:border-[#D4AF37] focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl input-light text-xs placeholder-[#94A3B8]"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-mono text-[#F1F2EE]/60">Project Goals & Overview</label>
+                  <label className="text-[11px] font-mono text-[#64748B]">Project Goals & Overview</label>
                   <textarea
                     rows={4}
                     placeholder="Provide a brief summary of the objectives, target audience, and key requirements..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full p-4 rounded-xl bg-black/50 border border-white/15 text-xs text-[#F1F2EE] placeholder-white/30 focus:border-[#D4AF37] focus:outline-none resize-none leading-relaxed"
+                    className="w-full p-4 rounded-xl input-light text-xs placeholder-[#94A3B8] resize-none leading-relaxed"
                   />
                 </div>
               </div>
@@ -300,7 +300,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 rounded-xl bg-[#D4AF37] hover:bg-[#E5C378] disabled:opacity-50 text-[#05080D] font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
+                className="w-full py-4 rounded-xl bg-[#D4AF37] hover:bg-[#E5C378] disabled:opacity-50 text-[#05080D] font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_14px_30px_-12px_rgba(201,164,92,0.55)] transition-all cursor-pointer"
               >
                 {isSubmitting ? (
                   <span>Transmitting Brief...</span>
@@ -318,40 +318,40 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
         {/* Right Side: Studio Coordinates & Direct Links */}
         <div className="lg:col-span-4 space-y-6">
           {/* Direct Channels Card */}
-          <div className="rounded-3xl bg-[#0F1015] border border-white/10 p-6 sm:p-8 space-y-6">
-            <h3 className="font-display text-lg font-bold text-[#FFF5DC]">
+          <div className="rounded-3xl bg-gradient-to-b from-[#F0F6FF] to-white border border-[#E2E8F0] p-6 sm:p-8 space-y-6">
+            <h3 className="font-display text-lg font-bold text-[#111827]">
               Direct Contact Lines
             </h3>
 
-            <div className="space-y-4 text-xs text-[#F1F2EE]/80">
+            <div className="space-y-4 text-xs text-[#334155]">
               <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-[#D4AF37] shrink-0">
+                <div className="p-2.5 rounded-xl bg-white border border-[#E2E8F0] text-[#5B5FEF] shrink-0 shadow-sm">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-[#F1F2EE]/40 block">Direct Inquiries</span>
-                  <a href="mailto:hello@branify.store" className="text-[#F1F2EE] hover:text-[#D4AF37] font-mono transition-colors">
+                  <span className="text-[10px] font-mono uppercase text-[#94A3B8] block">Direct Inquiries</span>
+                  <a href="mailto:hello@branify.store" className="text-[#111827] hover:text-[#5B5FEF] font-mono transition-colors">
                     hello@branify.store
                   </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-[#D4AF37] shrink-0">
+                <div className="p-2.5 rounded-xl bg-white border border-[#E2E8F0] text-[#5B5FEF] shrink-0 shadow-sm">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-[#F1F2EE]/40 block">Operating SLA</span>
+                  <span className="text-[10px] font-mono uppercase text-[#94A3B8] block">Operating SLA</span>
                   <span>Monday – Friday | 24-Hour Response</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-[#D4AF37] shrink-0">
+                <div className="p-2.5 rounded-xl bg-white border border-[#E2E8F0] text-[#5B5FEF] shrink-0 shadow-sm">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-[#F1F2EE]/40 block">Confidentiality</span>
+                  <span className="text-[10px] font-mono uppercase text-[#94A3B8] block">Confidentiality</span>
                   <span>Mutual NDA Executed on Request</span>
                 </div>
               </div>
@@ -359,20 +359,20 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
           </div>
 
           {/* Quick Schedule Call Simulation */}
-          <div className="rounded-3xl bg-gradient-to-b from-[#161720] to-[#0F1015] border border-[#D4AF37]/30 p-6 sm:p-8 space-y-4">
-            <div className="flex items-center gap-2 text-[#D4AF37] text-xs font-mono uppercase">
+          <div className="rounded-3xl bg-gradient-to-b from-[#EEF2FF] to-white border border-[#E2E8F0] p-6 sm:p-8 space-y-4">
+            <div className="flex items-center gap-2 text-[#5B5FEF] text-xs font-mono uppercase">
               <Calendar className="w-4 h-4" />
               <span>Priority Discovery</span>
             </div>
-            <h4 className="font-display text-base font-bold text-[#FFF5DC]">
+            <h4 className="font-display text-base font-bold text-[#111827]">
               Prefer a Live Call?
             </h4>
-            <p className="text-xs text-[#F1F2EE]/60 leading-relaxed font-light">
+            <p className="text-xs text-[#475569] leading-relaxed">
               Book an immediate 30-minute technical discovery call directly with our engineering lead.
             </p>
             <a
               href="mailto:consult@branify.store?subject=Schedule%20Discovery%20Call"
-              className="block w-full text-center py-3 rounded-xl bg-white/5 hover:bg-[#D4AF37] hover:text-[#05080D] border border-white/15 text-xs font-mono uppercase tracking-wider text-[#F1F2EE] transition-all cursor-pointer"
+              className="block w-full text-center py-3 rounded-xl bg-white hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] border border-[#E2E8F0] text-xs font-mono uppercase tracking-wider text-[#334155] transition-all cursor-pointer shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
             >
               Request Calendar Invite
             </a>

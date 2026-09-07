@@ -131,14 +131,14 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
       key: 'email',
       label: 'Email',
       sortable: false,
-      render: (r) => <span className="font-mono text-xs text-[#C9CED6]">{r.email}</span>,
+      render: (r) => <span className="font-mono text-xs text-[#94A3B8]">{r.email}</span>,
     },
     {
       key: 'created_at',
       label: 'Subscribed',
       sortable: true,
       hideOnMobile: true,
-      render: (r) => <span className="text-[#A7AFBA]">{fmtDateTime(r.created_at)}</span>,
+      render: (r) => <span className="text-[#475569]">{fmtDateTime(r.created_at)}</span>,
     },
     {
       key: '__actions',
@@ -151,7 +151,7 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
             title="Copy email"
             aria-label={`Copy ${r.email}`}
             onClick={() => void copyEmail(r)}
-            className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79]"
+            className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-[#8F6B2D]"
           >
             <Copy size={14} />
           </button>
@@ -160,7 +160,7 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
             title="Delete subscriber"
             aria-label={`Delete ${r.email}`}
             onClick={() => setConfirmDelete(r)}
-            className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-red-500/10 hover:text-red-300"
+            className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-red-500/10 hover:text-red-300"
           >
             <Trash2 size={14} />
           </button>
@@ -175,15 +175,15 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]"><Users size={15} className="text-[#E8C97C]" /></span>
-            <h2 className="font-display text-lg font-bold text-[#F5F6F2]">Contacts</h2>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]"><Users size={15} className="text-[#8F6B2D]" /></span>
+            <h2 className="font-display text-lg font-bold text-[#111827]">Contacts</h2>
             <Badge tone="gold">{total.toLocaleString()}</Badge>
           </div>
-          <p className="mt-0.5 text-xs text-[#A7AFBA]">Newsletter subscribers collected from the public site footer.</p>
+          <p className="mt-0.5 text-xs text-[#475569]">Newsletter subscribers collected from the public site footer.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative">
-            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#566072]" />
+            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
             <Input
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -200,8 +200,8 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
 
       {/* stat */}
       <div className="grid grid-cols-2 gap-2.5 sm:max-w-md">
-        <StatTile label="Subscribers" value={total.toLocaleString()} icon={<Mail size={15} className="text-[#C9A45C]/70" />} />
-        <StatTile label="Showing" value={`${rows.length} of ${total.toLocaleString()}`} sub={<span className="text-[10.5px] text-[#6B7280]">page {page} · 25 per page</span>} />
+        <StatTile label="Subscribers" value={total.toLocaleString()} icon={<Mail size={15} className="text-[#8F6B2D]/70" />} />
+        <StatTile label="Showing" value={`${rows.length} of ${total.toLocaleString()}`} sub={<span className="text-[10.5px] text-[#64748B]">page {page} · 25 per page</span>} />
       </div>
 
       {/* list */}
@@ -222,8 +222,8 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
             mobileCard={(r) => (
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate font-mono text-xs text-[#F5F6F2]">{r.email}</p>
-                  <p className="text-[11px] text-[#6B7280]">{fmtDateTime(r.created_at)}</p>
+                  <p className="truncate font-mono text-xs text-[#111827]">{r.email}</p>
+                  <p className="text-[11px] text-[#64748B]">{fmtDateTime(r.created_at)}</p>
                 </div>
                 <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()}>
                   <button
@@ -231,7 +231,7 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
                     title="Copy email"
                     aria-label={`Copy ${r.email}`}
                     onClick={() => void copyEmail(r)}
-                    className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.07] hover:text-[#E9CF79]"
+                    className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-[#8F6B2D]"
                   >
                     <Copy size={14} />
                   </button>
@@ -240,7 +240,7 @@ export const ContactsPage: React.FC<AdminPageProps> = () => {
                     title="Delete subscriber"
                     aria-label={`Delete ${r.email}`}
                     onClick={() => setConfirmDelete(r)}
-                    className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-red-500/10 hover:text-red-300"
+                    className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-red-500/10 hover:text-red-300"
                   >
                     <Trash2 size={14} />
                   </button>

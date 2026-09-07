@@ -160,11 +160,11 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
     : [];
 
   const navTiles: Array<{ label: string; value: string; icon: React.ReactNode }> = [
-    { label: 'DNS lookup', value: fmtMs(nav?.dns ?? null), icon: <Wifi size={14} className="text-[#C9A45C]" /> },
-    { label: 'TCP connect', value: fmtMs(nav?.tcp ?? null), icon: <Server size={14} className="text-[#C9A45C]" /> },
-    { label: 'TTFB', value: fmtMs(nav?.ttfb ?? null), icon: <Gauge size={14} className="text-[#C9A45C]" /> },
-    { label: 'DOM content loaded', value: fmtMs(nav?.dcl ?? null), icon: <Cpu size={14} className="text-[#C9A45C]" /> },
-    { label: 'Load event', value: nav?.load != null ? fmtMs(nav.load) : 'pending…', icon: <Layers size={14} className="text-[#C9A45C]" /> },
+    { label: 'DNS lookup', value: fmtMs(nav?.dns ?? null), icon: <Wifi size={14} className="text-[#8F6B2D]" /> },
+    { label: 'TCP connect', value: fmtMs(nav?.tcp ?? null), icon: <Server size={14} className="text-[#8F6B2D]" /> },
+    { label: 'TTFB', value: fmtMs(nav?.ttfb ?? null), icon: <Gauge size={14} className="text-[#8F6B2D]" /> },
+    { label: 'DOM content loaded', value: fmtMs(nav?.dcl ?? null), icon: <Cpu size={14} className="text-[#8F6B2D]" /> },
+    { label: 'Load event', value: nav?.load != null ? fmtMs(nav.load) : 'pending…', icon: <Layers size={14} className="text-[#8F6B2D]" /> },
   ];
 
   const storagePct = storage && storage.quota ? Math.min(100, Math.round((storage.usage / storage.quota) * 100)) : null;
@@ -174,10 +174,10 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
       {/* ---------------------------------------------------------- header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2] sm:text-2xl">
-            Performance <span className="text-[#E8C97C]">— measured live</span>
+          <h1 className="font-display text-xl font-extrabold text-[#111827] sm:text-2xl">
+            Performance <span className="text-[#8F6B2D]">— measured live</span>
           </h1>
-          <p className="mt-1 text-xs text-[#A7AFBA] sm:text-sm">
+          <p className="mt-1 text-xs text-[#475569] sm:text-sm">
             Real metrics from this browser session and the live data layer. Nothing estimated, nothing invented.
           </p>
         </div>
@@ -201,7 +201,7 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
                 <StatTile key={t.label} label={t.label} value={<span className="tabular-nums">{t.value}</span>} icon={t.icon} />
               ))}
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-[10.5px] text-[#6B7280]">
+            <p className="mt-3 flex items-center gap-1.5 text-[10.5px] text-[#64748B]">
               <Info size={11} />
               Measured live in your browser session (dev preview). Production Vercel build sizes may differ.
             </p>
@@ -218,13 +218,13 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
                 <StatTile
                   label="Total requests"
                   value={fmtNumber(res?.totalRequests ?? 0)}
-                  icon={<Layers size={14} className="text-[#C9A45C]" />}
+                  icon={<Layers size={14} className="text-[#8F6B2D]" />}
                 />
                 <StatTile
                   label="Transferred"
                   value={fmtBytes(res?.totalBytes ?? 0)}
-                  sub={<span className="text-[10px] text-[#6B7280]">transferSize as reported by the browser</span>}
-                  icon={<HardDrive size={14} className="text-[#C9A45C]" />}
+                  sub={<span className="text-[10px] text-[#64748B]">transferSize as reported by the browser</span>}
+                  icon={<HardDrive size={14} className="text-[#8F6B2D]" />}
                 />
               </div>
               <HBars
@@ -233,7 +233,7 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
                 emptyLabel="No resource entries in this session"
               />
             </div>
-            <p className="mt-3 text-[10.5px] text-[#6B7280]">
+            <p className="mt-3 text-[10.5px] text-[#64748B]">
               Cross-origin resources without a Timing-Allow-Origin header report 0 transfer bytes — shown as measured.
             </p>
           </Card>
@@ -255,11 +255,11 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
             ) : (
               <>
                 <div className="grid grid-cols-3 gap-3">
-                  <StatTile label="Static pages" value={STATIC_ROUTES} sub={<span className="text-[10px] text-[#6B7280]">home · about · contact · pricing · 5 legal</span>} icon={<Route size={14} className="text-[#C9A45C]" />} />
-                  <StatTile label="Content routes" value={fmtNumber(contentRoutes)} sub={<span className="text-[10px] text-[#6B7280]">services + tools + AI + products + blog</span>} icon={<Layers size={14} className="text-[#C9A45C]" />} />
-                  <StatTile label="Total indexable" value={fmtNumber(totalRoutes)} sub={<span className="text-[10px] text-[#6B7280]">approximate sitemap surface</span>} icon={<Gauge size={14} className="text-[#C9A45C]" />} />
+                  <StatTile label="Static pages" value={STATIC_ROUTES} sub={<span className="text-[10px] text-[#64748B]">home · about · contact · pricing · 5 legal</span>} icon={<Route size={14} className="text-[#8F6B2D]" />} />
+                  <StatTile label="Content routes" value={fmtNumber(contentRoutes)} sub={<span className="text-[10px] text-[#64748B]">services + tools + AI + products + blog</span>} icon={<Layers size={14} className="text-[#8F6B2D]" />} />
+                  <StatTile label="Total indexable" value={fmtNumber(totalRoutes)} sub={<span className="text-[10px] text-[#64748B]">approximate sitemap surface</span>} icon={<Gauge size={14} className="text-[#8F6B2D]" />} />
                 </div>
-                <p className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2 font-mono text-[11px] leading-relaxed text-[#A7AFBA]">
+                <p className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2 font-mono text-[11px] leading-relaxed text-[#475569]">
                   {STATIC_ROUTES} static
                   {contentCounts.map((x) => (
                     <span key={x.label}> + {fmtNumber(x.n)} {x.label.toLowerCase().replace(' (published)', '')}</span>
@@ -280,18 +280,18 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
                     {sw?.registered ? 'Registered' : 'Not registered'}
                   </span>
                 }
-                sub={<span className="text-[10.5px] leading-snug text-[#6B7280]">{sw?.detail}</span>}
-                icon={<Cpu size={14} className="text-[#C9A45C]" />}
+                sub={<span className="text-[10.5px] leading-snug text-[#64748B]">{sw?.detail}</span>}
+                icon={<Cpu size={14} className="text-[#8F6B2D]" />}
               />
               <StatTile
                 label="Origin storage used"
                 value={storage ? fmtBytes(storage.usage) : 'N/A'}
                 sub={
                   storage
-                    ? <span className="text-[10.5px] text-[#6B7280]">{fmtBytes(storage.quota)} quota{storagePct !== null ? ` · ${storagePct}% used` : ''}</span>
-                    : <span className="text-[10.5px] text-[#6B7280]">Storage estimate API unavailable</span>
+                    ? <span className="text-[10.5px] text-[#64748B]">{fmtBytes(storage.quota)} quota{storagePct !== null ? ` · ${storagePct}% used` : ''}</span>
+                    : <span className="text-[10.5px] text-[#64748B]">Storage estimate API unavailable</span>
                 }
-                icon={<HardDrive size={14} className="text-[#C9A45C]" />}
+                icon={<HardDrive size={14} className="text-[#8F6B2D]" />}
               />
             </div>
           </Card>
@@ -300,16 +300,16 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
           <Card title="Not measurable here" subtitle="Honest gaps — no fabricated numbers" bodyClass="pt-1">
             <ul className="flex flex-col gap-2">
               <li className="flex items-start gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-                <Info size={15} className="mt-0.5 shrink-0 text-[#A7AFBA]" />
-                <p className="text-xs leading-relaxed text-[#C9CED6]">
-                  <span className="font-bold text-[#F5F6F2]">Lighthouse scores: N/A</span> — not measurable from inside the admin.
-                  Run <span className="font-mono text-[#E8C97C]">PageSpeed Insights</span> externally against the production URL.
+                <Info size={15} className="mt-0.5 shrink-0 text-[#475569]" />
+                <p className="text-xs leading-relaxed text-[#94A3B8]">
+                  <span className="font-bold text-[#111827]">Lighthouse scores: N/A</span> — not measurable from inside the admin.
+                  Run <span className="font-mono text-[#8F6B2D]">PageSpeed Insights</span> externally against the production URL.
                 </p>
               </li>
               <li className="flex items-start gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-                <Info size={15} className="mt-0.5 shrink-0 text-[#A7AFBA]" />
-                <p className="text-xs leading-relaxed text-[#C9CED6]">
-                  <span className="font-bold text-[#F5F6F2]">Build status: N/A</span> — managed by Vercel; check the Vercel dashboard for deploy state.
+                <Info size={15} className="mt-0.5 shrink-0 text-[#475569]" />
+                <p className="text-xs leading-relaxed text-[#94A3B8]">
+                  <span className="font-bold text-[#111827]">Build status: N/A</span> — managed by Vercel; check the Vercel dashboard for deploy state.
                 </p>
               </li>
             </ul>

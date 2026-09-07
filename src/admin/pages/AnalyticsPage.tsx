@@ -144,20 +144,20 @@ export const AnalyticsPage: React.FC<AdminPageProps> = () => {
       key: 'name', label: 'Event', sortable: true,
       render: (r) => (
         <span className="inline-flex items-center gap-2 font-semibold text-[#EDEFF2]">
-          <Activity size={13} className="text-[#C9A45C]" /> {labelSingular(r.name)}
+          <Activity size={13} className="text-[#8F6B2D]" /> {labelSingular(r.name)}
         </span>
       ),
     },
     {
       key: 'path', label: 'Path',
-      render: (r) => <span className="font-mono text-[11.5px] text-[#A7AFBA]">{truncate(r.path || '/', 42)}</span>,
+      render: (r) => <span className="font-mono text-[11.5px] text-[#475569]">{truncate(r.path || '/', 42)}</span>,
     },
-    { key: 'created_at', label: 'When', sortable: true, render: (r) => <span className="tabular-nums text-[#A7AFBA]">{timeAgo(r.created_at)}</span> },
+    { key: 'created_at', label: 'When', sortable: true, render: (r) => <span className="tabular-nums text-[#475569]">{timeAgo(r.created_at)}</span> },
     {
       key: 'meta', label: 'Meta', hideOnMobile: true,
       render: (r) => {
         const json = r.meta && Object.keys(r.meta).length ? JSON.stringify(r.meta) : '—';
-        return <span className="font-mono text-[10.5px] text-[#566072]" title={json}>{truncate(json, 46)}</span>;
+        return <span className="font-mono text-[10.5px] text-[#64748B]" title={json}>{truncate(json, 46)}</span>;
       },
     },
   ];
@@ -197,10 +197,10 @@ export const AnalyticsPage: React.FC<AdminPageProps> = () => {
       {/* ---------------------------------------------------------- header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2] sm:text-2xl">
-            Analytics <span className="text-[#E8C97C]">— first-party events</span>
+          <h1 className="font-display text-xl font-extrabold text-[#111827] sm:text-2xl">
+            Analytics <span className="text-[#8F6B2D]">— first-party events</span>
           </h1>
-          <p className="mt-1 text-xs text-[#A7AFBA] sm:text-sm">
+          <p className="mt-1 text-xs text-[#475569] sm:text-sm">
             Real interactions recorded by the live BRANIFY site. No cookies, no cross-site tracking.
           </p>
         </div>
@@ -240,16 +240,16 @@ export const AnalyticsPage: React.FC<AdminPageProps> = () => {
         <StatTile
           label={`Events · ${days}d`}
           value={inRange.length.toLocaleString()}
-          sub={<span className="text-[10.5px] text-[#6B7280]">of {total.toLocaleString()} recorded total</span>}
-          icon={<BarChart3 size={14} className="text-[#C9A45C]" />}
+          sub={<span className="text-[10.5px] text-[#64748B]">of {total.toLocaleString()} recorded total</span>}
+          icon={<BarChart3 size={14} className="text-[#8F6B2D]" />}
         />
         {funnel.map((f) => (
           <StatTile
             key={f.label}
             label={f.label}
             value={f.value.toLocaleString()}
-            sub={<span className="text-[10.5px] text-[#6B7280]">last {days} days</span>}
-            icon={<MousePointerClick size={14} className="text-[#C9A45C]" />}
+            sub={<span className="text-[10.5px] text-[#64748B]">last {days} days</span>}
+            icon={<MousePointerClick size={14} className="text-[#8F6B2D]" />}
           />
         ))}
       </div>
@@ -289,7 +289,7 @@ export const AnalyticsPage: React.FC<AdminPageProps> = () => {
         subtitle={total > 0 ? `Latest ${Math.min(TABLE_PAGE_SIZE, total)} of ${total.toLocaleString()} recorded events` : 'Nothing recorded yet'}
         bodyClass="pt-1"
       >
-        <p className="mb-3 flex items-center gap-1.5 text-[10.5px] text-[#6B7280]">
+        <p className="mb-3 flex items-center gap-1.5 text-[10.5px] text-[#64748B]">
           <Database size={11} />
           Charts aggregate the latest 200 events; the table pages through the full store server-side.
         </p>
@@ -312,12 +312,12 @@ export const AnalyticsPage: React.FC<AdminPageProps> = () => {
             mobileCard={(r) => (
               <div className="flex flex-col gap-1">
                 <span className="flex items-center justify-between gap-2">
-                  <span className="flex items-center gap-1.5 text-[13px] font-semibold text-[#F5F6F2]">
-                    <Activity size={12} className="text-[#C9A45C]" /> {labelSingular(r.name)}
+                  <span className="flex items-center gap-1.5 text-[13px] font-semibold text-[#111827]">
+                    <Activity size={12} className="text-[#8F6B2D]" /> {labelSingular(r.name)}
                   </span>
-                  <span className="text-[10.5px] tabular-nums text-[#6B7280]">{timeAgo(r.created_at)}</span>
+                  <span className="text-[10.5px] tabular-nums text-[#64748B]">{timeAgo(r.created_at)}</span>
                 </span>
-                <span className="truncate font-mono text-[10.5px] text-[#A7AFBA]">{truncate(r.path || '/', 36)}</span>
+                <span className="truncate font-mono text-[10.5px] text-[#475569]">{truncate(r.path || '/', 36)}</span>
               </div>
             )}
           />

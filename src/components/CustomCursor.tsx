@@ -80,13 +80,13 @@ export const CustomCursor: React.FC = () => {
         <div
           className={`rounded-full transition-all duration-200 ${
             isHovered
-              ? 'w-2 h-2 bg-[#F3E5AB] shadow-[0_0_12px_#D4AF37]'
-              : 'w-1.5 h-1.5 bg-[#D4AF37]'
+              ? 'w-2 h-2 bg-[#4F46E5] shadow-[0_0_12px_rgba(91,95,239,0.65)]'
+              : 'w-1.5 h-1.5 bg-[#5B5FEF]'
           }`}
         />
       </div>
 
-      {/* Smooth Trailing Gold Ring */}
+      {/* Smooth Trailing Ring */}
       <div
         className="fixed top-0 left-0 pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ease-out"
         style={{
@@ -96,8 +96,8 @@ export const CustomCursor: React.FC = () => {
         <div
           className={`rounded-full border transition-all duration-300 ${
             isHovered
-              ? 'w-9 h-9 border-[#D4AF37] bg-[#D4AF37]/10 shadow-[0_0_20px_rgba(212,175,55,0.3)]'
-              : 'w-7 h-7 border-[#D4AF37]/35'
+              ? 'w-9 h-9 border-[#5B5FEF] bg-[#5B5FEF]/10 shadow-[0_0_20px_rgba(91,95,239,0.25)]'
+              : 'w-7 h-7 border-[#5B5FEF]/40'
           }`}
         />
       </div>

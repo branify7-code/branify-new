@@ -108,8 +108,8 @@ const UrlPreview: React.FC<{ url: string; label: string; size?: 'sm' | 'md' }> =
         {broken ? <X size={14} className="text-red-400" /> : <img src={url} alt={`${label} preview`} className="h-full w-full object-contain p-1" onError={() => setBroken(true)} />}
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280]">{label}</p>
-        <p className="truncate font-mono text-[11px] text-[#A7AFBA]" title={url}>{url}</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">{label}</p>
+        <p className="truncate font-mono text-[11px] text-[#475569]" title={url}>{url}</p>
       </div>
     </div>
   );
@@ -225,8 +225,8 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">Settings</h1>
-          <p className="text-xs text-[#A7AFBA]">Stored in the settings table — each section saves independently</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">Settings</h1>
+          <p className="text-xs text-[#475569]">Stored in the settings table — each section saves independently</p>
         </div>
         {anyDirty && <Badge tone="amber">Unsaved changes somewhere</Badge>}
       </div>
@@ -241,8 +241,8 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
             className={cx(
               'inline-flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-bold transition-all',
               tab === s.id
-                ? 'border-[#C9A45C]/60 bg-gradient-to-b from-[#E8C97C]/20 to-[#C9A45C]/[0.06] text-[#E9CF79]'
-                : 'border-white/[0.07] bg-white/[0.02] text-[#A7AFBA] hover:border-white/15 hover:text-[#F5F6F2]',
+                ? 'border-[#C9A45C]/60 bg-gradient-to-b from-[#E8C97C]/20 to-[#C9A45C]/[0.06] text-[#8F6B2D]'
+                : 'border-white/[0.07] bg-white/[0.02] text-[#475569] hover:border-white/15 hover:text-[#111827]',
             )}
           >
             {s.label}
@@ -309,7 +309,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
 
           <div className="mt-5">
             <div className="mb-2 flex items-center justify-between">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">Offices</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Offices</p>
               <Btn
                 size="sm"
                 variant="outline"
@@ -366,7 +366,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
             {SOCIAL_FIELDS.map((f) => (
               <Field key={f.key} label={f.label}>
                 <div className="relative">
-                  <Link2 size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#566072]" />
+                  <Link2 size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
                   <Input
                     value={drafts.social[f.key] || ''}
                     onChange={(e) => patch('social', { [f.key]: e.target.value } as Partial<Record<string, string>>)}
@@ -419,7 +419,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
               />
             </Field>
           </div>
-          <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#E8C97C]">
+          <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#8F6B2D]">
             <Info size={13} className="mt-0.5 shrink-0" />
             <p>
               <span className="font-bold uppercase tracking-wider">How these are used. </span>
@@ -462,18 +462,18 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
               <div className="flex items-center justify-between gap-2">
-                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]"><Database size={12} /> Supabase project</p>
+                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]"><Database size={12} /> Supabase project</p>
                 <Badge tone={mode === 'supabase' ? 'green' : 'zinc'}>{mode === 'supabase' ? 'Connected' : 'Standby'}</Badge>
               </div>
-              <p className="mt-2 truncate font-mono text-xs text-[#E8C97C]" title={supabaseHost}>{supabaseHost}</p>
-              <p className="mt-0.5 text-[11px] text-[#6B7280]">Project ref: <span className="font-mono">{projectRef}</span></p>
+              <p className="mt-2 truncate font-mono text-xs text-[#8F6B2D]" title={supabaseHost}>{supabaseHost}</p>
+              <p className="mt-0.5 text-[11px] text-[#64748B]">Project ref: <span className="font-mono">{projectRef}</span></p>
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
               <div className="flex items-center justify-between gap-2">
-                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]"><ShieldCheck size={12} /> Admin mode</p>
+                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]"><ShieldCheck size={12} /> Admin mode</p>
                 <Badge tone={mode === 'supabase' ? 'green' : mode === 'local' ? 'amber' : 'red'}>{modeLabel(mode)}</Badge>
               </div>
-              <p className="mt-2 text-[11px] leading-relaxed text-[#6B7280]">
+              <p className="mt-2 text-[11px] leading-relaxed text-[#64748B]">
                 {mode === 'local'
                   ? `Local preview API is serving the dashboard (dev only, port ${LOCAL_API_PORT} via the gateway).`
                   : mode === 'supabase'
@@ -482,13 +482,13 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
               </p>
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
-              <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]"><ExternalLink size={12} /> Local preview API</p>
-              <p className="mt-2 text-xs font-bold text-[#F5F6F2]">{mode === 'local' ? 'Online' : 'Not used in this mode'}</p>
-              <p className="mt-0.5 text-[11px] text-[#6B7280]">Dev-only Bun + SQLite API · compiled out of production builds.</p>
+              <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]"><ExternalLink size={12} /> Local preview API</p>
+              <p className="mt-2 text-xs font-bold text-[#111827]">{mode === 'local' ? 'Online' : 'Not used in this mode'}</p>
+              <p className="mt-0.5 text-[11px] text-[#64748B]">Dev-only Bun + SQLite API · compiled out of production builds.</p>
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">Gemini API key</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Gemini API key</p>
                 {geminiConfigured === null ? (
                   <Badge tone="zinc">—</Badge>
                 ) : geminiConfigured ? (
@@ -497,7 +497,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
                   <Badge tone="zinc">Not detected</Badge>
                 )}
               </div>
-              <p className="mt-2 text-[11px] leading-relaxed text-[#6B7280]">
+              <p className="mt-2 text-[11px] leading-relaxed text-[#64748B]">
                 Presence only, derived from the build environment. Key values are NEVER read, stored or displayed here.
               </p>
             </div>

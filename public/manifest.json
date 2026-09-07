@@ -1,6 +1,6 @@
 {
-  "short_name": "Branify",
-  "name": "Branify — Luxury Digital Studio & Futuristic Technology",
+  "short_name": "BRANIFY",
+  "name": "BRANIFY \u2014 Creative Digital Agency",
   "icons": [
     {
       "src": "/assets/icon-192.png",
@@ -16,9 +16,14 @@
     }
   ],
   "start_url": "/",
-  "background_color": "#08090B",
-  "theme_color": "#D4AF37",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "categories": ["business", "productivity", "utilities", "design"]
+  "categories": [
+    "business",
+    "productivity",
+    "utilities",
+    "design"
+  ]
 }

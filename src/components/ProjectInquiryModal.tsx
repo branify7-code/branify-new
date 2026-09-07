@@ -74,23 +74,23 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/80 backdrop-blur-xl animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-[#0B1120]/40 backdrop-blur-sm animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-inquiry-title"
     >
       <div
-        className="relative w-full max-w-3xl bg-[#0F1015] border border-[#D4AF37]/30 rounded-2xl p-6 md:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.8)] overflow-hidden"
+        className="relative w-full max-w-3xl bg-white border border-[#E2E8F0] rounded-2xl p-6 md:p-10 shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Subtle background ambient gold glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none" />
+        {/* Subtle background ambient indigo glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#5B5FEF]/[0.05] rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button
           id="close-inquiry-modal-btn"
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full border border-white/10 hover:border-[#D4AF37]/50 text-[#F1F2EE]/60 hover:text-[#F1F2EE] transition-colors"
+          className="absolute top-6 right-6 p-2 rounded-full border border-[#E2E8F0] hover:border-[#CBD5E1] text-[#64748B] hover:text-[#111827] transition-colors"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
@@ -98,14 +98,14 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
 
         {isSubmitted ? (
           <div className="py-12 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37]">
+            <div className="w-16 h-16 mx-auto rounded-full bg-[#EEF2FF] border border-[#E0E7FF] flex items-center justify-center text-[#5B5FEF]">
               <CheckCircle className="w-8 h-8" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-display text-2xl md:text-3xl font-bold text-[#FFF5DC]">
+              <h3 className="font-display text-2xl md:text-3xl font-bold text-[#111827]">
                 Project Brief Received
               </h3>
-              <p className="text-[#F1F2EE]/60 text-sm md:text-base max-w-md mx-auto">
+              <p className="text-[#64748B] text-sm md:text-base max-w-md mx-auto">
                 Thank you, {formData.name || 'valued partner'}. Our strategic team will review your requirements and respond within 24 hours with an actionable roadmap.
               </p>
             </div>
@@ -113,7 +113,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
               <button
                 id="done-inquiry-btn"
                 onClick={handleReset}
-                className="px-8 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-sm tracking-wide transition-all shadow-[0_0_25px_rgba(212,175,55,0.3)]"
+                className="px-8 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-sm tracking-wide transition-all shadow-[0_12px_26px_-12px_rgba(201,164,92,0.6)]"
               >
                 Close & Return
               </button>
@@ -123,14 +123,14 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
           <div>
             {/* Header */}
             <div className="mb-8 space-y-2">
-              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#D4AF37]">
+              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#8F6B2D]">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Branify Strategic Consultation</span>
               </div>
-              <h2 id="modal-inquiry-title" className="font-display text-2xl md:text-3xl font-bold text-[#FFF5DC]">
+              <h2 id="modal-inquiry-title" className="font-display text-2xl md:text-3xl font-bold text-[#111827]">
                 Start a New Project
               </h2>
-              <p className="text-[#F1F2EE]/60 text-sm">
+              <p className="text-[#111827]/60 text-sm">
                 Step {step} of 3 — {step === 1 ? 'Select Capabilities' : step === 2 ? 'Budget & Timeline' : 'Project & Contact Details'}
               </p>
             </div>
@@ -138,7 +138,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
             {/* Step 1: Capabilities Selection */}
             {step === 1 && (
               <div className="space-y-6">
-                <p className="text-xs uppercase tracking-widest text-[#F1F2EE]/50">
+                <p className="text-xs uppercase tracking-widest text-[#64748B]">
                   Select all services relevant to your vision:
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-64 overflow-y-auto pr-1">
@@ -151,11 +151,11 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                         onClick={() => toggleService(svc.id)}
                         className={`p-3 rounded-xl text-left border transition-all text-xs flex flex-col justify-between h-20 ${
                           active
-                            ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-[#FFF5DC] shadow-[0_0_15px_rgba(212,175,55,0.15)]'
-                            : 'border-white/10 bg-white/[0.02] text-[#F1F2EE]/70 hover:border-white/20'
+                            ? 'border-[#5B5FEF] bg-[#EEF2FF] text-[#111827] shadow-[0_8px_20px_-10px_rgba(91,95,239,0.45)]'
+                            : 'border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1]'
                         }`}
                       >
-                        <span className="font-mono text-[10px] text-[#F1F2EE]/40">{svc.number}</span>
+                        <span className="font-mono text-[10px] text-[#94A3B8]">{svc.number}</span>
                         <span className="font-medium truncate">{svc.title}</span>
                       </button>
                     );
@@ -167,7 +167,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                     id="step1-next-btn"
                     onClick={() => setStep(2)}
                     disabled={selectedServices.length === 0}
-                    className="px-6 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] disabled:opacity-40 disabled:cursor-not-allowed text-[#05080D] font-semibold text-sm tracking-wide flex items-center gap-2 transition-all"
+                    className="px-6 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] disabled:opacity-40 disabled:cursor-not-allowed text-[#05080D] font-semibold text-sm tracking-wide flex items-center gap-2 transition-all shadow-[0_12px_26px_-12px_rgba(201,164,92,0.6)]"
                   >
                     <span>Next: Parameters</span>
                     <ArrowRight className="w-4 h-4" />
@@ -180,7 +180,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
             {step === 2 && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#F1F2EE]/50 mb-3">
+                  <label className="block text-xs uppercase tracking-widest text-[#64748B] mb-3">
                     Anticipated Investment Range
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -191,8 +191,8 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                         onClick={() => setBudget(b)}
                         className={`p-3 rounded-xl border text-xs font-medium text-center transition-all ${
                           budget === b
-                            ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-[#FFF5DC]'
-                            : 'border-white/10 bg-white/[0.02] text-[#F1F2EE]/70 hover:border-white/20'
+                            ? 'border-[#5B5FEF] bg-[#EEF2FF] text-[#111827]'
+                            : 'border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1]'
                         }`}
                       >
                         {b}
@@ -202,7 +202,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#F1F2EE]/50 mb-3">
+                  <label className="block text-xs uppercase tracking-widest text-[#64748B] mb-3">
                     Target Deployment Timeline
                   </label>
                   <div className="grid grid-cols-3 gap-2.5">
@@ -213,8 +213,8 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                         onClick={() => setTimeline(t)}
                         className={`p-3 rounded-xl border text-xs font-medium text-center transition-all ${
                           timeline === t
-                            ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-[#FFF5DC]'
-                            : 'border-white/10 bg-white/[0.02] text-[#F1F2EE]/70 hover:border-white/20'
+                            ? 'border-[#5B5FEF] bg-[#EEF2FF] text-[#111827]'
+                            : 'border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1]'
                         }`}
                       >
                         {t}
@@ -227,14 +227,14 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                   <button
                     id="step2-back-btn"
                     onClick={() => setStep(1)}
-                    className="px-5 py-2.5 rounded-full border border-white/20 text-[#F1F2EE]/70 hover:text-[#F1F2EE] text-xs"
+                    className="px-5 py-2.5 rounded-full border border-[#E2E8F0] text-[#475569] hover:text-[#111827] text-xs"
                   >
                     Back
                   </button>
                   <button
                     id="step2-next-btn"
                     onClick={() => setStep(3)}
-                    className="px-6 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-sm tracking-wide flex items-center gap-2 transition-all"
+                    className="px-6 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-sm tracking-wide flex items-center gap-2 transition-all shadow-[0_12px_26px_-12px_rgba(201,164,92,0.6)]"
                   >
                     <span>Next: Details</span>
                     <ArrowRight className="w-4 h-4" />
@@ -248,48 +248,48 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-[#F1F2EE]/60 mb-1">Your Name *</label>
+                    <label className="block text-xs text-[#64748B] mb-1">Your Name *</label>
                     <input
                       required
                       type="text"
                       placeholder="e.g. Julian Hayes"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#F1F2EE] text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl input-light text-sm placeholder-[#94A3B8]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#F1F2EE]/60 mb-1">Work Email *</label>
+                    <label className="block text-xs text-[#64748B] mb-1">Work Email *</label>
                     <input
                       required
                       type="email"
                       placeholder="julian@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#F1F2EE] text-sm"
+                      className="w-full px-4 py-2.5 rounded-xl input-light text-sm placeholder-[#94A3B8]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs text-[#F1F2EE]/60 mb-1">Company / Brand Name</label>
+                  <label className="block text-xs text-[#64748B] mb-1">Company / Brand Name</label>
                   <input
                     type="text"
                     placeholder="e.g. Apex Luxury Ltd."
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#F1F2EE] text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl input-light text-sm placeholder-[#94A3B8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-[#F1F2EE]/60 mb-1">Project Objectives & Scope</label>
+                  <label className="block text-xs text-[#64748B] mb-1">Project Objectives & Scope</label>
                   <textarea
                     rows={3}
                     placeholder="Tell us about what you are aiming to build, key challenges, or existing benchmarks..."
                     value={formData.projectDetails}
                     onChange={(e) => setFormData({ ...formData, projectDetails: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#F1F2EE] text-sm resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl input-light text-sm placeholder-[#94A3B8] resize-none"
                   />
                 </div>
 
@@ -298,7 +298,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                     id="step3-back-btn"
                     type="button"
                     onClick={() => setStep(2)}
-                    className="px-5 py-2.5 rounded-full border border-white/20 text-[#F1F2EE]/70 hover:text-[#F1F2EE] text-xs"
+                    className="px-5 py-2.5 rounded-full border border-[#E2E8F0] text-[#475569] hover:text-[#111827] text-xs"
                   >
                     Back
                   </button>
@@ -306,7 +306,7 @@ export const ProjectInquiryModal: React.FC<ProjectInquiryModalProps> = ({
                     id="submit-inquiry-btn"
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-8 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-sm tracking-wide flex items-center gap-2 transition-all shadow-[0_0_25px_rgba(212,175,55,0.3)] disabled:opacity-50"
+                    className="px-8 py-3 rounded-full bg-[#D4AF37] hover:bg-[#E5C378] text-[#05080D] font-semibold text-sm tracking-wide flex items-center gap-2 transition-all shadow-[0_12px_26px_-12px_rgba(201,164,92,0.6)] disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <span>Dispatching Brief...</span>

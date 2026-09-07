@@ -22,10 +22,10 @@ export const Btn: React.FC<
   const sizes = size === 'sm' ? 'h-8 px-3 text-xs' : 'h-10 px-4 text-sm';
   const variants: Record<BtnVariant, string> = {
     gold: 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206] hover:brightness-110 shadow-[0_2px_14px_-4px_rgba(201,164,92,0.5)] border border-[#E8C97C]/60',
-    ghost: 'text-[#A7AFBA] hover:text-[#F5F6F2] hover:bg-white/[0.05]',
-    outline: 'border border-[rgba(201,164,92,0.25)] text-[#D8DCE2] hover:border-[rgba(201,164,92,0.55)] hover:text-[#E9CF79] bg-white/[0.02]',
+    ghost: 'text-[#475569] hover:text-[#111827] hover:bg-white/[0.05]',
+    outline: 'border border-[rgba(201,164,92,0.25)] text-[#CBD5E1] hover:border-[rgba(201,164,92,0.55)] hover:text-[#8F6B2D] bg-white/[0.02]',
     danger: 'border border-red-500/30 text-red-300 hover:bg-red-500/10 hover:border-red-500/60',
-    subtle: 'bg-white/[0.05] text-[#D8DCE2] hover:bg-white/[0.09] border border-transparent',
+    subtle: 'bg-white/[0.05] text-[#CBD5E1] hover:bg-white/[0.09] border border-transparent',
   };
   return (
     <button className={cx(base, sizes, variants[variant], className)} disabled={disabled || loading} {...rest}>
@@ -44,12 +44,12 @@ export const Card: React.FC<{
   bodyClass?: string;
   children: React.ReactNode;
 }> = ({ title, subtitle, actions, className, bodyClass, children }) => (
-  <section className={cx('rounded-2xl border border-[rgba(201,164,92,0.16)] bg-[#07101A]/85 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]', className)}>
+  <section className={cx('rounded-2xl border border-[rgba(201,164,92,0.16)] bg-[#F8FAFC]/85 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]', className)}>
     {(title || actions) && (
       <header className="flex items-center justify-between gap-3 px-4 pt-4 pb-3 sm:px-5">
         <div className="min-w-0">
           {title && <h2 className="text-[13px] font-bold uppercase tracking-[0.14em] text-[#E9DCBF]">{title}</h2>}
-          {subtitle && <p className="mt-0.5 text-xs text-[#A7AFBA]">{subtitle}</p>}
+          {subtitle && <p className="mt-0.5 text-xs text-[#475569]">{subtitle}</p>}
         </div>
         {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
       </header>
@@ -61,12 +61,12 @@ export const Card: React.FC<{
 // ------------------------------------------------------------------ Badges
 export type BadgeTone = 'gold' | 'green' | 'amber' | 'red' | 'steel' | 'zinc' | 'violet';
 const BADGE_TONES: Record<BadgeTone, string> = {
-  gold: 'bg-[#C9A45C]/15 text-[#E8C97C] border-[#C9A45C]/35',
+  gold: 'bg-[#C9A45C]/15 text-[#8F6B2D] border-[#C9A45C]/35',
   green: 'bg-emerald-500/12 text-emerald-300 border-emerald-500/30',
   amber: 'bg-amber-500/12 text-amber-300 border-amber-500/30',
   red: 'bg-red-500/12 text-red-300 border-red-500/30',
   steel: 'bg-slate-400/12 text-slate-300 border-slate-400/25',
-  zinc: 'bg-white/[0.06] text-[#A7AFBA] border-white/10',
+  zinc: 'bg-white/[0.06] text-[#475569] border-[#E2E8F0]',
   violet: 'bg-purple-500/12 text-purple-300 border-purple-500/30',
 };
 export const Badge: React.FC<{ tone?: BadgeTone; className?: string; children: React.ReactNode }> = ({ tone = 'zinc', className, children }) => (
@@ -83,22 +83,22 @@ export const LEAD_STATUS_TONE: Record<string, BadgeTone> = {
 export const Field: React.FC<{ label: string; hint?: string; error?: string; counter?: string; required?: boolean; className?: string; children: React.ReactNode }> = ({ label, hint, error, counter, required, className, children }) => (
   <label className={cx('block', className)}>
     <span className="mb-1.5 flex items-center justify-between gap-2">
-      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">
-        {label} {required && <span className="text-[#C9A45C]">*</span>}
+      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">
+        {label} {required && <span className="text-[#8F6B2D]">*</span>}
       </span>
-      {counter && <span className="text-[10px] tabular-nums text-[#6B7280]">{counter}</span>}
+      {counter && <span className="text-[10px] tabular-nums text-[#64748B]">{counter}</span>}
     </span>
     {children}
     {error ? (
       <span className="mt-1 block text-[11px] font-medium text-red-300">{error}</span>
     ) : hint ? (
-      <span className="mt-1 block text-[11px] text-[#6B7280]">{hint}</span>
+      <span className="mt-1 block text-[11px] text-[#64748B]">{hint}</span>
     ) : null}
   </label>
 );
 
 const inputCls =
-  'w-full rounded-lg border border-white/10 bg-[#04070C]/80 px-3 py-2 text-sm text-[#F5F6F2] placeholder-[#5A6472] outline-none transition-colors focus:border-[#C9A45C]/60 focus:ring-2 focus:ring-[#C9A45C]/15 disabled:opacity-50';
+  'w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 px-3 py-2 text-sm text-[#111827] placeholder-[#5A6472] outline-none transition-colors focus:border-[#C9A45C]/60 focus:ring-2 focus:ring-[#C9A45C]/15 disabled:opacity-50';
 
 export const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ className, ...rest }) => (
   <input className={cx(inputCls, 'h-10', className)} {...rest} />
@@ -124,7 +124,7 @@ export const Toggle: React.FC<{ checked: boolean; onChange: (v: boolean) => void
     onClick={() => onChange(!checked)}
     className={cx(
       'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors disabled:opacity-50',
-      checked ? 'border-[#C9A45C]/60 bg-[#C9A45C]/30' : 'border-white/10 bg-white/[0.06]',
+      checked ? 'border-[#C9A45C]/60 bg-[#C9A45C]/30' : 'border-[#E2E8F0] bg-white/[0.06]',
     )}
   >
     <span className={cx('inline-block h-4 w-4 transform rounded-full transition-transform', checked ? 'translate-x-6 bg-[#E8C97C]' : 'translate-x-1 bg-[#8B93A1]')} />
@@ -140,11 +140,11 @@ export const ChipsInput: React.FC<{ value: string[]; onChange: (v: string[]) => 
   };
   return (
     <Field label={label || 'Tags'} hint={hint}>
-      <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-white/10 bg-[#04070C]/80 p-2">
+      <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 p-2">
         {value.map((t) => (
-          <span key={t} className="inline-flex items-center gap-1 rounded-md bg-[#C9A45C]/15 px-2 py-0.5 text-xs text-[#E8C97C]">
+          <span key={t} className="inline-flex items-center gap-1 rounded-md bg-[#C9A45C]/15 px-2 py-0.5 text-xs text-[#8F6B2D]">
             {t}
-            <button type="button" aria-label={`Remove ${t}`} onClick={() => onChange(value.filter((x) => x !== t))} className="text-[#A7AFBA] hover:text-red-300">
+            <button type="button" aria-label={`Remove ${t}`} onClick={() => onChange(value.filter((x) => x !== t))} className="text-[#475569] hover:text-red-300">
               <X size={11} />
             </button>
           </span>
@@ -158,7 +158,7 @@ export const ChipsInput: React.FC<{ value: string[]; onChange: (v: string[]) => 
           }}
           onBlur={commit}
           placeholder={placeholder || 'Type and press Enter'}
-          className="min-w-[120px] flex-1 bg-transparent px-1 py-0.5 text-sm text-[#F5F6F2] outline-none placeholder-[#5A6472]"
+          className="min-w-[120px] flex-1 bg-transparent px-1 py-0.5 text-sm text-[#111827] outline-none placeholder-[#5A6472]"
         />
       </div>
     </Field>
@@ -167,11 +167,11 @@ export const ChipsInput: React.FC<{ value: string[]; onChange: (v: string[]) => 
 
 // ------------------------------------------------------------------ states
 export const Spinner: React.FC<{ className?: string }> = ({ className }) => (
-  <Loader2 className={cx('animate-spin text-[#C9A45C]', className || 'h-5 w-5')} />
+  <Loader2 className={cx('animate-spin text-[#8F6B2D]', className || 'h-5 w-5')} />
 );
 
 export const LoadingBlock: React.FC<{ label?: string }> = ({ label = 'Loading…' }) => (
-  <div className="flex items-center justify-center gap-2 py-14 text-sm text-[#A7AFBA]">
+  <div className="flex items-center justify-center gap-2 py-14 text-sm text-[#475569]">
     <Spinner /> {label}
   </div>
 );
@@ -180,16 +180,16 @@ export const ErrorBlock: React.FC<{ title?: string; message?: string; onRetry?: 
   <div className="flex flex-col items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/[0.05] px-6 py-10 text-center">
     <AlertTriangle className="text-red-300" size={22} />
     <p className="text-sm font-bold text-red-200">{title}</p>
-    {message && <p className="max-w-md text-xs text-[#A7AFBA]">{message}</p>}
+    {message && <p className="max-w-md text-xs text-[#475569]">{message}</p>}
     {onRetry && <Btn size="sm" variant="outline" className="mt-2" onClick={onRetry}>Try again</Btn>}
   </div>
 );
 
 export const EmptyState: React.FC<{ icon?: React.ComponentType<{ size?: number | string; className?: string }>; title: string; hint?: string; action?: React.ReactNode }> = ({ icon: Icon, title, hint, action }) => (
   <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
-    {Icon && <Icon size={26} className="text-[#C9A45C]/60" />}
-    <p className="text-sm font-bold text-[#D8DCE2]">{title}</p>
-    {hint && <p className="max-w-md text-xs leading-relaxed text-[#A7AFBA]">{hint}</p>}
+    {Icon && <Icon size={26} className="text-[#8F6B2D]/60" />}
+    <p className="text-sm font-bold text-[#CBD5E1]">{title}</p>
+    {hint && <p className="max-w-md text-xs leading-relaxed text-[#475569]">{hint}</p>}
     {action && <div className="mt-2">{action}</div>}
   </div>
 );
@@ -217,15 +217,15 @@ export const Modal: React.FC<{
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6" onMouseDown={onClose} role="dialog" aria-modal="true">
       <div
-        className={cx('flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl border border-[rgba(201,164,92,0.22)] bg-[#07101A] shadow-2xl sm:rounded-2xl', w)}
+        className={cx('flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl border border-[rgba(201,164,92,0.22)] bg-[#F8FAFC] shadow-2xl sm:rounded-2xl', w)}
         onMouseDown={(e) => e.stopPropagation()}
       >
         <header className="flex items-start justify-between gap-4 border-b border-white/[0.06] px-5 py-4">
           <div className="min-w-0">
-            <h3 className="truncate font-display text-base font-bold text-[#F5F6F2]">{title}</h3>
-            {subtitle && <p className="mt-0.5 text-xs text-[#A7AFBA]">{subtitle}</p>}
+            <h3 className="truncate font-display text-base font-bold text-[#111827]">{title}</h3>
+            {subtitle && <p className="mt-0.5 text-xs text-[#475569]">{subtitle}</p>}
           </div>
-          <button onClick={onClose} aria-label="Close dialog" className="rounded-lg p-1.5 text-[#A7AFBA] transition-colors hover:bg-white/[0.06] hover:text-white">
+          <button onClick={onClose} aria-label="Close dialog" className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.06] hover:text-white">
             <X size={16} />
           </button>
         </header>
@@ -260,8 +260,8 @@ export const ConfirmDialog: React.FC<{
     }
   >
     <div className="flex items-start gap-3">
-      <AlertTriangle size={18} className={danger ? 'mt-0.5 shrink-0 text-red-300' : 'mt-0.5 shrink-0 text-[#C9A45C]'} />
-      <div className="text-sm leading-relaxed text-[#C9CED6]">{message}</div>
+      <AlertTriangle size={18} className={danger ? 'mt-0.5 shrink-0 text-red-300' : 'mt-0.5 shrink-0 text-[#8F6B2D]'} />
+      <div className="text-sm leading-relaxed text-[#94A3B8]">{message}</div>
     </div>
   </Modal>
 );
@@ -277,7 +277,7 @@ export const Tabs: React.FC<{ tabs: Array<{ id: string; label: string; badge?: R
         onClick={() => onChange(t.id)}
         className={cx(
           'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
-          active === t.id ? 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206] shadow' : 'text-[#A7AFBA] hover:bg-white/[0.05] hover:text-[#F5F6F2]',
+          active === t.id ? 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206] shadow' : 'text-[#475569] hover:bg-white/[0.05] hover:text-[#111827]',
         )}
       >
         {t.label}
@@ -311,7 +311,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               'pointer-events-auto flex items-start gap-2 rounded-xl border px-3.5 py-2.5 text-sm shadow-2xl backdrop-blur-md',
               t.kind === 'success' && 'border-emerald-500/30 bg-[#07140d]/95 text-emerald-200',
               t.kind === 'error' && 'border-red-500/30 bg-[#160a0a]/95 text-red-200',
-              t.kind === 'info' && 'border-[#C9A45C]/30 bg-[#0d0b06]/95 text-[#E8C97C]',
+              t.kind === 'info' && 'border-[#C9A45C]/30 bg-[#0d0b06]/95 text-[#8F6B2D]',
             )}
           >
             {t.kind === 'success' ? <Check size={15} className="mt-0.5 shrink-0" /> : t.kind === 'error' ? <AlertTriangle size={15} className="mt-0.5 shrink-0" /> : <Info size={15} className="mt-0.5 shrink-0" />}
@@ -325,18 +325,18 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 // ------------------------------------------------------------------ misc
 export const Kbd: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <kbd className="rounded-md border border-white/10 bg-white/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-[#A7AFBA]">{children}</kbd>
+  <kbd className="rounded-md border border-[#E2E8F0] bg-white/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-[#475569]">{children}</kbd>
 );
 
 export const MetricDelta: React.FC<{ value: number | null; suffix?: string }> = ({ value, suffix = '%' }) => {
   if (value === null || value === undefined || !Number.isFinite(value)) {
-    return <span className="text-[11px] text-[#6B7280]">— no baseline yet</span>;
+    return <span className="text-[11px] text-[#64748B]">— no baseline yet</span>;
   }
   const up = value >= 0;
   return (
     <span className={cx('text-[11px] font-bold tabular-nums', up ? 'text-emerald-400' : 'text-red-400')}>
       {up ? '▲' : '▼'} {Math.abs(value).toFixed(1)}{suffix}
-      <span className="ml-1 font-medium text-[#6B7280]">vs prev 30d</span>
+      <span className="ml-1 font-medium text-[#64748B]">vs prev 30d</span>
     </span>
   );
 };

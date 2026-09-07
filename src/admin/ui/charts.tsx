@@ -50,7 +50,7 @@ export const LineArea: React.FC<{
   const padT = 12;
   if (!data.some((d) => d.value > 0)) {
     return (
-      <div className="flex items-center justify-center rounded-xl border border-dashed border-white/10 bg-black/20 text-xs font-semibold uppercase tracking-widest text-[#6B7280]" style={{ height }}>
+      <div className="flex items-center justify-center rounded-xl border border-dashed border-[#E2E8F0] bg-black/20 text-xs font-semibold uppercase tracking-widest text-[#64748B]" style={{ height }}>
         {emptyLabel}
       </div>
     );
@@ -139,11 +139,11 @@ export const Donut: React.FC<{
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {total > 0 ? (
           <>
-            <span className="font-display text-2xl font-extrabold text-[#F5F6F2]">{centerValue ?? total}</span>
-            {centerLabel && <span className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280]">{centerLabel}</span>}
+            <span className="font-display text-2xl font-extrabold text-[#111827]">{centerValue ?? total}</span>
+            {centerLabel && <span className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">{centerLabel}</span>}
           </>
         ) : (
-          <span className="px-4 text-center text-[10px] font-bold uppercase tracking-widest text-[#6B7280]">{emptyLabel}</span>
+          <span className="px-4 text-center text-[10px] font-bold uppercase tracking-widest text-[#64748B]">{emptyLabel}</span>
         )}
       </div>
     </div>
@@ -173,7 +173,7 @@ export const HealthRing: React.FC<{ value: number; max?: number; size?: number; 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="font-display text-2xl font-extrabold" style={{ color }}>{Math.round(value)}</span>
         {label && <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color }}>{label}</span>}
-        {sub && <span className="mt-0.5 text-[9px] text-[#6B7280]">{sub}</span>}
+        {sub && <span className="mt-0.5 text-[9px] text-[#64748B]">{sub}</span>}
       </div>
     </div>
   );
@@ -186,21 +186,21 @@ export const HBars: React.FC<{
   emptyLabel?: string;
 }> = ({ items, formatValue = (v) => String(v), emptyLabel = 'No events recorded yet' }) => {
   if (!items.length) {
-    return <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-8 text-center text-xs font-semibold uppercase tracking-widest text-[#6B7280]">{emptyLabel}</div>;
+    return <div className="rounded-xl border border-dashed border-[#E2E8F0] bg-black/20 px-4 py-8 text-center text-xs font-semibold uppercase tracking-widest text-[#64748B]">{emptyLabel}</div>;
   }
   const max = Math.max(...items.map((i) => i.value), 1);
   return (
     <div className="flex flex-col gap-2.5">
       {items.map((it) => (
         <div key={it.label} className="flex items-center gap-3">
-          <span className="w-36 shrink-0 truncate text-xs text-[#A7AFBA]" title={it.label}>{it.label}</span>
+          <span className="w-36 shrink-0 truncate text-xs text-[#475569]" title={it.label}>{it.label}</span>
           <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/[0.05]">
             <div
               className="h-full rounded-full transition-all"
               style={{ width: `${Math.max(3, (it.value / max) * 100)}%`, background: it.color || `linear-gradient(90deg, #8f6b2d, ${GOLD_BRIGHT})` }}
             />
           </div>
-          <span className="w-10 shrink-0 text-right text-xs font-bold tabular-nums text-[#E8C97C]">{formatValue(it.value)}</span>
+          <span className="w-10 shrink-0 text-right text-xs font-bold tabular-nums text-[#8F6B2D]">{formatValue(it.value)}</span>
         </div>
       ))}
     </div>
@@ -211,10 +211,10 @@ export const HBars: React.FC<{
 export const StatTile: React.FC<{ label: string; value: React.ReactNode; sub?: React.ReactNode; icon?: React.ReactNode; className?: string }> = ({ label, value, sub, icon, className }) => (
   <div className={`rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3 ${className || ''}`}>
     <div className="flex items-center justify-between gap-2">
-      <span className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#A7AFBA]">{label}</span>
+      <span className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#475569]">{label}</span>
       {icon}
     </div>
-    <div className="mt-1 font-display text-xl font-extrabold text-[#F5F6F2]">{value}</div>
+    <div className="mt-1 font-display text-xl font-extrabold text-[#111827]">{value}</div>
     {sub && <div className="mt-0.5">{sub}</div>}
   </div>
 );

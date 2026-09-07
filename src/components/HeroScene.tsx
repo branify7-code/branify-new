@@ -59,26 +59,26 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
     // ==========================================
     // LIGHTING SYSTEM (Metallic Gold & Deep Navy)
     // ==========================================
-    const ambientLight = new THREE.AmbientLight(0x0a101d, 2.2);
+    const ambientLight = new THREE.AmbientLight(0xf4f6ff, 3.0);
     scene.add(ambientLight);
 
     // Key Light - Warm Champagne Gold Highlight
-    const keyLight = new THREE.DirectionalLight(0xF3D27A, 4.2);
+    const keyLight = new THREE.DirectionalLight(0xF3D27A, 3.6);
     keyLight.position.set(3.5, 4.5, 5.0);
     scene.add(keyLight);
 
-    // Fill Light - Subtle Metallic Gold
-    const fillLight = new THREE.DirectionalLight(0xC9A45C, 2.4);
+    // Fill Light - Cool Indigo for Light Scene Depth
+    const fillLight = new THREE.DirectionalLight(0x8B9DF7, 1.6);
     fillLight.position.set(-4.0, -2.0, 3.0);
     scene.add(fillLight);
 
     // Rim/Back Light - Specular Edge Light
-    const rimLight = new THREE.DirectionalLight(0xD4AF37, 3.0);
+    const rimLight = new THREE.DirectionalLight(0xD4AF37, 2.6);
     rimLight.position.set(0.0, 3.0, -4.0);
     scene.add(rimLight);
 
     // Point Light for Emblem Core Glint
-    const corePointLight = new THREE.PointLight(0xF3D27A, 1.8, 8);
+    const corePointLight = new THREE.PointLight(0xFFF6DE, 2.2, 8);
     corePointLight.position.set(0, 0.35, 1.8);
     scene.add(corePointLight);
 
@@ -119,17 +119,17 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
 
     // Black Smoked Glass Material with High Specular Sheen
     const plateMat = new THREE.MeshPhysicalMaterial({
-      color: 0x05070B,
-      metalness: 0.15,
-      roughness: 0.12,
-      transmission: 0.75,
+      color: 0xE9EEF6,
+      metalness: 0.08,
+      roughness: 0.16,
+      transmission: 0.85,
       thickness: 0.6,
-      ior: 1.54,
+      ior: 1.45,
       clearcoat: 1.0,
       clearcoatRoughness: 0.05,
       reflectivity: 0.95,
       transparent: true,
-      opacity: 0.94,
+      opacity: 0.72,
     });
     const plateMesh = new THREE.Mesh(plateGeo, plateMat);
     emblemGroup.add(plateMesh);
@@ -243,8 +243,8 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
       new THREE.Color('#F3D27A'), // Radiant champagne gold highlight
       new THREE.Color('#E6C687'), // Pale gold shimmer
       new THREE.Color('#A88438'), // Deep antique gold
-      new THREE.Color('#FFF5DC'), // Platinum gold pearl
-      new THREE.Color('#1B263B'), // Deep cosmic navy spark
+      new THREE.Color('#93A6F5'), // Soft indigo spark
+      new THREE.Color('#5B5FEF'), // Brand indigo spark
     ];
 
     const domeRadius = 2.15;
@@ -443,8 +443,8 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
   if (!hasWebGL) {
     return (
       <div className={`w-full h-full flex items-center justify-center ${className}`}>
-        <div className="w-48 h-56 rounded-2xl border border-[#D4AF37]/30 bg-[#08090D]/90 backdrop-blur-xl flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.25)]">
-          <span className="font-display text-4xl font-extrabold text-[#D4AF37]">B</span>
+        <div className="w-48 h-56 rounded-2xl border border-[#C9A45C]/40 bg-white/80 backdrop-blur-xl flex items-center justify-center shadow-[0_16px_40px_-16px_rgba(201,164,92,0.45)]">
+          <span className="font-display text-4xl font-extrabold text-gold-gradient">B</span>
         </div>
       </div>
     );

@@ -36,14 +36,14 @@ const columns: Column<TemplateRow>[] = [
             src={r.thumbnail}
             alt=""
             loading="lazy"
-            className="h-9 w-14 shrink-0 rounded-md border border-white/10 bg-[#04070C] object-cover"
+            className="h-9 w-14 shrink-0 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] object-cover"
           />
         ) : (
-          <span className="h-9 w-14 shrink-0 rounded-md border border-white/10 bg-white/[0.03]" aria-hidden="true" />
+          <span className="h-9 w-14 shrink-0 rounded-md border border-[#E2E8F0] bg-white/[0.03]" aria-hidden="true" />
         )}
         <div className="min-w-0">
-          <p className="truncate font-semibold text-[#F5F6F2]">{r.name}</p>
-          <p className="truncate font-mono text-[10.5px] text-[#6B7280]">/{r.slug}</p>
+          <p className="truncate font-semibold text-[#111827]">{r.name}</p>
+          <p className="truncate font-mono text-[10.5px] text-[#64748B]">/{r.slug}</p>
         </div>
       </div>
     ),
@@ -60,13 +60,13 @@ const columns: Column<TemplateRow>[] = [
     label: 'Order',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="tabular-nums text-[#A7AFBA]">{r.sort_order}</span>,
+    render: (r) => <span className="tabular-nums text-[#475569]">{r.sort_order}</span>,
   },
   {
     key: 'featured',
     label: 'Featured',
     render: (r) => (
-      <Star size={14} className={r.featured ? 'fill-[#E8C97C] text-[#E8C97C]' : 'text-[#566072]'} />
+      <Star size={14} className={r.featured ? 'fill-[#E8C97C] text-[#8F6B2D]' : 'text-[#64748B]'} />
     ),
   },
   {
@@ -79,7 +79,7 @@ const columns: Column<TemplateRow>[] = [
     label: 'Updated',
     sortable: true,
     hideOnMobile: true,
-    render: (r) => <span className="text-[#A7AFBA]">{timeAgo(r.updated_at)}</span>,
+    render: (r) => <span className="text-[#475569]">{timeAgo(r.updated_at)}</span>,
   },
 ];
 

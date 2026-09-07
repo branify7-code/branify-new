@@ -94,12 +94,12 @@ const AccountsPanel: React.FC = () => {
       label: 'Customer',
       render: (r) => (
         <div className="flex min-w-0 items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#C9A45C]/25 bg-[#C9A45C]/[0.07] text-[10px] font-bold uppercase text-[#E8C97C]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#C9A45C]/25 bg-[#C9A45C]/[0.07] text-[10px] font-bold uppercase text-[#8F6B2D]">
             {(r.name || r.email).slice(0, 2).toUpperCase()}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-xs font-semibold text-[#F5F6F2]">{r.name || '—'}</p>
-            <p className="truncate font-mono text-[11px] text-[#A7AFBA]">{r.email}</p>
+            <p className="truncate text-xs font-semibold text-[#111827]">{r.name || '—'}</p>
+            <p className="truncate font-mono text-[11px] text-[#475569]">{r.email}</p>
           </div>
         </div>
       ),
@@ -108,21 +108,21 @@ const AccountsPanel: React.FC = () => {
       key: 'phone',
       label: 'Phone',
       hideOnMobile: true,
-      render: (r) => <span className="font-mono text-[11px] text-[#A7AFBA]">{r.phone || '—'}</span>,
+      render: (r) => <span className="font-mono text-[11px] text-[#475569]">{r.phone || '—'}</span>,
     },
     {
       key: 'created_at',
       label: 'Registered',
       hideOnMobile: true,
-      render: (r) => <span className="text-xs text-[#A7AFBA]">{fmtDateTime(r.created_at)}</span>,
+      render: (r) => <span className="text-xs text-[#475569]">{fmtDateTime(r.created_at)}</span>,
     },
     {
       key: 'last_login_at',
       label: 'Last login',
       hideOnMobile: true,
       render: (r) => r.last_login_at
-        ? <span className="text-xs text-[#A7AFBA]" title={fmtDateTime(r.last_login_at)}>{timeAgo(r.last_login_at)}</span>
-        : <span className="text-xs text-[#6B7280]">N/A</span>,
+        ? <span className="text-xs text-[#475569]" title={fmtDateTime(r.last_login_at)}>{timeAgo(r.last_login_at)}</span>
+        : <span className="text-xs text-[#64748B]">N/A</span>,
     },
     {
       key: 'status',
@@ -152,7 +152,7 @@ const AccountsPanel: React.FC = () => {
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative">
-          <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#566072]" />
+          <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
           <Input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
@@ -177,9 +177,9 @@ const AccountsPanel: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-2.5 sm:max-w-lg">
-        <StatTile label="Customers" value={rows.length.toLocaleString()} icon={<Users size={15} className="text-[#C9A45C]/70" />} />
-        <StatTile label="Active" value={activeCount.toLocaleString()} icon={<ShieldCheck size={15} className="text-[#C9A45C]/70" />} />
-        <StatTile label="With phone" value={withPhone.toLocaleString()} icon={<Mail size={15} className="text-[#C9A45C]/70" />} />
+        <StatTile label="Customers" value={rows.length.toLocaleString()} icon={<Users size={15} className="text-[#8F6B2D]/70" />} />
+        <StatTile label="Active" value={activeCount.toLocaleString()} icon={<ShieldCheck size={15} className="text-[#8F6B2D]/70" />} />
+        <StatTile label="With phone" value={withPhone.toLocaleString()} icon={<Mail size={15} className="text-[#8F6B2D]/70" />} />
       </div>
 
       {error ? (
@@ -199,9 +199,9 @@ const AccountsPanel: React.FC = () => {
             mobileCard={(r) => (
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-semibold text-[#F5F6F2]">{r.name || '—'}</p>
-                  <p className="truncate font-mono text-[11px] text-[#A7AFBA]">{r.email}</p>
-                  <p className="text-[10.5px] text-[#6B7280]">
+                  <p className="truncate text-xs font-semibold text-[#111827]">{r.name || '—'}</p>
+                  <p className="truncate font-mono text-[11px] text-[#475569]">{r.email}</p>
+                  <p className="text-[10.5px] text-[#64748B]">
                     Registered {fmtDateTime(r.created_at)}{r.last_login_at ? ` · last login ${timeAgo(r.last_login_at)}` : ''}
                   </p>
                 </div>
@@ -217,8 +217,8 @@ const AccountsPanel: React.FC = () => {
         </Card>
       )}
 
-      <p className="flex items-start gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3.5 py-3 text-[11px] leading-relaxed text-[#6B7280]">
-        <KeyRound size={13} className="mt-0.5 shrink-0 text-[#C9A45C]/60" />
+      <p className="flex items-start gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3.5 py-3 text-[11px] leading-relaxed text-[#64748B]">
+        <KeyRound size={13} className="mt-0.5 shrink-0 text-[#8F6B2D]/60" />
         Privacy: only profile data required by the website is shown (email, name/phone when provided, registration and last-login timestamps).
         Authentication passwords and tokens are managed exclusively by Supabase Auth and are never visible to this dashboard.
       </p>
@@ -236,11 +236,11 @@ export const CustomersPage: React.FC<AdminPageProps> = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]">
-              <UserCircle size={15} className="text-[#E8C97C]" />
+              <UserCircle size={15} className="text-[#8F6B2D]" />
             </span>
-            <h2 className="font-display text-lg font-bold text-[#F5F6F2]">Customers</h2>
+            <h2 className="font-display text-lg font-bold text-[#111827]">Customers</h2>
           </div>
-          <p className="mt-0.5 text-xs text-[#A7AFBA]">Customer database — registered accounts and newsletter contacts.</p>
+          <p className="mt-0.5 text-xs text-[#475569]">Customer database — registered accounts and newsletter contacts.</p>
         </div>
       </div>
 
@@ -258,7 +258,7 @@ export const CustomersPage: React.FC<AdminPageProps> = () => {
                 'flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-[11px] font-bold uppercase tracking-wider transition-all sm:flex-none sm:px-4',
                 tab === t.id
                   ? 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206]'
-                  : 'text-[#A7AFBA] hover:text-white',
+                  : 'text-[#475569] hover:text-white',
               )}
             >
               <Icon size={13} /> <span className="hidden sm:inline">{t.label}</span>

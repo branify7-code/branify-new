@@ -163,8 +163,8 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-xl font-extrabold text-[#F5F6F2]">Sitemap Center</h1>
-          <p className="text-xs text-[#A7AFBA]">Live /sitemap.xml status · coverage vs real route inventory · regeneration preview</p>
+          <h1 className="font-display text-xl font-extrabold text-[#111827]">Sitemap Center</h1>
+          <p className="text-xs text-[#475569]">Live /sitemap.xml status · coverage vs real route inventory · regeneration preview</p>
         </div>
         <Btn variant="outline" size="sm" icon={RefreshCw} onClick={() => { void fetchLive(); void fetchCoverage(); }}>Refresh</Btn>
       </div>
@@ -188,9 +188,9 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
               <StatTile label="Served" value={live.ok ? 'Yes' : 'No'} sub="static /public/sitemap.xml" />
             </div>
             <div>
-              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">First 10 URLs</p>
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">First 10 URLs</p>
               {live.firstUrls.length === 0 ? (
-                <p className="text-xs text-[#566072]">No &lt;loc&gt; entries found in the document.</p>
+                <p className="text-xs text-[#64748B]">No &lt;loc&gt; entries found in the document.</p>
               ) : (
                 <ul className="flex flex-col gap-1 rounded-xl border border-white/[0.07] bg-black/25 p-3">
                   {live.firstUrls.map((u, i) => (
@@ -243,8 +243,8 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
       >
         {genErr && <ErrorBlock title="Regeneration failed" message={genErr} onRetry={() => void regenerate()} />}
         {!gen && !genErr && (
-          <p className="text-xs leading-relaxed text-[#A7AFBA]">
-            Press <span className="font-semibold text-[#E8C97C]">Regenerate</span> to crawl the admin content collections
+          <p className="text-xs leading-relaxed text-[#475569]">
+            Press <span className="font-semibold text-[#8F6B2D]">Regenerate</span> to crawl the admin content collections
             (services, tools, AI directory, free templates, blog, portfolio) and emit a complete, standards-compliant
             <span className="font-mono"> urlset</span> you can inspect, copy and download.
           </p>
@@ -265,7 +265,7 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
             </pre>
           </div>
         )}
-        <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#E8C97C]">
+        <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-[#8F6B2D]">
           <FileText size={13} className="mt-0.5 shrink-0" />
           <p>
             <span className="font-bold uppercase tracking-wider">Honest deployment note. </span>
@@ -276,7 +276,7 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
         </div>
       </Card>
 
-      <p className="text-[11px] text-[#566072]">
+      <p className="text-[11px] text-[#64748B]">
         Last live check: {live ? fmtDateTime(live.checkedAt) : '—'} · generated previews are never auto-deployed.
       </p>
     </div>

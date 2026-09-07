@@ -122,8 +122,8 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
       label: 'Lead',
       render: (r) => (
         <div className="min-w-0">
-          <p className="truncate font-semibold text-[#F5F6F2]">{r.name || '(no name)'}</p>
-          <p className="truncate text-[11px] text-[#6B7280]">{r.company || '—'}</p>
+          <p className="truncate font-semibold text-[#111827]">{r.name || '(no name)'}</p>
+          <p className="truncate text-[11px] text-[#64748B]">{r.company || '—'}</p>
         </div>
       ),
     },
@@ -131,7 +131,7 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
       key: 'email',
       label: 'Email',
       hideOnMobile: true,
-      render: (r) => <span className="block max-w-[220px] truncate text-[#C9CED6]">{r.email || '—'}</span>,
+      render: (r) => <span className="block max-w-[220px] truncate text-[#94A3B8]">{r.email || '—'}</span>,
     },
     {
       key: 'services',
@@ -139,18 +139,18 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
       hideOnMobile: true,
       render: (r) => {
         const list = Array.isArray(r.services) ? r.services : [];
-        if (!list.length) return <span className="text-[#6B7280]">—</span>;
+        if (!list.length) return <span className="text-[#64748B]">—</span>;
         return (
           <div className="flex flex-wrap items-center gap-1">
             {list.slice(0, 2).map((s) => <Badge key={s} tone="zinc">{s}</Badge>)}
-            {list.length > 2 && <span className="text-[10.5px] font-bold text-[#A7AFBA]">+{list.length - 2}</span>}
+            {list.length > 2 && <span className="text-[10.5px] font-bold text-[#475569]">+{list.length - 2}</span>}
           </div>
         );
       },
     },
     { key: 'budget', label: 'Budget', hideOnMobile: true, render: (r) => r.budget || '—' },
     { key: 'timeline', label: 'Timeline', hideOnMobile: true, render: (r) => r.timeline || '—' },
-    { key: 'source', label: 'Source', hideOnMobile: true, render: (r) => <span className="text-[#A7AFBA]">{r.source || '—'}</span> },
+    { key: 'source', label: 'Source', hideOnMobile: true, render: (r) => <span className="text-[#475569]">{r.source || '—'}</span> },
     {
       key: 'status',
       label: 'Status',
@@ -160,7 +160,7 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
       key: 'created_at',
       label: 'Received',
       sortable: true,
-      render: (r) => <span className="text-[#A7AFBA]">{timeAgo(r.created_at)}</span>,
+      render: (r) => <span className="text-[#475569]">{timeAgo(r.created_at)}</span>,
     },
   ];
 
@@ -170,14 +170,14 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]"><Inbox size={15} className="text-[#E8C97C]" /></span>
-            <h2 className="font-display text-lg font-bold text-[#F5F6F2]">Leads CRM</h2>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A45C]/30 bg-[#C9A45C]/[0.08]"><Inbox size={15} className="text-[#8F6B2D]" /></span>
+            <h2 className="font-display text-lg font-bold text-[#111827]">Leads CRM</h2>
             <Badge tone="gold">{(stats?.total ?? 0).toLocaleString()}</Badge>
           </div>
-          <p className="mt-0.5 text-xs text-[#A7AFBA]">Private pipeline of every inquiry from the public site — triage, qualify, win.</p>
+          <p className="mt-0.5 text-xs text-[#475569]">Private pipeline of every inquiry from the public site — triage, qualify, win.</p>
         </div>
         <div className="relative">
-          <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#566072]" />
+          <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" />
           <Input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
@@ -230,12 +230,12 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
             onClick={() => { setTab(t.id); setPage(1); }}
             className={cx(
               'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
-              tab === t.id ? 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206] shadow' : 'text-[#A7AFBA] hover:bg-white/[0.05] hover:text-[#F5F6F2]',
+              tab === t.id ? 'bg-gradient-to-b from-[#E8C97C] to-[#C9A45C] text-[#1A1206] shadow' : 'text-[#475569] hover:bg-white/[0.05] hover:text-[#111827]',
             )}
           >
             {t.label}
             {typeof t.badge === 'number' && (
-              <span className={cx('rounded-full px-1.5 text-[9.5px] font-black tabular-nums', tab === t.id ? 'bg-black/20 text-[#1A1206]' : 'bg-white/[0.08] text-[#A7AFBA]')}>
+              <span className={cx('rounded-full px-1.5 text-[9.5px] font-black tabular-nums', tab === t.id ? 'bg-black/20 text-[#1A1206]' : 'bg-white/[0.08] text-[#475569]')}>
                 {t.badge}
               </span>
             )}
@@ -262,11 +262,11 @@ export const LeadsPage: React.FC<AdminPageProps> = ({ refreshBadges }) => {
             mobileCard={(r) => (
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="truncate text-sm font-bold text-[#F5F6F2]">{r.name || '(no name)'}</p>
+                  <p className="truncate text-sm font-bold text-[#111827]">{r.name || '(no name)'}</p>
                   <Badge tone={LEAD_STATUS_TONE[r.status] || 'zinc'}>{statusLabel(String(r.status))}</Badge>
                 </div>
-                <p className="truncate text-xs text-[#A7AFBA]">{r.email || '—'}</p>
-                <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[#6B7280]">
+                <p className="truncate text-xs text-[#475569]">{r.email || '—'}</p>
+                <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[#64748B]">
                   {r.company && <span>{r.company}</span>}
                   {r.budget && <span>· {r.budget}</span>}
                   <span>· {timeAgo(r.created_at)}</span>
@@ -395,7 +395,7 @@ const LeadDetailModal: React.FC<{
           <div className="flex w-full flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
               <Btn variant="subtle" size="sm" icon={ChevronLeft} onClick={onPrev} disabled={index <= 0}>Prev</Btn>
-              <span className="text-[11px] tabular-nums text-[#6B7280]">{index + 1} / {count}</span>
+              <span className="text-[11px] tabular-nums text-[#64748B]">{index + 1} / {count}</span>
               <Btn variant="subtle" size="sm" onClick={onNext} disabled={index < 0 || index >= count - 1}>Next <ChevronRight size={13} /></Btn>
             </div>
             <div className="flex items-center gap-2">
@@ -415,7 +415,7 @@ const LeadDetailModal: React.FC<{
           <div className="flex flex-wrap items-center gap-2">
             <a
               href={lead.email ? `mailto:${lead.email}` : undefined}
-              className={cx('inline-flex h-8 items-center gap-1.5 rounded-lg border border-[rgba(201,164,92,0.25)] px-3 text-xs font-semibold text-[#D8DCE2] transition-colors hover:border-[rgba(201,164,92,0.55)] hover:text-[#E9CF79]', !lead.email && 'pointer-events-none opacity-40')}
+              className={cx('inline-flex h-8 items-center gap-1.5 rounded-lg border border-[rgba(201,164,92,0.25)] px-3 text-xs font-semibold text-[#CBD5E1] transition-colors hover:border-[rgba(201,164,92,0.55)] hover:text-[#8F6B2D]', !lead.email && 'pointer-events-none opacity-40')}
             >
               <Mail size={13} /> Email lead
             </a>
@@ -432,7 +432,7 @@ const LeadDetailModal: React.FC<{
             {lead.phone ? (
               <a
                 href={`tel:${lead.phone.replace(/\s+/g, '')}`}
-                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-xs font-semibold text-[#D8DCE2] transition-colors hover:border-white/25"
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-3 text-xs font-semibold text-[#CBD5E1] transition-colors hover:border-white/25"
               >
                 <Phone size={13} /> {lead.phone}
               </a>
@@ -448,18 +448,18 @@ const LeadDetailModal: React.FC<{
             <InfoRow label="Budget" value={lead.budget} />
             <InfoRow label="Timeline" value={lead.timeline} />
             <div className="sm:col-span-2">
-              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">Services of interest</p>
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Services of interest</p>
               {services.length ? (
                 <div className="flex flex-wrap gap-1.5">
                   {services.map((s) => <Badge key={s} tone="gold">{s}</Badge>)}
                 </div>
               ) : (
-                <p className="text-xs text-[#6B7280]">—</p>
+                <p className="text-xs text-[#64748B]">—</p>
               )}
             </div>
             <div className="sm:col-span-2">
-              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">Inquiry details</p>
-              <div className="whitespace-pre-wrap rounded-xl border border-white/[0.07] bg-white/[0.02] px-3.5 py-3 text-[13px] leading-relaxed text-[#C9CED6]">
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Inquiry details</p>
+              <div className="whitespace-pre-wrap rounded-xl border border-white/[0.07] bg-white/[0.02] px-3.5 py-3 text-[13px] leading-relaxed text-[#94A3B8]">
                 {lead.details || '—'}
               </div>
             </div>
@@ -472,17 +472,17 @@ const LeadDetailModal: React.FC<{
                 <Select value={status} onChange={(e) => void saveStatus(e.target.value)} disabled={statusSaving} aria-label="Lead status">
                   {LEAD_STATUSES.map((s) => <option key={s} value={s}>{statusLabel(s)}</option>)}
                 </Select>
-                {statusSaving && <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A45C]">saving…</span>}
+                {statusSaving && <span className="text-[10px] font-bold uppercase tracking-widest text-[#8F6B2D]">saving…</span>}
               </div>
             </Field>
             <div>
-              <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">Archived</span>
+              <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Archived</span>
               {archivedTab ? (
-                <p className="text-xs text-[#6B7280]">This lead is archived (viewing the archived tab).</p>
+                <p className="text-xs text-[#64748B]">This lead is archived (viewing the archived tab).</p>
               ) : (
                 <div className="flex items-center gap-2.5">
                   <Toggle checked={Boolean(lead.archived)} onChange={() => setConfirmArchive(true)} label="Archived" />
-                  <span className="text-xs text-[#6B7280]">Hide from the active pipeline</span>
+                  <span className="text-xs text-[#64748B]">Hide from the active pipeline</span>
                 </div>
               )}
             </div>
@@ -516,7 +516,7 @@ const LeadDetailModal: React.FC<{
 
 const InfoRow: React.FC<{ label: string; value?: string | null; mono?: boolean }> = ({ label, value, mono }) => (
   <div>
-    <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#A7AFBA]">{label}</p>
-    <p className={cx('break-words text-[13px] text-[#C9CED6]', mono && 'font-mono text-xs')}>{value || '—'}</p>
+    <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">{label}</p>
+    <p className={cx('break-words text-[13px] text-[#94A3B8]', mono && 'font-mono text-xs')}>{value || '—'}</p>
   </div>
 );

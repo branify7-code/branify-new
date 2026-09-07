@@ -344,88 +344,6 @@ type OpenMenu = "services" | "templates" | "portfolio" | "tools" | null;
    BRAND LOGO MARK — gold "B" emblem (same as branify.store)
 ========================================================= */
 
-function BranifyLogoMark() {
-  return (
-    <svg
-      viewBox="0 0 120 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-9 h-9 transition-all duration-500"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient
-          id="branify-gold-grad"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
-        >
-          <stop offset="0%" stopColor="#FFF9EB">
-            <animate
-              attributeName="stop-color"
-              values="#FFF9EB;#DFBA73;#FFF9EB"
-              dur="4s"
-              repeatCount="indefinite"
-            />
-          </stop>
-          <stop offset="35%" stopColor="#E2C27B"></stop>
-          <stop offset="70%" stopColor="#C9A45C"></stop>
-          <stop offset="100%" stopColor="#8A6827"></stop>
-        </linearGradient>
-        <linearGradient
-          id="branify-silver-grad"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
-        >
-          <stop offset="0%" stopColor="#F5F5F2"></stop>
-          <stop offset="50%" stopColor="#C9A45C"></stop>
-          <stop offset="100%" stopColor="#8A6827"></stop>
-        </linearGradient>
-        <filter
-          id="gold-glow"
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-        >
-          <feGaussianBlur stdDeviation="3.5" result="blur"></feGaussianBlur>
-          <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
-        </filter>
-      </defs>
-      <circle
-        cx="60"
-        cy="60"
-        r="48"
-        fill="none"
-        stroke="url(#branify-gold-grad)"
-        strokeWidth="1"
-        strokeDasharray="6 6"
-        opacity="0.25"
-        className="origin-center animate-[spin_20s_linear_infinite]"
-      ></circle>
-      <path
-        d="M 18 36 L 42 14 H 80 C 98 14 110 25 110 41 C 110 54 99 63 83 67 L 40 40 L 18 36 Z"
-        fill="url(#branify-gold-grad)"
-        filter="url(#gold-glow)"
-      ></path>
-      <path
-        d="M 48 26 H 75 C 83 26 89 30 89 37 C 89 44 83 48 73 48 L 41 28 L 48 26 Z"
-        fill="#07090D"
-      ></path>
-      <path
-        d="M 38 41 L 83 67 L 76 72 L 30 46 Z"
-        fill="#07090D"
-      ></path>
-      <path
-        d="M 14 78 L 52 53 H 84 C 102 53 114 64 114 80 C 114 98 98 106 74 106 H 32 C 22 106 18 98 28 98 L 72 98 C 86 98 94 91 94 80 C 94 69 86 63 70 63 L 40 81 L 14 78 Z"
-        fill="url(#branify-silver-grad)"
-      ></path>
-    </svg>
-  );
-}
 
 /* =========================================================
    HEADER
@@ -636,8 +554,8 @@ export default function Header({
   const navLinkClass = (isActive: boolean) =>
     `px-2.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
       isActive
-        ? "text-[#E2C27B] font-bold bg-[#C9A45C]/10 border border-[#C9A45C]/25 shadow-sm"
-        : "border border-transparent hover:text-[#E2C27B] hover:bg-white/[0.04]"
+        ? "text-[#8F6B2D] font-bold bg-[#C9A45C]/10 border border-[#C9A45C]/25 shadow-sm"
+        : "border border-transparent hover:text-[#8F6B2D] hover:bg-[#F8FAFC]"
     }`;
 
   const activeUnderline = (
@@ -714,38 +632,27 @@ export default function Header({
       )}
 
       <header
-        className="sticky top-0 left-0 right-0 w-full z-40 bg-[#06080C]/95 backdrop-blur-xl border-b border-[#C9A45C]/20 transition-all"
+        className="sticky top-0 left-0 right-0 w-full z-40 bg-white/95 backdrop-blur-xl border-b border-[#C9A45C]/20 transition-all"
         onMouseLeave={schedulePanelClose}
       >
       <div className="w-full px-3 min-[420px]:px-4 sm:px-6 lg:px-8 xl:px-8 2xl:px-12 h-20 flex items-center justify-between gap-2 min-[420px]:gap-3 lg:gap-4 2xl:gap-5">
-        {/* ============ LOGO LOCKUP ============ */}
+        {/* ============ OFFICIAL LOGO ============ */}
         <button
           type="button"
           className="focus:outline-none shrink-0 cursor-pointer"
           aria-label="BRANIFY Home"
           onClick={(e) => handleNavClick(e, "/")}
         >
-          <div className="flex items-center gap-2 min-[420px]:gap-3 group ">
-            <div className="relative shrink-0 transition-transform duration-300 group-hover:scale-105">
-              <BranifyLogoMark />
-            </div>
-            <div className="flex flex-col justify-center">
-              <div className="font-black uppercase flex items-center leading-none font-sans text-xl min-[420px]:text-2xl tracking-wider">
-                <span className="text-[#F1F2EE]">BRAN</span>
-                <span className="text-[#E2C27B]">IFY</span>
-              </div>
-              <div className="hidden min-[420px]:flex items-center uppercase font-extrabold text-zinc-400 mt-1 text-[10px] gap-1.5">
-                <span className="text-[#F1F2EE]">BUILD.</span>
-                <span className="text-[#E2C27B]">BRAND.</span>
-                <span className="text-[#F1F2EE]">GROW.</span>
-              </div>
-            </div>
-          </div>
+          <img
+            src="/branify-logo-horizontal-light.svg"
+            alt="BRANIFY — Build. Brand. Grow."
+            className="h-10 w-auto min-[420px]:h-11 transition-transform duration-300 hover:scale-[1.03]"
+          />
         </button>
 
         {/* ============ DESKTOP NAV ============ */}
         <nav
-          className="hidden xl:flex items-center gap-1 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-zinc-300 tracking-wide uppercase font-sans"
+          className="hidden xl:flex items-center gap-1 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-slate-600 tracking-wide uppercase font-sans"
           aria-label="Main Navigation"
         >
           {/* HOME */}
@@ -772,7 +679,7 @@ export default function Header({
             <ChevronDown
               size={14}
               strokeWidth={2}
-              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-zinc-400 ${
+              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-slate-500 ${
                 openMenu === "services" ? "rotate-180" : ""
               }`}
             />
@@ -792,11 +699,11 @@ export default function Header({
             <ChevronDown
               size={14}
               strokeWidth={2}
-              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-zinc-400 ${
+              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-slate-500 ${
                 openMenu === "templates" ? "rotate-180" : ""
               }`}
             />
-            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono 2xl:hidden">
+            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#8F6B2D] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono 2xl:hidden">
               {templateCount()}
             </span>
             {isTemplatesActive && activeUnderline}
@@ -815,7 +722,7 @@ export default function Header({
             <ChevronDown
               size={14}
               strokeWidth={2}
-              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-zinc-400 ${
+              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-slate-500 ${
                 openMenu === "portfolio" ? "rotate-180" : ""
               }`}
             />
@@ -832,13 +739,13 @@ export default function Header({
             onClick={(e) => handleNavClick(e, "/tools")}
           >
             <span>FREE TOOLS</span>
-            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono">
+            <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#8F6B2D] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono">
               100+
             </span>
             <ChevronDown
               size={14}
               strokeWidth={2}
-              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-zinc-400 ${
+              className={`w-3.5 h-3.5 transition-transform duration-200 shrink-0 text-slate-500 ${
                 openMenu === "tools" ? "rotate-180" : ""
               }`}
             />
@@ -887,7 +794,7 @@ export default function Header({
           {/* INSTALL APP */}
           <button
             type="button"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-[#C9A45C]/10 hover:bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/30 hover:border-[#C9A45C]/50 rounded-full text-xs font-bold transition-all shadow-sm group cursor-pointer"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-[#C9A45C]/10 hover:bg-[#C9A45C]/20 text-[#8F6B2D] border border-[#C9A45C]/30 hover:border-[#C9A45C]/50 rounded-full text-xs font-bold transition-all shadow-sm group cursor-pointer"
             title="Install BRANIFY App on your Device"
             aria-label="Install App"
             onClick={handleInstallClick}
@@ -895,19 +802,19 @@ export default function Header({
             <Smartphone
               size={14}
               strokeWidth={2}
-              className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-[#E2C27B]"
+              className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-[#8F6B2D]"
             />
             <span className="hidden 2xl:inline-block">Install App</span>
           </button>
 
           {/* SEARCH / CURRENCY / CART PILL */}
           <div
-            className="flex items-center gap-1.5 bg-[#0B0F15] border border-[#C9A45C]/25 rounded-full px-2.5 py-1"
+            className="flex items-center gap-1.5 bg-[#F8FAFC] border border-[#C9A45C]/25 rounded-full px-2.5 py-1"
             ref={currencyMenuRef}
           >
             <button
               type="button"
-              className="hidden 2xl:flex p-1.5 text-zinc-300 hover:text-[#E2C27B] hover:bg-[#C9A45C]/10 rounded-full transition-colors items-center gap-1 text-xs cursor-pointer"
+              className="hidden 2xl:flex p-1.5 text-slate-600 hover:text-[#8F6B2D] hover:bg-[#C9A45C]/10 rounded-full transition-colors items-center gap-1 text-xs cursor-pointer"
               title="Search Services, Portfolio, Tools... (⌘K)"
               aria-label="Search"
             >
@@ -916,20 +823,20 @@ export default function Header({
 
             <button
               type="button"
-              className="flex items-center gap-1 px-2 py-1 hover:bg-[#C9A45C]/10 rounded-full text-xs font-bold text-zinc-200 transition-all cursor-pointer group"
+              className="flex items-center gap-1 px-2 py-1 hover:bg-[#C9A45C]/10 rounded-full text-xs font-bold text-slate-700 transition-all cursor-pointer group"
               aria-label="Select Currency and Country Region"
               title={`Currency: ${currency.code} (${currency.region})`}
               aria-expanded={currencyDropdownOpen}
               onClick={() => setCurrencyDropdownOpen((prev) => !prev)}
             >
               <span className="text-sm">{currency.flag}</span>
-              <span className="text-[#F1F2EE] group-hover:text-[#E2C27B] transition-colors">
+              <span className="text-[#111827] group-hover:text-[#8F6B2D] transition-colors">
                 {currency.code}
               </span>
               <ChevronDown
                 size={12}
                 strokeWidth={2}
-                className={`w-3 h-3 text-zinc-400 group-hover:text-[#E2C27B] transition-transform ${
+                className={`w-3 h-3 text-slate-500 group-hover:text-[#8F6B2D] transition-transform ${
                   currencyDropdownOpen ? "rotate-180" : ""
                 }`}
               />
@@ -937,7 +844,7 @@ export default function Header({
 
             <button
               type="button"
-              className="hidden 2xl:block p-1.5 text-zinc-300 hover:text-[#E2C27B] hover:bg-[#C9A45C]/10 rounded-full transition-colors relative cursor-pointer"
+              className="hidden 2xl:block p-1.5 text-slate-600 hover:text-[#8F6B2D] hover:bg-[#C9A45C]/10 rounded-full transition-colors relative cursor-pointer"
               title="View Cart"
               aria-label="Shopping Cart"
             >
@@ -947,7 +854,7 @@ export default function Header({
             {/* CURRENCY DROPDOWN */}
             {currencyDropdownOpen && (
               <div
-                className="absolute top-full right-0 mt-2 w-52 bg-[#0B0F15] border border-[#C9A45C]/30 rounded-2xl shadow-2xl shadow-black/80 p-2 z-50 mega-panel-enter"
+                className="absolute top-full right-0 mt-2 w-52 bg-[#F8FAFC] border border-[#C9A45C]/30 rounded-2xl shadow-2xl shadow-black/80 p-2 z-50 mega-panel-enter"
                 role="listbox"
                 aria-label="Currencies"
               >
@@ -959,15 +866,15 @@ export default function Header({
                     aria-selected={curr.code === currency.code}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                       curr.code === currency.code
-                        ? "bg-[#C9A45C]/15 text-[#E2C27B]"
-                        : "text-zinc-300 hover:bg-[#101620] hover:text-[#E2C27B]"
+                        ? "bg-[#C9A45C]/15 text-[#8F6B2D]"
+                        : "text-slate-600 hover:bg-[#F8FAFC] hover:text-[#8F6B2D]"
                     }`}
                     onClick={() => selectCurrency(curr.code)}
                   >
                     <span className="flex items-center gap-2">
                       <span className="text-sm">{curr.flag}</span>
                       {curr.code}
-                      <span className="text-zinc-500 font-normal">
+                      <span className="text-slate-500 font-normal">
                         {curr.symbol}
                       </span>
                     </span>
@@ -991,18 +898,18 @@ export default function Header({
           {/* MOBILE MENU BUTTON */}
           <button
             type="button"
-            className="xl:hidden p-2 text-zinc-300 hover:text-[#F1F2EE] bg-[#0B0F15] border border-[#C9A45C]/25 rounded-xl shrink-0 cursor-pointer"
+            className="xl:hidden p-2 text-slate-600 hover:text-[#111827] bg-[#F8FAFC] border border-[#C9A45C]/25 rounded-xl shrink-0 cursor-pointer"
             aria-label="Toggle Navigation Menu"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((value) => !value)}
           >
             {mobileOpen ? (
-              <X size={20} strokeWidth={2} className="w-5 h-5 text-[#E2C27B]" />
+              <X size={20} strokeWidth={2} className="w-5 h-5 text-[#8F6B2D]" />
             ) : (
               <Menu
                 size={20}
                 strokeWidth={2}
-                className="w-5 h-5 text-[#E2C27B]"
+                className="w-5 h-5 text-[#8F6B2D]"
               />
             )}
           </button>
@@ -1014,7 +921,7 @@ export default function Header({
       ========================================== */}
       {openMenu === "services" && (
         <div
-          className="absolute top-full left-0 w-full bg-[#07090D]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
+          className="absolute top-full left-0 w-full bg-[#F8FAFC]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
           role="menu"
           onMouseEnter={() => openPanel("services")}
           onMouseLeave={schedulePanelClose}
@@ -1025,7 +932,7 @@ export default function Header({
                 <div key={group.heading} className="space-y-4">
                   <div className="flex items-center gap-2 pb-2 border-b border-[#C9A45C]/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#E2C27B]"></span>
-                    <h3 className="text-xs font-black uppercase tracking-widest text-[#E2C27B]">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-[#8F6B2D]">
                       {group.heading}
                     </h3>
                   </div>
@@ -1036,19 +943,19 @@ export default function Header({
                         <li key={item.title}>
                           <button
                             type="button"
-                            className="w-full text-left p-2.5 rounded-xl transition-all duration-200 group hover:bg-[#101620] border border-transparent hover:border-[#C9A45C]/30 flex items-start gap-3 cursor-pointer"
+                            className="w-full text-left p-2.5 rounded-xl transition-all duration-200 group hover:bg-[#F8FAFC] border border-transparent hover:border-[#C9A45C]/30 flex items-start gap-3 cursor-pointer"
                             onClick={(e) => handleNavClick(e, item.route)}
                           >
-                            <div className="p-2 rounded-lg bg-[#0B0F15] group-hover:bg-[#C9A45C]/15 border border-[#C9A45C]/15 group-hover:border-[#C9A45C]/40 transition-colors mt-0.5">
+                            <div className="p-2 rounded-lg bg-[#F8FAFC] group-hover:bg-[#C9A45C]/15 border border-[#C9A45C]/15 group-hover:border-[#C9A45C]/40 transition-colors mt-0.5">
                               <Icon
                                 size={16}
                                 strokeWidth={2}
-                                className="w-4 h-4 text-[#E2C27B]"
+                                className="w-4 h-4 text-[#8F6B2D]"
                               />
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between gap-2">
-                                <span className="text-sm font-bold text-zinc-100 group-hover:text-[#E2C27B] transition-colors">
+                                <span className="text-sm font-bold text-slate-700 group-hover:text-[#8F6B2D] transition-colors">
                                   {item.title}
                                 </span>
                                 {item.badge && (
@@ -1057,7 +964,7 @@ export default function Header({
                                   </span>
                                 )}
                               </div>
-                              <p className="text-xs text-zinc-400 mt-0.5 line-clamp-1 group-hover:text-zinc-300">
+                              <p className="text-xs text-slate-500 mt-0.5 line-clamp-1 group-hover:text-slate-600">
                                 {item.desc}
                               </p>
                             </div>
@@ -1070,12 +977,12 @@ export default function Header({
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
+            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
-                  <span className="text-[#FFF6E5]">Need a Custom Solution?</span>
+                <div className="text-sm font-extrabold text-[#111827] flex items-center gap-2">
+                  <span className="text-[#111827]">Need a Custom Solution?</span>
                 </div>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Get a tailored project roadmap &amp; fixed quote in 24 hours.
                 </p>
               </div>
@@ -1104,7 +1011,7 @@ export default function Header({
       ========================================== */}
       {openMenu === "templates" && (
         <div
-          className="absolute top-full left-0 w-full bg-[#07090D]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
+          className="absolute top-full left-0 w-full bg-[#F8FAFC]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
           role="menu"
           onMouseEnter={() => openPanel("templates")}
           onMouseLeave={schedulePanelClose}
@@ -1117,18 +1024,18 @@ export default function Header({
                   <button
                     key={cat.slug}
                     type="button"
-                    className="w-full text-left px-3 py-2.5 rounded-xl transition-all duration-200 group hover:bg-[#101620] border border-transparent hover:border-[#C9A45C]/30 flex items-center justify-between gap-3 cursor-pointer"
+                    className="w-full text-left px-3 py-2.5 rounded-xl transition-all duration-200 group hover:bg-[#F8FAFC] border border-transparent hover:border-[#C9A45C]/30 flex items-center justify-between gap-3 cursor-pointer"
                     onClick={(e) => handleNavClick(e, categoryHref(cat.slug))}
                   >
                     <span className="flex flex-col min-w-0">
-                      <span className="text-sm font-bold text-zinc-100 group-hover:text-[#E2C27B] transition-colors truncate">
+                      <span className="text-sm font-bold text-slate-700 group-hover:text-[#8F6B2D] transition-colors truncate">
                         {cat.name}
                       </span>
-                      <span className="text-[11px] text-zinc-500 group-hover:text-zinc-400 truncate">
+                      <span className="text-[11px] text-slate-500 group-hover:text-slate-500 truncate">
                         {cat.tagline}
                       </span>
                     </span>
-                    <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/15 text-[#E2C27B] border border-[#C9A45C]/30 rounded-full shrink-0 font-mono">
+                    <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/15 text-[#8F6B2D] border border-[#C9A45C]/30 rounded-full shrink-0 font-mono">
                       {n}
                     </span>
                   </button>
@@ -1136,14 +1043,14 @@ export default function Header({
               })}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
+            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
-                  <span className="text-[#FFF6E5]">{templateCount()} ready-made templates</span>
-                  <span className="text-zinc-500">·</span>
+                <div className="text-sm font-extrabold text-[#111827] flex items-center gap-2">
+                  <span className="text-[#111827]">{templateCount()} ready-made templates</span>
+                  <span className="text-slate-500">·</span>
                   <span>{TEMPLATE_CATEGORIES.length} industries</span>
                 </div>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Every template ships responsive, editable and launch-ready.
                 </p>
               </div>
@@ -1164,7 +1071,7 @@ export default function Header({
       ========================================== */}
       {openMenu === "portfolio" && (
         <div
-          className="absolute top-full left-0 w-full bg-[#07090D]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
+          className="absolute top-full left-0 w-full bg-[#F8FAFC]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
           role="menu"
           onMouseEnter={() => openPanel("portfolio")}
           onMouseLeave={schedulePanelClose}
@@ -1173,7 +1080,7 @@ export default function Header({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="md:col-span-2 space-y-4">
                 <div className="pb-2 border-b border-[#C9A45C]/20">
-                  <h3 className="text-xs font-black uppercase tracking-widest text-[#E2C27B]">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-[#8F6B2D]">
                     Filter Portfolio By Category
                   </h3>
                 </div>
@@ -1182,13 +1089,13 @@ export default function Header({
                     <button
                       key={cat.title}
                       type="button"
-                      className="p-3 bg-[#0B0F15] hover:bg-[#101620] border border-[#C9A45C]/15 hover:border-[#C9A45C]/50 rounded-xl text-left transition-all group cursor-pointer"
+                      className="p-3 bg-[#F8FAFC] hover:bg-[#F8FAFC] border border-[#C9A45C]/15 hover:border-[#C9A45C]/50 rounded-xl text-left transition-all group cursor-pointer"
                       onClick={(e) => handleNavClick(e, cat.route)}
                     >
-                      <div className="text-xs font-bold text-zinc-200 group-hover:text-[#E2C27B] transition-colors">
+                      <div className="text-xs font-bold text-slate-700 group-hover:text-[#8F6B2D] transition-colors">
                         {cat.title}
                       </div>
-                      <div className="text-[10px] text-zinc-400 mt-0.5 line-clamp-1">
+                      <div className="text-[10px] text-slate-500 mt-0.5 line-clamp-1">
                         {cat.desc}
                       </div>
                     </button>
@@ -1202,14 +1109,14 @@ export default function Header({
                     <span className="px-2 py-0.5 bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#090A0C] text-[10px] font-black rounded-md">
                       FEATURED CASE STUDY
                     </span>
-                    <span className="text-[10px] text-[#C9A45C] font-mono">
+                    <span className="text-[10px] text-[#8F6B2D] font-mono">
                       REAL ESTATE &amp; WEB
                     </span>
                   </div>
-                  <h4 className="text-base font-black text-[#F1F2EE] leading-snug mb-2 font-serif-luxury">
+                  <h4 className="text-base font-black text-[#111827] leading-snug mb-2 font-serif-luxury">
                     Property Atlas: Luxury Real Estate &amp; Digital Experience
                   </h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  <p className="text-xs text-slate-500 leading-relaxed mb-4">
                     Bespoke property showcase with high-resolution visual
                     viewports, spec sheets, and seamless client consultation
                     funnel.
@@ -1217,23 +1124,23 @@ export default function Header({
                 </div>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#E2C27B] hover:text-[#F1F2EE] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#8F6B2D] hover:text-[#111827] transition-colors cursor-pointer"
                   onClick={(e) => handleNavClick(e, "/portfolio")}
                 >
                   <span>Read Full Case Study</span>
-                  <ArrowRight size={14} strokeWidth={2} className="w-3.5 h-3.5 text-[#E2C27B]" />
+                  <ArrowRight size={14} strokeWidth={2} className="w-3.5 h-3.5 text-[#8F6B2D]" />
                 </button>
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
+            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
-                  <span className="text-[#FFF6E5]">
+                <div className="text-sm font-extrabold text-[#111827] flex items-center gap-2">
+                  <span className="text-[#111827]">
                     Want to See Case Studies &amp; Client Results?
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Explore detailed breakdown of challenges, tech stacks, and ROI
                   generated.
                 </p>
@@ -1255,7 +1162,7 @@ export default function Header({
       ========================================== */}
       {openMenu === "tools" && (
         <div
-          className="absolute top-full left-0 w-full bg-[#07090D]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
+          className="absolute top-full left-0 w-full bg-[#F8FAFC]/98 backdrop-blur-2xl border-b border-[#C9A45C]/25 shadow-2xl shadow-black/90 z-50 mega-panel-enter"
           role="menu"
           onMouseEnter={() => openPanel("tools")}
           onMouseLeave={schedulePanelClose}
@@ -1266,7 +1173,7 @@ export default function Header({
                 <div key={column.heading} className="space-y-3">
                   <div className="pb-1.5 border-b border-[#C9A45C]/20 flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#E2C27B]"></span>
-                    <h3 className="text-[11px] font-black uppercase tracking-wider text-[#E2C27B]">
+                    <h3 className="text-[11px] font-black uppercase tracking-wider text-[#8F6B2D]">
                       {column.heading}
                     </h3>
                   </div>
@@ -1275,12 +1182,12 @@ export default function Header({
                       <li key={item.label}>
                         <button
                           type="button"
-                          className="w-full text-left py-1 px-1.5 rounded hover:bg-[#101620] transition-colors text-xs text-zinc-300 hover:text-[#E2C27B] flex items-center justify-between cursor-pointer"
+                          className="w-full text-left py-1 px-1.5 rounded hover:bg-[#F8FAFC] transition-colors text-xs text-slate-600 hover:text-[#8F6B2D] flex items-center justify-between cursor-pointer"
                           onClick={(e) => handleNavClick(e, item.route)}
                         >
                           <span className="truncate">{item.label}</span>
                           {item.badge && (
-                            <span className="text-[8px] px-1 bg-[#C9A45C]/20 text-[#E2C27B] font-bold rounded border border-[#C9A45C]/30">
+                            <span className="text-[8px] px-1 bg-[#C9A45C]/20 text-[#8F6B2D] font-bold rounded border border-[#C9A45C]/30">
                               {item.badge}
                             </span>
                           )}
@@ -1292,14 +1199,14 @@ export default function Header({
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0B0F15] p-4 rounded-xl border border-[#C9A45C]/25">
+            <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
-                <div className="text-sm font-extrabold text-[#F1F2EE] flex items-center gap-2">
-                  <span className="text-[#FFF6E5]">
+                <div className="text-sm font-extrabold text-[#111827] flex items-center gap-2">
+                  <span className="text-[#111827]">
                     Explore 100+ Free Online Browser Tools
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   100% Client-side processing. No server uploads. Instant
                   results.
                 </p>
@@ -1320,27 +1227,27 @@ export default function Header({
           MOBILE MENU
       ========================================== */}
       {mobileOpen && (
-        <div className="xl:hidden bg-[#07090D] border-b border-[#C9A45C]/25 px-4 py-6 space-y-3 max-h-[85vh] overflow-y-auto mobile-menu-slide">
+        <div className="xl:hidden bg-[#F8FAFC] border-b border-[#C9A45C]/25 px-4 py-6 space-y-3 max-h-[85vh] overflow-y-auto mobile-menu-slide">
           <div className="space-y-1">
             {/* HOME */}
             <button
               type="button"
-              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-zinc-200 hover:bg-[#101620] cursor-pointer"
+              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-slate-700 hover:bg-[#F8FAFC] cursor-pointer"
               onClick={(e) => handleNavClick(e, "/")}
             >
               <span>Home</span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
             </button>
 
             {/* SERVICES ACCORDION */}
-            <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#0B0F15]">
+            <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#F8FAFC]">
               <div className="flex items-center justify-between p-1">
                 <button
                   type="button"
                   className={`flex-1 text-left px-3 py-2.5 font-bold text-sm transition-colors uppercase tracking-wider cursor-pointer ${
                     openMobileMenu === "services"
-                      ? "text-[#E2C27B]"
-                      : "text-zinc-200"
+                      ? "text-[#8F6B2D]"
+                      : "text-slate-700"
                   }`}
                   onClick={(e) => handleNavClick(e, "/services")}
                 >
@@ -1348,7 +1255,7 @@ export default function Header({
                 </button>
                 <button
                   type="button"
-                  className="p-2.5 text-zinc-400 hover:text-[#F1F2EE] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
+                  className="p-2.5 text-slate-500 hover:text-[#111827] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
                   aria-label="Toggle Services Submenu"
                   aria-expanded={openMobileMenu === "services"}
                   onClick={() => toggleMobileMenu("services")}
@@ -1367,7 +1274,7 @@ export default function Header({
                 <div className="px-3 pb-3 space-y-3">
                   {serviceMenuGroups.map((group) => (
                     <div key={group.heading}>
-                      <div className="text-[10px] font-black uppercase tracking-widest text-[#E2C27B] pt-2 pb-1">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-[#8F6B2D] pt-2 pb-1">
                         {group.heading}
                       </div>
                       <ul className="space-y-0.5">
@@ -1375,7 +1282,7 @@ export default function Header({
                           <li key={item.title}>
                             <button
                               type="button"
-                              className="w-full text-left py-1.5 px-2 rounded-lg text-xs text-zinc-300 hover:text-[#E2C27B] hover:bg-[#101620] transition-colors cursor-pointer"
+                              className="w-full text-left py-1.5 px-2 rounded-lg text-xs text-slate-600 hover:text-[#8F6B2D] hover:bg-[#F8FAFC] transition-colors cursor-pointer"
                               onClick={(e) => handleNavClick(e, item.route)}
                             >
                               {item.title}
@@ -1393,28 +1300,28 @@ export default function Header({
             <button
               type="button"
               className={`w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider cursor-pointer ${
-                isTemplatesActive ? "text-[#E2C27B] bg-[#101620]" : "text-zinc-200 hover:bg-[#101620]"
+                isTemplatesActive ? "text-[#8F6B2D] bg-[#F8FAFC]" : "text-slate-700 hover:bg-[#F8FAFC]"
               }`}
               onClick={(e) => handleNavClick(e, "/templates")}
             >
               <span className="flex items-center gap-2">
                 Templates
-                <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#E2C27B] border border-[#C9A45C]/35 rounded-full font-mono">
+                <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#8F6B2D] border border-[#C9A45C]/35 rounded-full font-mono">
                   {templateCount()}
                 </span>
               </span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
             </button>
 
             {/* PORTFOLIO ACCORDION */}
-            <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#0B0F15]">
+            <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#F8FAFC]">
               <div className="flex items-center justify-between p-1">
                 <button
                   type="button"
                   className={`flex-1 text-left px-3 py-2.5 font-bold text-sm transition-colors uppercase tracking-wider cursor-pointer ${
                     openMobileMenu === "portfolio"
-                      ? "text-[#E2C27B]"
-                      : "text-zinc-200"
+                      ? "text-[#8F6B2D]"
+                      : "text-slate-700"
                   }`}
                   onClick={(e) => handleNavClick(e, "/portfolio")}
                 >
@@ -1422,7 +1329,7 @@ export default function Header({
                 </button>
                 <button
                   type="button"
-                  className="p-2.5 text-zinc-400 hover:text-[#F1F2EE] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
+                  className="p-2.5 text-slate-500 hover:text-[#111827] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
                   aria-label="Toggle Portfolio Submenu"
                   aria-expanded={openMobileMenu === "portfolio"}
                   onClick={() => toggleMobileMenu("portfolio")}
@@ -1444,7 +1351,7 @@ export default function Header({
                       <li key={cat.title}>
                         <button
                           type="button"
-                          className="w-full text-left py-1.5 px-2 rounded-lg text-xs text-zinc-300 hover:text-[#E2C27B] hover:bg-[#101620] transition-colors cursor-pointer"
+                          className="w-full text-left py-1.5 px-2 rounded-lg text-xs text-slate-600 hover:text-[#8F6B2D] hover:bg-[#F8FAFC] transition-colors cursor-pointer"
                           onClick={(e) => handleNavClick(e, cat.route)}
                         >
                           {cat.title}
@@ -1457,14 +1364,14 @@ export default function Header({
             </div>
 
             {/* FREE TOOLS ACCORDION */}
-            <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#0B0F15]">
+            <div className="rounded-xl overflow-hidden border border-[#C9A45C]/15 bg-[#F8FAFC]">
               <div className="flex items-center justify-between p-1">
                 <button
                   type="button"
                   className={`flex-1 text-left px-3 py-2.5 font-bold text-sm transition-colors uppercase tracking-wider cursor-pointer ${
                     openMobileMenu === "tools"
-                      ? "text-[#E2C27B]"
-                      : "text-zinc-200"
+                      ? "text-[#8F6B2D]"
+                      : "text-slate-700"
                   }`}
                   onClick={(e) => handleNavClick(e, "/tools")}
                 >
@@ -1472,7 +1379,7 @@ export default function Header({
                 </button>
                 <button
                   type="button"
-                  className="p-2.5 text-zinc-400 hover:text-[#F1F2EE] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
+                  className="p-2.5 text-slate-500 hover:text-[#111827] hover:bg-[#141B26] rounded-lg transition-colors cursor-pointer"
                   aria-label="Toggle Free Tools Submenu"
                   aria-expanded={openMobileMenu === "tools"}
                   onClick={() => toggleMobileMenu("tools")}
@@ -1491,7 +1398,7 @@ export default function Header({
                 <div className="px-3 pb-3 space-y-3">
                   {toolsMenuColumns.map((column) => (
                     <div key={column.heading}>
-                      <div className="text-[10px] font-black uppercase tracking-widest text-[#E2C27B] pt-2 pb-1">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-[#8F6B2D] pt-2 pb-1">
                         {column.heading}
                       </div>
                       <ul className="space-y-0.5">
@@ -1499,7 +1406,7 @@ export default function Header({
                           <li key={item.label}>
                             <button
                               type="button"
-                              className="w-full text-left py-1.5 px-2 rounded-lg text-xs text-zinc-300 hover:text-[#E2C27B] hover:bg-[#101620] transition-colors cursor-pointer"
+                              className="w-full text-left py-1.5 px-2 rounded-lg text-xs text-slate-600 hover:text-[#8F6B2D] hover:bg-[#F8FAFC] transition-colors cursor-pointer"
                               onClick={(e) => handleNavClick(e, item.route)}
                             >
                               {item.label}
@@ -1516,31 +1423,31 @@ export default function Header({
             {/* AI TOOLS (direct) */}
             <button
               type="button"
-              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-zinc-200 hover:bg-[#101620] cursor-pointer"
+              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-slate-700 hover:bg-[#F8FAFC] cursor-pointer"
               onClick={(e) => handleNavClick(e, "/ai-tools")}
             >
               <span>AI Tools</span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
             </button>
 
             {/* ABOUT */}
             <button
               type="button"
-              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-zinc-200 hover:bg-[#101620] cursor-pointer"
+              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-slate-700 hover:bg-[#F8FAFC] cursor-pointer"
               onClick={(e) => handleNavClick(e, "/about")}
             >
               <span>About</span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
             </button>
 
             {/* CONTACT */}
             <button
               type="button"
-              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-zinc-200 hover:bg-[#101620] cursor-pointer"
+              className="w-full text-left px-4 py-3 rounded-xl transition-colors font-bold text-sm flex items-center justify-between uppercase tracking-wider text-slate-700 hover:bg-[#F8FAFC] cursor-pointer"
               onClick={(e) => handleNavClick(e, "/contact")}
             >
               <span>Contact</span>
-              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-zinc-500" />
+              <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
             </button>
           </div>
 
@@ -1549,30 +1456,30 @@ export default function Header({
             {/* INSTALL APP CARD */}
             <button
               type="button"
-              className="w-full p-3 rounded-xl bg-[#C9A45C]/10 border border-[#C9A45C]/30 hover:bg-[#C9A45C]/20 flex items-center justify-between text-left transition-colors text-[#E2C27B] cursor-pointer"
+              className="w-full p-3 rounded-xl bg-[#C9A45C]/10 border border-[#C9A45C]/30 hover:bg-[#C9A45C]/20 flex items-center justify-between text-left transition-colors text-[#8F6B2D] cursor-pointer"
               onClick={handleInstallClick}
             >
               <div className="flex items-center gap-2.5">
                 <span className="text-lg">📲</span>
                 <div>
-                  <div className="text-xs font-bold text-[#F1F2EE] flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-[#111827] flex items-center gap-1.5">
                     <span>Install BRANIFY App</span>
                     <span className="text-[9px] px-1.5 py-0.5 bg-gradient-to-r from-[#FFF6E5] to-[#C9A45C] text-[#090A0C] rounded font-black uppercase">
                       PWA
                     </span>
                   </div>
-                  <div className="text-[10px] text-zinc-400">
+                  <div className="text-[10px] text-slate-500">
                     Install for offline access &amp; full-screen UI
                   </div>
                 </div>
               </div>
-              <span className="text-xs font-bold text-[#E2C27B]">
+              <span className="text-xs font-bold text-[#8F6B2D]">
                 Install →
               </span>
             </button>
 
             {/* REGION / CURRENCY CARD */}
-            <div className="w-full rounded-xl bg-[#0B0F15] border border-[#C9A45C]/25 hover:border-[#C9A45C]/50 transition-colors">
+            <div className="w-full rounded-xl bg-[#F8FAFC] border border-[#C9A45C]/25 hover:border-[#C9A45C]/50 transition-colors">
               <button
                 type="button"
                 className="w-full p-3 flex items-center justify-between text-left transition-colors cursor-pointer"
@@ -1582,19 +1489,19 @@ export default function Header({
                 <div className="flex items-center gap-2.5">
                   <span className="text-xl">{currency.flag}</span>
                   <div>
-                    <div className="text-xs font-bold text-[#F1F2EE] flex items-center gap-1.5">
+                    <div className="text-xs font-bold text-[#111827] flex items-center gap-1.5">
                       <span>{currency.code}</span>
-                      <span className="text-zinc-400">({currency.symbol})</span>
+                      <span className="text-slate-500">({currency.symbol})</span>
                       <span className="text-[9px] px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-semibold uppercase">
                         Auto
                       </span>
                     </div>
-                    <div className="text-[10px] text-zinc-500">
+                    <div className="text-[10px] text-slate-500">
                       Region: {currency.region}
                     </div>
                   </div>
                 </div>
-                <span className="text-xs text-[#E2C27B] font-semibold">
+                <span className="text-xs text-[#8F6B2D] font-semibold">
                   Change Region →
                 </span>
               </button>
@@ -1607,8 +1514,8 @@ export default function Header({
                       type="button"
                       className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors cursor-pointer ${
                         curr.code === currency.code
-                          ? "bg-[#C9A45C]/15 text-[#E2C27B]"
-                          : "text-zinc-300 hover:bg-[#101620] hover:text-[#E2C27B]"
+                          ? "bg-[#C9A45C]/15 text-[#8F6B2D]"
+                          : "text-slate-600 hover:bg-[#F8FAFC] hover:text-[#8F6B2D]"
                       }`}
                       onClick={() => selectCurrency(curr.code)}
                     >
