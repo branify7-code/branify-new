@@ -80,9 +80,22 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
               </div>
               <p className="font-display text-xl font-semibold text-white">{project.serviceType}</p>
             </div>
-            <div className="w-12 h-12 rounded-full border border-[#E2E8F0] bg-white/90 backdrop-blur-md flex items-center justify-center text-[#111827] shadow-[0_6px_18px_-6px_rgba(0,0,0,0.35)]">
-              <ExternalLink className="w-5 h-5" />
-            </div>
+            {project.liveUrl ? (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit live site"
+                title={`Visit live site — ${project.liveUrl}`}
+                className="w-12 h-12 rounded-full border border-[#E2E8F0] bg-white/90 backdrop-blur-md flex items-center justify-center text-[#111827] shadow-[0_6px_18px_-6px_rgba(0,0,0,0.35)] hover:bg-[#111827] hover:text-white hover:border-[#111827] transition-colors"
+              >
+                <ExternalLink className="w-5 h-5" />
+              </a>
+            ) : (
+              <div className="w-12 h-12 rounded-full border border-[#E2E8F0] bg-white/90 backdrop-blur-md flex items-center justify-center text-[#111827] shadow-[0_6px_18px_-6px_rgba(0,0,0,0.35)]">
+                <ExternalLink className="w-5 h-5" />
+              </div>
+            )}
           </div>
         </div>
 

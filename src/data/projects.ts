@@ -72,5 +72,24 @@ export const projectsData: Project[] = [
     heroImage: 'url(/portfolio/playbeat-cover.jpg) left center / cover no-repeat',
     accentColor: '#F8B808',
     isFeatured: false
+  },
+  {
+    id: 'blockexchange',
+    title: 'Institutional AI-Powered Crypto Trading Platform',
+    client: 'BLOCKEXCHANGE',
+    category: 'AI Trading Platform',
+    serviceType: 'AI-Powered Trading Platform Web Development',
+    year: '2026',
+    description: 'BLOCKEXCHANGE is an institutional binary trading desk for crypto — pick BUY UP or BUY DOWN, set a 30s/60s/120s expiry and let real-time pricing settle the trade instantly. 18 live market pairs with sparkline trends, segregated wallets, invitation-only sub-agent onboarding and a full staff portal with audited operations.',
+    impactMetrics: [
+      { label: 'Registered Traders', value: '184,000+' },
+      { label: 'Trades Settled', value: '58M+' },
+      { label: 'Avg Execution', value: '2.4s' }
+    ],
+    deliverables: ['Binary Trading Engine — 30s/60s/120s Expiries', 'Live Markets Dashboard · 18 Pairs', 'Segregated Wallets + Sub-Agent Network', 'Staff Portal with Audited Operations'],
+    heroImage: 'url(/portfolio/blockexchange-cover.jpg) left center / cover no-repeat',
+    liveUrl: 'https://blockexchange.buzz/',
+    accentColor: '#18A8F8',
+    isFeatured: false
   }
 ];
