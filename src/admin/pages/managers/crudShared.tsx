@@ -89,6 +89,11 @@ export interface CrudConfig<T extends { id: string; archived?: boolean }> {
   /** collection has no `archived` column — hides archive UI and skips the filter */
   noArchive?: boolean;
   inlineToggles?: InlineToggle<T>[];
+  /**
+   * When provided, New/Edit routes to an external editor (e.g. the full-page
+   * Blog Editor) instead of opening the built-in modal. null = create new.
+   */
+  openEditor?: (row: T | null) => void;
   emptyTitle?: string;
   emptyHint?: string;
   icon?: React.ComponentType<{ size?: number | string; className?: string }>;
@@ -214,14 +219,22 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
     }, [load]);
 
     const openCreate = useCallback(() => {
+      if (config.openEditor) {
+        config.openEditor(null);
+        return;
+      }
       setEditing(null);
       setFormInitial(normalizeFormValues(config.defaults(), config.fields));
-    }, []);
+    }, [config]);
 
     const openEdit = useCallback((row: T) => {
+      if (config.openEditor) {
+        config.openEditor(row);
+        return;
+      }
       setEditing(row);
       setFormInitial(config.rowToForm ? config.rowToForm(row) : defaultRowToForm(config, row));
-    }, []);
+    }, [config]);
 
     useEffect(() => {
       if (wantsNew && !openedNewRef.current && !loading && !error) {

@@ -22,6 +22,13 @@ export interface BlogPost {
   tags: string[];
   featured: boolean;
   content: string;
+  /** Editor-produced article HTML (sanitized before render). Registry posts use markdown `content`. */
+  contentHtml?: string;
+  /** ISO timestamps for BlogPosting structured data (DB-published posts). */
+  publishedAtISO?: string;
+  updatedAtISO?: string;
+  /** Per-post robots directive (e.g. "noindex, nofollow") — empty = index, follow. */
+  robots?: string;
 }
 
 export const blogPosts: BlogPost[] = [

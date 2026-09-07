@@ -3,15 +3,15 @@
    • BlogIndex    → /blog          (hero, featured article,
      post grid, consultation CTA strip)
    • BlogPostPage → /blog/<slug>   (author row, cover,
-     Markdown article renderer, tags, more insights)
-   Markdown is rendered by a small local typed renderer
-   (no new deps): # / ## / ### headings, **bold**, `code`,
-   - lists and blank-line-separated paragraphs.
+     article body, tags, more insights)
+   Article bodies render through the SHARED BlogArticleBody
+   (sanitized editor HTML with auto TOC, or legacy markdown).
 ========================================================= */
 
 import React, { useMemo } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Seo from '../../components/Seo';
+import { BlogArticleBody } from '../../components/BlogArticleBody';
 import { blogPosts, BlogPost } from '../../data/blogPosts';
 
 /* ------------------------------------------------------------------ */
@@ -26,132 +26,6 @@ export interface BlogPostPageProps {
   slug: string;
   onNavigate: (path: string) => void;
 }
-
-/* ------------------------------------------------------------------ */
-/* Tiny typed Markdown renderer (local, no dependencies)               */
-/* ------------------------------------------------------------------ */
-
-type MarkdownBlock =
-  | { kind: 'heading2' | 'heading3' | 'heading4' | 'paragraph'; text: string }
-  | { kind: 'list'; items: string[] };
-
-const parseMarkdown = (content: string): MarkdownBlock[] => {
-  const lines = content.split('\n');
-
-  // The very first non-empty line of every article body is the `# `
-  // H1 — it duplicates the page H1 (rendered from post.title), so
-  // drop it before parsing blocks.
-  const firstContentIdx = lines.findIndex((l) => l.trim() !== '');
-  if (firstContentIdx !== -1 && lines[firstContentIdx].startsWith('# ')) {
-    lines.splice(firstContentIdx, 1);
-  }
-
-  const blocks: MarkdownBlock[] = [];
-  let paragraph: string[] = [];
-  let list: string[] | null = null;
-
-  const flushParagraph = () => {
-    if (paragraph.length > 0) {
-      blocks.push({ kind: 'paragraph', text: paragraph.join(' ').trim() });
-      paragraph = [];
-    }
-  };
-  const flushList = () => {
-    if (list && list.length > 0) blocks.push({ kind: 'list', items: list });
-    list = null;
-  };
-
-  for (const raw of lines) {
-    const line = raw.trim();
-    if (line === '') {
-      flushParagraph();
-      flushList();
-    } else if (line.startsWith('### ')) {
-      flushParagraph();
-      flushList();
-      blocks.push({ kind: 'heading4', text: line.slice(4).trim() });
-    } else if (line.startsWith('## ')) {
-      flushParagraph();
-      flushList();
-      blocks.push({ kind: 'heading3', text: line.slice(3).trim() });
-    } else if (line.startsWith('# ')) {
-      flushParagraph();
-      flushList();
-      blocks.push({ kind: 'heading2', text: line.slice(2).trim() });
-    } else if (line.startsWith('- ')) {
-      flushParagraph();
-      if (!list) list = [];
-      list.push(line.slice(2).trim());
-    } else {
-      flushList();
-      paragraph.push(line);
-    }
-  }
-  flushParagraph();
-  flushList();
-  return blocks;
-};
-
-/** Inline renderer: **bold** → <strong>, `code` → <code>. */
-const renderInline = (text: string): React.ReactNode[] => {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
-  return parts
-    .filter((part) => part !== '')
-    .map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="text-[#111827]">{part.slice(2, -2)}</strong>;
-      }
-      if (part.startsWith('`') && part.endsWith('`')) {
-        return (
-          <code key={i} className="font-mono text-[#8F6B2D] text-[0.9em] bg-[#F8FAFC] border border-[#E2E8F0] px-1.5 py-0.5 rounded">
-            {part.slice(1, -1)}
-          </code>
-        );
-      }
-      return <React.Fragment key={i}>{part}</React.Fragment>;
-    });
-};
-
-const renderMarkdown = (content: string): React.ReactNode[] => {
-  const blocks = parseMarkdown(content);
-  return blocks.map((block, i) => {
-    switch (block.kind) {
-      case 'heading2':
-        return (
-          <h2 key={i} className="font-display text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight mt-10 mb-4">
-            {renderInline(block.text)}
-          </h2>
-        );
-      case 'heading3':
-        return (
-          <h3 key={i} className="font-display text-xl font-extrabold text-[#111827] tracking-tight mt-8 mb-3">
-            {renderInline(block.text)}
-          </h3>
-        );
-      case 'heading4':
-        return (
-          <h4 key={i} className="text-base sm:text-lg font-extrabold text-[#111827] mt-6 mb-2">
-            {renderInline(block.text)}
-          </h4>
-        );
-      case 'list':
-        return (
-          <ul key={i} className="list-disc list-inside text-[#475569] text-sm mb-2 space-y-1.5">
-            {block.items.map((item, j) => (
-              <li key={j}>{renderInline(item)}</li>
-            ))}
-          </ul>
-        );
-      case 'paragraph':
-      default:
-        return (
-          <p key={i} className="text-sm sm:text-base text-[#334155] leading-relaxed mb-5">
-            {renderInline(block.text)}
-          </p>
-        );
-    }
-  });
-};
 
 /* ------------------------------------------------------------------ */
 /* Shared card fragments                                               */
@@ -323,6 +197,18 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
         canonicalPath={`/blog/${post.slug}`}
         ogType="article"
         ogImage={post.coverImage}
+        robots={post.robots || 'index, follow'}
+        articleSchema={{
+          headline: post.title,
+          description: post.excerpt,
+          image: post.coverImage,
+          datePublished: post.publishedAtISO || post.publishedAt,
+          dateModified: post.updatedAtISO,
+          authorName: post.author.name,
+          authorRole: post.author.role,
+          section: post.category,
+          keywords: post.tags,
+        }}
       />
 
       <section className="px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
@@ -366,8 +252,8 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
               loading="lazy"
             />
 
-            {/* Markdown article body */}
-            {renderMarkdown(post.content)}
+            {/* Article body — sanitized editor HTML (with auto TOC) or legacy markdown */}
+            <BlogArticleBody content={post.content} contentHtml={post.contentHtml} />
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-10">

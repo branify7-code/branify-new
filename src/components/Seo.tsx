@@ -46,6 +46,19 @@ export interface SeoServiceSchema {
   areaServed?: string;
 }
 
+/** BlogPosting structured data — only ever built from REAL post fields. */
+export interface SeoArticleSchema {
+  headline: string;
+  description: string;
+  image?: string;
+  datePublished?: string; // ISO
+  dateModified?: string; // ISO
+  authorName: string;
+  authorRole?: string;
+  section?: string;
+  keywords?: string[];
+}
+
 interface SeoProps {
   title?: string;
   description?: string;
@@ -53,9 +66,12 @@ interface SeoProps {
   canonicalPath?: string;
   ogType?: string;
   ogImage?: string;
+  /** Robots directive override (defaults to "index, follow"). */
+  robots?: string;
   breadcrumbs?: SeoBreadcrumb[];
   faqs?: SeoFaq[];
   serviceSchema?: SeoServiceSchema;
+  articleSchema?: SeoArticleSchema;
 }
 
 export const Seo: React.FC<SeoProps> = ({
@@ -65,9 +81,11 @@ export const Seo: React.FC<SeoProps> = ({
   canonicalPath = '',
   ogType = 'website',
   ogImage = DEFAULT_OG_IMAGE,
+  robots = 'index, follow',
   breadcrumbs,
   faqs,
   serviceSchema,
+  articleSchema,
 }) => {
   useEffect(() => {
     const originalTitle = document.title;
@@ -98,7 +116,11 @@ export const Seo: React.FC<SeoProps> = ({
 
     setMeta('description', description);
     setMeta('keywords', keywords.join(', '));
-    setMeta('robots', 'index, follow');
+    setMeta('robots', robots);
+    if (/noindex/i.test(robots)) {
+      // keep engines out entirely when a post opts out of indexing
+      setMeta('googlebot', 'noindex, nofollow');
+    }
 
     const path = canonicalPath === '/' || !canonicalPath ? '/' : canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`;
     const canonicalUrl = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
@@ -192,6 +214,29 @@ export const Seo: React.FC<SeoProps> = ({
       });
     }
 
+    // BlogPosting — built strictly from real post fields passed by /blog/<slug>
+    if (articleSchema && articleSchema.headline) {
+      graph.push({
+        '@type': 'BlogPosting',
+        '@id': `${canonicalUrl}#article`,
+        headline: articleSchema.headline.slice(0, 110),
+        description: articleSchema.description,
+        ...(articleSchema.image ? { image: [articleSchema.image] } : {}),
+        ...(articleSchema.datePublished ? { datePublished: articleSchema.datePublished } : {}),
+        ...(articleSchema.dateModified ? { dateModified: articleSchema.dateModified } : {}),
+        author: {
+          '@type': 'Person',
+          name: articleSchema.authorName,
+          ...(articleSchema.authorRole ? { jobTitle: articleSchema.authorRole } : {}),
+          worksFor: { '@id': `${SITE_URL}/#organization` },
+        },
+        publisher: { '@id': `${SITE_URL}/#organization` },
+        mainEntityOfPage: { '@id': `${canonicalUrl}#webpage` },
+        ...(articleSchema.section ? { articleSection: articleSchema.section } : {}),
+        ...(articleSchema.keywords && articleSchema.keywords.length ? { keywords: articleSchema.keywords.join(', ') } : {}),
+      });
+    }
+
     const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
     let script = document.getElementById('dynamic-jsonld');
     if (!script) {
@@ -227,7 +272,7 @@ export const Seo: React.FC<SeoProps> = ({
     return () => {
       document.title = originalTitle;
     };
-  }, [title, description, keywords, canonicalPath, ogType, ogImage, breadcrumbs, faqs, serviceSchema]);
+  }, [title, description, keywords, canonicalPath, ogType, ogImage, robots, breadcrumbs, faqs, serviceSchema, articleSchema]);
 
   return null;
 };

@@ -24,6 +24,8 @@ export interface ContentRowLike {
   published?: boolean;
   status?: string;
   updated_at?: string;
+  /** blog posts: scheduled (future) publish moment — excluded until it passes */
+  published_at?: string | null;
 }
 
 export interface InventoryInput {
@@ -229,6 +231,9 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
   });
   for (const r of rows.blog || []) {
     if (!isLive(r) || !r.slug) continue;
+    // scheduled posts (future publish moment) are not public yet — keep them out
+    if (r.published_at && Number.isFinite(Date.parse(r.published_at))
+      && Date.parse(r.published_at) > Date.now()) continue;
     const seo = contentSeo(r);
     pages.push({
       path: `/blog/${r.slug}`,

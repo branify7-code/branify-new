@@ -1,5 +1,10 @@
 // =============================================================================
 // BRANIFY ADMIN — Blog manager (collection: blog_posts)
+// -----------------------------------------------------------------------------
+// Route hub:
+//   /blog             → post list (shared CRUD table)
+//   /blog?post=new    → full-page Blog Editor (CMS-style, visual + HTML)
+//   /blog?post=<id>   → full-page Blog Editor for an existing post
 // =============================================================================
 import React from 'react';
 import { Eye, Newspaper, Star } from 'lucide-react';
@@ -9,10 +14,14 @@ import { fmtDate, timeAgo } from '../../lib/format';
 import { Badge } from '../../ui';
 import type { Column } from '../../ui/DataTable';
 import { makeCrudPage } from './crudShared';
+import { BlogEditor } from './BlogEditor';
 
-const StatusPill: React.FC<{ status: string }> = ({ status }) => (
-  <Badge tone={status === 'published' ? 'green' : 'steel'}>{status === 'published' ? 'Published' : 'Draft'}</Badge>
-);
+const StatusPill: React.FC<{ row: BlogRow }> = ({ row }) => {
+  const scheduled = row.status === 'published' && row.published_at
+    && new Date(row.published_at).getTime() > Date.now();
+  if (scheduled) return <Badge tone="violet">Scheduled</Badge>;
+  return <Badge tone={row.status === 'published' ? 'green' : 'steel'}>{row.status === 'published' ? 'Published' : 'Draft'}</Badge>;
+};
 
 const columns: Column<BlogRow>[] = [
   {
@@ -36,7 +45,7 @@ const columns: Column<BlogRow>[] = [
   {
     key: 'status',
     label: 'Status',
-    render: (r) => <StatusPill status={r.status} />,
+    render: (r) => <StatusPill row={r} />,
   },
   {
     key: 'published_at',
@@ -61,16 +70,15 @@ const columns: Column<BlogRow>[] = [
   },
 ];
 
-export const BlogManager = makeCrudPage<BlogRow>({
+const ListPage = makeCrudPage<BlogRow>({
   collection: 'blog_posts',
   title: 'Blog Posts',
-  subtitle: 'Insights & strategy articles for the public /blog — markdown body, tags and SEO.',
+  subtitle: 'Insights & strategy articles for the public /blog — CMS editor with HTML mode, media library, SEO audit and Search Console area.',
   entity: 'post',
   plural: 'posts',
   nameKey: 'title',
   slugKey: 'slug',
   icon: Newspaper,
-  modalWidth: 'xl',
   defaultSort: 'created_at',
   defaultDir: 'desc',
   filter: {
@@ -116,17 +124,6 @@ export const BlogManager = makeCrudPage<BlogRow>({
     { kind: 'date', key: 'published_at', label: 'Published date', hint: 'Leave empty for an unscheduled draft.' },
     { kind: 'text', key: 'cover_image', label: 'Cover image URL', placeholder: 'https://…', col: 2 },
     { kind: 'textarea', key: 'excerpt', label: 'Excerpt', col: 2, rows: 3, counter: 200, hint: 'Short summary used on cards and meta description fallback.' },
-    {
-      kind: 'code',
-      key: 'content',
-      label: 'Content (Markdown)',
-      col: 2,
-      rows: 16,
-      placeholder: '## Heading\n\nParagraph…\n\n- list item',
-      hint: 'Markdown: ## / ### headings, **bold**, `code`, - lists.',
-    },
-    { kind: 'chips', key: 'tags', label: 'Tags', hint: 'Press Enter to add each tag.', col: 2 },
-    { kind: 'toggle', key: 'featured', label: 'Featured' },
   ],
   defaults: () => ({
     slug: '',
@@ -145,6 +142,20 @@ export const BlogManager = makeCrudPage<BlogRow>({
   }),
   emptyTitle: 'No posts yet',
   emptyHint: 'Write your first article — published posts appear instantly on the public /blog.',
+  openEditor: (row) => navBridge.current(row ? `/blog?post=${row.id}` : '/blog?post=new'),
 });
+
+/** Module-level navigation bridge — the list config routes New/Edit here. */
+const navBridge: { current: (pathUnderAdmin: string) => void } = { current: () => {} };
+
+export const BlogManager: React.FC<AdminPageProps> = (props) => {
+  const postId = props.query.get('post');
+  navBridge.current = props.navigate;
+
+  if (postId) {
+    return <BlogEditor postId={postId === 'new' ? null : postId} {...props} />;
+  }
+  return <ListPage {...props} />;
+};
 
 export type BlogManagerProps = AdminPageProps;

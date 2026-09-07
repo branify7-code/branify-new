@@ -11,10 +11,11 @@ import { servicesRegistry } from '../data/servicesRegistry';
 import { toolsRegistry } from '../data/toolsRegistry';
 import { aiToolsDirectory } from '../data/aiToolsDirectory';
 import { projectsData } from '../data/projects';
-import { blogPosts } from '../data/blogPosts';
+import { blogPosts, BlogPost } from '../data/blogPosts';
 import { freeTemplates } from '../data/freeTemplatesRegistry';
 import { templatesRegistry } from '../data/templates/templates';
 import { TEMPLATE_CATEGORIES } from '../data/templates';
+import { htmlToPlainText, looksLikeHtml, sanitizeArticleHtml } from './sanitizeHtml';
 
 const LOCAL_ENABLED = Boolean((import.meta as { env?: Record<string, unknown> }).env?.DEV);
 const CACHE_KEY = 'branify_public_overrides_v1';
@@ -36,6 +37,51 @@ interface OverridesPayload {
 
 const str = (v: unknown): string => (typeof v === 'string' ? v : '');
 const bool = (v: unknown): boolean | undefined => (typeof v === 'boolean' ? v : undefined);
+
+/**
+ * Converts a published blog_posts DB row into a public BlogPost and injects it
+ * into the compiled registry. Content is SANITIZED here (same sanitizer as the
+ * article renderer — defense in depth) and reading time is computed from the
+ * real word count, never hardcoded.
+ */
+function dbRowToBlogPost(o: Record<string, unknown>): BlogPost {
+  const slug = str(o.slug);
+  const raw = str(o.content);
+  const isHtml = looksLikeHtml(raw);
+  const contentHtml = isHtml ? sanitizeArticleHtml(raw) : undefined;
+  const content = isHtml ? '' : raw;
+  const plain = htmlToPlainText(contentHtml || content);
+  const words = plain.split(/\s+/).filter(Boolean).length;
+  const mins = Math.max(1, Math.round(words / 200));
+  const pubIso = str(o.published_at);
+  const d = pubIso ? new Date(pubIso) : null;
+  const tags = Array.isArray(o.tags) ? o.tags.map(String) : [];
+  const seo = (o.seo && typeof o.seo === 'object' ? o.seo : {}) as Record<string, unknown>;
+  return {
+    id: `db-${slug}`,
+    slug,
+    title: str(o.title),
+    excerpt: str(o.excerpt),
+    category: str(o.category) || 'Insights',
+    author: {
+      name: str(o.author_name) || 'BRANIFY Team',
+      role: str(o.author_role),
+      avatar: '/brand/branify-logo.png',
+    },
+    publishedAt: d && !isNaN(d.getTime())
+      ? d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      : '',
+    readTime: `${mins} min read`,
+    coverImage: str(o.cover_image),
+    tags,
+    featured: bool(o.featured) === true,
+    content,
+    contentHtml,
+    publishedAtISO: pubIso || undefined,
+    updatedAtISO: str(o.updated_at) || undefined,
+    robots: str(seo.robots) || undefined,
+  };
+}
 
 function applyOverrides(p: OverridesPayload): void {
   // ---- services
@@ -113,17 +159,46 @@ function applyOverrides(p: OverridesPayload): void {
   }
 
   // ---- blog
+  // 1) Rows matching compiled registry posts patch/remove them (existing).
+  // 2) NEW: posts created in the admin editor are INJECTED so /blog grows
+  //    without a redeploy. Drafts/archived rows are dropped; scheduled rows
+  //    (status published + future published_at) stay hidden until the moment.
+  const nowMs = Date.now();
+  const freshPosts: Array<Record<string, unknown>> = [];
   for (const o of p.blog_posts || []) {
     const b = blogPosts.find((x) => x.slug === str(o.slug));
-    if (!b) continue;
-    if (str(o.status) === 'draft' || bool(o.archived) === true) {
+    const hidden = str(o.status) === 'draft' || bool(o.archived) === true;
+    if (b) {
       const i = blogPosts.indexOf(b);
-      if (i >= 0) blogPosts.splice(i, 1);
+      if (hidden) {
+        blogPosts.splice(i, 1);
+        continue;
+      }
+      if (str(o.title)) b.title = str(o.title);
+      if (str(o.excerpt)) b.excerpt = str(o.excerpt);
+      // editor content: sanitized HTML wins; legacy markdown passes through
+      const c = str(o.content);
+      if (c) {
+        if (looksLikeHtml(c)) {
+          b.contentHtml = sanitizeArticleHtml(c);
+          b.content = '';
+        } else {
+          b.content = c;
+          b.contentHtml = undefined;
+        }
+      }
+      if (str(o.cover_image)) b.coverImage = str(o.cover_image);
       continue;
     }
-    if (str(o.title)) b.title = str(o.title);
-    if (str(o.excerpt)) b.excerpt = str(o.excerpt);
+    if (hidden) continue;
+    const pubIso = str(o.published_at);
+    if (pubIso && Number.isFinite(Date.parse(pubIso)) && Date.parse(pubIso) > nowMs) continue; // scheduled
+    if (!str(o.slug) || !str(o.title)) continue;
+    freshPosts.push(o);
   }
+  freshPosts.sort((a, z) =>
+    (Date.parse(str(a.published_at)) || 0) - (Date.parse(str(z.published_at)) || 0));
+  for (const o of freshPosts) blogPosts.unshift(dbRowToBlogPost(o));
 
   // ---- template library categories (tagline/hero/name + deactivation)
   for (const o of p.template_categories || []) {

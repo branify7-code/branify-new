@@ -52,14 +52,16 @@ type BadgeCounts = { leads_new: number; not_found: number };
 
 const AdminApp: React.FC = () => {
   const [path, setPath] = useState<string>(() =>
-    typeof window !== 'undefined' ? window.location.pathname : '/admin',
+    typeof window !== 'undefined'
+      ? window.location.pathname + window.location.search
+      : '/admin',
   );
   const [session, setSession] = useState<{ user: AdminUser; mode: AdminMode } | 'loading' | null>('loading');
   const [sessionEpoch, setSessionEpoch] = useState(0);
 
   // Internal navigation (works with the SPA's pushState routing)
   useEffect(() => {
-    const sync = () => setPath(window.location.pathname);
+    const sync = () => setPath(window.location.pathname + window.location.search);
     window.addEventListener('popstate', sync);
     window.addEventListener('branify:admin-nav', sync);
     return () => {
