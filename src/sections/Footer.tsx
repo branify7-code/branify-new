@@ -141,9 +141,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
             <button onClick={() => nav('/')} className="text-left focus:outline-none cursor-pointer">
               <div className="flex items-center gap-3 group">
                 <img
-                  src="/branify-logo-horizontal.svg"
+                  src="/brand/branify-logo.png"
                   alt="BRANIFY — Build. Brand. Grow."
-                  className="h-12 w-auto transition-transform duration-300 group-hover:scale-[1.03] drop-shadow-[0_0_18px_rgba(91,95,239,0.35)]"
+                  width={1672}
+                  height={941}
+                  className="h-14 w-auto transition-transform duration-300 group-hover:scale-[1.03]"
                 />
               </div>
             </button>

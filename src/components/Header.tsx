@@ -643,11 +643,15 @@ export default function Header({
           aria-label="BRANIFY Home"
           onClick={(e) => handleNavClick(e, "/")}
         >
-          <img
-            src="/branify-logo-horizontal-light.svg"
-            alt="BRANIFY — Build. Brand. Grow."
-            className="h-10 w-auto min-[420px]:h-11 transition-transform duration-300 hover:scale-[1.03]"
-          />
+          <span className="inline-flex items-center justify-center rounded-xl bg-[#0B1120] ring-1 ring-[#C9A45C]/30 px-2.5 py-1.5 shadow-[0_2px_10px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:scale-[1.03]">
+            <img
+              src="/brand/branify-logo.png"
+              alt="BRANIFY — Build. Brand. Grow."
+              width={1672}
+              height={941}
+              className="h-9 w-auto min-[420px]:h-10"
+            />
+          </span>
         </button>
 
         {/* ============ DESKTOP NAV ============ */}

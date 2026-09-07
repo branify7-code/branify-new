@@ -121,7 +121,7 @@ export const Seo: React.FC<SeoProps> = ({
         '@id': `${SITE_URL}/#organization`,
         name: 'BRANIFY',
         url: SITE_URL,
-        logo: `${SITE_URL}/branify-logo.png`,
+        logo: `${SITE_URL}/brand/branify-logo.png`,
         description: 'BRANIFY is an international full-stack digital agency providing custom web development, brand identity design, AI solutions, and digital products.',
         email: 'admin@branify.store',
         telephone: '+44-7412-831132',

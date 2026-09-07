@@ -276,10 +276,10 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
         <Card title="Brand" subtitle="Logo, favicon and the default social-share image" actions={sectionActions('brand')}>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Logo URL">
-              <Input value={drafts.brand.logo_url} onChange={(e) => patch('brand', { logo_url: e.target.value })} placeholder="/branify-logo-horizontal.svg" className="font-mono text-xs" />
+              <Input value={drafts.brand.logo_url} onChange={(e) => patch('brand', { logo_url: e.target.value })} placeholder="/brand/branify-logo.png" className="font-mono text-xs" />
             </Field>
             <Field label="Favicon URL">
-              <Input value={drafts.brand.favicon_url} onChange={(e) => patch('brand', { favicon_url: e.target.value })} placeholder="/branify-icon.svg" className="font-mono text-xs" />
+              <Input value={drafts.brand.favicon_url} onChange={(e) => patch('brand', { favicon_url: e.target.value })} placeholder="/branify-icon.png" className="font-mono text-xs" />
             </Field>
             <Field label="Default OG image" className="sm:col-span-2" hint="Fallback social-share image when a page defines none.">
               <Input value={drafts.brand.default_og_image} onChange={(e) => patch('brand', { default_og_image: e.target.value })} placeholder="/og/home.jpg" className="font-mono text-xs" />

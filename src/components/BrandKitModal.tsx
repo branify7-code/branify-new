@@ -7,9 +7,9 @@ interface BrandKitModalProps {
 }
 
 /* ------------------------------------------------------------------ */
-/* BrandKitModal — replica of branify.store's "Logo & Brand Kit"      */
-/* modal: official logo & icon downloads served from                  */
-/* /downloads/ (files ship with the site, no external requests).      */
+/* BrandKitModal — "Logo & Brand Kit" modal: THE official BRANIFY     */
+/* logo & monogram icon (transparent PNG) served from /downloads/.    */
+/* Single official artwork — no variants, no recreations.             */
 /* ------------------------------------------------------------------ */
 
 interface BrandAsset {
@@ -20,29 +20,14 @@ interface BrandAsset {
 
 const brandAssets: BrandAsset[] = [
   {
-    title: 'BRANIFY PRIMARY LOGO (TRANSPARENT)',
+    title: 'BRANIFY OFFICIAL LOGO (TRANSPARENT PNG)',
     file: '/downloads/branify-logo.png',
-    note: 'Full-color horizontal lockup on transparent canvas — for light & dark backgrounds.',
+    note: 'The official BRANIFY logo — metallic gold monogram & wordmark lockup on transparent canvas. Use as-is.',
   },
   {
-    title: 'BRANIFY PRIMARY LOGO (DARK CANVAS)',
-    file: '/downloads/branify-logo-dark.png',
-    note: 'Horizontal lockup pre-composed on the brand dark canvas.',
-  },
-  {
-    title: 'BRANIFY MONOGRAM ICON MARK (TRANSPARENT)',
+    title: 'BRANIFY OFFICIAL MONOGRAM ICON (TRANSPARENT PNG)',
     file: '/downloads/branify-icon.png',
-    note: 'Square app-icon / favicon monogram on transparent canvas.',
-  },
-  {
-    title: 'BRANIFY MONOGRAM ICON MARK (DARK THEME)',
-    file: '/downloads/branify-icon-dark.png',
-    note: 'Monogram mark pre-composed on the brand dark canvas.',
-  },
-  {
-    title: 'BRANIFY VERTICAL EMBLEM LOCKUP',
-    file: '/downloads/branify-logo-vertical.png',
-    note: 'Stacked emblem + wordmark for packaging, merch & avatars.',
+    note: 'The official B monogram mark — app icon / favicon usage on transparent canvas.',
   },
 ];
 
@@ -106,7 +91,7 @@ export const BrandKitModal: React.FC<BrandKitModalProps> = ({ isOpen, onClose })
               key={asset.file}
               className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#C9A45C]/40 transition-colors"
             >
-              <div className="w-20 h-20 shrink-0 rounded-xl bg-white border border-[#E2E8F0] flex items-center justify-center p-2.5">
+              <div className="w-20 h-20 shrink-0 rounded-xl bg-[#0B1120] border border-[#E2E8F0] flex items-center justify-center p-2.5">
                 <img src={asset.file} alt={asset.title} className="max-w-full max-h-full object-contain" loading="lazy" />
               </div>
               <div className="min-w-0 flex-1 space-y-1">

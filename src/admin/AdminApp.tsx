@@ -98,7 +98,7 @@ const AdminApp: React.FC = () => {
     return (
       <div className="adm-root flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <img src="/branify-icon.svg" alt="BRANIFY" className="h-10 w-10 animate-pulse" />
+          <img src="/branify-icon.png" alt="BRANIFY" className="h-10 w-10 animate-pulse" />
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8F6B2D]">Loading admin…</p>
         </div>
       </div>
@@ -241,7 +241,7 @@ const AdminShell: React.FC<{
   const SidebarInner = ({ compact }: { compact?: boolean }) => (
     <div className="flex h-full flex-col">
       <div className={cx('flex items-center gap-2.5 px-4 py-4', compact && 'justify-center px-2')}>
-        <img src="/branify-icon.svg" alt="BRANIFY logo" className="h-9 w-9 shrink-0" />
+        <img src="/branify-icon.png" alt="BRANIFY logo" className="h-9 w-9 shrink-0" />
         {!compact && (
           <div className="min-w-0 leading-tight">
             <p className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-[#111827]">BRANIFY</p>
