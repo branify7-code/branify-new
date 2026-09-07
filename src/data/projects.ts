@@ -73,5 +73,23 @@ export const projectsData: Project[] = [
     liveUrl: 'https://blockexchange.buzz/',
     accentColor: '#18A8F8',
     isFeatured: false
+  },
+  {
+    id: 'worlddollar-quest',
+    title: 'Learn-to-Earn Online Education Platform',
+    client: 'WorldDollar Quest',
+    category: 'Learn-to-Earn Platform',
+    serviceType: 'Content Platform Design & Web Development',
+    year: '2026',
+    description: 'WorldDollar Quest is a free learn-to-earn platform that helps beginners start an online career from anywhere — structured roadmaps across freelancing, in-demand skills, remote jobs, digital careers and global payments, with practical guides, real success stories, weekly updates and a supportive community.',
+    impactMetrics: [
+      { label: 'Practical Guides', value: '25+' },
+      { label: 'Free Core Resources', value: '100%' },
+      { label: 'New Guides & Leads', value: 'Weekly' }
+    ],
+    deliverables: ['Learn-to-Earn Platform UI & Quest-Map Onboarding', '7 Guided Career Paths & Skill Tracks', 'Editorial Blog with Success Stories', 'Community, Membership & Weekly Newsletter'],
+    heroImage: 'url(/portfolio/worlddollar-quest-cover.jpg) left center / cover no-repeat',
+    accentColor: '#0B6E4F',
+    isFeatured: false
   }
 ];

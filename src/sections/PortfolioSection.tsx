@@ -14,7 +14,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
-  const categories = ['All', 'E-Commerce Experience', 'Digital Marketplace', 'AI Trading Platform'];
+  const categories = ['All', 'E-Commerce Experience', 'Digital Marketplace', 'AI Trading Platform', 'Learn-to-Earn Platform'];
 
   const filteredProjects =
     activeCategory === 'All'
@@ -53,7 +53,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               <Filter className="w-3.5 h-3.5" />
               <span>Filter:</span>
             </div>
-            {categories.slice(0, 4).map((cat) => (
+            {categories.slice(0, 5).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
