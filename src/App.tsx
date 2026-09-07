@@ -15,6 +15,7 @@ import { PortfolioView } from './views/portfolio/PortfolioView';
 import FreeToolsView from './views/tools/FreeToolsView';
 import ToolPageView from './views/tools/ToolPageView';
 import { AIToolsView } from './views/ai-tools/AIToolsView';
+import { AIToolDetailView } from './views/ai-tools/AIToolDetailView';
 import { ContactView } from './views/contact/ContactView';
 import { AboutView } from './views/about/AboutView';
 import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageView';
@@ -255,7 +256,14 @@ export default function App() {
           />
         )}
 
-        {(pathname === '/ai-tools' || pathname.startsWith('/ai-tools/')) && <AIToolsView />}
+        {pathname === '/ai-tools' && <AIToolsView />}
+
+        {pathname.startsWith('/ai-tools/') && (
+          <AIToolDetailView
+            slug={decodeURIComponent(pathname.replace('/ai-tools/', '').split('/')[0])}
+            onNavigate={navigateTo}
+          />
+        )}
 
         {pathname === '/pricing' && <ServicesView onNavigate={navigateTo} />}
 

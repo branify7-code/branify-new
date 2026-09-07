@@ -1,0 +1,127 @@
+{
+  "chatgpt": {
+    "type": "svg",
+    "title": "OpenAI",
+    "hex": "#412991"
+  },
+  "claude": {
+    "type": "svg",
+    "title": "Claude",
+    "hex": "#D97757"
+  },
+  "gemini": {
+    "type": "svg",
+    "title": "Google Gemini",
+    "hex": "#8E75B2"
+  },
+  "grok": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "grok"
+  },
+  "jasper": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "jasper"
+  },
+  "copy-ai": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "copy-ai"
+  },
+  "grammarly": {
+    "type": "svg",
+    "title": "Grammarly",
+    "hex": "#027E6F"
+  },
+  "midjourney": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "midjourney"
+  },
+  "leonardo-ai": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "leonardo-ai"
+  },
+  "ideogram": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "ideogram"
+  },
+  "adobe-firefly": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "adobe-firefly"
+  },
+  "runway": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "runway"
+  },
+  "synthesia": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "synthesia"
+  },
+  "veo": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "veo"
+  },
+  "elevenlabs": {
+    "type": "svg",
+    "title": "ElevenLabs",
+    "hex": "#000000"
+  },
+  "murf-ai": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "murf-ai"
+  },
+  "github-copilot": {
+    "type": "svg",
+    "title": "GitHub Copilot",
+    "hex": "#000000"
+  },
+  "cursor": {
+    "type": "png",
+    "source": "apple-touch-icon",
+    "title": "cursor"
+  },
+  "replit": {
+    "type": "svg",
+    "title": "Replit",
+    "hex": "#F26207"
+  },
+  "lovable": {
+    "type": "png",
+    "source": "apple-touch-icon",
+    "title": "lovable"
+  },
+  "bolt": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "bolt"
+  },
+  "perplexity": {
+    "type": "svg",
+    "title": "Perplexity",
+    "hex": "#1FB8CD"
+  },
+  "notebooklm": {
+    "type": "png",
+    "source": "google-s2",
+    "title": "notebooklm"
+  },
+  "zapier": {
+    "type": "svg",
+    "title": "Zapier",
+    "hex": "#FF4F00"
+  },
+  "n8n": {
+    "type": "svg",
+    "title": "n8n",
+    "hex": "#EA4B71"
+  }
+}

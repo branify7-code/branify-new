@@ -1,7 +1,45 @@
 /* =========================================================
    BRANIFY AI TOOLS DIRECTORY — full copy of branify.store
    26 hand-picked AI tools across 9 categories (1:1 live data).
+   ---------------------------------------------------------
+   Extended model (spec: AI TOOLS DISCOVERY + GUIDES):
+   · slug/icon/featured/beginnerFriendly/guide are seeded here
+     and OVERLAID by the admin DB rows through contentOverrides.
+   · guide content comes from aiToolGuides.ts (seed) and can be
+     replaced per tool from the admin editor (ai_tools.seo).
 ========================================================= */
+
+import { aiToolGuides, type AIToolGuideContent } from './aiToolGuides';
+
+export type { AIToolGuideContent };
+export type { AIToolGuideStep, AIToolPrompt, AIToolUseCase, AIToolFaq } from './aiToolGuides';
+
+/** Extended SEO/metadata document stored in ai_tools.seo (jsonb). */
+export interface AIToolSeoDoc {
+  /* standard fields (compatible with the shared admin SEO block) */
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  og_image?: string;
+  /* extended fields (admin editor) */
+  focus_keyword?: string;
+  secondary_keywords?: string[];
+  canonical?: string;
+  og_title?: string;
+  og_description?: string;
+  about?: string;
+  best_for?: string[];
+  use_cases?: Array<{ title: string; text: string }>;
+  beginner_friendly?: boolean;
+  tips?: string[];
+  pros?: string[];
+  limitations?: string[];
+  guide_intro?: string;
+  guide_steps?: Array<{ title: string; text: string; image?: string; caption?: string; alt?: string }>;
+  prompts?: Array<{ title: string; category: string; content: string; sort?: number; active?: boolean }>;
+  outputs?: Array<{ image?: string; caption?: string; alt?: string; prompt?: string; sort?: number }>;
+  faqs?: Array<{ question: string; answer: string; sort?: number; active?: boolean }>;
+}
 
 export interface AIDirectoryTool {
   name: string;
@@ -9,9 +47,52 @@ export interface AIDirectoryTool {
   category: string;
   pricing: 'Free' | 'Freemium' | 'Paid';
   url: string;
+  /* extended (seeded at module init below) */
+  slug: string;
+  icon: string;
+  featured: boolean;
+  beginnerFriendly: boolean;
+  sort: number;
+  guide: AIToolGuideContent | null;
+  seo: AIToolSeoDoc;
 }
 
-export const aiToolsDirectory: AIDirectoryTool[] = [
+const SEED_NAME_TO_SLUG: Record<string, string> = {
+  ChatGPT: 'chatgpt',
+  Claude: 'claude',
+  Gemini: 'gemini',
+  Grok: 'grok',
+  Jasper: 'jasper',
+  'Copy.ai': 'copy-ai',
+  Grammarly: 'grammarly',
+  Midjourney: 'midjourney',
+  'Leonardo.Ai': 'leonardo-ai',
+  Ideogram: 'ideogram',
+  'Adobe Firefly': 'adobe-firefly',
+  Runway: 'runway',
+  Synthesia: 'synthesia',
+  Veo: 'veo',
+  ElevenLabs: 'elevenlabs',
+  'Murf AI': 'murf-ai',
+  'GitHub Copilot': 'github-copilot',
+  Cursor: 'cursor',
+  Replit: 'replit',
+  Lovable: 'lovable',
+  Bolt: 'bolt',
+  Perplexity: 'perplexity',
+  NotebookLM: 'notebooklm',
+  Gamma: 'gamma',
+  Zapier: 'zapier',
+  n8n: 'n8n',
+};
+
+const slugify = (name: string) =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+type SeedTool = Pick<AIDirectoryTool, 'name' | 'desc' | 'category' | 'pricing' | 'url'>;
+
+export const aiToolsDirectory: AIDirectoryTool[] = (
+  [
   { name: 'ChatGPT', desc: 'General-purpose AI assistant for writing, coding, research, and images.', category: 'Chat Assistants', pricing: 'Freemium', url: 'https://chat.openai.com' },
   { name: 'Claude', desc: 'AI assistant strong at writing, coding, and reasoning-heavy tasks.', category: 'Chat Assistants', pricing: 'Freemium', url: 'https://claude.ai' },
   { name: 'Gemini', desc: "Google's AI assistant, integrated with Gmail, Docs, and Sheets.", category: 'Chat Assistants', pricing: 'Freemium', url: 'https://gemini.google.com' },
@@ -38,7 +119,19 @@ export const aiToolsDirectory: AIDirectoryTool[] = [
   { name: 'Gamma', desc: 'Turns notes and outlines into polished presentations.', category: 'Productivity & Research', pricing: 'Freemium', url: 'https://gamma.app' },
   { name: 'Zapier', desc: 'No-code AI workflow automation across thousands of apps.', category: 'Automation', pricing: 'Freemium', url: 'https://zapier.com' },
   { name: 'n8n', desc: 'Developer-friendly workflow automation with AI steps.', category: 'Automation', pricing: 'Freemium', url: 'https://n8n.io' },
-];
+] as SeedTool[]).map((t, i): AIDirectoryTool => {
+  const slug = SEED_NAME_TO_SLUG[t.name] || slugify(t.name);
+  return {
+    ...t,
+    slug,
+    icon: '',
+    featured: i < 6,
+    beginnerFriendly: aiToolGuides[slug]?.beginnerFriendly ?? true,
+    sort: i,
+    guide: aiToolGuides[slug] || null,
+    seo: {},
+  };
+});
 
 export const aiToolCategories: string[] = ['All', ...Array.from(new Set(aiToolsDirectory.map((t) => t.category)))];
 

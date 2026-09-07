@@ -9,6 +9,7 @@ import { timeAgo } from '../../lib/format';
 import { Badge } from '../../ui';
 import type { Column } from '../../ui/DataTable';
 import { makeCrudPage } from './crudShared';
+import { AIToolEditor } from './AIToolEditor';
 
 const KNOWN_CATEGORIES = [
   'Chat Assistants',
@@ -76,7 +77,7 @@ const columns: Column<AiToolRow>[] = [
 export const AIToolsManager = makeCrudPage<AiToolRow>({
   collection: 'ai_tools',
   title: 'AI Tools',
-  subtitle: 'The curated AI directory at /ai-tools — external tools with pricing tiers.',
+  subtitle: 'The AI discovery platform at /ai-tools — directory cards, beginner guides, example prompts, FAQs and per-tool SEO, all editable here.',
   entity: 'AI tool',
   plural: 'AI tools',
   nameKey: 'name',
@@ -137,6 +138,20 @@ export const AIToolsManager = makeCrudPage<AiToolRow>({
   }),
   emptyTitle: 'No AI tools yet',
   emptyHint: 'The public /ai-tools directory renders from this registry.',
+  openEditor: (row) => navBridge.current(row ? `/ai-tools?tool=${row.id}` : '/ai-tools?tool=new'),
 });
+
+/** Module-level navigation bridge — the list config routes New/Edit here. */
+const navBridge: { current: (pathUnderAdmin: string) => void } = { current: () => {} };
+
+export const AIToolsManagerPage: React.FC<AdminPageProps> = (props) => {
+  const toolId = props.query.get('tool');
+  navBridge.current = props.navigate;
+
+  if (toolId) {
+    return <AIToolEditor toolId={toolId === 'new' ? null : toolId} {...props} />;
+  }
+  return <AIToolsManager {...props} />;
+};
 
 export type AIToolsManagerProps = AdminPageProps;

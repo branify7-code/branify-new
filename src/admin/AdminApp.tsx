@@ -24,7 +24,7 @@ import { Dashboard } from './pages/Dashboard';
 import { ServicesManager } from './pages/managers/ServicesManager';
 import { PortfolioManager } from './pages/managers/PortfolioManager';
 import { ToolsManager } from './pages/managers/ToolsManager';
-import { AIToolsManager } from './pages/managers/AIToolsManager';
+import { AIToolsManagerPage } from './pages/managers/AIToolsManager';
 import { ProductsManager } from './pages/managers/ProductsManager';
 import { TemplatesManager } from './pages/managers/TemplatesManager';
 import { TemplateCategoriesManager } from './pages/managers/TemplateCategoriesManager';
@@ -206,7 +206,7 @@ const AdminShell: React.FC<{
       case '/services': return <ServicesManager {...pageProps} />;
       case '/portfolio': return <PortfolioManager {...pageProps} />;
       case '/tools': return <ToolsManager {...pageProps} />;
-      case '/ai-tools': return <AIToolsManager {...pageProps} />;
+      case '/ai-tools': return <AIToolsManagerPage {...pageProps} />;
       case '/products': return <ProductsManager {...pageProps} />;
       case '/templates': return <TemplatesManager {...pageProps} />;
       case '/template-categories': return <TemplateCategoriesManager {...pageProps} />;
@@ -390,7 +390,7 @@ const AdminShell: React.FC<{
                   ['New Service', '/services?new=1'],
                   ['New Portfolio Project', '/portfolio?new=1'],
                   ['New Tool', '/tools?new=1'],
-                  ['New AI Tool', '/ai-tools?new=1'],
+                  ['New AI Tool', '/ai-tools?tool=new'],
                   ['New Product', '/products?new=1'],
                   ['New Template', '/templates?new=1'],
                   ['New Blog Post', '/blog?new=1'],

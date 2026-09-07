@@ -122,13 +122,57 @@ function applyOverrides(p: OverridesPayload): void {
   for (const o of p.ai_tools || []) {
     const t = aiToolsDirectory.find((x) => str(o.slug) === x.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
     if (!t) continue;
-    if (bool(o.active) === false) {
+    if (bool(o.active) === false || bool(o.archived) === true) {
       const i = aiToolsDirectory.indexOf(t);
       if (i >= 0) aiToolsDirectory.splice(i, 1);
       continue;
     }
     if (str(o.name)) t.name = str(o.name);
     if (str(o.description)) t.desc = str(o.description);
+    if (str(o.category)) t.category = str(o.category);
+    if (str(o.url)) t.url = str(o.url);
+    if (str(o.pricing)) t.pricing = str(o.pricing) as typeof t.pricing;
+    if (str(o.icon)) t.icon = str(o.icon);
+    if (bool(o.featured) !== undefined) t.featured = bool(o.featured);
+    if (o.sort_order !== undefined && o.sort_order !== null) t.sort = Number(o.sort_order) || 0;
+    // extended metadata document (seo jsonb) — guide content, prompts, faqs, seo fields
+    const seoDoc = (o.seo && typeof o.seo === 'object' ? o.seo : null) as Record<string, unknown> | null;
+    if (seoDoc) {
+      const clean = { ...t.seo };
+      for (const k of ['title', 'description', 'og_image', 'focus_keyword', 'canonical', 'og_title', 'og_description', 'about', 'guide_intro'] as const) {
+        if (typeof seoDoc[k] === 'string' && seoDoc[k]) (clean as Record<string, unknown>)[k] = str(seoDoc[k]);
+      }
+      for (const k of ['keywords', 'secondary_keywords', 'best_for', 'tips', 'pros', 'limitations'] as const) {
+        if (Array.isArray(seoDoc[k])) (clean as Record<string, unknown>)[k] = (seoDoc[k] as unknown[]).map(String).filter(Boolean);
+      }
+      for (const k of ['use_cases', 'guide_steps', 'prompts', 'outputs', 'faqs'] as const) {
+        if (Array.isArray(seoDoc[k]) && (seoDoc[k] as unknown[]).length) (clean as Record<string, unknown>)[k] = seoDoc[k];
+      }
+      if (typeof seoDoc.beginner_friendly === 'boolean') clean.beginner_friendly = seoDoc.beginner_friendly;
+      t.seo = clean;
+      // admin-managed guide overrides the compiled seed
+      const hasGuideOverride = (Array.isArray(clean.guide_steps) && clean.guide_steps.length > 0) || (typeof clean.about === 'string' && clean.about.length > 0);
+      if (hasGuideOverride && t.guide) {
+        const dbPrompts = Array.isArray(clean.prompts)
+          ? (clean.prompts as Array<Record<string, unknown>>)
+              .filter((p) => p.active !== false && String(p.content ?? '').trim())
+              .map((p) => ({ title: String(p.title ?? ''), category: String(p.category ?? 'Prompts'), content: String(p.content ?? '') }))
+          : [];
+        t.guide = {
+          ...t.guide,
+          about: typeof clean.about === 'string' && clean.about ? clean.about : t.guide.about,
+          bestFor: Array.isArray(clean.best_for) && clean.best_for.length ? clean.best_for : t.guide.bestFor,
+          useCases: Array.isArray(clean.use_cases) && clean.use_cases.length ? clean.use_cases.map((u) => ({ title: String((u as { title?: unknown })?.title ?? ''), text: String((u as { text?: unknown })?.text ?? '') })).filter((u) => u.title || u.text) : t.guide.useCases,
+          beginnerFriendly: typeof clean.beginner_friendly === 'boolean' ? clean.beginner_friendly : t.guide.beginnerFriendly,
+          steps: Array.isArray(clean.guide_steps) && clean.guide_steps.length ? clean.guide_steps.map((s) => ({ title: String((s as { title?: unknown })?.title ?? ''), text: String((s as { text?: unknown })?.text ?? ''), image: typeof (s as { image?: unknown })?.image === 'string' ? (s as { image: string }).image : undefined, caption: typeof (s as { caption?: unknown })?.caption === 'string' ? (s as { caption: string }).caption : undefined, alt: typeof (s as { alt?: unknown })?.alt === 'string' ? (s as { alt: string }).alt : undefined })) : t.guide.steps,
+          prompts: dbPrompts.length ? dbPrompts : t.guide.prompts,
+          tips: Array.isArray(clean.tips) && clean.tips.length ? clean.tips : t.guide.tips,
+          pros: Array.isArray(clean.pros) && clean.pros.length ? clean.pros : t.guide.pros,
+          limitations: Array.isArray(clean.limitations) && clean.limitations.length ? clean.limitations : t.guide.limitations,
+          faqs: Array.isArray(clean.faqs) && clean.faqs.length ? clean.faqs.map((f) => ({ question: String((f as { question?: unknown })?.question ?? ''), answer: String((f as { answer?: unknown })?.answer ?? '') })).filter((f) => f.question && f.answer) : t.guide.faqs,
+        };
+      }
+    }
   }
 
   // ---- products (free templates)
