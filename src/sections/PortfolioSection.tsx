@@ -184,6 +184,7 @@ export const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                   style={{ background: project.heroImage }}
                 />
                 <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120]/40 via-transparent to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/85 via-[#0B1120]/15 to-transparent" />
 
                 <div className="relative z-10 h-full p-6 flex flex-col justify-between">

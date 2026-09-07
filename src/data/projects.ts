@@ -108,5 +108,23 @@ export const projectsData: Project[] = [
     heroImage: 'linear-gradient(135deg, #16171E 0%, #221D16 50%, #090A0D 100%)',
     accentColor: '#E5C378',
     isFeatured: false
+  },
+  {
+    id: 'taqder-jts',
+    title: 'Premium Fashion Clothing Storefront',
+    client: 'TAQDER BY JTS',
+    category: 'E-Commerce Experience',
+    serviceType: 'E-Commerce Design & PWA Development',
+    year: '2026',
+    description: 'A premium fashion commerce experience for TAQDER BY JTS — contemporary Bangladeshi couture & pret for women, with curated seasonal edits, an installable app-grade storefront, WhatsApp ordering and cash-on-delivery flow.',
+    impactMetrics: [
+      { label: 'Curated Collection Edits', value: '5' },
+      { label: 'App-Grade PWA Storefront', value: 'Offline-Ready' },
+      { label: 'Ordering Channels', value: 'Web + WhatsApp' }
+    ],
+    deliverables: ['Premium Fashion Storefront UI', 'Curated Collections Architecture', 'Installable PWA + WhatsApp Orders', 'Ordering Guide & Client Reviews'],
+    heroImage: 'url(/portfolio/taqder-cover.jpg) left center / cover no-repeat',
+    accentColor: '#E0446B',
+    isFeatured: false
   }
 ];
