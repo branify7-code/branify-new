@@ -16,7 +16,6 @@ interface ContactViewProps {
 
 export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
   const [selectedServices, setSelectedServices] = useState<string[]>(['Web Development']);
-  const [selectedBudget, setSelectedBudget] = useState<string>('$15k – $35k');
   const [selectedTimeline, setSelectedTimeline] = useState<string>('1 – 2 Months');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -61,14 +60,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
     'Cloud & DevOps'
   ];
 
-  const budgetOptions = [
-    '$5,000 – $15,000',
-    '$15,000 – $35,000',
-    '$35,000 – $75,000',
-    '$75,000+ Enterprise'
-  ];
-
   const timelineOptions = [
+    'Less than 24 hours',
     'Immediate (Under 3 weeks)',
     '1 – 2 Months',
     '3 – 6 Months',
@@ -96,7 +89,6 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
         email,
         company: company || 'Not specified',
         services: selectedServices,
-        budget: selectedBudget,
         timeline: selectedTimeline,
         details: message || 'Direct Contact Form Inquiry',
         source: 'contact_form',
@@ -111,7 +103,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-      trackEvent('contact_submit', { services: selectedServices, budget: selectedBudget, source: 'contact_form' });
+      trackEvent('contact_submit', { services: selectedServices, timeline: selectedTimeline, source: 'contact_form' });
     }, 800);
   };
 
@@ -205,33 +197,10 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                 </div>
               </div>
 
-              {/* Step 2: Budget Brackets */}
+              {/* Step 2: Target Timeline */}
               <div className="space-y-3">
                 <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
-                  2. Anticipated Investment Bracket
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {budgetOptions.map((budget) => (
-                    <button
-                      type="button"
-                      key={budget}
-                      onClick={() => setSelectedBudget(budget)}
-                      className={`p-3 rounded-xl text-xs font-mono tracking-wider text-left transition-all cursor-pointer border ${
-                        selectedBudget === budget
-                          ? 'bg-[#EEF2FF] text-[#111827] font-bold border-[#5B5FEF]/60'
-                          : 'bg-white text-[#475569] border-[#E2E8F0] hover:text-[#111827] hover:border-[#CBD5E1]'
-                      }`}
-                    >
-                      {budget}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Step 3: Target Timeline */}
-              <div className="space-y-3">
-                <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
-                  3. Launch Timeline
+                  2. Launch Timeline
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {timelineOptions.map((timeline) => (
@@ -251,10 +220,10 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                 </div>
               </div>
 
-              {/* Step 4: Contact Details */}
+              {/* Step 3: Contact Details */}
               <div className="space-y-4 pt-4 border-t border-[#E2E8F0]">
                 <label className="block text-xs font-mono uppercase tracking-wider text-[#8F6B2D]">
-                  4. Your Details & Brief
+                  3. Your Details & Brief
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -339,8 +308,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono uppercase text-[#94A3B8] block">Direct Inquiries</span>
-                  <a href="mailto:hello@branify.store" className="text-[#111827] hover:text-[#5B5FEF] font-mono transition-colors">
-                    hello@branify.store
+                  <a href="mailto:admin@branify.store" className="text-[#111827] hover:text-[#5B5FEF] font-mono transition-colors">
+                    admin@branify.store
                   </a>
                 </div>
               </div>
@@ -380,7 +349,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
               Book an immediate 30-minute technical discovery call directly with our engineering lead.
             </p>
             <a
-              href="mailto:consult@branify.store?subject=Schedule%20Discovery%20Call"
+              href="mailto:admin@branify.store?subject=Schedule%20Discovery%20Call"
               className="block w-full text-center py-3 rounded-xl bg-white hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] border border-[#E2E8F0] text-xs font-mono uppercase tracking-wider text-[#334155] transition-all cursor-pointer shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
             >
               Request Calendar Invite
