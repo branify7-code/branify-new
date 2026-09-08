@@ -160,11 +160,10 @@ async function writeVault(vault: Vault, bearer: string): Promise<void> {
 }
 
 // ------------------------------------------------------------------ admin verification
-export async function verifyAdmin(bearer: string): Promise<{ id: string; email: string }> {
-  if (!bearer || !bearer.startsWith('Bearer ')) {
+export async function verifyAdmin(token: string): Promise<{ id: string; email: string }> {
+  if (!token) {
     throw new GscError('unauthorized', 401, 'Sign in to BRANIFY Admin to use Search Console.');
   }
-  const token = bearer.slice(7).trim();
   const uRes = await fetch(`${SB_URL}/auth/v1/user`, { headers: { apikey: SB_ANON, Authorization: `Bearer ${token}` } });
   if (!uRes.ok) throw new GscError('unauthorized', 401, 'Your admin session is invalid or expired. Sign in again.');
   const user = (await uRes.json()) as { id?: string; email?: string };
@@ -441,7 +440,10 @@ function cors(origin: string, res: Res): void {
 
 function bearerOf(req: Req): string {
   const h = req.headers?.authorization;
-  return Array.isArray(h) ? (h[0] || '') : (h || '');
+  const raw = Array.isArray(h) ? (h[0] || '') : (h || '');
+  // Normalize to the RAW token (strip any "Bearer " prefix) — every usage
+  // below re-wraps with `Bearer ${token}` exactly once.
+  return raw.replace(/^Bearer\s+/i, '').trim();
 }
 
 async function readBody(req: Req): Promise<Record<string, unknown>> {
@@ -655,15 +657,6 @@ async function handleAction(action: string, req: Req, res: Res): Promise<void> {
   let data: unknown;
   switch (action) {
     case 'ping': data = { ok: true, service: 'gsc', time: new Date().toISOString() }; break;
-    case 'diag': data = {
-      envSupabaseUrl: Boolean(process.env.SUPABASE_URL),
-      envSupabaseAnon: Boolean(process.env.SUPABASE_ANON_KEY),
-      envSupabaseAnonIsJwt: String(process.env.SUPABASE_ANON_KEY || '').startsWith('eyJ'),
-      envSupabaseAnonIsPublishable: String(process.env.SUPABASE_ANON_KEY || '').startsWith('sb_publishable_'),
-      sbUrlMatchesFallback: SB_URL === 'https://uspshkegxhrglbpxqtil.supabase.co',
-      anonMatchesFallback: SB_ANON === 'sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw',
-      nodeVersion: process.version,
-    }; break;
     case 'status': data = await actionStatus(); break;
     case 'config.set': data = await actionConfigSet(bearer, body); break;
     case 'config.clear': data = await actionConfigClear(bearer); break;
