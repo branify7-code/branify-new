@@ -1,32 +1,35 @@
 import { StatItem } from '../types';
 
+// All figures below are verifiable on branify.store itself:
+// 118 template-library entries, 136 free-tool registry entries,
+// 26 AI tool guides, 11 agency services with 4 package tiers each.
 export const statsData: StatItem[] = [
   {
-    value: 50,
+    value: 118,
     suffix: '+',
-    label: 'PROJECTS DELIVERED',
-    description: 'Bespoke web applications, high-converting flagships, and enterprise AI platforms deployed globally.',
-    sublabel: 'Across North America, Europe & Asia'
+    label: 'WEBSITE TEMPLATES',
+    description: 'Professionally designed, responsive templates across 15 industries — restaurants, real estate, healthcare, tech, fashion and more.',
+    sublabel: 'New designs added monthly'
   },
   {
-    value: 25,
-    suffix: '+',
-    label: 'GLOBAL BRANDS',
-    description: 'Trusted by luxury maisons, deep-tech unicorns, and forward-thinking venture-backed startups.',
-    sublabel: 'Fortune 500 & High-Growth Scaleups'
+    value: 136,
+    suffix: '',
+    label: 'FREE ONLINE TOOLS',
+    description: 'Privacy-first browser utilities — PDF tools, image converter, text utilities, developer, SEO, business and finance tools. No signup.',
+    sublabel: '100% free, running directly in your browser'
   },
   {
-    value: 10,
-    suffix: '+',
-    label: 'INDUSTRIES TRANSFORMED',
-    description: 'Specialized expertise spanning FinTech, Luxury Horology, Architecture, AI, SaaS, and BioTech.',
-    sublabel: 'Deep Sector Comprehension'
+    value: 26,
+    suffix: '',
+    label: 'AI TOOL GUIDES',
+    description: 'Step-by-step beginner guides for the best AI tools — with copy-ready prompts, FAQs, comparisons and practical tips.',
+    sublabel: 'Updated with hands-on prompts & examples'
   },
   {
-    value: 99,
-    suffix: '%',
-    label: 'CLIENT SATISFACTION',
-    description: 'Uncompromising standard of technical craftsmanship, responsive communication, and ROI impact.',
-    sublabel: 'Verified Executive Net Promoter Score'
+    value: 11,
+    suffix: '',
+    label: 'SPECIALIZED SERVICES',
+    description: 'Web development, branding, SEO, AI solutions and more — each with 4 transparent package tiers from Basic to On-Demand.',
+    sublabel: 'One studio for build, brand & growth'
   }
 ];

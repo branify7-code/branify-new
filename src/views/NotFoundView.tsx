@@ -3,11 +3,17 @@
 // =============================================================================
 import React from 'react';
 import { Compass } from 'lucide-react';
+import Seo from '../components/Seo';
 
 export const NotFoundView: React.FC<{ path: string; onNavigateHome: () => void; onExploreTools: () => void }> = ({
   path, onNavigateHome, onExploreTools,
 }) => (
   <div className="mx-auto flex max-w-xl flex-col items-center px-6 py-24 text-center">
+    <Seo
+      title="Page Not Found (404) | BRANIFY"
+      description="The page you are looking for does not exist. Explore BRANIFY services, templates, free tools and AI tools instead."
+      robots="noindex, nofollow"
+    />
     <p className="font-display text-[64px] font-extrabold leading-none tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-[#5B5FEF] via-[#3B82F6] to-[#8B5CF6] sm:text-[88px]">404</p>
     <h1 className="mt-3 font-display text-xl font-bold text-[#111827] sm:text-2xl">This page doesn’t exist</h1>
     <p className="mt-2 max-w-md text-sm leading-relaxed text-[#64748B]">

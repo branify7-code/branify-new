@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { projectsData } from '../../data/projects';
 import { Project } from '../../types';
+import Seo from '../../components/Seo';
 
 interface PortfolioViewProps {
   onSelectProject: (project: Project) => void;
@@ -53,6 +54,13 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
 
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+      <Seo
+        title="Portfolio & Case Studies | Web, E-Commerce & AI Platforms | BRANIFY"
+        description="Explore BRANIFY case studies — e-commerce storefronts, digital marketplaces, AI trading platforms and learn-to-earn education platforms built for clients worldwide."
+        keywords={['BRANIFY portfolio', 'web development case studies', 'e-commerce website portfolio', 'digital agency work', 'AI platform development']}
+        canonicalPath="/portfolio"
+        breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Portfolio', url: '/portfolio' }]}
+      />
       {/* Header Breadcrumbs & Hero Title */}
       <div className="space-y-6 text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-xs font-mono text-[#8F6B2D]">

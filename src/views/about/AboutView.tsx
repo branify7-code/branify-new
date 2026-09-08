@@ -8,6 +8,7 @@ import { statsData } from '../../data/stats';
 import { whyBranifyData } from '../../data/whyBranify';
 import { testimonialsData } from '../../data/testimonials';
 import { faqsData } from '../../data/faqs';
+import Seo from '../../components/Seo';
 
 interface AboutViewProps {
   onStartInquiry: () => void;
@@ -26,6 +27,13 @@ export const AboutView: React.FC<AboutViewProps> = ({
 
   return (
     <div className="min-h-screen pt-28 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24 sm:space-y-28">
+      <Seo
+        title="About BRANIFY | International Digital Agency & Software Studio"
+        description="BRANIFY is an international digital agency combining deep-stack engineering with premium design — building websites, brand identities, AI solutions and digital products for ambitious brands worldwide."
+        keywords={['about BRANIFY', 'digital agency', 'web development agency', 'brand identity studio', 'AI solutions company']}
+        canonicalPath="/about"
+        breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'About', url: '/about' }]}
+      />
       {/* Header Breadcrumbs & Hero Title */}
       <div className="space-y-6 text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-xs font-mono text-[#8F6B2D]">

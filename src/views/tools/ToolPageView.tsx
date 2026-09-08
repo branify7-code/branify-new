@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { getCompleteTool, defaultsFor } from '../../tools';
 import { trackEvent } from '../../lib/track';
+import Seo from '../../components/Seo';
 import type { ToolResult, ToolField } from '../../tools/types';
 
 interface ToolPageViewProps {
@@ -33,13 +34,6 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
   const [dragOver, setDragOver] = useState(false);
   const [resetTick, setResetTick] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (tool) document.title = `${tool.metaTitle || tool.name} — BRANIFY`;
-    return () => {
-      document.title = 'Custom Web Development & Digital Agency | BRANIFY';
-    };
-  }, [tool]);
 
   useEffect(() => {
     // reset state when switching tools
@@ -130,6 +124,12 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
   if (!tool) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-24 text-center space-y-6">
+        <Seo
+          title="Free Tool Not Found | BRANIFY"
+          description="This free online tool does not exist. Browse all 100+ free BRANIFY browser utilities instead."
+          canonicalPath="/tools"
+          robots="noindex, nofollow"
+        />
         <div className="text-7xl">🧭</div>
         <h1 className="font-display text-2xl font-extrabold text-[#111827] tracking-tight">Tool Not Found</h1>
         <p className="text-slate-500 text-sm">
@@ -227,6 +227,17 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <Seo
+        title={tool.metaTitle || tool.name}
+        description={tool.metaDescription || tool.description}
+        keywords={tool.keywords && tool.keywords.length ? tool.keywords : ['free online tools', tool.name, 'BRANIFY tools']}
+        canonicalPath={`/tools/${tool.slug}`}
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Free Tools', url: '/tools' },
+          { name: tool.name, url: `/tools/${tool.slug}` },
+        ]}
+      />
       <div className="space-y-6" key={resetTick}>
         <button
           onClick={() => onNavigate('/tools')}

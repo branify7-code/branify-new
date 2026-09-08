@@ -294,6 +294,29 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
               ))}
             </div>
           </div>
+
+          {/* End-of-article conversion CTA */}
+          <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-8 text-center mt-12">
+            <p className="font-display text-base sm:text-lg font-bold text-[#111827] mb-5">
+              Want results like these on your own website?
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => onNavigate('/contact')}
+                className="btn-gold-primary rounded-full text-xs font-black uppercase px-7 py-3 inline-flex items-center gap-2 tracking-wider cursor-pointer"
+              >
+                Book a Free Consultation <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('/services')}
+                className="rounded-full bg-white border border-[#E2E8F0] px-7 py-3 text-xs font-bold uppercase tracking-widest text-[#334155] shadow-[0_2px_10px_rgba(15,23,42,0.04)] transition-colors hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] cursor-pointer"
+              >
+                Explore Our Services
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </div>

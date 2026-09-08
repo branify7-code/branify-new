@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { trackEvent } from '../../lib/track';
 import { mirrorLeadToPreview } from '../../lib/leadCapture';
 import { getTemplateBySlug, getCategoryBySlug } from '../../data/templates';
+import Seo from '../../components/Seo';
 
 interface ContactViewProps {
   onNavigateHome: () => void;
@@ -115,6 +116,13 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
 
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+      <Seo
+        title="Contact BRANIFY | Consultation & Project Inquiry"
+        description="Tell BRANIFY about your brand vision, architectural requirements, or upcoming product launch. Senior leadership responds within 24 business hours — book a free consultation today."
+        keywords={['contact BRANIFY', 'book a consultation', 'web development quote', 'hire digital agency', 'project inquiry']}
+        canonicalPath="/contact"
+        breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact' }]}
+      />
       {/* Header Breadcrumbs & Hero Title */}
       <div className="space-y-6 text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E8F0] shadow-[0_2px_10px_rgba(15,23,42,0.04)] text-xs font-mono text-[#8F6B2D]">

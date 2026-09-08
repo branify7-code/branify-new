@@ -27,7 +27,7 @@ const DEFAULT_KEYWORDS = [
   'templates',
 ];
 const DEFAULT_OG_IMAGE =
-  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&auto=format&fit=crop&q=80';
+  'https://branify.store/og/home.jpg';
 
 export interface SeoBreadcrumb {
   name: string;

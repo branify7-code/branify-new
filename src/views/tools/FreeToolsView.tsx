@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { TOOL_CATEGORIES } from '../../data/toolsRegistry';
 import { allTools } from '../../tools';
+import Seo from '../../components/Seo';
 
 interface FreeToolsViewProps {
   onNavigate: (path: string) => void;
@@ -97,13 +98,6 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
   const [query, setQuery] = useState('');
 
   React.useEffect(() => {
-    document.title = '100+ Free Online Tools | Browser Utilities | BRANIFY';
-    return () => {
-      document.title = 'Custom Web Development & Digital Agency | BRANIFY';
-    };
-  }, []);
-
-  React.useEffect(() => {
     if (initialCategory && TOOL_CATEGORIES.includes(initialCategory as never)) {
       setActiveCategory(initialCategory);
     }
@@ -131,6 +125,13 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
 
   return (
     <div className="min-h-screen bg-white">
+      <Seo
+        title="100+ Free Online Tools | Browser Utilities | BRANIFY"
+        description="136 fast, privacy-first online tools running directly in your browser — PDF tools, image converter, text utilities, developer tools, SEO tools, business and finance calculators. No registration required."
+        keywords={['free online tools', 'pdf tools', 'image converter', 'word counter', 'password generator', 'UTM builder', 'QR code generator', 'invoice generator', 'browser utilities']}
+        canonicalPath="/tools"
+        breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Free Tools', url: '/tools' }]}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
