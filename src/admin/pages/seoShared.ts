@@ -9,6 +9,9 @@
 
 import type { SeoOverrideRow, SiteSettings } from '../lib/types';
 import { TEMPLATE_CATEGORIES, allTemplates, templateCount } from '../../data/templates';
+import { templateCategories } from '../../data/freeTemplatesRegistry';
+import { getAllAiTools, getToolSeo } from '../../lib/aiToolsData';
+import { projectsData } from '../../data/projects';
 
 // ------------------------------------------------------------------ row shape
 /** Minimal structural shape of content rows fetched via listRows(). */
@@ -196,13 +199,30 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
     });
   }
 
-  // --- AI tools directory (one page; the 26 ai_tools rows are EXTERNAL links,
-  //     not site pages — they never enter the sitemap or route inventory) ---
+  // --- AI tools directory (hub + per-tool guide pages) ---
+  // The DB ai_tools rows are directory records; the PUBLIC SITE also serves a
+  // real SEO guide page per tool at /ai-tools/{slug} (AIToolDetailView, driven
+  // by lib/aiToolsData). Unknown slugs render a noindex "not found" page, so
+  // only slugs known to the directory are inventoried.
   pages.push({
     path: '/ai-tools', kind: 'ai_tools', label: 'AI Tools Directory',
     sourceTitle: '27+ AI Tools for Work & Productivity | BRANIFY',
     sourceDescription: 'Discover useful AI tools for productivity, business, content, design and everyday workflows from BRANIFY.',
   });
+  const aiToolLastmod = new Map(
+    (rows.aiTools || []).filter((r) => r.slug && r.updated_at).map((r) => [String(r.slug), r.updated_at as string]),
+  );
+  for (const t of getAllAiTools()) {
+    const seo = getToolSeo(t);
+    pages.push({
+      path: `/ai-tools/${t.slug}`,
+      kind: 'ai_tools',
+      label: t.name,
+      sourceTitle: seo.title,
+      sourceDescription: seo.description,
+      sourceUpdated: aiToolLastmod.get(t.slug),
+    });
+  }
 
   // --- free templates (= products rows) ---
   pages.push({
@@ -220,6 +240,19 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
       sourceTitle: seo.title,
       sourceDescription: seo.description,
       sourceUpdated: r.updated_at,
+    });
+  }
+  // Category landing views (/free-templates/{category}) — real filtered pages
+  // served by FreeTemplatesView. They share the hub's meta + canonical by
+  // design, exactly as the live site behaves.
+  for (const c of templateCategories) {
+    if (!c.slug) continue; // 'All Templates' is the hub itself
+    pages.push({
+      path: `/free-templates/${c.slug}`,
+      kind: 'template_category',
+      label: c.label,
+      sourceTitle: 'Free Templates for Business & Creators | BRANIFY',
+      sourceDescription: 'Free Website & Design Templates | BRANIFY',
     });
   }
 
@@ -245,18 +278,26 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
     });
   }
 
-  // --- portfolio (hub + case studies) ---
+  // --- portfolio (hub + static case studies) ---
+  // Source of truth: src/data/projects. The public contentOverrides merge only
+  // lets DB rows PATCH or REMOVE existing static ids — DB-only rows can never
+  // inject a public page. Mirror that rule here so the audit inventory matches
+  // the real public routes exactly (a leftover DB row for a deleted project
+  // must not create a sitemap URL).
   pages.push({ path: '/portfolio', kind: 'portfolio_hub', label: 'Portfolio' });
-  for (const r of rows.portfolio || []) {
-    if (!isLive(r) || !r.slug) continue;
-    const seo = contentSeo(r);
+  const dbPortfolio = new Map(
+    (rows.portfolio || []).filter((r) => r.slug).map((r) => [String(r.slug), r]),
+  );
+  for (const p of projectsData) {
+    const db = dbPortfolio.get(p.id);
+    if (db && !isLive(db)) continue; // hidden via admin (unpublished/archived)
     pages.push({
-      path: `/portfolio/${r.slug}`,
+      path: `/portfolio/${p.id}`,
       kind: 'portfolio',
-      label: r.title || r.slug,
-      sourceTitle: seo.title,
-      sourceDescription: seo.description || (r.description || '').trim() || undefined,
-      sourceUpdated: r.updated_at,
+      label: p.title,
+      sourceTitle: (db?.seo?.title || '').trim() || p.title,
+      sourceDescription: (db?.seo?.description || '').trim() || p.description,
+      sourceUpdated: db?.updated_at,
     });
   }
 
@@ -449,19 +490,19 @@ function duplicates(values: Array<{ path: string; value: string }>, valueLabel: 
   groups: DuplicateGroup[];
   issues: Map<string, AuditIssue>;
 } {
-  const byKey = new Map<string, string[]>();
+  const byKey = new Map<string, { text: string; paths: string[] }>();
   for (const { path, value } of values) {
     const key = value.trim().toLowerCase();
     if (!key) continue;
-    const list = byKey.get(key) || [];
-    list.push(path);
-    byKey.set(key, list);
+    const entry = byKey.get(key) || { text: value.trim(), paths: [] };
+    entry.paths.push(path);
+    byKey.set(key, entry);
   }
   const groups: DuplicateGroup[] = [];
   const issues = new Map<string, AuditIssue>();
-  for (const [, paths] of byKey) {
+  for (const { text, paths } of byKey.values()) {
     if (paths.length < 2) continue;
-    groups.push({ value: paths[0], paths });
+    groups.push({ value: text, paths });
     const others = paths.filter((p) => p !== paths[0]);
     const preview = others.slice(0, 2).join(', ');
     const extra = others.length > 2 ? ` +${others.length - 2} more` : '';
