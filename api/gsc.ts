@@ -125,9 +125,38 @@ export interface VaultConnection {
 }
 
 export interface Vault {
-  client: { client_id: string; client_secret: string } | null;
-  connection: VaultConnection | null;
+  /** AES-256-GCM blob of { client_id, client_secret } — ciphertext at rest. */
+  client: string | null;
+  /** AES-256-GCM blob of VaultConnection — ciphertext at rest. */
+  connection: string | null;
   updated_at?: string;
+}
+
+interface VaultRefs {
+  vault: Vault;
+  client: { client_id: string; client_secret: string } | null;
+  conn: VaultConnection | null;
+  connCorrupt: boolean;
+}
+
+async function loadVaultRefs(): Promise<VaultRefs> {
+  const vault = await readVault();
+  const refs: VaultRefs = { vault, client: null, conn: null, connCorrupt: false };
+  if (vault.client) refs.client = decryptJson<{ client_id: string; client_secret: string }>(vault.client);
+  if (vault.connection) {
+    try {
+      refs.conn = decryptJson<VaultConnection>(vault.connection);
+    } catch {
+      refs.connCorrupt = true; // status stays renderable; data actions report vault_corrupt
+    }
+  }
+  return refs;
+}
+
+async function persistRefs(refs: VaultRefs, bearer: string): Promise<void> {
+  refs.vault.client = refs.client ? encryptJson(refs.client) : null;
+  refs.vault.connection = refs.conn ? encryptJson(refs.conn) : null;
+  await writeVault(refs.vault, bearer);
 }
 
 async function readVault(): Promise<Vault> {
@@ -345,30 +374,31 @@ export async function inspectUrl(accessToken: string, siteUrl: string, inspectio
 }
 
 // ------------------------------------------------------------------ token freshness
-async function freshAccessToken(bearer: string): Promise<{ conn: VaultConnection; vault: Vault; token: string }> {
-  const vault = await readVault();
-  if (!vault.client) throw new GscError('not_configured', 400, 'Google OAuth client is not configured yet.');
-  if (!vault.connection) throw new GscError('not_connected', 409, 'Google Search Console is not connected.');
-  const conn = vault.connection;
+async function freshAccessToken(bearer: string): Promise<{ conn: VaultConnection; refs: VaultRefs; token: string }> {
+  const refs = await loadVaultRefs();
+  if (!refs.client) throw new GscError('not_configured', 400, 'Google OAuth client is not configured yet.');
+  if (!refs.conn) throw new GscError(refs.connCorrupt ? 'vault_corrupt' : 'not_connected', refs.connCorrupt ? 500 : 409,
+    refs.connCorrupt ? 'Stored credentials could not be decrypted — reconnect the integration.' : 'Google Search Console is not connected.');
+  const conn = refs.conn;
   if (conn.needsReconnect) throw new GscError('reconnect_required', 409, 'The Google connection needs to be renewed. Click Reconnect.');
 
   let token = conn.access_token;
   if (!conn.expires_at || conn.expires_at - 60_000 < Date.now()) {
     try {
-      const refreshed = await refreshAccessToken(vault.client.client_id, vault.client.client_secret, conn.refresh_token);
+      const refreshed = await refreshAccessToken(refs.client.client_id, refs.client.client_secret, conn.refresh_token);
       token = refreshed.access_token;
       conn.access_token = token;
       conn.expires_at = Date.now() + (refreshed.expires_in || 3600) * 1000;
-      await writeVault(vault, bearer);
+      await persistRefs(refs, bearer);
     } catch (e) {
       if (e instanceof GscError && e.code === 'reconnect_required') {
         conn.needsReconnect = true;
-        await writeVault(vault, bearer).catch(() => {});
+        await persistRefs(refs, bearer).catch(() => {});
       }
       throw e;
     }
   }
-  return { conn, vault, token };
+  return { conn, refs, token };
 }
 
 // ------------------------------------------------------------------ helpers
@@ -464,13 +494,15 @@ function param(req: Req, name: string): string {
 
 // ------------------------------------------------------------------ action implementations
 async function actionStatus() {
-  const vault = await readVault();
-  const c = vault.connection;
+  const refs = await loadVaultRefs();
+  const c = refs.connCorrupt ? null : refs.conn;
+  let clientId: string | null = null;
+  try { clientId = refs.client ? `${refs.client.client_id.slice(0, 12)}…` : null; } catch { clientId = null; }
   return {
-    configured: Boolean(vault.client),
-    clientId: vault.client?.client_id ? `${vault.client.client_id.slice(0, 12)}…` : null,
+    configured: Boolean(refs.client),
+    clientId,
     connected: Boolean(c && !c.needsReconnect),
-    needsReconnect: Boolean(c?.needsReconnect),
+    needsReconnect: Boolean(refs.connCorrupt || c?.needsReconnect),
     property: c?.property || null,
     sites: c?.sites || [],
     googleEmail: c?.google_email || null,
@@ -488,40 +520,40 @@ async function actionConfigSet(bearer: string, body: Record<string, unknown>) {
     throw new GscError('bad_request', 400, 'Client ID should look like "1234-abc.apps.googleusercontent.com".');
   }
   if (clientSecret.length < 10) throw new GscError('bad_request', 400, 'That Client Secret looks too short.');
-  const vault = await readVault();
-  vault.client = { client_id: clientId, client_secret: clientSecret };
-  await writeVault(vault, bearer);
+  const refs = await loadVaultRefs();
+  refs.client = { client_id: clientId, client_secret: clientSecret };
+  await persistRefs(refs, bearer);
   return { configured: true, clientId: `${clientId.slice(0, 12)}…` };
 }
 
 async function actionConfigClear(bearer: string) {
-  const vault = await readVault();
-  vault.client = null;
-  await writeVault(vault, bearer);
+  const refs = await loadVaultRefs();
+  refs.client = null;
+  await persistRefs(refs, bearer);
   return { configured: false };
 }
 
 async function actionConnectStart(bearer: string, body: Record<string, unknown>) {
-  const vault = await readVault();
-  if (!vault.client) throw new GscError('not_configured', 400, 'Add the Google OAuth client credentials first.');
+  const refs = await loadVaultRefs();
+  if (!refs.client) throw new GscError('not_configured', 400, 'Add the Google OAuth client credentials first.');
   const admin = await verifyAdmin(bearer);
   const back = String(body.back || 'https://branify.store');
   if (!CORS_ORIGINS.includes(back)) throw new GscError('bad_request', 400, 'Unrecognized admin origin.');
-  const state = signState(vault.client.client_secret, { sub: admin.id, ru: PROD_REDIRECT, back });
-  return { authUrl: buildAuthUrl(vault.client.client_id, PROD_REDIRECT, state) };
+  const state = signState(refs.client.client_secret, { sub: admin.id, ru: PROD_REDIRECT, back });
+  return { authUrl: buildAuthUrl(refs.client.client_id, PROD_REDIRECT, state) };
 }
 
 async function actionConnectComplete(bearer: string, body: Record<string, unknown>) {
   const admin = await verifyAdmin(bearer);
-  const vault = await readVault();
-  if (!vault.client) throw new GscError('not_configured', 400, 'Google OAuth client is no longer configured.');
+  const refs = await loadVaultRefs();
+  if (!refs.client) throw new GscError('not_configured', 400, 'Google OAuth client is no longer configured.');
   const code = String(body.code || '');
   const state = String(body.state || '');
   if (!code || !state) throw new GscError('bad_request', 400, 'Missing code/state from the Google redirect.');
 
-  const st = verifyState(vault.client.client_secret, state, admin.id);
+  const st = verifyState(refs.client.client_secret, state, admin.id);
 
-  const tokens = await exchangeCode(vault.client.client_id, vault.client.client_secret, code, st.ru);
+  const tokens = await exchangeCode(refs.client.client_id, refs.client.client_secret, code, st.ru);
   if (!tokens.refresh_token) {
     throw new GscError('bad_request', 400, 'Google did not return a refresh token. Remove this app\'s access at myaccount.google.com/permissions, then connect again (consent screen will reappear).');
   }
@@ -532,7 +564,7 @@ async function actionConnectComplete(bearer: string, body: Record<string, unknow
   const picked = pickProperty(sites);
   const googleEmail = await fetchGoogleEmail(tokens.access_token);
 
-  vault.connection = {
+  refs.conn = {
     access_token: tokens.access_token,
     refresh_token: tokens.refresh_token,
     expires_at: Date.now() + (tokens.expires_in || 3600) * 1000,
@@ -543,26 +575,26 @@ async function actionConnectComplete(bearer: string, body: Record<string, unknow
     needsReconnect: false,
     connected_at: new Date().toISOString(),
   };
-  await writeVault(vault, bearer);
+  await persistRefs(refs, bearer);
   return { connected: true, property: picked.property, matchedPreferred: picked.matched, sites, googleEmail };
 }
 
 async function actionDisconnect(bearer: string, full: boolean) {
-  const vault = await readVault();
-  vault.connection = null;
-  if (full) vault.client = null;
-  await writeVault(vault, bearer);
-  return { connected: false, configured: Boolean(vault.client) };
+  const refs = await loadVaultRefs();
+  refs.conn = null;
+  if (full) refs.client = null;
+  await persistRefs(refs, bearer);
+  return { connected: false, configured: Boolean(refs.client) };
 }
 
 async function actionPropertySet(bearer: string, body: Record<string, unknown>) {
   const property = String(body.property || '');
-  const { conn, vault } = await freshAccessToken(bearer);
+  const { conn, refs } = await freshAccessToken(bearer);
   if (!conn.sites.some((s) => s.siteUrl === property)) {
     throw new GscError('invalid_property', 400, 'Pick one of the properties listed for the connected Google account.');
   }
   conn.property = property;
-  await writeVault(vault, bearer);
+  await persistRefs(refs, bearer);
   return { property };
 }
 
