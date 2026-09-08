@@ -27,7 +27,6 @@ interface FormErrors {
   email?: string;
   phone?: string;
   password?: string;
-  confirm?: string;
 }
 
 export const RegisterView: React.FC<RegisterViewProps> = ({ onNavigate, redirect }) => {
@@ -36,7 +35,6 @@ export const RegisterView: React.FC<RegisterViewProps> = ({ onNavigate, redirect
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -57,7 +55,6 @@ export const RegisterView: React.FC<RegisterViewProps> = ({ onNavigate, redirect
     else if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
       fe.password = 'Include at least one letter and one number.';
     }
-    if (confirm !== password) fe.confirm = 'Passwords do not match.';
     setFieldErrors(fe);
     return Object.keys(fe).length === 0;
   };
@@ -175,15 +172,6 @@ export const RegisterView: React.FC<RegisterViewProps> = ({ onNavigate, redirect
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={fieldErrors.password}
-        />
-        <PasswordField
-          id="reg-confirm"
-          label="Confirm Password"
-          autoComplete="new-password"
-          placeholder="Repeat your password"
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          error={fieldErrors.confirm}
         />
 
         <SubmitButton loading={submitting} loadingLabel="Creating your account…">
