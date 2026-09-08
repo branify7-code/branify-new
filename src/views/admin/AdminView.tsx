@@ -183,6 +183,7 @@ export const AdminView: React.FC = () => {
         title="Management Dashboard | BRANIFY"
         description="BRANIFY Admin Portal for managing leads, products, case studies, and articles."
         canonicalPath="/admin"
+        robots="noindex, nofollow"
       />
 
       <div className="max-w-7xl mx-auto px-4">

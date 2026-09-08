@@ -28,6 +28,7 @@ import TemplatePreviewPage from './views/library/TemplatePreviewPage';
 import { BlogIndex, BlogPostPage } from './views/blog/BlogView';
 import { NotFoundView } from './views/NotFoundView';
 import { WhatsAppFab } from './components/WhatsAppFab';
+import Seo from './components/Seo';
 import { freeTemplates } from './data/freeTemplatesRegistry';
 import { getCategoryBySlug, getTemplateBySlug } from './data/templates';
 
@@ -193,6 +194,13 @@ export default function App() {
             </div>
           }
         >
+          {/* App-level noindex: applies immediately (pre-lazy-chunk + pre-auth login screen), belt-and-braces with robots.txt Disallow:/admin */}
+          <Seo
+            title="Management Dashboard | BRANIFY"
+            description="BRANIFY Admin Portal."
+            canonicalPath="/admin"
+            robots="noindex, nofollow"
+          />
           <AdminApp />
         </Suspense>
       )}
@@ -361,6 +369,13 @@ export default function App() {
         {/* Homepage Single-View Experience when pathname === '/' */}
         {pathname === '/' && (
           <div>
+            {/* Homepage structured data — values mirror static index.html 1:1 (no metadata change); <Seo> injects the Organization/WebSite/WebPage JSON-LD graph */}
+            <Seo
+              title="Custom Web Development & Digital Agency | BRANIFY"
+              description="Build a stronger digital presence with BRANIFY—web development, branding, AI solutions, SEO and digital products designed for modern businesses worldwide."
+              canonicalPath="/"
+              ogImage="https://branify.store/og/home.jpg"
+            />
             {/* 1. Hero Experience with 3D Cosmic Particle Dome & Horizon */}
             <Hero
               onStartProject={() => handleOpenInquiry()}
