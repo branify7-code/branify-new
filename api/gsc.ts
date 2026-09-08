@@ -710,7 +710,8 @@ export async function gscHandler(req: Req, res: Res): Promise<void> {
       return;
     }
 
-    if (String(req.method || 'GET').toUpperCase() !== 'POST') {
+    // ping is intentionally GET-friendly (deploy smoke test)
+    if (String(req.method || 'GET').toUpperCase() !== 'POST' && action !== 'ping') {
       throw new GscError('bad_request', 405, 'Use POST with an action.');
     }
 
