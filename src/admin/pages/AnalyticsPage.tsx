@@ -219,8 +219,8 @@ export const AnalyticsPage: React.FC<AdminPageProps> = () => {
 
       {/* ------------------------------------------------------ info card */}
       <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/[0.06] px-4 py-3.5">
-        <Info size={16} className="mt-0.5 shrink-0 text-amber-300" />
-        <p className="text-xs leading-relaxed text-amber-200">
+        <Info size={16} className="mt-0.5 shrink-0 text-amber-600" />
+        <p className="text-xs leading-relaxed text-amber-800">
           {provider === 'google_analytics' ? (
             <>
               <span className="font-bold uppercase tracking-wider">Google Analytics is configured in Settings.</span>{' '}

@@ -387,7 +387,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                 aria-label="Archive"
                 disabled={busy}
                 onClick={() => void setArchived(row, true)}
-                className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-amber-300 disabled:opacity-40"
+                className="rounded-lg p-1.5 text-[#475569] transition-colors hover:bg-white/[0.07] hover:text-amber-600 disabled:opacity-40"
               >
                 <Archive size={14} />
               </button>

@@ -205,7 +205,7 @@ export const AdminView: React.FC = () => {
               </p>
 
               {!isSupabaseConfigured && (
-                <div className="mt-6 text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3">
+                <div className="mt-6 text-xs text-amber-700 bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3">
                   Supabase is not configured on this deployment — authentication is unavailable.
                 </div>
               )}
@@ -323,7 +323,7 @@ export const AdminView: React.FC = () => {
                   <Loader2 className="w-5 h-5 text-[#8F6B2D] animate-spin" />
                 </div>
               ) : fetchError ? (
-                <div className="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-2xl px-4 py-3 leading-relaxed">
+                <div className="text-xs text-amber-700 bg-amber-500/10 border border-amber-500/30 rounded-2xl px-4 py-3 leading-relaxed">
                   Supabase returned: {fetchError}. Your admin role may lack SELECT policies on this table.
                 </div>
               ) : activeTab === 'inquiries' ? (

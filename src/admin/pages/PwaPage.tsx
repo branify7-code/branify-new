@@ -251,7 +251,7 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
         bodyClass="pt-1"
       >
         {iconChecks.length === 0 ? (
-          <p className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] px-3.5 py-3 text-xs text-amber-200">
+          <p className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] px-3.5 py-3 text-xs text-amber-800">
             The manifest declares no icons — browsers will fall back to the favicon and install prompts will degrade.
           </p>
         ) : (
@@ -268,8 +268,8 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
 
         {!iconsValid && iconChecks.some((i) => i.src.startsWith('/assets/')) && (
           <div className="mt-4 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/[0.07] px-4 py-3.5">
-            <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-300" />
-            <div className="text-xs leading-relaxed text-amber-200">
+            <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-600" />
+            <div className="text-xs leading-relaxed text-amber-800">
               <p className="font-bold uppercase tracking-wider">Real finding — manifest icons are missing</p>
               <p className="mt-1">
                 Manifest references <span className="font-mono">/assets/icon-*.png</span> which don't exist in <span className="font-mono">/public</span>.
@@ -294,9 +294,9 @@ export const PwaPage: React.FC<AdminPageProps> = () => {
             >
               {sw.registered
                 ? <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-300" />
-                : <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-300" />}
+                : <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-600" />}
               <div>
-                <p className={cx('text-xs font-bold uppercase tracking-wider', sw.registered ? 'text-emerald-300' : 'text-amber-300')}>
+                <p className={cx('text-xs font-bold uppercase tracking-wider', sw.registered ? 'text-emerald-300' : 'text-amber-700')}>
                   {sw.registered ? 'Registered' : 'Not registered'}
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-[#94A3B8]">{sw.detail}</p>

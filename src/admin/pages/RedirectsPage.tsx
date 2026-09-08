@@ -314,7 +314,7 @@ export const RedirectsPage: React.FC<AdminPageProps> = ({ query, navigate }) => 
                 <li key={m} className="flex items-start gap-1.5 text-xs font-semibold text-red-300"><TriangleAlert size={12} className="mt-0.5 shrink-0" /> {m}</li>
               ))}
               {validation.warnings.map((m) => (
-                <li key={m} className="flex items-start gap-1.5 text-xs text-amber-300"><TriangleAlert size={12} className="mt-0.5 shrink-0" /> {m}</li>
+                <li key={m} className="flex items-start gap-1.5 text-xs text-amber-700"><TriangleAlert size={12} className="mt-0.5 shrink-0" /> {m}</li>
               ))}
             </ul>
           </div>

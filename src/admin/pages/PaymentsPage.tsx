@@ -104,11 +104,11 @@ export const PaymentsPage: React.FC<AdminPageProps> = () => {
       >
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10">
-            <Wallet size={17} className="text-amber-300" />
+            <Wallet size={17} className="text-amber-600" />
           </span>
           <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-200">Payment Gateway Not Connected</p>
-            <p className="mt-1 max-w-xl text-xs leading-relaxed text-amber-200/70">
+            <p className="text-sm font-bold uppercase tracking-wider text-amber-800">Payment Gateway Not Connected</p>
+            <p className="mt-1 max-w-xl text-xs leading-relaxed text-amber-800/80">
               No payment provider is wired up yet. When one is connected (Stripe, PayPal, PayFast, or manual
               transfers), transactions will appear below automatically. Card numbers, CVV and gateway secrets
               are never stored in this system — only payment references and statuses.

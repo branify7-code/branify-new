@@ -445,7 +445,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
               </Select>
             </Field>
           </div>
-          <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-500/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-amber-200">
+          <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-500/[0.06] px-3.5 py-3 text-[11px] leading-relaxed text-amber-800">
             <Info size={13} className="mt-0.5 shrink-0" />
             <p>
               <span className="font-bold uppercase tracking-wider">Honesty note. </span>

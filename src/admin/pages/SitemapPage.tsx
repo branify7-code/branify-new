@@ -225,7 +225,7 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
               />
             </div>
             {match === false && (
-              <p className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] px-4 py-3 text-xs leading-relaxed text-amber-200">
+              <p className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] px-4 py-3 text-xs leading-relaxed text-amber-800">
                 The shipped static sitemap ({live?.urlCount ?? 0} URLs) does not cover the current inventory ({coverage} routes).
                 Regenerate below and replace <span className="font-mono">/public/sitemap.xml</span> to bring them back in sync — stale
                 sitemaps slow down discovery of new tools and templates.

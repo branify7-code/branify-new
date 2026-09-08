@@ -70,7 +70,7 @@ const LEAD_COLORS: Record<string, string> = {
 
 const STATUS_WORDS: Record<HealthItem['status'], { word: string; cls: string }> = {
   operational: { word: 'Operational', cls: 'text-emerald-300' },
-  warning: { word: 'Warning', cls: 'text-amber-300' },
+  warning: { word: 'Warning', cls: 'text-amber-700' },
   error: { word: 'Error', cls: 'text-red-300' },
   unknown: { word: 'Unknown', cls: 'text-[#475569]' },
 };

@@ -199,17 +199,17 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
       {/* -------------------------------------------------- 'none' setup card */}
       {mode === 'none' && (
         <div className="rounded-2xl border border-amber-500/35 bg-amber-500/[0.07] px-4 py-4 sm:px-5">
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300">
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700">
             <Database size={14} /> Admin database not connected
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-amber-200">
+          <p className="mt-2 text-xs leading-relaxed text-amber-800">
             The production admin runs on Supabase. To enable it, open the Supabase SQL editor and run, in order:
           </p>
-          <ol className="mt-2 flex flex-col gap-1.5 text-xs text-amber-100">
-            <li className="rounded-lg bg-black/25 px-3 py-2 font-mono">supabase/admin-schema.sql <span className="font-sans text-amber-300/70">— schema, RLS policies, storage bucket</span></li>
-            <li className="rounded-lg bg-black/25 px-3 py-2 font-mono">supabase/admin-seed.sql <span className="font-sans text-amber-300/70">— seeds real content + default settings</span></li>
+          <ol className="mt-2 flex flex-col gap-1.5 text-xs text-amber-900">
+            <li className="rounded-lg bg-black/25 px-3 py-2 font-mono">supabase/admin-schema.sql <span className="font-sans text-amber-700/80">— schema, RLS policies, storage bucket</span></li>
+            <li className="rounded-lg bg-black/25 px-3 py-2 font-mono">supabase/admin-seed.sql <span className="font-sans text-amber-700/80">— seeds real content + default settings</span></li>
           </ol>
-          <p className="mt-2 text-[11px] leading-relaxed text-amber-200/80">
+          <p className="mt-2 text-[11px] leading-relaxed text-amber-800/80">
             Then reload /admin and sign up with an allowlisted email. Until then the local preview API (dev sandbox) keeps the dashboard usable.
           </p>
         </div>
@@ -258,8 +258,8 @@ export const SystemPage: React.FC<AdminPageProps> = () => {
           <ErrorBlock title="Row counts unavailable" message={countsError} onRetry={loadCounts} />
         ) : collections.length === 0 ? (
           <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/[0.06] px-4 py-3.5">
-            <Server size={16} className="mt-0.5 shrink-0 text-amber-300" />
-            <p className="text-xs leading-relaxed text-amber-200">
+            <Server size={16} className="mt-0.5 shrink-0 text-amber-600" />
+            <p className="text-xs leading-relaxed text-amber-800">
               Not connected — no row counts available. Apply <span className="font-mono">supabase/admin-schema.sql</span> (paths above) to bring the collections online.
             </p>
           </div>

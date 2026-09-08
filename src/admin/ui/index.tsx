@@ -63,7 +63,7 @@ export type BadgeTone = 'gold' | 'green' | 'amber' | 'red' | 'steel' | 'zinc' | 
 const BADGE_TONES: Record<BadgeTone, string> = {
   gold: 'bg-[#C9A45C]/15 text-[#8F6B2D] border-[#C9A45C]/35',
   green: 'bg-emerald-500/12 text-emerald-300 border-emerald-500/30',
-  amber: 'bg-amber-500/12 text-amber-300 border-amber-500/30',
+  amber: 'bg-amber-500/12 text-amber-700 border-amber-500/30',
   red: 'bg-red-500/12 text-red-300 border-red-500/30',
   steel: 'bg-slate-400/12 text-slate-300 border-slate-400/25',
   zinc: 'bg-white/[0.06] text-[#475569] border-[#E2E8F0]',

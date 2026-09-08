@@ -54,7 +54,7 @@ const SOURCE_BADGE: Record<SeoSource, { tone: 'gold' | 'steel' | 'zinc' | 'viole
 };
 
 const lenTone = (len: number, min: number, max: number): string =>
-  len >= min && len <= max ? 'text-emerald-400' : 'text-amber-400';
+  len >= min && len <= max ? 'text-emerald-400' : 'text-amber-600';
 
 interface ContentRows {
   services: ContentRowLike[];
@@ -265,7 +265,7 @@ const SeoEditorModal: React.FC<{
             </Field>
             <div className={cx('-mt-3 h-1 rounded-full bg-white/[0.06]')}>
               <div
-                className={cx('h-1 rounded-full transition-all', draft.title.length > 60 || draft.title.length < 30 ? 'bg-amber-400/70' : 'bg-emerald-400/70')}
+                className={cx('h-1 rounded-full transition-all', draft.title.length > 60 || draft.title.length < 30 ? 'bg-amber-500/80' : 'bg-emerald-400/70')}
                 style={{ width: `${Math.min(100, (draft.title.length / 60) * 100)}%` }}
               />
             </div>
@@ -275,7 +275,7 @@ const SeoEditorModal: React.FC<{
             </Field>
             <div className="-mt-3 h-1 rounded-full bg-white/[0.06]">
               <div
-                className={cx('h-1 rounded-full transition-all', draft.description.length > 160 || draft.description.length < 50 ? 'bg-amber-400/70' : 'bg-emerald-400/70')}
+                className={cx('h-1 rounded-full transition-all', draft.description.length > 160 || draft.description.length < 50 ? 'bg-amber-500/80' : 'bg-emerald-400/70')}
                 style={{ width: `${Math.min(100, (draft.description.length / 160) * 100)}%` }}
               />
             </div>
@@ -561,7 +561,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
               </span>
             )}
             {r.issueCount.w > 0 && (
-              <span className="inline-flex items-center gap-0.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-300">
+              <span className="inline-flex items-center gap-0.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
                 <AlertTriangle size={10} /> {r.issueCount.w}
               </span>
             )}
@@ -574,7 +574,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
       label: 'Robots',
       hideOnMobile: true,
       render: (r) => (
-        <span className={cx('font-mono text-[11px]', isNoindex(r.robots) ? 'text-amber-300' : 'text-[#64748B]')}>{r.robots}</span>
+        <span className={cx('font-mono text-[11px]', isNoindex(r.robots) ? 'text-amber-700' : 'text-[#64748B]')}>{r.robots}</span>
       ),
     },
     {
@@ -599,7 +599,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
         <Badge tone={SOURCE_BADGE[r.source].tone}>{SOURCE_BADGE[r.source].label}</Badge>
         <Badge tone="zinc">{PAGE_KIND_LABEL[r.kind]}</Badge>
         {(r.issueCount.w > 0 || r.issueCount.e > 0) && (
-          <span className="text-[10px] font-bold text-amber-300">{r.issueCount.w} W · {r.issueCount.e} E</span>
+          <span className="text-[10px] font-bold text-amber-700">{r.issueCount.w} W · {r.issueCount.e} E</span>
         )}
       </div>
       <p className="truncate text-xs text-[#475569]">{r.title} <span className="text-[#64748B]">({r.title.length})</span></p>
@@ -648,7 +648,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
         <div className="grid flex-1 grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
           <StatTile label="Pages audited" value={s?.total ?? 0} sub="live public routes" />
           <StatTile label="Pass" value={s?.pass ?? 0} sub="no issues" icon={<CheckCircle2 size={15} className="text-emerald-400" />} />
-          <StatTile label="Warning" value={s?.warning ?? 0} sub={`${s?.warnings ?? 0} warnings`} icon={<AlertTriangle size={15} className="text-amber-400" />} />
+          <StatTile label="Warning" value={s?.warning ?? 0} sub={`${s?.warnings ?? 0} warnings`} icon={<AlertTriangle size={15} className="text-amber-500" />} />
           <StatTile label="Error" value={s?.error ?? 0} sub={`${s?.errors ?? 0} errors`} icon={<XCircle size={15} className="text-red-400" />} />
           <StatTile label="Overrides" value={overrideCount} sub="seo_overrides rows" />
         </div>
@@ -703,12 +703,12 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
         <Card title="Duplicate content report" subtitle="Pages sharing identical titles or descriptions (real audit finding)">
           <div className="grid gap-4 lg:grid-cols-2">
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-300">Duplicate titles ({s.duplicateTitles.length} groups)</p>
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[#8F6B2D]">Duplicate titles ({s.duplicateTitles.length} groups)</p>
               {s.duplicateTitles.length === 0 ? <p className="text-xs text-[#64748B]">None — every page has a unique title.</p> : (
                 <ul className="flex flex-col gap-2">
                   {s.duplicateTitles.slice(0, 6).map((g) => (
-                    <li key={g.paths.join('|')} className="rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[#94A3B8]">
-                      <span className="font-semibold text-amber-200">“{truncate(g.value, 60)}”</span>
+                    <li key={g.paths.join('|')} className="rounded-lg border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3 py-2 text-xs text-[#94A3B8]">
+                      <span className="font-semibold text-[#334155]">“{truncate(g.value, 60)}”</span>
                       <span className="ml-1 text-[#475569]">on {g.paths.length} pages:</span>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {g.paths.slice(0, 5).map((p) => (
@@ -721,12 +721,12 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
               )}
             </div>
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-amber-300">Duplicate descriptions ({s.duplicateDescriptions.length} groups)</p>
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[#8F6B2D]">Duplicate descriptions ({s.duplicateDescriptions.length} groups)</p>
               {s.duplicateDescriptions.length === 0 ? <p className="text-xs text-[#64748B]">None — every page has a unique description.</p> : (
                 <ul className="flex flex-col gap-2">
                   {s.duplicateDescriptions.slice(0, 6).map((g) => (
-                    <li key={g.paths.join('|')} className="rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[#94A3B8]">
-                      <span className="font-semibold text-amber-200">“{truncate(g.value, 60)}”</span>
+                    <li key={g.paths.join('|')} className="rounded-lg border border-[#C9A45C]/25 bg-[#C9A45C]/[0.06] px-3 py-2 text-xs text-[#94A3B8]">
+                      <span className="font-semibold text-[#334155]">“{truncate(g.value, 60)}”</span>
                       <span className="ml-1 text-[#475569]">on {g.paths.length} pages</span>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {g.paths.slice(0, 5).map((p) => (

@@ -276,7 +276,7 @@ export const PerformancePage: React.FC<AdminPageProps> = () => {
               <StatTile
                 label="Service worker"
                 value={
-                  <span className={cx('text-base', sw?.registered ? 'text-emerald-300' : 'text-amber-300')}>
+                  <span className={cx('text-base', sw?.registered ? 'text-emerald-300' : 'text-amber-600')}>
                     {sw?.registered ? 'Registered' : 'Not registered'}
                   </span>
                 }

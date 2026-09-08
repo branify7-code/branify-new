@@ -292,7 +292,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
         message={confirmDelete ? (
           <>
             Delete <span className="font-mono text-[#8F6B2D]">{confirmDelete.filename}</span>?
-            <span className="mt-2 block text-xs text-amber-300">Check this asset isn&apos;t used in content before deleting — pages or overrides referencing it will show broken media.</span>
+            <span className="mt-2 block text-xs text-amber-700">Check this asset isn&apos;t used in content before deleting — pages or overrides referencing it will show broken media.</span>
           </>
         ) : ''}
         confirmLabel="Delete asset"
