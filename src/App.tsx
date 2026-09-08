@@ -7,6 +7,7 @@ import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { usePWA } from './hooks/usePWA';
 import { trackNotFound } from './lib/track';
 import { getSeoOverride, getRedirectTarget } from './lib/contentOverrides';
+import { STATIC_PAGE_SEO } from './data/seoMeta';
 
 // Views
 import { ServicesView } from './views/services/ServicesView';
@@ -273,7 +274,15 @@ export default function App() {
           />
         )}
 
-        {pathname === '/pricing' && <ServicesView onNavigate={navigateTo} />}
+        {pathname === '/pricing' && (
+          <ServicesView
+            onNavigate={navigateTo}
+            seoTitle={STATIC_PAGE_SEO.pricing.title}
+            seoDescription={STATIC_PAGE_SEO.pricing.description}
+            seoCanonicalPath="/pricing"
+            seoCrumb="Pricing"
+          />
+        )}
 
         {/* Template Library — /templates, /templates/:category, /templates/:category/:slug, + /preview */}
         {pathname === '/templates' && (

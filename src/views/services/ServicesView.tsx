@@ -15,9 +15,21 @@ import Seo from '../../components/Seo';
 import { servicesRegistry } from '../../data/servicesRegistry';
 import { useCurrency } from '../../lib/currency';
 
+const SERVICES_SEO = {
+  title: 'Digital Agency Services | Web, Branding, AI & SEO | BRANIFY',
+  description: "Explore BRANIFY's digital services including web development, branding, AI solutions, e-commerce, SEO, UI/UX and digital growth.",
+  canonicalPath: '/services',
+  crumb: 'Services',
+};
+
 interface ServicesViewProps {
   onNavigate: (path: string) => void;
   initialCategory?: string | null;
+  /** Route-scoped SEO overrides — used when this view also serves /pricing. */
+  seoTitle?: string;
+  seoDescription?: string;
+  seoCanonicalPath?: string;
+  seoCrumb?: string;
 }
 
 /* Icon system: color inherited from the accent chip of each card */
@@ -81,7 +93,14 @@ const filterTabs = [
   { id: 'growth', label: 'Growth & Technology' },
 ];
 
-export const ServicesView: React.FC<ServicesViewProps> = ({ onNavigate, initialCategory }) => {
+export const ServicesView: React.FC<ServicesViewProps> = ({
+  onNavigate,
+  initialCategory,
+  seoTitle = SERVICES_SEO.title,
+  seoDescription = SERVICES_SEO.description,
+  seoCanonicalPath = SERVICES_SEO.canonicalPath,
+  seoCrumb = SERVICES_SEO.crumb,
+}) => {
   const { currency, currencyInfo, format } = useCurrency();
   const [activeFilter, setActiveFilter] = useState<string>('all');
 
@@ -92,11 +111,11 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ onNavigate, initialC
   }, [initialCategory]);
 
   useEffect(() => {
-    document.title = 'Digital Agency Services | Web, Branding, AI & SEO | BRANIFY';
+    document.title = seoTitle;
     return () => {
       document.title = 'Custom Web Development & Digital Agency | BRANIFY';
     };
-  }, []);
+  }, [seoTitle]);
 
   const filtered = useMemo(
     () =>
@@ -117,10 +136,10 @@ export const ServicesView: React.FC<ServicesViewProps> = ({ onNavigate, initialC
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 relative">
       <Seo
-        title="Digital Agency Services | Web, Branding, AI & SEO | BRANIFY"
-        description="Explore BRANIFY's digital services including web development, branding, AI solutions, e-commerce, SEO, UI/UX and digital growth."
-        canonicalPath="/services"
-        breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Services', url: '/services' }]}
+        title={seoTitle}
+        description={seoDescription}
+        canonicalPath={seoCanonicalPath}
+        breadcrumbs={[{ name: 'Home', url: '/' }, { name: seoCrumb, url: seoCanonicalPath }]}
       />
 
       {/* Ambient glow */}

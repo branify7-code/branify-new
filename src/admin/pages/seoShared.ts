@@ -12,6 +12,9 @@ import { TEMPLATE_CATEGORIES, allTemplates, templateCount } from '../../data/tem
 import { templateCategories } from '../../data/freeTemplatesRegistry';
 import { getAllAiTools, getToolSeo } from '../../lib/aiToolsData';
 import { projectsData } from '../../data/projects';
+import {
+  FREE_TEMPLATE_CATEGORY_SEO, FREE_TEMPLATES_HUB_SEO, STATIC_PAGE_SEO,
+} from '../../data/seoMeta';
 
 // ------------------------------------------------------------------ row shape
 /** Minimal structural shape of content rows fetched via listRows(). */
@@ -123,19 +126,31 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
   const pages: PageMeta[] = [];
 
   // --- statics (9) — titles/descriptions mirror what the live views actually
-  //     render (index.html, ServicesView, FreeToolsView, AIToolsView,
-  //     FreeTemplatesView, BlogView, LegalPageView) so the audit reports the
-  //     site's TRUE state. Statics without view-level SEO (about, contact,
-  //     pricing, portfolio, tools-hub description) intentionally fall through
-  //     to the global default — the audit will surface that as a finding.
+  //     render (index.html, AboutView, ContactView, ServicesView on /pricing,
+  //     FreeToolsView, PortfolioView, FreeTemplatesView, BlogView,
+  //     LegalPageView) so the audit reports the site's TRUE state. The meta
+  //     strings come from src/data/seoMeta.ts — the same single source the
+  //     views import — so the inventory can never drift from runtime again.
   pages.push({
     path: '/', kind: 'home', label: 'BRANIFY',
     sourceTitle: 'Custom Web Development & Digital Agency | BRANIFY',
     sourceDescription: 'Build a stronger digital presence with BRANIFY—web development, branding, AI solutions, SEO and digital products designed for modern businesses worldwide.',
   });
-  pages.push({ path: '/about', kind: 'static', label: 'About' });
-  pages.push({ path: '/contact', kind: 'static', label: 'Contact' });
-  pages.push({ path: '/pricing', kind: 'static', label: 'Pricing' });
+  pages.push({
+    path: '/about', kind: 'static', label: 'About',
+    sourceTitle: STATIC_PAGE_SEO.about.title,
+    sourceDescription: STATIC_PAGE_SEO.about.description,
+  });
+  pages.push({
+    path: '/contact', kind: 'static', label: 'Contact',
+    sourceTitle: STATIC_PAGE_SEO.contact.title,
+    sourceDescription: STATIC_PAGE_SEO.contact.description,
+  });
+  pages.push({
+    path: '/pricing', kind: 'static', label: 'Pricing',
+    sourceTitle: STATIC_PAGE_SEO.pricing.title,
+    sourceDescription: STATIC_PAGE_SEO.pricing.description,
+  });
   pages.push({
     path: '/privacypolicy', kind: 'legal', label: 'Privacy Policy',
     sourceTitle: 'Privacy Policy | BRANIFY',
@@ -184,7 +199,8 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
   // --- tools (hub + detail) ---
   pages.push({
     path: '/tools', kind: 'tools_hub', label: 'Free Tools',
-    sourceTitle: '100+ Free Online Tools | Browser Utilities | BRANIFY',
+    sourceTitle: STATIC_PAGE_SEO.tools.title,
+    sourceDescription: STATIC_PAGE_SEO.tools.description,
   });
   for (const r of rows.tools || []) {
     if (!isLive(r) || !r.slug) continue;
@@ -227,8 +243,8 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
   // --- free templates (= products rows) ---
   pages.push({
     path: '/free-templates', kind: 'templates_hub', label: 'Free Templates',
-    sourceTitle: 'Free Templates for Business & Creators | BRANIFY',
-    sourceDescription: 'Free Website & Design Templates | BRANIFY',
+    sourceTitle: FREE_TEMPLATES_HUB_SEO.title,
+    sourceDescription: FREE_TEMPLATES_HUB_SEO.description,
   });
   for (const r of rows.products || []) {
     if (!isLive(r) || !r.slug) continue;
@@ -243,16 +259,17 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
     });
   }
   // Category landing views (/free-templates/{category}) — real filtered pages
-  // served by FreeTemplatesView. They share the hub's meta + canonical by
-  // design, exactly as the live site behaves.
+  // served by FreeTemplatesView, whose <Seo/> picks per-category metadata by
+  // URL segment from src/data/seoMeta.ts. Mirrored 1:1 here.
   for (const c of templateCategories) {
     if (!c.slug) continue; // 'All Templates' is the hub itself
+    const catSeo = FREE_TEMPLATE_CATEGORY_SEO[c.slug] ?? FREE_TEMPLATES_HUB_SEO;
     pages.push({
       path: `/free-templates/${c.slug}`,
       kind: 'template_category',
       label: c.label,
-      sourceTitle: 'Free Templates for Business & Creators | BRANIFY',
-      sourceDescription: 'Free Website & Design Templates | BRANIFY',
+      sourceTitle: catSeo.title,
+      sourceDescription: catSeo.description,
     });
   }
 
@@ -284,7 +301,11 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
   // inject a public page. Mirror that rule here so the audit inventory matches
   // the real public routes exactly (a leftover DB row for a deleted project
   // must not create a sitemap URL).
-  pages.push({ path: '/portfolio', kind: 'portfolio_hub', label: 'Portfolio' });
+  pages.push({
+    path: '/portfolio', kind: 'portfolio_hub', label: 'Portfolio',
+    sourceTitle: STATIC_PAGE_SEO.portfolio.title,
+    sourceDescription: STATIC_PAGE_SEO.portfolio.description,
+  });
   const dbPortfolio = new Map(
     (rows.portfolio || []).filter((r) => r.slug).map((r) => [String(r.slug), r]),
   );

@@ -12,6 +12,7 @@ import {
 import { TOOL_CATEGORIES } from '../../data/toolsRegistry';
 import { allTools } from '../../tools';
 import Seo from '../../components/Seo';
+import { STATIC_PAGE_SEO } from '../../data/seoMeta';
 
 interface FreeToolsViewProps {
   onNavigate: (path: string) => void;
@@ -126,8 +127,8 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
   return (
     <div className="min-h-screen bg-white">
       <Seo
-        title="100+ Free Online Tools | Browser Utilities | BRANIFY"
-        description="136 fast, privacy-first online tools running directly in your browser — PDF tools, image converter, text utilities, developer tools, SEO tools, business and finance calculators. No registration required."
+        title={STATIC_PAGE_SEO.tools.title}
+        description={STATIC_PAGE_SEO.tools.description}
         keywords={['free online tools', 'pdf tools', 'image converter', 'word counter', 'password generator', 'UTM builder', 'QR code generator', 'invoice generator', 'browser utilities']}
         canonicalPath="/tools"
         breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Free Tools', url: '/tools' }]}

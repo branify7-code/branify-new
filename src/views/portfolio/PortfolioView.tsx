@@ -6,6 +6,7 @@ import {
 import { projectsData } from '../../data/projects';
 import { Project } from '../../types';
 import Seo from '../../components/Seo';
+import { STATIC_PAGE_SEO } from '../../data/seoMeta';
 
 interface PortfolioViewProps {
   onSelectProject: (project: Project) => void;
@@ -55,8 +56,8 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
       <Seo
-        title="Portfolio & Case Studies | Web, E-Commerce & AI Platforms | BRANIFY"
-        description="Explore BRANIFY case studies — e-commerce storefronts, digital marketplaces, AI trading platforms and learn-to-earn education platforms built for clients worldwide."
+        title={STATIC_PAGE_SEO.portfolio.title}
+        description={STATIC_PAGE_SEO.portfolio.description}
         keywords={['BRANIFY portfolio', 'web development case studies', 'e-commerce website portfolio', 'digital agency work', 'AI platform development']}
         canonicalPath="/portfolio"
         breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Portfolio', url: '/portfolio' }]}

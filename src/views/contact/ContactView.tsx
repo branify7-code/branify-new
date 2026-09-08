@@ -6,6 +6,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import { trackEvent } from '../../lib/track';
 import { mirrorLeadToPreview } from '../../lib/leadCapture';
+import { STATIC_PAGE_SEO } from '../../data/seoMeta';
 import { getTemplateBySlug, getCategoryBySlug } from '../../data/templates';
 import Seo from '../../components/Seo';
 
@@ -117,8 +118,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
       <Seo
-        title="Contact BRANIFY | Consultation & Project Inquiry"
-        description="Tell BRANIFY about your brand vision, architectural requirements, or upcoming product launch. Senior leadership responds within 24 business hours — book a free consultation today."
+        title={STATIC_PAGE_SEO.contact.title}
+        description={STATIC_PAGE_SEO.contact.description}
         keywords={['contact BRANIFY', 'book a consultation', 'web development quote', 'hire digital agency', 'project inquiry']}
         canonicalPath="/contact"
         breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact' }]}

@@ -12,6 +12,7 @@ import { createPortal } from 'react-dom';
 import { Download, Eye, Gift, Search, X } from 'lucide-react';
 import Seo from '../../components/Seo';
 import { freeTemplates, templateCategories, FreeTemplate } from '../../data/freeTemplatesRegistry';
+import { FREE_TEMPLATE_CATEGORY_SEO, FREE_TEMPLATES_HUB_SEO } from '../../data/seoMeta';
 
 export interface FreeTemplatesViewProps {
   onNavigate: (path: string) => void;
@@ -210,11 +211,15 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
     setActiveCategory('');
   };
 
+  // Route-scoped metadata: keyed off the URL segment (stable for crawlers),
+  // not the mutable category-pill state. Unknown segments get hub meta.
+  const seo = (initialCategory && FREE_TEMPLATE_CATEGORY_SEO[initialCategory]) || FREE_TEMPLATES_HUB_SEO;
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-[#334155] py-12 px-4 sm:px-6 lg:px-8 space-y-12">
       <Seo
-        title="Free Templates for Business & Creators | BRANIFY"
-        description="Free Website & Design Templates | BRANIFY"
+        title={seo.title}
+        description={seo.description}
         canonicalPath="/free-templates"
       />
 
