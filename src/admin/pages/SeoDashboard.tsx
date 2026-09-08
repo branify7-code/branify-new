@@ -386,7 +386,7 @@ const SeoEditorModal: React.FC<{
 // =====================================================================
 // PAGE
 // =====================================================================
-export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
+export const SeoDashboard: React.FC<AdminPageProps> = ({ query, navigate }) => {
   const { push } = useToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<{ title: string; message: string } | null>(null);
@@ -625,6 +625,7 @@ export const SeoDashboard: React.FC<AdminPageProps> = ({ query }) => {
         </div>
         <div className="flex items-center gap-2">
           <Btn variant="outline" size="sm" icon={RefreshCw} onClick={() => void runAudit()} loading={loading}>Re-run audit</Btn>
+          <Btn variant="subtle" size="sm" icon={Globe} onClick={() => navigate('/seo/search-console')}>Search Console</Btn>
           <Btn variant="subtle" size="sm" icon={FileSearch} onClick={() => window.location.assign('/admin/seo/sitemap')}>Sitemap center</Btn>
         </div>
       </div>

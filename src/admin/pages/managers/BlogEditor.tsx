@@ -135,14 +135,14 @@ function buildPayload(f: BlogForm, statusOverride?: string): { payload: Record<s
 }
 
 // ------------------------------------------------------------------ component
-export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = ({ postId, navigate }) => {
+export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = ({ postId, navigate, query }) => {
   const { push } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [formState, setFormState] = useState<BlogForm>(defaultForm());
   const [mode, setMode] = useState<'visual' | 'html'>('visual');
-  const [tab, setTab] = useState('post');
+  const [tab, setTab] = useState(() => (query.get('tab') === 'performance' ? 'performance' : 'post'));
   const [previewOpen, setPreviewOpen] = useState(false);
   const [confirmBack, setConfirmBack] = useState(false);
   const [publishAsk, setPublishAsk] = useState(false);
@@ -717,7 +717,11 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
 
           {tab === 'performance' && (
             <>
-              <SearchPerformancePanel slug={f.slug} published={isPublished && !isScheduled} />
+              <SearchPerformancePanel
+                slug={f.slug}
+                published={isPublished && !isScheduled}
+                onOpenCenter={(p) => navigate(`/seo/search-console?page=${encodeURIComponent(p)}`)}
+              />
               {isPublished && f.slug && (
                 <Card title="Live post" subtitle="Opens the public article in a new tab">
                   <a

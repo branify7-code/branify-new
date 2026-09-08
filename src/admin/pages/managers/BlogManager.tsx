@@ -7,7 +7,7 @@
 //   /blog?post=<id>   → full-page Blog Editor for an existing post
 // =============================================================================
 import React from 'react';
-import { Eye, Newspaper, Star } from 'lucide-react';
+import { Eye, Newspaper, Star, TrendingUp } from 'lucide-react';
 import type { AdminPageProps } from '../../lib/auth';
 import type { BlogRow } from '../../lib/types';
 import { fmtDate, timeAgo } from '../../lib/format';
@@ -53,6 +53,23 @@ const columns: Column<BlogRow>[] = [
     sortable: true,
     hideOnMobile: true,
     render: (r) => <span className="text-[#475569]">{fmtDate(r.published_at)}</span>,
+  },
+  {
+    key: 'gsc',
+    label: 'SEO perf',
+    render: (r) => r.status === 'published' ? (
+      <button
+        type="button"
+        title="Google Search performance for this post"
+        aria-label={`Google Search performance for ${r.title}`}
+        onClick={(e) => { e.stopPropagation(); navBridge.current(`/blog?post=${r.id}&tab=performance`); }}
+        className="text-[#8F6B2D] transition-colors hover:text-[#5B5FEF]"
+      >
+        <TrendingUp size={15} />
+      </button>
+    ) : (
+      <span className="text-[10px] text-[#64748B]" title="Publish the post to track search performance">—</span>
+    ),
   },
   {
     key: 'featured',

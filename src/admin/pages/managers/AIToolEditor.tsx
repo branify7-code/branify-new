@@ -22,6 +22,7 @@ import {
   LoadingBlock, Select, Tabs, Textarea, Toggle, cx, useToast,
 } from '../../ui';
 import { slugify } from '../../lib/format';
+import { GscMiniPanel } from '../GscMiniPanel';
 import { auditAiTool, type AiToolAuditReport } from '../../lib/aiToolAudit';
 import { MediaPickerModal } from './BlogEditorMedia';
 import { ToolIcon } from '../../../components/ToolIcon';
@@ -841,11 +842,11 @@ export const AIToolEditor: React.FC<AdminPageProps & { toolId: string | null }> 
             <Card className="p-5 space-y-3">
               <h3 className="font-bold text-sm text-[#111827]">Search performance</h3>
               <div className="rounded-xl border border-[#E2E8F0] bg-white/[0.5] p-4">
-                <p className="text-[11.5px] font-bold text-amber-700">Google Search Console is not connected.</p>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-[#475569]">
-                  Real clicks, impressions, CTR and average position come only from a live GSC connection — none is
-                  configured in this project, so those numbers cannot be shown and will never be simulated here.
-                </p>
+                <GscMiniPanel
+                  path={`/ai-tools/${form.slug || slugify(form.name)}`}
+                  published={Boolean(form.slug)}
+                  onOpenCenter={(p) => navigate(`/seo/search-console?page=${encodeURIComponent(p)}`)}
+                />
               </div>
             </Card>
           </div>

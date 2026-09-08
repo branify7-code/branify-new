@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { listRows } from '../../lib/backend';
 import type { EventRow } from '../../lib/types';
+import { GscMiniPanel } from '../GscMiniPanel';
 import { Badge, Btn, Card, EmptyState, Field, Input, LoadingBlock, Textarea, cx } from '../../ui';
 import { analyzeArticle, type BlogAuditReport } from '../../lib/blogAudit';
 import { htmlToPlainText } from '../../../lib/sanitizeHtml';
@@ -457,7 +458,7 @@ export const LinkCheckPanel: React.FC<{ contentHtml: string }> = ({ contentHtml 
 };
 
 // ------------------------------------------------------------------ search performance
-export const SearchPerformancePanel: React.FC<{ slug: string; published: boolean }> = ({ slug, published }) => {
+export const SearchPerformancePanel: React.FC<{ slug: string; published: boolean; onOpenCenter: (deepLinkPath: string) => void }> = ({ slug, published, onOpenCenter }) => {
   const [views, setViews] = useState<{ total: number; byName: Array<{ name: string; count: number }>; loading: boolean; error: string }>({ total: 0, byName: [], loading: true, error: '' });
   const path = `/blog/${slug}`;
 
@@ -493,23 +494,7 @@ export const SearchPerformancePanel: React.FC<{ slug: string; published: boolean
   return (
     <div className="flex flex-col gap-4">
       <div className="rounded-xl border border-[#E2E8F0] bg-white/[0.5] p-4">
-        <p className="mb-2 flex items-center gap-2 text-[12px] font-bold text-[#111827]">
-          <Globe size={14} className="text-[#8F6B2D]" /> Google Search Console
-        </p>
-        <p className="text-[11.5px] font-bold text-amber-700">Google Search Console is not connected.</p>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-[#475569]">
-          Real clicks, impressions, CTR, average position and queries come only from a live GSC connection —
-          none is configured in this project, so those numbers cannot be shown (and will never be simulated here).
-          Once an integration is added, this panel will show per-post performance with page / query / date filters.
-        </p>
-        <a
-          href={`https://search.google.com/search-console`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-[#5B5FEF] hover:underline"
-        >
-          Open Google Search Console <ExternalLink size={11} />
-        </a>
+        <GscMiniPanel path={`/blog/${slug}`} published={published} onOpenCenter={onOpenCenter} />
       </div>
 
       <div className="rounded-xl border border-[#E2E8F0] bg-white/[0.5] p-4">

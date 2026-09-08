@@ -34,6 +34,7 @@ import { ContactsPage } from './pages/managers/ContactsPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { PaymentsPage } from './pages/PaymentsPage';
 import { SeoDashboard } from './pages/SeoDashboard';
+import { SearchConsolePage } from './pages/SearchConsolePage';
 import { SitemapPage } from './pages/SitemapPage';
 import { RedirectsPage } from './pages/RedirectsPage';
 import { NotFoundMonitor } from './pages/NotFoundMonitor';
@@ -216,6 +217,7 @@ const AdminShell: React.FC<{
       case '/payments': return <PaymentsPage {...pageProps} />;
       case '/contacts': return <ContactsPage {...pageProps} />;
       case '/seo': return <SeoDashboard {...pageProps} />;
+      case '/seo/search-console': return <SearchConsolePage {...pageProps} />;
       case '/seo/sitemap': return <SitemapPage {...pageProps} />;
       case '/seo/redirects': return <RedirectsPage {...pageProps} />;
       case '/seo/404': return <NotFoundMonitor {...pageProps} />;
