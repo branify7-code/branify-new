@@ -655,6 +655,15 @@ async function handleAction(action: string, req: Req, res: Res): Promise<void> {
   let data: unknown;
   switch (action) {
     case 'ping': data = { ok: true, service: 'gsc', time: new Date().toISOString() }; break;
+    case 'diag': data = {
+      envSupabaseUrl: Boolean(process.env.SUPABASE_URL),
+      envSupabaseAnon: Boolean(process.env.SUPABASE_ANON_KEY),
+      envSupabaseAnonIsJwt: String(process.env.SUPABASE_ANON_KEY || '').startsWith('eyJ'),
+      envSupabaseAnonIsPublishable: String(process.env.SUPABASE_ANON_KEY || '').startsWith('sb_publishable_'),
+      sbUrlMatchesFallback: SB_URL === 'https://uspshkegxhrglbpxqtil.supabase.co',
+      anonMatchesFallback: SB_ANON === 'sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw',
+      nodeVersion: process.version,
+    }; break;
     case 'status': data = await actionStatus(); break;
     case 'config.set': data = await actionConfigSet(bearer, body); break;
     case 'config.clear': data = await actionConfigClear(bearer); break;
