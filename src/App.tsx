@@ -32,6 +32,12 @@ import { WhatsAppFab } from './components/WhatsAppFab';
 import Seo from './components/Seo';
 import { freeTemplates } from './data/freeTemplatesRegistry';
 import { getCategoryBySlug, getTemplateBySlug } from './data/templates';
+import { CustomerAuthProvider } from './lib/customerAuth';
+import { LoginView } from './views/auth/LoginView';
+import { RegisterView } from './views/auth/RegisterView';
+import { ForgotPasswordView } from './views/auth/ForgotPasswordView';
+import { ResetPasswordView } from './views/auth/ResetPasswordView';
+import { AccountView } from './views/auth/AccountView';
 
 // Admin dashboard — lazy-loaded, never downloaded by public pages
 const AdminApp = lazy(() => import('./admin/AdminApp'));
@@ -58,6 +64,8 @@ const PUBLIC_ROUTE_PREFIXES = [
   '/', '/services', '/portfolio', '/tools', '/free-tools', '/ai-tools', '/pricing',
   '/contact', '/about', '/privacypolicy', '/termsandconditions', '/refundpolicy',
   '/cookiespolicy', '/disclaimer', '/free-templates', '/blog', '/admin', '/templates',
+  // Customer account utility pages (noindex, kept out of the sitemap)
+  '/login', '/register', '/forgot-password', '/reset-password', '/account',
 ];
 function isKnownRoute(pathname: string): boolean {
   return PUBLIC_ROUTE_PREFIXES.some((p) => (p === '/' ? pathname === '/' : pathname === p || pathname.startsWith(`${p}/`)));
@@ -207,7 +215,7 @@ export default function App() {
       )}
 
       {!isAdminRoute && (
-        <>
+        <CustomerAuthProvider>
       {/* Luxury Custom Cursor follower */}
       <CustomCursor />
 
@@ -364,6 +372,28 @@ export default function App() {
           />
         )}
 
+        {/* Customer account — secure utility pages (noindex, not in sitemap).
+            Uses the existing Supabase Auth; admin auth is entirely separate. */}
+        {pathname === '/login' && (
+          <LoginView onNavigate={navigateTo} redirect={queryParams.get('redirect')} />
+        )}
+
+        {pathname === '/register' && (
+          <RegisterView onNavigate={navigateTo} redirect={queryParams.get('redirect')} />
+        )}
+
+        {pathname === '/forgot-password' && (
+          <ForgotPasswordView onNavigate={navigateTo} />
+        )}
+
+        {pathname === '/reset-password' && (
+          <ResetPasswordView onNavigate={navigateTo} />
+        )}
+
+        {pathname === '/account' && (
+          <AccountView onNavigate={navigateTo} />
+        )}
+
         {/* Admin Portal — protected, lazy-loaded control center (rendered above as a full-screen app) */}
 
         {/* Unknown routes → real 404 page */}
@@ -466,7 +496,7 @@ export default function App() {
         onClose={() => setActiveProjectDetail(null)}
         onStartInquiry={(category) => handleOpenInquiry(category)}
       />
-        </>
+        </CustomerAuthProvider>
       )}
     </div>
   );

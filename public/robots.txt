@@ -12,6 +12,10 @@ Disallow: /checkout/
 Disallow: /api/
 Disallow: /login
 Disallow: /register
+Disallow: /account
+Disallow: /account/
+Disallow: /forgot-password
+Disallow: /reset-password
 
 # Sitemaps
 Sitemap: https://branify.store/sitemap.xml

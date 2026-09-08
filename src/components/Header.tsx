@@ -21,7 +21,12 @@ import {
   Presentation,
   Bot,
   TrendingUp,
+  LogIn,
+  LogOut,
+  UserCircle,
+  UserPlus,
 } from "lucide-react";
+import { useCustomerAuth } from "../lib/customerAuth";
 
 export interface HeaderProps {
   currentRoute?: string;
@@ -367,6 +372,10 @@ export default function Header({
     if (code) setCurrencyCode(code);
   };
   const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+  // Customer authentication (public site) — separate from the admin portal
+  const { user: customerUser, signOut: customerSignOut } = useCustomerAuth();
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
   const [announcementVisible, setAnnouncementVisible] = useState(() => {
     if (typeof window !== "undefined") {
       try {
@@ -458,6 +467,22 @@ export default function Header({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [currencyDropdownOpen]);
 
+  // Close account dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        accountMenuRef.current &&
+        !accountMenuRef.current.contains(e.target as Node)
+      ) {
+        setAccountOpen(false);
+      }
+    };
+    if (accountOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [accountOpen]);
+
   const openPanel = (menu: Exclude<OpenMenu, null>) => {
     if (closeTimer.current) {
       window.clearTimeout(closeTimer.current);
@@ -493,6 +518,49 @@ export default function Header({
     e.preventDefault();
     handleNav(route);
   };
+
+  // ---- Customer authentication helpers (public site; admin stays separate) ----
+  // Carry the visitor's current page through login/register so they land back
+  // where they started (e.g. /contact?template=… context is preserved).
+  const authRouteWithRedirect = (base: string) => {
+    const from = currentRoute || "/";
+    const isAuthPage =
+      from.startsWith("/login") ||
+      from.startsWith("/register") ||
+      from.startsWith("/forgot-password") ||
+      from.startsWith("/reset-password") ||
+      from.startsWith("/account");
+    return isAuthPage || from === "/" ? base : `${base}?redirect=${encodeURIComponent(from)}`;
+  };
+
+  const handleAccountNav = (route: string) => {
+    setAccountOpen(false);
+    setMobileOpen(false);
+    handleNav(route);
+  };
+
+  const handleCustomerSignOut = async () => {
+    setAccountOpen(false);
+    setMobileOpen(false);
+    await customerSignOut(); // Supabase signOut — customer session only
+    if (onNavigate && (pathname === "/account" || pathname === "/login" || pathname === "/register")) {
+      onNavigate("/"); // return to a sensible public page
+    }
+  };
+
+  const customerInitials = (() => {
+    const n = (customerUser?.name || "").trim();
+    if (n) {
+      return (
+        n
+          .split(/\s+/)
+          .slice(0, 2)
+          .map((p) => p[0]?.toUpperCase() || "")
+          .join("") || "B"
+      );
+    }
+    return (customerUser?.email || "B").slice(0, 2).toUpperCase();
+  })();
 
   const handleConsultClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -888,6 +956,92 @@ export default function Header({
                     {curr.code === currency.code && <span>✓</span>}
                   </button>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* CUSTOMER ACCOUNT — Login/Register (logged out) or Account menu (logged in).
+              Deliberately quieter than the gold consultation CTA. */}
+          <div className="relative shrink-0" ref={accountMenuRef}>
+            <button
+              type="button"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-[#F8FAFC] hover:bg-[#C9A45C]/10 text-slate-700 hover:text-[#8F6B2D] border border-[#C9A45C]/25 hover:border-[#C9A45C]/50 rounded-full text-xs font-bold transition-all cursor-pointer max-w-[10rem]"
+              title={customerUser ? "My Account" : "Login or Create Account"}
+              aria-label={customerUser ? "My Account" : "Login or Create Account"}
+              aria-expanded={accountOpen}
+              onClick={() => setAccountOpen((prev) => !prev)}
+            >
+              {customerUser ? (
+                <span className="w-5 h-5 rounded-full bg-[#C9A45C]/20 border border-[#C9A45C]/45 text-[9px] font-black text-[#8F6B2D] flex items-center justify-center shrink-0">
+                  {customerInitials}
+                </span>
+              ) : (
+                <UserCircle
+                  size={16}
+                  strokeWidth={2}
+                  className="w-4 h-4 text-[#8F6B2D] shrink-0"
+                />
+              )}
+              <span className="hidden lg:inline-block truncate">
+                {customerUser ? customerUser.name || "My Account" : "Account"}
+              </span>
+            </button>
+
+            {accountOpen && (
+              <div
+                className="absolute top-full right-0 mt-2 w-60 bg-[#F8FAFC] border border-[#C9A45C]/30 rounded-2xl shadow-2xl shadow-black/80 p-2 z-50 mega-panel-enter"
+                role="menu"
+                aria-label="Account Menu"
+              >
+                {customerUser ? (
+                  <>
+                    <div className="px-3 py-2.5 border-b border-[#C9A45C]/20 mb-1.5">
+                      <p className="text-xs font-bold text-[#111827] truncate">
+                        {customerUser.name || "BRANIFY Customer"}
+                      </p>
+                      <p className="text-[11px] text-slate-500 truncate">{customerUser.email}</p>
+                    </div>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-[#8F6B2D] hover:bg-white transition-colors cursor-pointer text-left"
+                      onClick={() => handleAccountNav("/account")}
+                    >
+                      <UserCircle size={15} strokeWidth={2} className="text-[#8F6B2D]" />
+                      My Account
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-white transition-colors cursor-pointer text-left"
+                      onClick={handleCustomerSignOut}
+                    >
+                      <LogOut size={15} strokeWidth={2} className="text-slate-400" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-[#8F6B2D] hover:bg-white transition-colors cursor-pointer text-left"
+                      onClick={() => handleAccountNav(authRouteWithRedirect("/login"))}
+                    >
+                      <LogIn size={15} strokeWidth={2} className="text-[#8F6B2D]" />
+                      Login
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-[#8F6B2D] hover:bg-white transition-colors cursor-pointer text-left"
+                      onClick={() => handleAccountNav(authRouteWithRedirect("/register"))}
+                    >
+                      <UserPlus size={15} strokeWidth={2} className="text-[#8F6B2D]" />
+                      Create Account
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -1460,6 +1614,56 @@ export default function Header({
 
           {/* MOBILE BOTTOM ACTIONS */}
           <div className="pt-4 border-t border-[#C9A45C]/20 space-y-3">
+            {/* CUSTOMER ACCOUNT CARD (mobile) */}
+            {customerUser ? (
+              <div className="w-full rounded-xl bg-[#F8FAFC] border border-[#C9A45C]/25 p-3 space-y-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="w-9 h-9 rounded-full bg-[#C9A45C]/15 border border-[#C9A45C]/40 text-[11px] font-black text-[#8F6B2D] flex items-center justify-center shrink-0">
+                    {customerInitials}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-[#111827] truncate">
+                      {customerUser.name || "My Account"}
+                    </div>
+                    <div className="text-[10px] text-slate-500 truncate">{customerUser.email}</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    className="py-2.5 rounded-lg bg-[#C9A45C]/15 border border-[#C9A45C]/40 text-[#8F6B2D] text-[11px] font-bold uppercase tracking-wider hover:bg-[#C9A45C]/25 transition-colors cursor-pointer"
+                    onClick={() => handleAccountNav("/account")}
+                  >
+                    My Account
+                  </button>
+                  <button
+                    type="button"
+                    className="py-2.5 rounded-lg bg-white border border-[#E2E8F0] text-slate-600 text-[11px] font-bold uppercase tracking-wider hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer"
+                    onClick={handleCustomerSignOut}
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  className="py-3 rounded-xl bg-[#F8FAFC] border border-[#C9A45C]/30 text-[#8F6B2D] text-xs font-extrabold uppercase tracking-wider hover:bg-[#C9A45C]/10 transition-colors cursor-pointer"
+                  onClick={() => handleAccountNav(authRouteWithRedirect("/login"))}
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  className="py-3 rounded-xl bg-white border border-[#E2E8F0] text-slate-700 text-xs font-extrabold uppercase tracking-wider hover:text-[#8F6B2D] hover:border-[#C9A45C]/40 transition-colors cursor-pointer"
+                  onClick={() => handleAccountNav(authRouteWithRedirect("/register"))}
+                >
+                  Register
+                </button>
+              </div>
+            )}
+
             {/* INSTALL APP CARD */}
             <button
               type="button"
