@@ -145,11 +145,11 @@ export const Seo: React.FC<SeoProps> = ({
         url: SITE_URL,
         logo: `${SITE_URL}/brand/branify-logo.png`,
         description: 'BRANIFY is an international full-stack digital agency providing custom web development, brand identity design, AI solutions, and digital products.',
-        email: 'admin@branify.store',
+        email: 'support@branify.store',
         telephone: '+44-7412-831132',
         contactPoint: [
-          { '@type': 'ContactPoint', telephone: '+44-7412-831132', contactType: 'customer service', email: 'admin@branify.store', availableLanguage: ['English'] },
-          { '@type': 'ContactPoint', telephone: '+92-332-1029333', contactType: 'customer service', email: 'admin@branify.store', availableLanguage: ['English', 'Urdu', 'Arabic'] },
+          { '@type': 'ContactPoint', telephone: '+44-7412-831132', contactType: 'customer service', email: 'support@branify.store', availableLanguage: ['English'] },
+          { '@type': 'ContactPoint', telephone: '+92-332-1029333', contactType: 'customer service', email: 'support@branify.store', availableLanguage: ['English', 'Urdu', 'Arabic'] },
         ],
         sameAs: [
           'https://www.instagram.com/branify001',

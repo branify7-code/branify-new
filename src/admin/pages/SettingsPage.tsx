@@ -297,7 +297,7 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
       {tab === 'contact' && (
         <Card title="Contact" subtitle="Public contact channels and office blocks" actions={sectionActions('contact')}>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Email"><Input type="email" value={drafts.contact.email} onChange={(e) => patch('contact', { email: e.target.value })} placeholder="admin@branify.store" /></Field>
+            <Field label="Email"><Input type="email" value={drafts.contact.email} onChange={(e) => patch('contact', { email: e.target.value })} placeholder="support@branify.store" /></Field>
             <Field label="Phone"><Input value={drafts.contact.phone} onChange={(e) => patch('contact', { phone: e.target.value })} placeholder="+447412831132" /></Field>
             <Field label="WhatsApp number" hint="Digits only — used to build wa.me links.">
               <Input value={drafts.contact.whatsapp} onChange={(e) => patch('contact', { whatsapp: e.target.value })} placeholder="923321029333" className="font-mono text-xs" />

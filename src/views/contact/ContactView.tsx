@@ -308,8 +308,8 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                 </div>
                 <div>
                   <span className="text-[10px] font-mono uppercase text-[#94A3B8] block">Direct Inquiries</span>
-                  <a href="mailto:admin@branify.store" className="text-[#111827] hover:text-[#5B5FEF] font-mono transition-colors">
-                    admin@branify.store
+                  <a href="mailto:support@branify.store" className="text-[#111827] hover:text-[#5B5FEF] font-mono transition-colors">
+                    support@branify.store
                   </a>
                 </div>
               </div>
@@ -349,7 +349,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
               Book an immediate 30-minute technical discovery call directly with our engineering lead.
             </p>
             <a
-              href="mailto:admin@branify.store?subject=Schedule%20Discovery%20Call"
+              href="mailto:support@branify.store?subject=Schedule%20Discovery%20Call"
               className="block w-full text-center py-3 rounded-xl bg-white hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] border border-[#E2E8F0] text-xs font-mono uppercase tracking-wider text-[#334155] transition-all cursor-pointer shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
             >
               Request Calendar Invite

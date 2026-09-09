@@ -218,8 +218,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="w-3.5 h-3.5 text-[#E7C978] shrink-0" />
-                  <a href="mailto:admin@branify.store" className="text-slate-400 hover:text-[#E7C978] text-xs transition-colors">
-                    admin@branify.store
+                  <a href="mailto:support@branify.store" className="text-slate-400 hover:text-[#E7C978] text-xs transition-colors">
+                    support@branify.store
                   </a>
                 </div>
               </div>
