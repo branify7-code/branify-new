@@ -622,7 +622,7 @@ export default function Header({
   };
 
   const navLinkClass = (isActive: boolean) =>
-    `px-2.5 xl:px-1.5 2xl:px-2.5 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
+    `px-2.5 xl:px-1.5 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
       isActive
         ? "text-[#8F6B2D] font-bold bg-[#C9A45C]/10 border border-[#C9A45C]/25 shadow-sm"
         : "border border-transparent hover:text-[#8F6B2D] hover:bg-[#F8FAFC]"
@@ -728,7 +728,7 @@ export default function Header({
 
         {/* ============ DESKTOP NAV ============ */}
         <nav
-          className="hidden xl:flex items-center gap-0.5 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-slate-600 tracking-wide uppercase font-sans"
+          className="hidden xl:flex items-center gap-0.5 text-[12px] font-semibold text-slate-600 tracking-wide uppercase font-sans"
           aria-label="Main Navigation"
         >
           {/* HOME (direct link) */}
@@ -891,7 +891,6 @@ export default function Header({
               strokeWidth={2}
               className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-[#8F6B2D]"
             />
-            <span className="hidden 2xl:inline-block">Install App</span>
           </button>
 
           {/* SEARCH / CURRENCY / CART PILL */}
@@ -1061,7 +1060,7 @@ export default function Header({
           {/* BOOK A CONSULTATION */}
           <button
             type="button"
-            className="hidden sm:inline-flex items-center gap-1.5 px-4 xl:px-4 2xl:px-6 py-2.5 btn-gold-primary rounded-full uppercase tracking-wider text-[11px] lg:text-xs font-extrabold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A45C] cursor-pointer"
+            className="hidden 2xl:inline-flex items-center gap-1.5 px-4 2xl:px-4 py-2.5 btn-gold-primary rounded-full uppercase tracking-wider text-[11px] lg:text-xs font-extrabold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A45C] cursor-pointer"
             aria-label="Book a Consultation"
             onClick={handleConsultClick}
           >
