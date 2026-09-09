@@ -65,7 +65,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ onStartProject, onViewWo
 
         {/* Direct Channel Info */}
         <div className="pt-10 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-white/60">
-          <span>Direct Inquiries: <a href="mailto:hello@branify.agency" className="text-[#FFE9A8] hover:underline">hello@branify.agency</a></span>
+          <span>Direct Inquiries: <a href="mailto:admin@branify.store" className="text-[#FFE9A8] hover:underline">admin@branify.store</a></span>
           <span>•</span>
           <span>Response SLA: &lt; 24 Hours</span>
           <span>•</span>

@@ -22,7 +22,7 @@ export const ToolRunnerModal: React.FC<ToolRunnerModalProps> = ({
   const [generatedPw, setGeneratedPw] = useState('k9$Nx#8L!vP2@mQ4*wZ');
 
   // QR Code Text State
-  const [qrText, setQrText] = useState('https://branify.agency');
+  const [qrText, setQrText] = useState('https://branify.store');
 
   // Color Converter State
   const [hexColor, setHexColor] = useState('#D4AF37');

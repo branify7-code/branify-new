@@ -197,7 +197,7 @@ export const textTools: ToolDefinition[] = [
   {
     slug: 'duplicate-line-remover',
     fields: [
-      { name: 'input', label: 'List with duplicates', type: 'textarea', rows: 9, default: 'gold@branify.store\nteam@branify.store\ngold@branify.store\nhello@branify.store\nteam@branify.store\nsupport@branify.store', placeholder: 'Paste list with duplicate lines…' },
+      { name: 'input', label: 'List with duplicates', type: 'textarea', rows: 9, default: 'gold@branify.store\nteam@branify.store\ngold@branify.store\nadmin@branify.store\nteam@branify.store\nsupport@branify.store', placeholder: 'Paste list with duplicate lines…' },
       { name: 'caseSensitive', label: 'Case-sensitive comparison', type: 'checkbox', default: false },
       { name: 'trimLines', label: 'Trim whitespace per line', type: 'checkbox', default: true },
       { name: 'removeEmpty', label: 'Remove empty lines', type: 'checkbox', default: true },

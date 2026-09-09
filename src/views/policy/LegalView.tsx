@@ -113,7 +113,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
               GDPR, CCPA & International Compliance
             </h3>
             <p>
-              All European Union and California statutory rights regarding data deletion, access, and export are honored within 48 hours upon written notice to privacy@branify.store.
+              All European Union and California statutory rights regarding data deletion, access, and export are honored within 48 hours upon written notice to admin@branify.store.
             </p>
           </div>
         )}
@@ -187,7 +187,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
               All trademarks, product names, and company logos referenced in our portfolio case studies are the property of their respective owners. Case studies document real architectural and engineering engagements executed by Branify and its team.
             </p>
             <p>
-              For legal inquiries, copyright notices, or formal correspondence, contact legal@branify.store.
+              For legal inquiries, copyright notices, or formal correspondence, contact admin@branify.store.
             </p>
           </div>
         )}
