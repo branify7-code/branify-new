@@ -622,7 +622,7 @@ export default function Header({
   };
 
   const navLinkClass = (isActive: boolean) =>
-    `px-2.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
+    `px-2.5 xl:px-1.5 2xl:px-2.5 py-1.5 rounded-lg transition-colors relative flex items-center cursor-pointer ${
       isActive
         ? "text-[#8F6B2D] font-bold bg-[#C9A45C]/10 border border-[#C9A45C]/25 shadow-sm"
         : "border border-transparent hover:text-[#8F6B2D] hover:bg-[#F8FAFC]"
@@ -728,7 +728,7 @@ export default function Header({
 
         {/* ============ DESKTOP NAV ============ */}
         <nav
-          className="hidden xl:flex items-center gap-1 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-slate-600 tracking-wide uppercase font-sans"
+          className="hidden xl:flex items-center gap-0.5 2xl:gap-1.5 text-[12px] 2xl:text-[13px] font-semibold text-slate-600 tracking-wide uppercase font-sans"
           aria-label="Main Navigation"
         >
           {/* HOME (direct link) */}
