@@ -311,10 +311,13 @@ const TONE_LABELS: Record<string, string> = {
 };
 
 const LENGTH_HINTS: Record<number, string> = {
-  1200: '1200 words (±15%) — tight, high-signal article',
-  1500: '1500 words (±15%) — standard depth article',
-  2000: '2000 words (±15%) — comprehensive guide',
-  2500: '2500 words (±15%) — in-depth pillar-style guide',
+  // Hard-floor phrasing: several open models (DeepSeek-V3 notably) otherwise
+  // stop at 300-500 words. Stating a NON-NEGOTIABLE word floor + a section
+  // budget is far more effective than a loose target with a range.
+  1200: 'HARD MINIMUM 1200 words of article body (target 1200–1400). Do NOT stop early — a shorter submission is a failed response',
+  1500: 'HARD MINIMUM 1500 words of article body (target 1500–1700). Do NOT stop early — a shorter submission is a failed response',
+  2000: 'HARD MINIMUM 2000 words of article body (target 2000–2200). Do NOT stop early — a shorter submission is a failed response',
+  2500: 'HARD MINIMUM 2500 words of article body (target 2500–2700). Do NOT stop early — a shorter submission is a failed response',
 };
 
 export const BRANIFY_SYSTEM_PROMPT = `You are BRANIFY's senior SEO content strategist and editorial writer.
@@ -352,7 +355,7 @@ FORBIDDEN: <h1>, <img>, <figure>, <script>, <iframe>, <table>, inline styles,
 class attributes, event handlers, javascript:/data: URLs.
 Rules:
 - Start directly with an introduction <p> — no <h1> (the page renders its own H1).
-- 5 to 9 <h2> sections depending on length; use <h3> subsections inside longer ones.
+- 7 to 9 <h2> sections for every 1200 words of requested length; use <h3> subsections inside longer ones. EACH <h2> section must carry 2–4 substantial <p> paragraphs (3–5 sentences each).
 - Wrap every paragraph in <p>. Bullet lists as <ul><li>; numbered steps as <ol><li>.
 - <blockquote> for at most one or two key takeaways.
 - <strong> for genuine emphasis, <em> sparingly, <code> only for literals.
