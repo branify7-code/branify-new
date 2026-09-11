@@ -62,6 +62,17 @@ export interface InlineToggle<T> {
   success: (row: T) => string;
 }
 
+/** API passed to config.headerActions — lets a manager add header actions
+ *  (e.g. the AI blog generator) and open a prefilled create form or navigate
+ *  to an external editor route. */
+export interface CrudHeaderApi {
+  /** Open the create modal with custom initial values (merged over defaults). */
+  openCreateWith: (initial: Record<string, unknown>) => void;
+  /** Navigate to another admin route (path under /admin, leading slash) —
+   *  the same navigation the manager page itself receives. */
+  navigate: (pathUnderAdmin: string) => void;
+}
+
 export interface CrudConfig<T extends { id: string; archived?: boolean }> {
   collection: CollectionKey;
   title: string;
@@ -89,6 +100,9 @@ export interface CrudConfig<T extends { id: string; archived?: boolean }> {
   /** collection has no `archived` column — hides archive UI and skips the filter */
   noArchive?: boolean;
   inlineToggles?: InlineToggle<T>[];
+  /** Extra header actions (rendered left of the primary "New <entity>" button).
+   *  Receives openCreateWith (prefilled create modal) + navigate. */
+  headerActions?: (api: CrudHeaderApi) => React.ReactNode;
   /**
    * When provided, New/Edit routes to an external editor (e.g. the full-page
    * Blog Editor) instead of opening the built-in modal. null = create new.
@@ -234,6 +248,11 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
       }
       setEditing(row);
       setFormInitial(config.rowToForm ? config.rowToForm(row) : defaultRowToForm(config, row));
+    }, [config]);
+
+    const openCreateWith = useCallback((initial: Record<string, unknown>) => {
+      setEditing(null);
+      setFormInitial(normalizeFormValues({ ...config.defaults(), ...initial }, config.fields));
     }, [config]);
 
     useEffect(() => {
@@ -491,6 +510,7 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
                 <option value="all">All records</option>
               </Select>
             )}
+            {config.headerActions && config.headerActions({ openCreateWith, navigate: props.navigate })}
             <Btn variant="gold" icon={Plus} onClick={openCreate}>New {config.entity}</Btn>
           </div>
         </div>

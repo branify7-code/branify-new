@@ -336,13 +336,14 @@ interface LinkCheckResult {
   note: string;
 }
 
-const STATIC_ROUTES = new Set([
+export const STATIC_ROUTES = new Set([
   '/', '/about', '/contact', '/blog', '/services', '/tools', '/ai-tools', '/portfolio',
   '/free-templates', '/templates', '/privacy-policy', '/terms', '/termspolicy', '/cookiespolicy',
   '/disclaimer', '/faq',
 ]);
 
-function checkLink(href: string, text: string): LinkCheckResult {
+/** Registry-backed internal link validation — reused by the AI blog generator. */
+export function checkLink(href: string, text: string): LinkCheckResult {
   const base = { href, text };
   if (!href || href === '#') return { ...base, state: 'warn', note: 'No destination — add a real URL.' };
   if (/^javascript:/i.test(href)) return { ...base, state: 'warn', note: 'javascript: link was removed by the sanitizer.' };

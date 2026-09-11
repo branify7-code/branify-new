@@ -33,6 +33,7 @@ import { FeaturedImagePanel } from './BlogEditorMedia';
 import { HtmlSourceEditor, VisualEditor } from './BlogEditorVisual';
 import { BlogArticleBody } from '../../../components/BlogArticleBody';
 import { BlogImportStrip, type BlogImportPayload } from './BlogEditorImport';
+import { consumeAiDraftSeed, draftToSeed } from './blogAiHandoff';
 
 const SITE_URL = 'https://branify.store';
 
@@ -188,12 +189,25 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
         setFormState(f);
         snapshotRef.current = JSON.stringify(f);
       } else {
-        const f = defaultForm();
-        formRef.current = f;
-        setFormState(f);
-        snapshotRef.current = JSON.stringify(f);
+        // AI draft handoff (one-shot): BlogAiGenerator leaves a seed in the
+        // bridge and navigates to /blog?post=new — prefill the form with it.
+        const seed = consumeAiDraftSeed();
+        if (seed) {
+          const seeded = draftToSeed(seed);
+          const f: BlogForm = { ...defaultForm(), ...seeded, seo: { ...defaultSeo(), ...seeded.seo } };
+          formRef.current = f;
+          setFormState(f);
+          snapshotRef.current = JSON.stringify(f);
+          slugTouched.current = Boolean(f.slug);
+          setTimeout(() => push('info', 'AI draft loaded — review it, then save. Nothing was published.'), 0);
+        } else {
+          const f = defaultForm();
+          formRef.current = f;
+          setFormState(f);
+          snapshotRef.current = JSON.stringify(f);
+        }
       }
-      slugTouched.current = Boolean(postId);
+      if (!slugTouched.current) slugTouched.current = Boolean(postId);
       setSaveState('saved');
       setLastSaved(null);
       await loadOthers(postId);

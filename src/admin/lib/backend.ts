@@ -195,7 +195,10 @@ export function resolveAssetUrl(url: string): string {
   return url;
 }
 
-async function logActivity(mode: AdminMode, user: AdminUser | null, action: string, targetType: string, targetId: string, meta: Record<string, unknown> = {}): Promise<void> {
+/** Log an admin activity event (existing activity_log table). Exported for the
+ *  AI blog generator (blog.ai_generate) — same RLS-protected insert as every
+ *  other admin write. Local preview mode logs writes inside the API itself. */
+export async function logActivity(mode: AdminMode, user: AdminUser | null, action: string, targetType: string, targetId: string, meta: Record<string, unknown> = {}): Promise<void> {
   try {
     if (mode === 'supabase') {
       await supabase.from('activity_log').insert({

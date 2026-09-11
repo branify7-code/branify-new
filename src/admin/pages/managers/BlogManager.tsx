@@ -15,6 +15,7 @@ import { Badge } from '../../ui';
 import type { Column } from '../../ui/DataTable';
 import { makeCrudPage } from './crudShared';
 import { BlogEditor } from './BlogEditor';
+import { BlogAiGenerator } from './BlogAiGenerator';
 
 const StatusPill: React.FC<{ row: BlogRow }> = ({ row }) => {
   const scheduled = row.status === 'published' && row.published_at
@@ -159,6 +160,7 @@ const ListPage = makeCrudPage<BlogRow>({
   }),
   emptyTitle: 'No posts yet',
   emptyHint: 'Write your first article — published posts appear instantly on the public /blog.',
+  headerActions: ({ navigate }) => <BlogAiGenerator navigate={navigate} />,
   openEditor: (row) => navBridge.current(row ? `/blog?post=${row.id}` : '/blog?post=new'),
 });
 
