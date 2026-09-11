@@ -161,8 +161,14 @@ export function resolveProvider(oidcToken?: string): AiProviderConfig {
   }
   if (!baseUrl) throw new AiError('not_configured', 503, 'AI base URL is missing. Set AI_API_BASE_URL for the configured provider.');
   if (!model) throw new AiError('not_configured', 503, 'AI model is missing. Set AI_MODEL in the server environment.');
-  const rawTimeout = Number(process.env.AI_TIMEOUT_MS || 0);
-  const timeoutMs = Math.min(110000, Math.max(15000, Number.isFinite(rawTimeout) ? rawTimeout : 52000));
+  // BUGFIX: previously `Number(process.env.AI_TIMEOUT_MS || 0)` made the
+  // unset case fall through `Number.isFinite(0)` and clamp to the 15s floor —
+  // killing every real generation (a 1200-word draft needs 20–50s). Unset now
+  // means the 50s default. The clamp keeps the abort inside the function's
+  // `maxDuration = 60` platform window while reserving time to validate the
+  // output and return a friendly JSON error instead of a platform kill.
+  const rawTimeout = process.env.AI_TIMEOUT_MS ? Number(process.env.AI_TIMEOUT_MS) : NaN;
+  const timeoutMs = Math.min(55000, Math.max(15000, Number.isFinite(rawTimeout) ? rawTimeout : 50000));
   return { name, baseUrl, apiKey, model, timeoutMs };
 }
 
