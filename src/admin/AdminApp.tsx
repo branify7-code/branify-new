@@ -29,6 +29,7 @@ import { ProductsManager } from './pages/managers/ProductsManager';
 import { TemplatesManager } from './pages/managers/TemplatesManager';
 import { TemplateCategoriesManager } from './pages/managers/TemplateCategoriesManager';
 import { BlogManager } from './pages/managers/BlogManager';
+import { SocialMediaManager } from './pages/managers/SocialMediaManager';
 import { LeadsPage } from './pages/managers/LeadsPage';
 import { ContactsPage } from './pages/managers/ContactsPage';
 import { CustomersPage } from './pages/CustomersPage';
@@ -212,6 +213,7 @@ const AdminShell: React.FC<{
       case '/templates': return <TemplatesManager {...pageProps} />;
       case '/template-categories': return <TemplateCategoriesManager {...pageProps} />;
       case '/blog': return <BlogManager {...pageProps} />;
+      case '/social': return <SocialMediaManager {...pageProps} />;
       case '/leads': return <LeadsPage {...pageProps} />;
       case '/customers': return <CustomersPage {...pageProps} />;
       case '/payments': return <PaymentsPage {...pageProps} />;

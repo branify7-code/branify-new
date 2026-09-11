@@ -4,5 +4,11 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/social/publish-due",
+      "schedule": "*/5 * * * *"
+    }
   ]
 }

@@ -35,7 +35,9 @@ export type CollectionKey =
   | 'media_assets'
   | 'analytics_events'
   | 'activity_log'
-  | 'not_found_log';
+  | 'not_found_log'
+  | 'social_posts'
+  | 'social_connections';
 
 export interface ListParams {
   page?: number;
@@ -437,3 +439,73 @@ export const EVENT_DEFS = [
   'book_consultation',
   'not_found',
 ] as const;
+
+// ---------------------------------------------------------------- social (Phase 2)
+export type SocialPlatform = 'facebook' | 'instagram';
+export type SocialContentType = 'facebook_post' | 'instagram_image' | 'instagram_carousel' | 'instagram_reel_idea' | 'instagram_story_idea';
+export type SocialStatus = 'draft' | 'pending_approval' | 'approved' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'cancelled';
+
+export interface SocialPostRow {
+  id: string;
+  platform: SocialPlatform;
+  content_type: SocialContentType;
+  title: string;
+  caption: string;
+  hashtags: string[];
+  media_url: string;
+  media_type: string;
+  status: SocialStatus;
+  scheduled_at: string | null;
+  published_at: string | null;
+  external_post_id: string | null;
+  source_type: string;
+  source_id: string;
+  approval_required: boolean;
+  approved_at: string | null;
+  created_by: string;
+  error_message: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Admin-readable connection metadata. token_encrypted is AES-256-GCM ciphertext
+ *  (useless without the server-side key) — the plaintext NEVER reaches the browser. */
+export interface SocialConnectionRow {
+  id: string;
+  platform: SocialPlatform;
+  page_id: string;
+  page_name: string;
+  ig_user_id: string;
+  ig_username: string;
+  token_encrypted: string;
+  token_kind: string;
+  token_expires_at: string | null;
+  scopes: string[];
+  connected_by: string;
+  connected_at: string;
+  updated_at: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface SocialPublishingSettings {
+  approval_required: boolean;
+  auto_publish: boolean;
+  facebook_time: string;   // 'HH:mm'
+  instagram_time: string;  // 'HH:mm'
+  timezone: string;        // IANA name or 'site' (= admin browser timezone at compose time)
+  posting_days: string[];  // ['Mon',...]
+  brand_voice: string;
+  platforms_enabled: string[]; // subset of ['facebook','instagram']
+}
+
+export const SOCIAL_DEFAULT_SETTINGS: SocialPublishingSettings = {
+  approval_required: true,
+  auto_publish: false,
+  facebook_time: '10:00',
+  instagram_time: '18:00',
+  timezone: 'site',
+  posting_days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+  brand_voice: 'Premium, modern, confident, human. BUILD. BRAND. GROW.',
+  platforms_enabled: ['facebook', 'instagram'],
+};

@@ -154,6 +154,8 @@ const TABLES: Record<CollectionKey, string> = {
   analytics_events: 'analytics_events',
   activity_log: 'activity_log',
   not_found_log: 'not_found_log',
+  social_posts: 'social_posts',
+  social_connections: 'social_connections',
 };
 
 const SEARCHABLE: Partial<Record<CollectionKey, string[]>> = {
@@ -174,6 +176,7 @@ const SEARCHABLE: Partial<Record<CollectionKey, string[]>> = {
   analytics_events: ['name', 'path'],
   activity_log: ['user_email', 'action', 'target_type'],
   not_found_log: ['path'],
+  social_posts: ['title', 'caption'],
 };
 
 const DEFAULT_SORT: Partial<Record<CollectionKey, string>> = {
@@ -184,6 +187,7 @@ const DEFAULT_SORT: Partial<Record<CollectionKey, string>> = {
   seo_overrides: 'page_path',
   redirects: 'created_at', media_assets: 'created_at', analytics_events: 'created_at',
   activity_log: 'created_at', not_found_log: 'last_seen',
+  social_posts: 'created_at',
 };
 
 /** Public asset URLs may point at the local preview API — append the gateway port. */

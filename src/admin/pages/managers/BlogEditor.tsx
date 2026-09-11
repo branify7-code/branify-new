@@ -13,7 +13,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft, CalendarClock, Check, ExternalLink, Eye, Loader2,
-  RefreshCw, Save, TriangleAlert, Wand2, X,
+  RefreshCw, Save, Share2, TriangleAlert, Wand2, X,
 } from 'lucide-react';
 import type { AdminPageProps } from '../../lib/auth';
 import type { BlogRow } from '../../lib/types';
@@ -24,6 +24,7 @@ import {
 } from '../../ui';
 import { slugify } from '../../lib/format';
 import { finalizeArticleHtml, sanitizeArticleHtml } from '../../../lib/sanitizeHtml';
+import { socialPromoteBridge } from './socialBridge';
 import { analyzeArticle, suggestMetaDescription, type BlogAuditReport } from '../../lib/blogAudit';
 import {
   AuditPanel, DEFAULT_ROBOTS, LinkCheckPanel, ReadabilityPanel, SearchPerformancePanel,
@@ -500,6 +501,21 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
             >
               {isPublished ? 'Update' : 'Publish'}
             </Btn>
+            {isPublished && (
+              <Btn
+                variant="outline"
+                size="sm"
+                icon={Share2}
+                onClick={() => {
+                  socialPromoteBridge.current = {
+                    id: postId || '', title: f.title, slug: f.slug, excerpt: f.excerpt,
+                  };
+                  navigate('/social');
+                }}
+              >
+                Promote on Social
+              </Btn>
+            )}
           </div>
         </div>
         {(slugError || (!isPublished && !f.title.trim())) && (

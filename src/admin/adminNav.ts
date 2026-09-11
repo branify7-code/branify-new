@@ -12,7 +12,7 @@ import type { LucideIcon } from 'lucide-react';
 import {
   Activity, BarChart3, Briefcase, CreditCard, FileText,
   FolderKanban, FolderTree, Gauge, HeartPulse, Image as ImageIcon, LayoutDashboard,
-  LayoutTemplate, Search, Settings, ShoppingBag, Sparkles, Users, Wrench,
+  LayoutTemplate, Search, Settings, Share2, ShoppingBag, Sparkles, Users, Wrench,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -46,6 +46,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { path: '/templates', label: 'Templates', icon: LayoutTemplate },
       { path: '/template-categories', label: 'Template Categories', icon: FolderTree },
       { path: '/blog', label: 'Blog', icon: FileText },
+      { path: '/social', label: 'Social Media', icon: Share2 },
     ],
   },
   {
