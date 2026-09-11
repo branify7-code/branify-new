@@ -196,7 +196,10 @@ async function chatComplete(cfg: AiProviderConfig, messages: ChatMessage[], temp
     try { msg = (JSON.parse(text) as { error?: { message?: string } })?.error?.message || ''; } catch { /* raw */ }
     msg = (msg || text || '').slice(0, 300);
     if (res.status === 401 || res.status === 403) {
-      throw new AiError('provider_auth', 502, 'The AI provider rejected the server API key. Verify AI_API_KEY on the server.');
+      // Safe to surface the provider's own message to authenticated admins —
+      // it never contains the credential and helps them fix the configuration.
+      throw new AiError('provider_auth', 502,
+        `The AI provider rejected the server credential (HTTP ${res.status}).${msg ? ' Provider said: ' + msg : ' Verify AI_API_KEY on the server.'}`);
     }
     if (res.status === 429) throw new AiError('rate_limited', 429, 'The AI provider rate limit was hit. Wait a minute and try again.');
     if (res.status === 404) throw new AiError('provider_model', 502, `The model "${cfg.model}" was not found on the provider. Check AI_MODEL.`);
