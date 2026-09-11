@@ -318,6 +318,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
               <li>
                 <button onClick={() => nav('/refundpolicy')} className="hover:text-[#E7C978] transition-colors text-left">Refund Policy</button>
               </li>
+              <li>
+                <button onClick={() => nav('/data-deletion')} className="hover:text-[#E7C978] transition-colors text-left">Data Deletion</button>
+              </li>
             </ul>
           </div>
         </div>
@@ -372,6 +375,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
             <button onClick={() => nav('/privacypolicy')} className="hover:underline cursor-pointer">Privacy</button>
             <button onClick={() => nav('/termsandconditions')} className="hover:underline cursor-pointer">Terms</button>
             <button onClick={() => nav('/disclaimer')} className="hover:underline cursor-pointer">Disclaimer</button>
+            <button onClick={() => nav('/data-deletion')} className="hover:underline cursor-pointer">Data Deletion</button>
             <button onClick={() => nav('/admin')} className="text-slate-500 hover:text-slate-500 transition-colors cursor-pointer">Admin</button>
           </div>
         </div>

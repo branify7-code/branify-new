@@ -20,6 +20,7 @@ import { AIToolDetailView } from './views/ai-tools/AIToolDetailView';
 import { ContactView } from './views/contact/ContactView';
 import { AboutView } from './views/about/AboutView';
 import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageView';
+import { DataDeletionView } from './views/policy/DataDeletionView';
 import { FreeTemplatesView } from './views/templates/FreeTemplatesView';
 import { FreeTemplateDetailPage } from './views/templates/FreeTemplateDetailPage';
 import TemplatesLibraryView from './views/library/TemplatesLibraryView';
@@ -63,7 +64,7 @@ import { Project } from './types';
 const PUBLIC_ROUTE_PREFIXES = [
   '/', '/services', '/portfolio', '/tools', '/free-tools', '/ai-tools', '/pricing',
   '/contact', '/about', '/privacypolicy', '/termsandconditions', '/refundpolicy',
-  '/cookiespolicy', '/disclaimer', '/free-templates', '/blog', '/admin', '/templates',
+  '/cookiespolicy', '/disclaimer', '/data-deletion', '/free-templates', '/blog', '/admin', '/templates',
   // Customer account utility pages (noindex, kept out of the sitemap)
   '/login', '/register', '/forgot-password', '/reset-password', '/account',
 ];
@@ -345,6 +346,11 @@ export default function App() {
           pathname === '/cookiespolicy' ||
           pathname === '/disclaimer') && (
           <LegalPageView docPath={pathname} onNavigateHome={() => navigateTo('/')} />
+        )}
+
+        {/* User Data Deletion — official Meta/Facebook data-deletion instructions URL */}
+        {pathname === '/data-deletion' && (
+          <DataDeletionView onNavigate={navigateTo} />
         )}
 
         {/* Free Templates directory + category/slug detail pages */}

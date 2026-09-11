@@ -176,6 +176,11 @@ export function buildPageInventory(rows: InventoryInput): PageMeta[] {
     sourceTitle: 'Legal Disclaimer | BRANIFY',
     sourceDescription: 'Legal disclaimer and trademark notices covering BRANIFY case studies, portfolio content, and digital publications.',
   });
+  pages.push({
+    path: '/data-deletion', kind: 'legal', label: 'User Data Deletion',
+    sourceTitle: 'User Data Deletion | BRANIFY',
+    sourceDescription: 'Learn how to request deletion of personal data associated with BRANIFY services and connected Meta accounts.',
+  });
 
   // --- services (hub + detail) ---
   pages.push({

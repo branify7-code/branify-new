@@ -46,6 +46,11 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://branify.store/data-deletion</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://branify.store/services</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
