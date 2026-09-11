@@ -165,10 +165,12 @@ export function resolveProvider(oidcToken?: string): AiProviderConfig {
   // unset case fall through `Number.isFinite(0)` and clamp to the 15s floor —
   // killing every real generation (a 1200-word draft needs 20–50s). Unset now
   // means the 50s default. The clamp keeps the abort inside the function's
-  // `maxDuration = 60` platform window while reserving time to validate the
+  // `maxDuration = 120` platform window while reserving time to validate the
   // output and return a friendly JSON error instead of a platform kill.
+  // Ceiling is 100s: HF-router open models (DeepSeek-V3) write a 1200-word
+  // draft in ~60-80s, so AI_TIMEOUT_MS=100000 is the supported HF setting.
   const rawTimeout = process.env.AI_TIMEOUT_MS ? Number(process.env.AI_TIMEOUT_MS) : NaN;
-  const timeoutMs = Math.min(55000, Math.max(15000, Number.isFinite(rawTimeout) ? rawTimeout : 50000));
+  const timeoutMs = Math.min(100000, Math.max(15000, Number.isFinite(rawTimeout) ? rawTimeout : 50000));
   return { name, baseUrl, apiKey, model, timeoutMs };
 }
 
