@@ -400,11 +400,15 @@ function sanitizePosts(raw: Record<string, unknown>, r: GenerateSocialRequest): 
     if (!caption) continue;
     const platform = ['facebook', 'instagram'].includes(String(o.platform)) ? String(o.platform) : (r.platform === 'instagram' ? 'instagram' : 'facebook');
     const ct = String(o.content_type || '');
+    // Platform/content-type coherence: models sometimes echo the wrong type
+    // (e.g. instagram + facebook_post). Facebook rows are always facebook_post;
+    // instagram rows collapse to their declared IG type (default instagram_image).
+    const contentType = platform === 'facebook'
+      ? 'facebook_post'
+      : (['instagram_image', 'instagram_carousel', 'instagram_reel_idea', 'instagram_story_idea'].includes(ct) ? ct : 'instagram_image');
     out.push({
       platform,
-      content_type: CONTENT_TYPES.includes(ct)
-        ? ct
-        : (platform === 'facebook' ? 'facebook_post' : 'instagram_image'),
+      content_type: contentType,
       title: String(o.title || '').slice(0, 180).trim(),
       caption: caption.slice(0, 3000),
       hashtags: Array.isArray(o.hashtags)
