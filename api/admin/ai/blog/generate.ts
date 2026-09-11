@@ -19,9 +19,9 @@
 // =============================================================================
 
 import { verifyAdmin, CORS_ORIGINS } from '../../../gsc';
-import { AiError, generateStructuredJson, maxTokensForLength, resolveProvider, wordCountOf } from '../../../_lib/aiProvider';
-import { BRANIFY_SYSTEM_PROMPT, buildUserPrompt } from '../../../_lib/aiPrompt';
-import type { ExistingPostRef, GenerateBlogResponseData, GeneratedBlogDraft } from '../../../_lib/aiTypes';
+import { AiError, generateStructuredJson, maxTokensForLength, resolveProvider, wordCountOf } from '../../../../server/ai/aiProvider';
+import { BRANIFY_SYSTEM_PROMPT, buildUserPrompt } from '../../../../server/ai/aiPrompt';
+import type { ExistingPostRef, GenerateBlogResponseData, GeneratedBlogDraft } from '../../../../server/ai/aiTypes';
 
 export const maxDuration = 60;
 
