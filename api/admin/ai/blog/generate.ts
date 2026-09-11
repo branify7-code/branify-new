@@ -38,7 +38,7 @@ const SB_URL = process.env.SUPABASE_URL || 'https://uspshkegxhrglbpxqtil.supabas
 // the ADMIN USER's own JWT through Supabase Auth/REST (RLS enforces the rest).
 const SB_ANON = process.env.SUPABASE_ANON_KEY || 'sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw';
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 class AiError extends Error {
   code: string;
@@ -178,11 +178,20 @@ async function chatComplete(cfg: AiProviderConfig, messages: ChatMessage[], temp
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), cfg.timeoutMs);
   let res: Response;
+  const body: Record<string, unknown> = {
+    model: cfg.model, messages, temperature, max_tokens: maxTokens, stream: false,
+  };
+  // Gemini 3.x "thinking" models spend a large share of the generation window
+  // reasoning before writing. For editorial output with this detailed system
+  // prompt, low effort trims latency meaningfully without hurting draft
+  // quality — and keeps long-brief generations inside the platform's function
+  // window. Other providers keep the exact payload they had before.
+  if (cfg.name === 'gemini') body.reasoning_effort = 'low';
   try {
     res = await fetch(`${cfg.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${cfg.apiKey}` },
-      body: JSON.stringify({ model: cfg.model, messages, temperature, max_tokens: maxTokens, stream: false }),
+      body: JSON.stringify(body),
       signal: ctrl.signal,
     });
   } catch (e) {
