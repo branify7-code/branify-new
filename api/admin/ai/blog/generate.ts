@@ -124,6 +124,9 @@ interface AiProviderConfig { name: string; baseUrl: string; apiKey: string; mode
 const PROVIDER_DEFAULTS: Record<string, { baseUrl: string; model: string }> = {
   glm: { baseUrl: 'https://api.z.ai/api/paas/v4', model: 'glm-4.6' },
   openai: { baseUrl: 'https://api.openai.com/v1', model: 'gpt-4o' },
+  // Gemini via its OpenAI-compatible endpoint. Reuses the project's existing
+  // GEMINI_API_KEY env var when AI_API_KEY is not set (see resolveProvider).
+  gemini: { baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai', model: 'gemini-2.5-flash' },
   custom: { baseUrl: '', model: '' },
 };
 
@@ -131,12 +134,16 @@ export function resolveProvider(): AiProviderConfig {
   const name = (process.env.AI_PROVIDER || 'glm').toLowerCase().trim();
   const preset = PROVIDER_DEFAULTS[name] || PROVIDER_DEFAULTS.custom;
   const baseUrl = (process.env.AI_API_BASE_URL || preset.baseUrl).replace(/\/+$/, '');
-  const apiKey = (process.env.AI_API_KEY || '').trim();
+  // AI_API_KEY wins; the gemini provider falls back to the project's existing
+  // GEMINI_API_KEY (same credential the rest of the stack already provisions).
+  const apiKey = (process.env.AI_API_KEY || (name === 'gemini' ? process.env.GEMINI_API_KEY : '') || '').trim();
   const model = (process.env.AI_MODEL || preset.model).trim();
 
   if (!apiKey) {
     throw new AiError('not_configured', 503,
-      'AI generation is not configured yet. Add AI_API_KEY (and optionally AI_PROVIDER, AI_API_BASE_URL, AI_MODEL) to the server environment variables, then redeploy.');
+      name === 'gemini'
+        ? 'AI generation (gemini provider) needs AI_API_KEY or GEMINI_API_KEY in the server environment variables, then redeploy.'
+        : 'AI generation is not configured yet. Add AI_API_KEY (and optionally AI_PROVIDER, AI_API_BASE_URL, AI_MODEL) to the server environment variables, then redeploy.');
   }
   if (!baseUrl) throw new AiError('not_configured', 503, 'AI base URL is missing. Set AI_API_BASE_URL for the configured provider.');
   if (!model) throw new AiError('not_configured', 503, 'AI model is missing. Set AI_MODEL in the server environment.');
