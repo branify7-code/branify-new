@@ -134,17 +134,19 @@ const PROVIDER_DEFAULTS: Record<string, { baseUrl: string; model: string }> = {
   custom: { baseUrl: '', model: '' },
 };
 
-export function resolveProvider(): AiProviderConfig {
+export function resolveProvider(oidcToken?: string): AiProviderConfig {
   const name = (process.env.AI_PROVIDER || 'glm').toLowerCase().trim();
   const preset = PROVIDER_DEFAULTS[name] || PROVIDER_DEFAULTS.custom;
   const baseUrl = (process.env.AI_API_BASE_URL || preset.baseUrl).replace(/\/+$/, '');
   // AI_API_KEY wins; provider-specific fallbacks keep zero-secret setups
   // working: gemini reuses the project's GEMINI_API_KEY, gateway uses the
-  // OIDC token Vercel injects into every function invocation.
+  // OIDC token Vercel delivers on every function invocation as the
+  // 'x-vercel-oidc-token' request header (falls back to the env var for
+  // local development via `vercel env pull`).
   const apiKey = (
     process.env.AI_API_KEY
     || (name === 'gemini' ? process.env.GEMINI_API_KEY : '')
-    || (name === 'gateway' ? process.env.VERCEL_OIDC_TOKEN : '')
+    || (name === 'gateway' ? (oidcToken || process.env.VERCEL_OIDC_TOKEN || '') : '')
     || ''
   ).trim();
   const model = (process.env.AI_MODEL || preset.model).trim();
@@ -154,7 +156,7 @@ export function resolveProvider(): AiProviderConfig {
       name === 'gemini'
         ? 'AI generation (gemini provider) needs AI_API_KEY or GEMINI_API_KEY in the server environment variables, then redeploy.'
         : name === 'gateway'
-          ? 'AI generation (gateway provider) needs an AI Gateway API key in AI_API_KEY (Vercel dashboard → AI Gateway → API keys) or a deployment OIDC token.'
+          ? 'AI generation (gateway provider) needs an AI Gateway API key in AI_API_KEY (Vercel dashboard → AI Gateway → API keys). On Vercel deployments the OIDC token is used automatically.'
           : 'AI generation is not configured yet. Add AI_API_KEY (and optionally AI_PROVIDER, AI_API_BASE_URL, AI_MODEL) to the server environment variables, then redeploy.');
   }
   if (!baseUrl) throw new AiError('not_configured', 503, 'AI base URL is missing. Set AI_API_BASE_URL for the configured provider.');
@@ -603,6 +605,13 @@ function bearerOf(req: Req): string {
   return raw.replace(/^Bearer\s+/i, '').trim();
 }
 
+/** OIDC token Vercel attaches to every function invocation (x-vercel-oidc-token). */
+function oidcTokenOf(req: Req): string {
+  const h = req.headers?.['x-vercel-oidc-token'];
+  const raw = Array.isArray(h) ? (h[0] || '') : (h || '');
+  return raw.trim();
+}
+
 // ------------------------------------------------------------------ endpoint
 export default async function handler(req: Req, res: Res): Promise<void> {
   const h = req.headers || {};
@@ -623,7 +632,7 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>;
     const validated = validateRequest(body);
 
-    const cfg = resolveProvider();
+    const cfg = resolveProvider(oidcTokenOf(req));
     const t0 = Date.now();
     const { parsed, repaired } = await generateStructuredJson(
       cfg,
