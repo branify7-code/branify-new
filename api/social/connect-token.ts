@@ -106,8 +106,9 @@ function sbHeaders(extra: Record<string, string> = {}): Record<string, string> {
 }
 
 async function restUpsertConnection(row: Record<string, unknown>): Promise<void> {
+  // NOTE: PostgREST param is on_conflict (snake_case) — camelCase 400s with PGRST100.
   const res = await fetch(
-    `${SB_URL}/rest/v1/social_connections?onConflict=platform`,
+    `${SB_URL}/rest/v1/social_connections?on_conflict=platform`,
     {
       method: 'POST',
       headers: sbHeaders({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
@@ -115,7 +116,11 @@ async function restUpsertConnection(row: Record<string, unknown>): Promise<void>
       signal: AbortSignal.timeout(20000),
     },
   );
-  if (!res.ok) throw new ConnError('server_error', 502, `Database write failed (HTTP ${res.status}).`);
+  if (!res.ok) {
+    const detail = (await res.text()).slice(0, 300);
+    console.error(`[social-connect-token] upsert HTTP ${res.status}: ${detail}`);
+    throw new ConnError('server_error', 502, `Database write failed (HTTP ${res.status}).`);
+  }
 }
 
 async function logActivity(email: string, action: string, targetId: string, meta: Record<string, unknown>): Promise<void> {

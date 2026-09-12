@@ -107,8 +107,9 @@ async function getJson<T>(url: string): Promise<T> {
 
 async function restUpsertConnection(row: Record<string, unknown>): Promise<void> {
   if (!SB_SERVICE) throw new Error('service_role_missing');
+  // NOTE: PostgREST param is on_conflict (snake_case) — camelCase 400s with PGRST100.
   const res = await fetch(
-    `${SB_URL}/rest/v1/social_connections?onConflict=platform`,
+    `${SB_URL}/rest/v1/social_connections?on_conflict=platform`,
     {
       method: 'POST',
       headers: {
