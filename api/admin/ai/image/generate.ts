@@ -246,16 +246,21 @@ async function callGeminiImage(model: string, apiKey: string, prompt: string, as
   if (out.status === 400 && /imageConfig|imageSize|aspectRatio|Unknown name/i.test(JSON.stringify(out.body).slice(0, 600))) {
     out = await call(false);
   }
+  // Google's own message (safe to surface — never contains the credential).
+  const providerMsg = (() => {
+    const err = (out.body.error as { message?: string } | undefined) || {};
+    return (err.message || '').slice(0, 220);
+  })();
   if (out.status === 404) {
-    throw new ImgError('model_unavailable', 502, `The image model "${model}" is not available for this API key. Check IMAGE_AI_MODEL in the server environment.`);
+    throw new ImgError('model_unavailable', 502, `The image model "${model}" is not available for this API key. ${providerMsg || 'Check IMAGE_AI_MODEL in the server environment.'}`.trim());
   }
   if (out.status === 429) {
-    throw new ImgError('quota', 429, 'Image generation hit the provider quota. Wait a minute and try again.');
+    throw new ImgError('quota', 429, `Image generation hit the provider quota. ${providerMsg || 'Wait a minute and try again.'}`.trim());
   }
   if (out.status !== 200) {
     const msg = JSON.stringify(out.body).slice(0, 200);
     console.error('[ai-image] gemini error', out.status, msg);
-    throw new ImgError('provider', 502, 'Image generation is temporarily unavailable. Please try again.');
+    throw new ImgError('provider', 502, `Image generation is temporarily unavailable. Please try again.${providerMsg ? ` Provider said: ${providerMsg}` : ''}`);
   }
 
   type Part = { text?: string; inlineData?: { mimeType?: string; data?: string }; inline_data?: { mime_type?: string; data?: string } };
