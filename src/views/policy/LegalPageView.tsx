@@ -96,17 +96,6 @@ const LEGAL_DOCS: Record<string, LegalDoc> = {
 
 export const LEGAL_CANONICAL_PATHS = Object.keys(LEGAL_DOCS);
 
-/* Old repo-era URLs → canonical owner-requested slugs. */
-export const LEGACY_LEGAL_REDIRECTS: Record<string, string> = {
-  '/privacy': '/privacypolicy',
-  '/privacy-policy': '/privacypolicy',
-  '/terms': '/termsandconditions',
-  '/terms-and-conditions': '/termsandconditions',
-  '/refund': '/refundpolicy',
-  '/refund-policy': '/refundpolicy',
-  '/cookies': '/cookiespolicy',
-};
-
 interface LegalPageViewProps {
   /** canonical path, e.g. '/privacypolicy' */
   docPath: string;

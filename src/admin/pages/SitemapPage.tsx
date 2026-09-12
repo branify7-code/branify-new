@@ -120,7 +120,7 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
       ]);
       const rows: Record<string, ContentRowLike[]> = { services, tools, aiTools, products, blog, portfolio };
       const inventory = buildPageInventory(rows);
-      const entries = sitemapEntries(inventory, overrides, settings as SiteSettings);
+      const entries = sitemapEntries(inventory, overrides, settings as SiteSettings, new Date().toISOString().slice(0, 10));
       const xml = buildSitemapXml(entries);
       setGen({ xml, count: entries.length, bytes: new Blob([xml]).size });
       push('success', `Preview generated — ${entries.length} URLs`);

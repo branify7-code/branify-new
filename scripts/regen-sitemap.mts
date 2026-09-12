@@ -65,22 +65,47 @@ const settings = Object.fromEntries(
 
 const rows = { services, tools, aiTools, products, blog, portfolio } as never;
 const inventory = buildPageInventory(rows);
-const entries = sitemapEntries(inventory, overrides as never, settings);
+const today = new Date().toISOString().slice(0, 10);
+
+// Previous <loc> → <lastmod> map (per-<url> block parse, order-safe).
+const cur = fs.readFileSync('public/sitemap.xml', 'utf8');
+const prevLastmod = new Map<string, string>();
+for (const block of cur.match(/<url>[\s\S]*?<\/url>/g) || []) {
+  const loc = block.match(/<loc>(.*?)<\/loc>/)?.[1];
+  const lm = block.match(/<lastmod>(.*?)<\/lastmod>/)?.[1];
+  if (loc && lm) prevLastmod.set(loc, lm);
+}
+
+const entries = sitemapEntries(inventory, overrides as never, settings, today);
+// Distinguish REAL lastmods (from content rows' updated_at) from fallback
+// lastmods (static pages → today). Static pages reuse the previously shipped
+// value so unchanged URLs never falsely claim a fresh update; content rows
+// always keep their real updated_at, and genuinely new URLs keep today.
+const origin = entries.length ? new URL(entries[0].loc).origin : '';
+const realLastmod = new Set<string>(
+  (inventory as Array<{ path: string; sourceUpdated?: string }>)
+    .filter((p) => p.sourceUpdated)
+    .map((p) => `${origin}${p.path}`),
+);
+for (const e of entries) {
+  if (!realLastmod.has(e.loc) && prevLastmod.has(e.loc)) e.lastmod = prevLastmod.get(e.loc);
+}
 const xml = buildSitemapXml(entries);
 
-const cur = fs.readFileSync('public/sitemap.xml', 'utf8');
 const curLocs = parseSitemapXml(cur).locs;
 const newLocs = entries.map((e) => e.loc);
 const curSet = new Set(curLocs);
 const newSet = new Set(newLocs);
 const removed = curLocs.filter((l) => !newSet.has(l));
 const added = newLocs.filter((l) => !curSet.has(l));
+const lastmodChanged = entries.filter((e) => prevLastmod.has(e.loc) && prevLastmod.get(e.loc) !== e.lastmod).length;
 
 console.log(`inventory pages: ${inventory.length}`);
 console.log(`indexable sitemap entries: ${entries.length}`);
 console.log(`shipped file URLs:       ${curLocs.length}`);
 console.log(`in file but NOT indexable: ${removed.length}`);
 console.log(`indexable but missing from file: ${added.length}`);
+console.log(`lastmod changed on existing URLs: ${lastmodChanged}`);
 if (removed.length) {
   console.log('\n-- REMOVED (stale URLs in current file) --');
   for (const l of removed) console.log('  -', l);
@@ -90,7 +115,7 @@ if (added.length) {
   for (const l of added) console.log('  +', l);
 }
 
-if (removed.length === 0 && added.length === 0) {
+if (removed.length === 0 && added.length === 0 && lastmodChanged === 0 && cur.includes('<lastmod>')) {
   console.log('\nNo changes — shipped sitemap already matches the live inventory.');
 } else {
   fs.writeFileSync('public/sitemap.xml', xml);

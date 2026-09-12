@@ -21,21 +21,21 @@ interface TemplateCardProps {
 }
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onNavigate, compact }) => {
-  const open = () => {
+  const href = templateHref(template);
+  const open = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
     trackEvent('template_card_open', { template: template.slug, category: template.categorySlug });
-    onNavigate(templateHref(template));
+    onNavigate(href);
   };
 
   return (
     <TiltCard
       className="group h-full bg-white! border-[#E2E8F0]! shadow-[0_1px_2px_rgba(15,23,42,0.04)]! hover:shadow-[0_14px_34px_-14px_rgba(15,23,42,0.14)]! hover:border-[#C9A45C]/40! hover:bg-white! hover:-translate-y-1"
-      ariaLabel={`View ${template.name} template`}
-      onClick={compact ? open : undefined}
     >
       <div id={`template-card-${template.slug}`} className="h-full flex flex-col">
-        {/* Preview image */}
-        <button
-          type="button"
+        {/* Preview image — a real <a> so crawlers can follow template URLs */}
+        <a
+          href={href}
           onClick={open}
           className="relative block w-full overflow-hidden rounded-t-2xl aspect-[4/3] bg-[#F8FAFC] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A45C]/60"
           aria-label={`View ${template.name} template`}
@@ -61,7 +61,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onNavigate
               Responsive
             </span>
           )}
-        </button>
+        </a>
 
         {/* Body */}
         <div className="flex flex-col flex-1 p-5 space-y-3 text-left">
@@ -75,24 +75,25 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onNavigate
 
           {!compact && (
             <div className="mt-auto pt-4 border-t border-[#E2E8F0] flex items-center justify-between gap-3">
-              <button
-                type="button"
+              <a
+                href={href}
                 onClick={open}
                 className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-[#8F6B2D] hover:text-[#8F6B2D] transition-colors cursor-pointer"
               >
                 View Template
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </button>
-              <button
-                type="button"
-                onClick={() => {
+              </a>
+              <a
+                href={`/contact?template=${template.slug}`}
+                onClick={(e) => {
+                  e.preventDefault();
                   trackEvent('template_start_project', { template: template.slug, source: 'card' });
                   onNavigate(`/contact?template=${template.slug}`);
                 }}
                 className="px-3.5 py-2 rounded-full text-[10px] font-extrabold uppercase tracking-widest border border-[#C9A45C]/40 text-[#111827] hover:border-[#C9A45C] hover:text-[#8F6B2D] hover:bg-[#C9A45C]/10 transition-all cursor-pointer"
               >
                 Start With This
-              </button>
+              </a>
             </div>
           )}
         </div>

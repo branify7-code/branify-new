@@ -39,6 +39,9 @@ const TemplateDetailPage: React.FC<TemplateDetailPageProps> = ({ categorySlug, t
   const category = getCategoryBySlug(template.categorySlug);
   const related = relatedTemplates(template, 3);
   const preview = templatePreviewHref(template);
+  // Per-template social image: admin override → real preview screenshot →
+  // card thumbnail (never fabricated — these are the template's own assets).
+  const socialImage = template.seo.ogImage || template.previewImage || template.thumbnail;
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -48,12 +51,12 @@ const TemplateDetailPage: React.FC<TemplateDetailPageProps> = ({ categorySlug, t
         keywords={template.seo.keywords}
         canonicalPath={templateHref(template)}
         ogType="website"
-        ogImage={template.seo.ogImage}
+        ogImage={socialImage}
         softwareSchema={{
           name: template.name,
           description: template.seo.description,
           applicationCategory: 'DesignApplication',
-          image: template.seo.ogImage,
+          image: socialImage,
         }}
         breadcrumbs={[
           { name: 'Home', url: 'https://branify.store/' },

@@ -132,11 +132,17 @@ export const FreeTemplateCard: React.FC<FreeTemplateCardProps> = ({ template, on
           <span className="uppercase text-[10px] font-black text-[#8F6B2D] tracking-wider">{template.category}</span>
           <span className="text-[10px] text-[#64748B] shrink-0">{template.fileSize}</span>
         </div>
-        <h3
-          onClick={() => onNavigate(`/free-templates/${template.slug}`)}
-          className="font-display text-[#111827] font-extrabold leading-snug group-hover:text-[#8F6B2D] transition-colors cursor-pointer"
-        >
-          {template.title}
+        <h3 className="font-display text-[#111827] font-extrabold leading-snug group-hover:text-[#8F6B2D] transition-colors">
+          <a
+            href={`/free-templates/${template.slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate(`/free-templates/${template.slug}`);
+            }}
+            className="cursor-pointer"
+          >
+            {template.title}
+          </a>
         </h3>
         <p className="text-xs text-[#64748B] leading-relaxed">{template.shortDescription}</p>
         <ul className="list-disc list-inside space-y-1 text-[11px] text-[#64748B]">
@@ -145,13 +151,16 @@ export const FreeTemplateCard: React.FC<FreeTemplateCardProps> = ({ template, on
           ))}
         </ul>
         <div className="flex items-center gap-3 pt-1 mt-auto">
-          <button
-            type="button"
-            onClick={() => onNavigate(`/free-templates/${template.slug}`)}
+          <a
+            href={`/free-templates/${template.slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate(`/free-templates/${template.slug}`);
+            }}
             className="px-4 py-2 rounded-full border border-[#E2E8F0] text-xs text-[#475569] hover:border-[#C9A45C]/50 hover:text-[#111827] transition cursor-pointer shrink-0"
           >
             Details
-          </button>
+          </a>
           {template.downloadUrl ? (
             <a
               href={template.downloadUrl}

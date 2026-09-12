@@ -7,15 +7,61 @@
 // nothing changes — the public site renders exactly the shipped registries.
 // =============================================================================
 import { supabase } from './supabase';
-import { servicesRegistry } from '../data/servicesRegistry';
-import { toolsRegistry } from '../data/toolsRegistry';
-import { aiToolsDirectory } from '../data/aiToolsDirectory';
-import { projectsData } from '../data/projects';
-import { blogPosts, BlogPost } from '../data/blogPosts';
-import { freeTemplates } from '../data/freeTemplatesRegistry';
-import { templatesRegistry } from '../data/templates/templates';
-import { TEMPLATE_CATEGORIES } from '../data/templates';
+import type { BlogPost } from '../data/blogPosts';
 import { htmlToPlainText, looksLikeHtml, sanitizeArticleHtml } from './sanitizeHtml';
+
+// ---------------------------------------------------------------------------
+// Registry modules are DYNAMICALLY imported so the big data registries stay
+// OUT of the main bundle: each becomes its own cacheable chunk that loads in
+// parallel with the overrides fetch at boot (started below, at module scope).
+// Dynamic import returns the same module singleton the views import, so the
+// in-place mutations performed here are visible to every view exactly as with
+// the previous static imports.
+// ---------------------------------------------------------------------------
+interface RegistryModules {
+  servicesRegistry: typeof import('../data/servicesRegistry')['servicesRegistry'];
+  toolsRegistry: typeof import('../data/toolsRegistry')['toolsRegistry'];
+  aiToolsDirectory: typeof import('../data/aiToolsDirectory')['aiToolsDirectory'];
+  projectsData: typeof import('../data/projects')['projectsData'];
+  blogPosts: typeof import('../data/blogPosts')['blogPosts'];
+  freeTemplates: typeof import('../data/freeTemplatesRegistry')['freeTemplates'];
+  templatesRegistry: typeof import('../data/templates/templates')['templatesRegistry'];
+  TEMPLATE_CATEGORIES: typeof import('../data/templates')['TEMPLATE_CATEGORIES'];
+}
+
+function importRegistries(): Promise<RegistryModules> {
+  return Promise.all([
+    import('../data/servicesRegistry'),
+    import('../data/toolsRegistry'),
+    import('../data/aiToolsDirectory'),
+    import('../data/projects'),
+    import('../data/blogPosts'),
+    import('../data/freeTemplatesRegistry'),
+    import('../data/templates/templates'),
+    import('../data/templates'),
+  ]).then(
+    ([services, tools, aiTools, projects, blog, freeTpl, tplReg, tplCats]) => ({
+      servicesRegistry: services.servicesRegistry,
+      toolsRegistry: tools.toolsRegistry,
+      aiToolsDirectory: aiTools.aiToolsDirectory,
+      projectsData: projects.projectsData,
+      blogPosts: blog.blogPosts,
+      freeTemplates: freeTpl.freeTemplates,
+      templatesRegistry: tplReg.templatesRegistry,
+      TEMPLATE_CATEGORIES: tplCats.TEMPLATE_CATEGORIES,
+    }),
+  );
+}
+
+// Kicked off the moment this module evaluates (i.e. when the main bundle runs)
+// so registry chunks download IN PARALLEL with the overrides network fetch —
+// no added waterfall versus the previous single-bundle approach. Guarded by a
+// timeout: if chunks cannot load, overrides are skipped and the public site
+// renders the compiled registries untouched (same contract as a fetch failure).
+const REGISTRIES_P: Promise<RegistryModules | null> = Promise.race([
+  importRegistries(),
+  new Promise<null>((resolve) => setTimeout(() => resolve(null), 4000)),
+]).catch(() => null);
 
 const LOCAL_ENABLED = Boolean((import.meta as { env?: Record<string, unknown> }).env?.DEV);
 const CACHE_KEY = 'branify_public_overrides_v1';
@@ -83,7 +129,11 @@ function dbRowToBlogPost(o: Record<string, unknown>): BlogPost {
   };
 }
 
-function applyOverrides(p: OverridesPayload): void {
+async function applyOverrides(p: OverridesPayload): Promise<void> {
+  const mods = await REGISTRIES_P;
+  if (!mods) return; // registry chunks unavailable — keep compiled content
+  const { servicesRegistry, toolsRegistry, aiToolsDirectory, projectsData, blogPosts, freeTemplates, templatesRegistry, TEMPLATE_CATEGORIES } = mods;
+
   // ---- services
   for (const o of p.services || []) {
     const s = servicesRegistry.find((x) => x.slug === str(o.slug));
@@ -367,12 +417,13 @@ async function fetchOverrides(): Promise<OverridesPayload | null> {
   }
 }
 
-/** Called once at app boot, BEFORE React renders. Never blocks longer than ~1.2s. */
+/** Called once at app boot, BEFORE React renders. Never blocks longer than ~1.2s
+ *  (registry chunks download in parallel with the overrides fetch, not after). */
 export async function applyPublicContentOverrides(): Promise<void> {
   try {
     const cached = readCache();
     if (cached) {
-      applyOverrides(cached);
+      await applyOverrides(cached);
       // refresh quietly for next load
       void fetchOverrides().then((fresh) => {
         if (fresh) { try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(fresh)); } catch { /* noop */ } }
@@ -385,7 +436,7 @@ export async function applyPublicContentOverrides(): Promise<void> {
     ]);
     if (fresh) {
       try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(fresh)); } catch { /* noop */ }
-      applyOverrides(fresh);
+      await applyOverrides(fresh);
     }
   } catch { /* public site stays on compiled registries */ }
 }

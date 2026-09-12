@@ -87,7 +87,9 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
                 {featured.publishedAt} • {featured.readTime}
               </p>
               <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight leading-tight group-hover:text-[#5B5FEF] transition-colors">
-                {featured.title}
+                <a href={`/blog/${featured.slug}`} onClick={(e) => { e.preventDefault(); onNavigate(`/blog/${featured.slug}`); }}>
+                  {featured.title}
+                </a>
               </h2>
               <p className="text-sm sm:text-base text-[#475569] leading-relaxed">{featured.excerpt}</p>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5B5FEF] tracking-wider">
@@ -118,7 +120,9 @@ export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
                     {post.publishedAt} • {post.readTime}
                   </p>
                   <h3 className="font-display text-lg font-extrabold text-[#111827] tracking-tight leading-snug group-hover:text-[#5B5FEF] transition-colors">
-                    {post.title}
+                    <a href={`/blog/${post.slug}`} onClick={(e) => { e.preventDefault(); onNavigate(`/blog/${post.slug}`); }}>
+                      {post.title}
+                    </a>
                   </h3>
                   <p className="text-xs text-[#64748B] leading-relaxed">{post.excerpt}</p>
                   <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5B5FEF] tracking-wider mt-auto pt-1">
@@ -285,7 +289,9 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
                     {other.category} • {other.readTime}
                   </p>
                   <h3 className="text-sm font-extrabold text-[#111827] tracking-tight leading-snug group-hover:text-[#5B5FEF] transition-colors">
-                    {other.title}
+                    <a href={`/blog/${other.slug}`} onClick={(e) => { e.preventDefault(); onNavigate(`/blog/${other.slug}`); }}>
+                      {other.title}
+                    </a>
                   </h3>
                   <p className="text-xs text-[#64748B] leading-relaxed">{other.excerpt}</p>
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#5B5FEF] tracking-wider mt-auto pt-1">

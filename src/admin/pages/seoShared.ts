@@ -666,11 +666,17 @@ const xmlEscape = (s: string): string =>
  * Builds sitemap entries from the inventory, EXCLUDING pages hidden by a
  * noindex override (or a noindex directive of any kind). Archived/inactive/
  * draft content never enters the inventory in the first place.
+ *
+ * Content rows carry their real `updated_at` as lastmod. Static pages (hubs,
+ * legal, home) have no source row — they receive `fallbackLastmod` when the
+ * caller provides one (the generation date), so every shipped URL carries a
+ * valid <lastmod>.
  */
 export function sitemapEntries(
   inventory: PageMeta[],
   overrides: SeoOverrideRow[],
   settings: SiteSettings | null | undefined,
+  fallbackLastmod?: string,
 ): SitemapEntry[] {
   const origin = siteOrigin(settings);
   const byPath = new Map<string, SeoOverrideRow>();
@@ -684,7 +690,7 @@ export function sitemapEntries(
     const policy = SITEMAP_POLICY[page.kind] || SITEMAP_POLICY.static;
     out.push({
       loc: `${origin}${page.path}` || page.path,
-      lastmod: page.sourceUpdated ? page.sourceUpdated.slice(0, 10) : undefined,
+      lastmod: page.sourceUpdated ? page.sourceUpdated.slice(0, 10) : fallbackLastmod,
       changefreq: policy.changefreq,
       priority: policy.priority,
     });

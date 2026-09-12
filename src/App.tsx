@@ -21,21 +21,22 @@ const AIToolsView = lazy(() => import('./views/ai-tools/AIToolsView').then((m) =
 const AIToolDetailView = lazy(() => import('./views/ai-tools/AIToolDetailView').then((m) => ({ default: m.AIToolDetailView })));
 const ContactView = lazy(() => import('./views/contact/ContactView').then((m) => ({ default: m.ContactView })));
 const AboutView = lazy(() => import('./views/about/AboutView').then((m) => ({ default: m.AboutView })));
-import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageView';
+// Legal redirects map lives in a tiny standalone module — App needs it
+// synchronously, the legal page texts (lazy below) do not.
+import { LEGACY_LEGAL_REDIRECTS } from './views/policy/legalRedirects';
+const LegalPageView = lazy(() => import('./views/policy/LegalPageView').then((m) => ({ default: m.LegalPageView })));
 const DataDeletionView = lazy(() => import('./views/policy/DataDeletionView').then((m) => ({ default: m.DataDeletionView })));
 const FreeTemplatesView = lazy(() => import('./views/templates/FreeTemplatesView').then((m) => ({ default: m.FreeTemplatesView })));
-const FreeTemplateDetailPage = lazy(() => import('./views/templates/FreeTemplateDetailPage').then((m) => ({ default: m.FreeTemplateDetailPage })));
 const TemplatesLibraryView = lazy(() => import('./views/library/TemplatesLibraryView'));
-const TemplatesCategoryView = lazy(() => import('./views/library/TemplatesCategoryView'));
-const TemplateDetailPage = lazy(() => import('./views/library/TemplateDetailPage'));
-const TemplatePreviewPage = lazy(() => import('./views/library/TemplatePreviewPage'));
+// Async /templates/… + /free-templates/… resolvers — keep the template
+// registries OUT of the main bundle (resolution happens inside the chunks).
+const TemplatesRoute = lazy(() => import('./views/library/TemplatesRoute').then((m) => ({ default: m.TemplatesRoute })));
+const FreeTemplatesRoute = lazy(() => import('./views/templates/FreeTemplatesRoute').then((m) => ({ default: m.FreeTemplatesRoute })));
 const BlogIndex = lazy(() => import('./views/blog/BlogView').then((m) => ({ default: m.BlogIndex })));
 const BlogPostPage = lazy(() => import('./views/blog/BlogView').then((m) => ({ default: m.BlogPostPage })));
 const NotFoundView = lazy(() => import('./views/NotFoundView').then((m) => ({ default: m.NotFoundView })));
 import { WhatsAppFab } from './components/WhatsAppFab';
 import Seo from './components/Seo';
-import { freeTemplates } from './data/freeTemplatesRegistry';
-import { getCategoryBySlug, getTemplateBySlug } from './data/templates';
 import { CustomerAuthProvider } from './lib/customerAuth';
 const LoginView = lazy(() => import('./views/auth/LoginView').then((m) => ({ default: m.LoginView })));
 const RegisterView = lazy(() => import('./views/auth/RegisterView').then((m) => ({ default: m.RegisterView })));
@@ -46,20 +47,12 @@ const AccountView = lazy(() => import('./views/auth/AccountView').then((m) => ({
 // Admin dashboard — lazy-loaded, never downloaded by public pages
 const AdminApp = lazy(() => import('./admin/AdminApp'));
 
-// Home Sections
+// Home Sections — above-fold stays in the main bundle; sections 4–13 are one
+// lazy chunk (HomeBelowFold) so no other route downloads them either.
 import { Hero } from './sections/Hero';
 import { HeroTransition } from './sections/HeroTransition';
 import { ServicesSection } from './sections/ServicesSection';
-import { PortfolioSection } from './sections/PortfolioSection';
-import { ToolsSection } from './sections/ToolsSection';
-import { AIToolsSection } from './sections/AIToolsSection';
-import { TemplatesSection } from './sections/TemplatesSection';
-import { ProcessSection } from './sections/ProcessSection';
-import { WhyBranifySection } from './sections/WhyBranifySection';
-import { StatsSection } from './sections/StatsSection';
-import { TestimonialsSection } from './sections/TestimonialsSection';
-import { FAQSection } from './sections/FAQSection';
-import { CTASection } from './sections/CTASection';
+const HomeBelowFold = lazy(() => import('./sections/HomeBelowFold').then((m) => ({ default: m.HomeBelowFold })));
 import { Footer } from './sections/Footer';
 import { Project } from './types';
 
@@ -312,31 +305,9 @@ export default function App() {
           />
         )}
 
-        {pathname.startsWith('/templates/') && (() => {
-          const segs = pathname.replace('/templates/', '').split('/').filter(Boolean).map((s) => decodeURIComponent(s));
-          if (segs.length === 1) {
-            const [a] = segs;
-            if (getCategoryBySlug(a)) {
-              return <TemplatesCategoryView categorySlug={a} onNavigate={navigateTo} />;
-            }
-            const bySlug = getTemplateBySlug(a);
-            if (bySlug) {
-              return <TemplateDetailPage categorySlug={bySlug.categorySlug} templateSlug={bySlug.slug} onNavigate={navigateTo} />;
-            }
-            return <NotFoundView path={pathname} onNavigateHome={() => navigateTo('/')} onExploreTools={() => navigateTo('/templates')} />;
-          }
-          const [a, b, c] = segs;
-          if (segs.length === 2 && b === 'preview') {
-            const bySlug = getTemplateBySlug(a);
-            return bySlug
-              ? <TemplatePreviewPage categorySlug={bySlug.categorySlug} templateSlug={bySlug.slug} onNavigate={navigateTo} />
-              : <NotFoundView path={pathname} onNavigateHome={() => navigateTo('/')} onExploreTools={() => navigateTo('/templates')} />;
-          }
-          if (segs.length >= 3 && c === 'preview') {
-            return <TemplatePreviewPage categorySlug={a} templateSlug={b} onNavigate={navigateTo} />;
-          }
-          return <TemplateDetailPage categorySlug={a} templateSlug={b} onNavigate={navigateTo} />;
-        })()}
+        {pathname.startsWith('/templates/') && (
+          <TemplatesRoute pathname={pathname} onNavigate={navigateTo} />
+        )}
 
         {pathname === '/contact' && (
           <ContactView onNavigateHome={() => navigateTo('/')} />
@@ -369,14 +340,10 @@ export default function App() {
         )}
 
         {pathname.startsWith('/free-templates/') &&
-          (() => {
-            const seg = decodeURIComponent(pathname.replace('/free-templates/', '').split('/')[0]);
-            const asSlug = freeTemplates.find((t) => t.slug === seg);
-            if (asSlug) {
-              return <FreeTemplateDetailPage slug={asSlug.slug} onNavigate={navigateTo} />;
-            }
-            return <FreeTemplatesView onNavigate={navigateTo} initialCategory={seg} />;
-          })()}
+          <FreeTemplatesRoute
+            seg={decodeURIComponent(pathname.replace('/free-templates/', '').split('/')[0])}
+            onNavigate={navigateTo}
+          />}
 
         {/* Insights Blog */}
         {pathname === '/blog' && <BlogIndex onNavigate={navigateTo} />}
@@ -443,41 +410,16 @@ export default function App() {
             {/* 3. Specialized Digital Services (01 to 10) */}
             <ServicesSection onSelectService={handleSelectService} />
 
-            {/* 4. Website Template Library showcase — featured from central registry */}
-            <TemplatesSection onNavigate={navigateTo} />
-
-            {/* 5. Selected Work / Portfolio Case Studies */}
-            <PortfolioSection
-              onSelectProject={handleSelectProject}
-              onViewAllWork={handleExploreWork}
-            />
-
-            {/* 6. Free Digital Tools Ecosystem — mirrors the /tools page */}
-            <ToolsSection onNavigate={navigateTo} />
-
-            {/* 7. AI Powered Tools Showcase — mirrors the /ai-tools page */}
-            <AIToolsSection onNavigate={navigateTo} />
-
-            {/* 8. 5-Phase Process Timeline */}
-            <ProcessSection />
-
-            {/* 9. Why Choose Branify Editorial Value Pillars */}
-            <WhyBranifySection />
-
-            {/* 10. Verified Precision Stats Counter Strip */}
-            <StatsSection />
-
-            {/* 11. Client Feedback & Executive Testimonials */}
-            <TestimonialsSection />
-
-            {/* 12. Frequently Asked Questions Accordion */}
-            <FAQSection />
-
-            {/* 13. Final Cinematic CTA Banner */}
-            <CTASection
-              onStartProject={() => handleOpenInquiry()}
-              onViewWork={handleExploreWork}
-            />
+            {/* 4–13. Below-fold sections — one lazy chunk (never blocks FCP,
+                never downloaded by any other route) */}
+            <Suspense fallback={null}>
+              <HomeBelowFold
+                onNavigate={navigateTo}
+                onSelectProject={handleSelectProject}
+                onViewAllWork={handleExploreWork}
+                onStartProject={() => handleOpenInquiry()}
+              />
+            </Suspense>
           </div>
         )}
         </Suspense>

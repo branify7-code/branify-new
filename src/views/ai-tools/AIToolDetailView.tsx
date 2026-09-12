@@ -111,7 +111,7 @@ export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
         canonicalPath={`/ai-tools/${tool.slug}`}
         keywords={[tool.name, `${tool.name} guide`, `how to use ${tool.name}`, `${tool.name} prompts`, tool.category, 'AI tools', 'BRANIFY']}
         ogType="article"
-        ogImage={toolSeo.ogImage}
+        ogImage={toolSeo.ogImage || `/og/ai-tools/${tool.slug}.png`}
         breadcrumbs={breadcrumbs}
         faqs={faqSchema}
         softwareSchema={{

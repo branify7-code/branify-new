@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCurrency } from "../lib/currency";
-import { templateCount, TEMPLATE_CATEGORIES, categoryCounts, categoryHref } from "../data/templates";
+import { TEMPLATE_CATEGORIES, categoryHref } from "../data/templateCategories";
 import {
   ChevronDown,
   ChevronRight,
@@ -379,7 +379,24 @@ export default function Header({
   const currencyMenuRef = useRef<HTMLDivElement>(null);
 
   const pathname = currentRoute.split("?")[0] || "/";
-  const templateCategoryCounts = categoryCounts();
+  // Live template counts load from the (heavy) registry chunk asynchronously —
+  // they render only inside the templates mega menu / badges, never above fold.
+  const [templateCategoryCounts, setTemplateCategoryCounts] = useState<Record<string, number>>({});
+  const [templateTotal, setTemplateTotal] = useState(0);
+  useEffect(() => {
+    let alive = true;
+    import("../data/templates")
+      .then((m) => {
+        if (!alive) return;
+        setTemplateCategoryCounts(m.categoryCounts());
+        setTemplateTotal(m.templateCount());
+      })
+      .catch(() => {
+        /* badges stay blank — categories still navigate */ });
+    return () => {
+      alive = false;
+    };
+  }, []);
   const isAboutActive = pathname === "/about";
   const isHomeActive = pathname === "/";
   const isServicesActive =
@@ -774,7 +791,7 @@ export default function Header({
               }`}
             />
             <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#8F6B2D] border border-[#C9A45C]/35 rounded-full shrink-0 shadow-sm font-mono 2xl:hidden">
-              {templateCount()}
+              {templateTotal}
             </span>
             {isTemplatesActive && activeUnderline}
           </button>
@@ -1194,7 +1211,7 @@ export default function Header({
             <div className="mt-8 pt-6 border-t border-[#C9A45C]/20 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#F8FAFC] p-4 rounded-xl border border-[#C9A45C]/25">
               <div>
                 <div className="text-sm font-extrabold text-[#111827] flex items-center gap-2">
-                  <span className="text-[#111827]">{templateCount()} ready-made templates</span>
+                  <span className="text-[#111827]">{templateTotal} ready-made templates</span>
                   <span className="text-slate-500">·</span>
                   <span>{TEMPLATE_CATEGORIES.length} industries</span>
                 </div>
@@ -1455,7 +1472,7 @@ export default function Header({
               <span className="flex items-center gap-2">
                 Templates
                 <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-[#C9A45C]/20 text-[#8F6B2D] border border-[#C9A45C]/35 rounded-full font-mono">
-                  {templateCount()}
+                  {templateTotal}
                 </span>
               </span>
               <ChevronRight size={16} strokeWidth={2} className="w-4 h-4 text-slate-500" />
