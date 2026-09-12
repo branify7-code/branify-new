@@ -188,6 +188,7 @@ const DEFAULT_SORT: Partial<Record<CollectionKey, string>> = {
   redirects: 'created_at', media_assets: 'created_at', analytics_events: 'created_at',
   activity_log: 'created_at', not_found_log: 'last_seen',
   social_posts: 'created_at',
+  social_connections: 'connected_at', // table has connected_at, not created_at
 };
 
 /** Public asset URLs may point at the local preview API — append the gateway port. */
