@@ -431,6 +431,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
         <Seo
           title="Service Not Found | BRANIFY"
           description="The service you requested is not part of the BRANIFY services catalog."
+          canonicalPath="/services"
           robots="noindex, follow"
         />
         <h1 className="text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">Service Not Found</h1>

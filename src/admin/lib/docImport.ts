@@ -18,7 +18,8 @@
 // becomes HTML, every src/href passes through the shared DOMPurify sanitizer
 // (sanitizeArticleHtml) before the editor sees it, and the parsers only READ
 // document structure — macros, embedded scripts and PDF JavaScript are never
-// executed. pdf.js runs with isEvalSupported:false.
+// executed. pdf.js v6 no longer evals worker code (the old isEvalSupported
+// flag was removed upstream), so PDF scripts cannot execute by design.
 //
 // Duplicate protection: images are deduped by SHA-256 inside one import, and
 // cross-import reuse tries a size+mime lookup against media_assets with a

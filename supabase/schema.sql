@@ -3,6 +3,11 @@
 -- Project Reference: uspshkegxhrglbpxqtil
 -- URL: https://uspshkegxhrglbpxqtil.supabase.co
 -- ==============================================================================
+-- NOTE: This file covers the PUBLIC site tables (inquiries, newsletter).
+-- Customer account profiles live in Supabase Auth (auth.users) + the
+-- public.customers table synced by the on_auth_user_created_sync_customer
+-- trigger — both defined in supabase/admin-schema.sql (run it AFTER this file).
+-- ==============================================================================
 
 -- 1. Enable UUID Extension
 create extension if not exists "pgcrypto";

@@ -205,6 +205,10 @@ export const AIToolsView: React.FC<AIToolsViewProps> = () => {
         canonicalPath="/ai-tools"
         ogType="website"
         keywords={['AI tools', 'best AI tools', 'AI tools directory', 'AI image generators', 'AI writing tools', 'AI video generation', 'beginner AI guides', 'BRANIFY']}
+        itemListSchema={{
+          name: 'BRANIFY AI Tools Directory',
+          items: allTools.map((t) => ({ name: t.name, url: `/ai-tools/${t.slug}` })),
+        }}
       />
 
       {/* ==================== HERO ==================== */}
@@ -440,7 +444,7 @@ export const AIToolsView: React.FC<AIToolsViewProps> = () => {
                 key={p}
                 onClick={() => setPricing(p)}
                 aria-pressed={pricing === p}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all cursor-pointer ${
+                className={`px-3.5 py-2 rounded-full text-[11px] font-bold border transition-all cursor-pointer ${
                   pricing === p
                     ? 'bg-[#5B5FEF] border-[#5B5FEF] text-white'
                     : 'bg-white text-[#64748B] border-[#E2E8F0] hover:border-[#5B5FEF]/45 hover:text-[#5B5FEF]'

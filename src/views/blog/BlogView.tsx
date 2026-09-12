@@ -169,6 +169,7 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({ slug, onNavigate }) 
           title="Article Not Found | BRANIFY Blog"
           description="The article you are looking for does not exist. Browse the BRANIFY insights blog instead."
           canonicalPath="/blog"
+          robots="noindex, follow"
         />
         <section className="px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight mb-6">

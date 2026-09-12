@@ -8,11 +8,9 @@ import {
   X,
   Smartphone,
   Search,
-  ShoppingBag,
   ArrowRight,
   Globe,
   LayoutGrid,
-  ShoppingCart,
   MousePointerClick,
   Figma,
   Palette,
@@ -111,18 +109,6 @@ const serviceMenuGroups: ServiceMenuGroup[] = [
         desc: "Custom Elementor, WooCommerce & speed optimization",
         icon: LayoutGrid,
         route: "/services/wordpress-development",
-      },
-      {
-        title: "Shopify Website Development",
-        desc: "Custom theme design, store setup & app integrations",
-        icon: ShoppingBag,
-        route: "/services/shopify-website-development",
-      },
-      {
-        title: "E-Commerce Website Development",
-        desc: "Full-stack, WooCommerce & headless online stores",
-        icon: ShoppingCart,
-        route: "/services/e-commerce-website-development",
       },
       {
         title: "Landing Pages",
@@ -908,15 +894,6 @@ export default function Header({
           >
             <button
               type="button"
-              className="hidden 2xl:flex p-1.5 text-slate-600 hover:text-[#8F6B2D] hover:bg-[#C9A45C]/10 rounded-full transition-colors items-center gap-1 text-xs cursor-pointer"
-              title="Search Services, Portfolio, Tools... (⌘K)"
-              aria-label="Search"
-            >
-              <Search size={16} strokeWidth={2} className="w-4 h-4" />
-            </button>
-
-            <button
-              type="button"
               className="flex items-center gap-1 px-2 py-1 hover:bg-[#C9A45C]/10 rounded-full text-xs font-bold text-slate-700 transition-all cursor-pointer group"
               aria-label="Select Currency and Country Region"
               title={`Currency: ${currency.code} (${currency.region})`}
@@ -934,15 +911,6 @@ export default function Header({
                   currencyDropdownOpen ? "rotate-180" : ""
                 }`}
               />
-            </button>
-
-            <button
-              type="button"
-              className="hidden 2xl:block p-1.5 text-slate-600 hover:text-[#8F6B2D] hover:bg-[#C9A45C]/10 rounded-full transition-colors relative cursor-pointer"
-              title="View Cart"
-              aria-label="Shopping Cart"
-            >
-              <ShoppingBag size={16} strokeWidth={2} className="w-4 h-4" />
             </button>
 
             {/* CURRENCY DROPDOWN */}

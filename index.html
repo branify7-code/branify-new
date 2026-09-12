@@ -23,20 +23,6 @@
               configurable: true,
               enumerable: true
             });
-
-            // Instant unregistration of any stale Service Worker and cache
-            if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.getRegistrations().then(function(regs) {
-                for (var i = 0; i < regs.length; i++) {
-                  regs[i].unregister();
-                }
-              });
-            }
-            if ('caches' in window) {
-              caches.keys().then(function(keys) {
-                keys.forEach(function(k) { caches.delete(k); });
-              });
-            }
           }
         } catch (_) {}
       })();
@@ -64,6 +50,7 @@
     <link rel="apple-touch-icon" href="/branify-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
   <body class="bg-white text-[#111827] antialiased selection:bg-[#C9A45C]/30 selection:text-white overflow-x-hidden">

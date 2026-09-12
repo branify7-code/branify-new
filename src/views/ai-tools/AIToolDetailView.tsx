@@ -73,7 +73,7 @@ export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
   if (!tool) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#EEF2FF] to-white flex items-center justify-center px-4 py-24">
-        <Seo title="AI tool not found" description="This AI tool guide is not in the BRANIFY directory." canonicalPath="/" robots="noindex, nofollow" />
+        <Seo title="AI tool not found" description="This AI tool guide is not in the BRANIFY directory." canonicalPath="/ai-tools" robots="noindex, nofollow" />
         <div className="text-center space-y-4 max-w-md bg-white border border-[#E2E8F0] rounded-3xl p-10">
           <Sparkles className="w-10 h-10 text-[#94A3B8] mx-auto" />
           <h1 className="font-display text-2xl font-extrabold text-[#111827]">Tool guide not found</h1>
@@ -114,6 +114,11 @@ export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
         ogImage={toolSeo.ogImage}
         breadcrumbs={breadcrumbs}
         faqs={faqSchema}
+        softwareSchema={{
+          name: tool.name,
+          description: toolSeo.description,
+          applicationCategory: tool.category,
+        }}
       />
 
       {/* ==================== BREADCRUMB ==================== */}

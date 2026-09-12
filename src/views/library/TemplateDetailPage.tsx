@@ -49,6 +49,12 @@ const TemplateDetailPage: React.FC<TemplateDetailPageProps> = ({ categorySlug, t
         canonicalPath={templateHref(template)}
         ogType="website"
         ogImage={template.seo.ogImage}
+        softwareSchema={{
+          name: template.name,
+          description: template.seo.description,
+          applicationCategory: 'DesignApplication',
+          image: template.seo.ogImage,
+        }}
         breadcrumbs={[
           { name: 'Home', url: 'https://branify.store/' },
           { name: 'Templates', url: 'https://branify.store/templates' },
@@ -166,7 +172,7 @@ const TemplateDetailPage: React.FC<TemplateDetailPageProps> = ({ categorySlug, t
                 onClick={() => { trackEvent('template_start_project', { template: template.slug, source: 'detail_panel' }); onNavigate(`/contact?template=${template.slug}`); }}
                 className="w-full px-8 py-4 rounded-full text-xs font-extrabold uppercase tracking-widest border border-[#C9A45C]/40 text-[#111827] hover:border-[#C9A45C] hover:text-[#8F6B2D] hover:bg-[#C9A45C]/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Sparkles className="w-4 h-4" /> Start With This Template
+                <Sparkles className="w-4 h-4" /> Use Template
               </button>
               <p className="text-center text-[10px] text-[#64748B] leading-relaxed pt-1">
                 Start with this design — we tailor it to your brand and launch it as your own website.

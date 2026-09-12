@@ -9,36 +9,39 @@ import { trackNotFound } from './lib/track';
 import { getSeoOverride, getRedirectTarget } from './lib/contentOverrides';
 import { STATIC_PAGE_SEO } from './data/seoMeta';
 
-// Views
-import { ServicesView } from './views/services/ServicesView';
-import ServiceDetailPage from './views/services/ServiceDetailPage';
-import { PortfolioView } from './views/portfolio/PortfolioView';
-import FreeToolsView from './views/tools/FreeToolsView';
-import ToolPageView from './views/tools/ToolPageView';
-import { AIToolsView } from './views/ai-tools/AIToolsView';
-import { AIToolDetailView } from './views/ai-tools/AIToolDetailView';
-import { ContactView } from './views/contact/ContactView';
-import { AboutView } from './views/about/AboutView';
+// Views — route-split via React.lazy so each public page only downloads what
+// it renders (homepage sections + legal pages stay in the main chunk; legal is
+// static because App.tsx needs LEGACY_LEGAL_REDIRECTS synchronously).
+const ServicesView = lazy(() => import('./views/services/ServicesView').then((m) => ({ default: m.ServicesView })));
+const ServiceDetailPage = lazy(() => import('./views/services/ServiceDetailPage'));
+const PortfolioView = lazy(() => import('./views/portfolio/PortfolioView').then((m) => ({ default: m.PortfolioView })));
+const FreeToolsView = lazy(() => import('./views/tools/FreeToolsView'));
+const ToolPageView = lazy(() => import('./views/tools/ToolPageView'));
+const AIToolsView = lazy(() => import('./views/ai-tools/AIToolsView').then((m) => ({ default: m.AIToolsView })));
+const AIToolDetailView = lazy(() => import('./views/ai-tools/AIToolDetailView').then((m) => ({ default: m.AIToolDetailView })));
+const ContactView = lazy(() => import('./views/contact/ContactView').then((m) => ({ default: m.ContactView })));
+const AboutView = lazy(() => import('./views/about/AboutView').then((m) => ({ default: m.AboutView })));
 import { LegalPageView, LEGACY_LEGAL_REDIRECTS } from './views/policy/LegalPageView';
-import { DataDeletionView } from './views/policy/DataDeletionView';
-import { FreeTemplatesView } from './views/templates/FreeTemplatesView';
-import { FreeTemplateDetailPage } from './views/templates/FreeTemplateDetailPage';
-import TemplatesLibraryView from './views/library/TemplatesLibraryView';
-import TemplatesCategoryView from './views/library/TemplatesCategoryView';
-import TemplateDetailPage from './views/library/TemplateDetailPage';
-import TemplatePreviewPage from './views/library/TemplatePreviewPage';
-import { BlogIndex, BlogPostPage } from './views/blog/BlogView';
-import { NotFoundView } from './views/NotFoundView';
+const DataDeletionView = lazy(() => import('./views/policy/DataDeletionView').then((m) => ({ default: m.DataDeletionView })));
+const FreeTemplatesView = lazy(() => import('./views/templates/FreeTemplatesView').then((m) => ({ default: m.FreeTemplatesView })));
+const FreeTemplateDetailPage = lazy(() => import('./views/templates/FreeTemplateDetailPage').then((m) => ({ default: m.FreeTemplateDetailPage })));
+const TemplatesLibraryView = lazy(() => import('./views/library/TemplatesLibraryView'));
+const TemplatesCategoryView = lazy(() => import('./views/library/TemplatesCategoryView'));
+const TemplateDetailPage = lazy(() => import('./views/library/TemplateDetailPage'));
+const TemplatePreviewPage = lazy(() => import('./views/library/TemplatePreviewPage'));
+const BlogIndex = lazy(() => import('./views/blog/BlogView').then((m) => ({ default: m.BlogIndex })));
+const BlogPostPage = lazy(() => import('./views/blog/BlogView').then((m) => ({ default: m.BlogPostPage })));
+const NotFoundView = lazy(() => import('./views/NotFoundView').then((m) => ({ default: m.NotFoundView })));
 import { WhatsAppFab } from './components/WhatsAppFab';
 import Seo from './components/Seo';
 import { freeTemplates } from './data/freeTemplatesRegistry';
 import { getCategoryBySlug, getTemplateBySlug } from './data/templates';
 import { CustomerAuthProvider } from './lib/customerAuth';
-import { LoginView } from './views/auth/LoginView';
-import { RegisterView } from './views/auth/RegisterView';
-import { ForgotPasswordView } from './views/auth/ForgotPasswordView';
-import { ResetPasswordView } from './views/auth/ResetPasswordView';
-import { AccountView } from './views/auth/AccountView';
+const LoginView = lazy(() => import('./views/auth/LoginView').then((m) => ({ default: m.LoginView })));
+const RegisterView = lazy(() => import('./views/auth/RegisterView').then((m) => ({ default: m.RegisterView })));
+const ForgotPasswordView = lazy(() => import('./views/auth/ForgotPasswordView').then((m) => ({ default: m.ForgotPasswordView })));
+const ResetPasswordView = lazy(() => import('./views/auth/ResetPasswordView').then((m) => ({ default: m.ResetPasswordView })));
+const AccountView = lazy(() => import('./views/auth/AccountView').then((m) => ({ default: m.AccountView })));
 
 // Admin dashboard — lazy-loaded, never downloaded by public pages
 const AdminApp = lazy(() => import('./admin/AdminApp'));
@@ -228,8 +231,15 @@ export default function App() {
         onOpenPWA={openPWAModal}
       />
 
-      {/* Main View Router */}
+      {/* Main View Router — Suspense covers all lazy route chunks */}
       <main className="flex-1 relative">
+        <Suspense
+          fallback={
+            <div className="flex min-h-[60vh] items-center justify-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#8F6B2D]">Loading…</span>
+            </div>
+          }
+        >
         {pathname === '/services' && (
           <ServicesView onNavigate={navigateTo} initialCategory={queryParams.get('category')} />
         )}
@@ -470,6 +480,7 @@ export default function App() {
             />
           </div>
         )}
+        </Suspense>
       </main>
 
       {/* Global Footer */}

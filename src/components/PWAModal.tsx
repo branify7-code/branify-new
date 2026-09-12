@@ -145,9 +145,9 @@ export const PWAModal: React.FC<PWAModalProps> = ({
         </div>
 
         {/* Benefits Row */}
-        <div className="flex items-center justify-between pt-2 text-[11px] text-[#94A3B8] border-t border-[#E2E8F0] font-mono">
-          <span>✓ Instant Offline Caching</span>
-          <span>✓ 0 MB Storage Overhead</span>
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 pt-2 text-[11px] text-[#94A3B8] border-t border-[#E2E8F0] font-mono">
+          <span>✓ Offline-ready app shell</span>
+          <span>✓ Fast cached assets</span>
           <span>✓ Pure Standalone Mode</span>
         </div>
       </div>

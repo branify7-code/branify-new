@@ -28,20 +28,14 @@ import App from './App.tsx';
 import './index.css';
 import { applyPublicContentOverrides } from './lib/contentOverrides';
 
-// Purge any stale service workers and caches
-if (typeof window !== 'undefined') {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for (const registration of registrations) {
-        registration.unregister();
-      }
+// Register the production service worker (versioned, network-first for HTML).
+// The SW's own activate step cleans up caches from the previous kill-switch era.
+if (typeof window !== 'undefined' && import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      /* PWA is progressive enhancement — site works without it */
     });
-  }
-  if ('caches' in window) {
-    caches.keys().then((keys) => {
-      keys.forEach((key) => caches.delete(key));
-    });
-  }
+  });
 }
 
 // Apply admin-managed content overrides before first render (no-op when the

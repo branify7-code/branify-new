@@ -161,7 +161,7 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search PDF merge, background remover, password generator, UTM builder, invoice generator..."
+              placeholder="Search PDF merge, QR code generator, password generator, UTM builder, invoice generator..."
               aria-label="Search tools"
               className="w-full pl-12 pr-4 py-3 bg-white border border-[#E2E8F0] rounded-xl text-xs sm:text-sm text-[#1E293B] placeholder-[#94A3B8] shadow-[0_2px_10px_rgba(15,23,42,0.04)] focus:outline-none focus:border-[#5B5FEF]/50 focus:shadow-[0_0_0_3px_rgba(91,95,239,0.12)] transition-colors"
             />
@@ -174,8 +174,8 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
         </div>
       </section>
 
-      {/* Category filter pills */}
-      <section className="sticky top-[64px] z-30 bg-white/85 backdrop-blur-xl border-b border-[#E2E8F0]">
+      {/* Category filter pills — non-sticky on mobile (header height varies), sticky from md up */}
+      <section className="relative md:sticky md:top-[64px] z-30 bg-white/85 backdrop-blur-xl border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="Tool categories">
             {TOOL_CATEGORIES.map((cat) => {
@@ -186,7 +186,7 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
                   role="tab"
                   aria-selected={active}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 rounded-full font-extrabold uppercase text-[11px] tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2.5 rounded-full font-extrabold uppercase text-[11px] tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 ${
                     active
                       ? 'bg-gradient-to-b from-[#F6DF84] via-[#D4AF37] to-[#B3841F] text-[#1A1206] shadow-lg shadow-[#C9A45C]/25'
                       : 'bg-white text-[#475569] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:border-[#C9A45C]/45 hover:text-[#8F6B2D]'
@@ -215,7 +215,7 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
               onClick={() => { setQuery(''); setActiveCategory('All'); }}
               className="text-[#8F6B2D] text-xs font-extrabold uppercase tracking-widest hover:underline"
             >
-              Clear filters &amp; browse all 136 tools
+              Clear filters &amp; browse all {allTools.length} tools
             </button>
           </div>
         ) : (

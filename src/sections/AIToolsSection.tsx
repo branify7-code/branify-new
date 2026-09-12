@@ -58,7 +58,7 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({ onNavigate }) =>
 
           <div className="text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] leading-relaxed">
             {aiToolCategories.length - 1} HAND-PICKED CATEGORIES<br />
-            UPDATED EVERY MONTH
+            GROWING CURATED DIRECTORY
           </div>
         </div>
 

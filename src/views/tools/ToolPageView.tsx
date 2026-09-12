@@ -350,9 +350,9 @@ const ToolPageView: React.FC<ToolPageViewProps> = ({ slug, onNavigate }) => {
         {/* Output */}
         {(result || runError) && (
           <div className="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04)] space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-extrabold text-slate-600 uppercase tracking-widest">Tool Output Result</label>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {runError && (
                   <span className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-red-600 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full">
                     <AlertTriangle className="w-3.5 h-3.5" /> Error

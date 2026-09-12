@@ -46,6 +46,20 @@ export interface SeoServiceSchema {
   areaServed?: string;
 }
 
+/** ItemList structured data — directory/hub pages listing real inventory. */
+export interface SeoItemListSchema {
+  name: string;
+  items: Array<{ name: string; url: string }>;
+}
+
+/** SoftwareApplication structured data — built from REAL registry fields only (no invented prices/ratings). */
+export interface SeoSoftwareSchema {
+  name: string;
+  description: string;
+  applicationCategory?: string;
+  image?: string;
+}
+
 /** BlogPosting structured data — only ever built from REAL post fields. */
 export interface SeoArticleSchema {
   headline: string;
@@ -72,6 +86,8 @@ interface SeoProps {
   faqs?: SeoFaq[];
   serviceSchema?: SeoServiceSchema;
   articleSchema?: SeoArticleSchema;
+  itemListSchema?: SeoItemListSchema;
+  softwareSchema?: SeoSoftwareSchema;
 }
 
 export const Seo: React.FC<SeoProps> = ({
@@ -86,6 +102,8 @@ export const Seo: React.FC<SeoProps> = ({
   faqs,
   serviceSchema,
   articleSchema,
+  itemListSchema,
+  softwareSchema,
 }) => {
   useEffect(() => {
     const originalTitle = document.title;
@@ -114,12 +132,19 @@ export const Seo: React.FC<SeoProps> = ({
       el.setAttribute('href', href);
     };
 
+    // OG/Twitter images must be absolute — scrapers drop relative URLs
+    const absolutize = (img: string) =>
+      img.startsWith('http') ? img : `${SITE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
+
     setMeta('description', description);
     setMeta('keywords', keywords.join(', '));
     setMeta('robots', robots);
     if (/noindex/i.test(robots)) {
       // keep engines out entirely when a post opts out of indexing
       setMeta('googlebot', 'noindex, nofollow');
+    } else {
+      // a previous noindex page in this SPA session may have left a sticky googlebot tag
+      document.querySelector('meta[name="googlebot"]')?.remove();
     }
 
     const path = canonicalPath === '/' || !canonicalPath ? '/' : canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`;
@@ -130,12 +155,12 @@ export const Seo: React.FC<SeoProps> = ({
     setMeta('og:description', description, true);
     setMeta('og:type', ogType, true);
     setMeta('og:url', canonicalUrl, true);
-    setMeta('og:image', ogImage, true);
+    setMeta('og:image', absolutize(ogImage), true);
     setMeta('og:site_name', 'BRANIFY', true);
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', fullTitle);
     setMeta('twitter:description', description);
-    setMeta('twitter:image', ogImage);
+    setMeta('twitter:image', absolutize(ogImage));
 
     const graph: Record<string, unknown>[] = [
       {
@@ -237,6 +262,36 @@ export const Seo: React.FC<SeoProps> = ({
       });
     }
 
+    // ItemList — hub/directory pages listing real inventory (no invented entries)
+    if (itemListSchema && itemListSchema.items.length > 0) {
+      graph.push({
+        '@type': 'ItemList',
+        '@id': `${canonicalUrl}#directory`,
+        name: itemListSchema.name,
+        numberOfItems: itemListSchema.items.length,
+        itemListElement: itemListSchema.items.map((it, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: it.name,
+          item: it.url.startsWith('http') ? it.url : `${SITE_URL}${it.url.startsWith('/') ? it.url : `/${it.url}`}`,
+        })),
+      });
+    }
+
+    // SoftwareApplication — template + AI tool detail pages (real fields only)
+    if (softwareSchema && softwareSchema.name) {
+      graph.push({
+        '@type': 'SoftwareApplication',
+        '@id': `${canonicalUrl}#software`,
+        name: softwareSchema.name,
+        description: softwareSchema.description,
+        applicationCategory: softwareSchema.applicationCategory || 'BusinessApplication',
+        operatingSystem: 'Web',
+        ...(softwareSchema.image ? { image: [absolutize(softwareSchema.image)] } : {}),
+        publisher: { '@id': `${SITE_URL}/#organization` },
+      });
+    }
+
     const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
     let script = document.getElementById('dynamic-jsonld');
     if (!script) {
@@ -262,8 +317,9 @@ export const Seo: React.FC<SeoProps> = ({
           setMeta('twitter:description', ov.description);
         }
         if (ov.ogImage) {
-          setMeta('og:image', ov.ogImage, true);
-          setMeta('twitter:image', ov.ogImage);
+          const absOg = ov.ogImage.startsWith('http') ? ov.ogImage : `${SITE_URL}${ov.ogImage.startsWith('/') ? '' : '/'}${ov.ogImage}`;
+          setMeta('og:image', absOg, true);
+          setMeta('twitter:image', absOg);
         }
         if (ov.robots) setMeta('robots', ov.robots.replace(/,\s*/g, ', '));
       }
@@ -272,7 +328,7 @@ export const Seo: React.FC<SeoProps> = ({
     return () => {
       document.title = originalTitle;
     };
-  }, [title, description, keywords, canonicalPath, ogType, ogImage, robots, breadcrumbs, faqs, serviceSchema, articleSchema]);
+  }, [title, description, keywords, canonicalPath, ogType, ogImage, robots, breadcrumbs, faqs, serviceSchema, articleSchema, itemListSchema, softwareSchema]);
 
   return null;
 };
