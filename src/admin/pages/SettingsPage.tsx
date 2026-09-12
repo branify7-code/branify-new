@@ -7,7 +7,7 @@
 // =============================================================================
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Check, Database, ExternalLink, Info, Link2, Plus, RotateCcw, Save, ShieldCheck, Trash2, X,
+  Check, Database, ExternalLink, Info, Link2, Plus, RotateCcw, Save, ShieldCheck, Sparkles, Trash2, X,
 } from 'lucide-react';
 import type { AdminPageProps } from '../lib/auth';
 import { getSettings, LOCAL_API_PORT, modeLabel, updateSettings } from '../lib/backend';
@@ -17,6 +17,7 @@ import {
   Textarea, cx, useToast,
 } from '../ui';
 import { useAdminAuth } from '../lib/auth';
+import { fetchAiStatus, AiStatus } from '../../lib/aiClient';
 import { PwaPage } from './PwaPage';
 
 // ------------------------------------------------------------------ section model
@@ -164,6 +165,19 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
     return () => window.removeEventListener('beforeunload', onBeforeUnload);
   }, [anyDirty]);
 
+  // AI gateway status (presence only — no key values are ever returned)
+  const [aiStatus, setAiStatus] = useState<AiStatus | null>(null);
+  const [aiStatusErr, setAiStatusErr] = useState<string | null>(null);
+  useEffect(() => {
+    if (tab !== 'integrations') return;
+    let alive = true;
+    setAiStatusErr(null);
+    fetchAiStatus(true)
+      .then((s) => { if (alive) setAiStatus(s); })
+      .catch((e) => { if (alive) setAiStatusErr((e as Error).message); });
+    return () => { alive = false; };
+  }, [tab]);
+
   const switchTab = (id: string) => {
     if (id === tab) return;
     if (anyDirty) setConfirmSwitch(id);
@@ -218,8 +232,6 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
     supabaseHost = u.host;
     projectRef = u.host.split('.')[0];
   } catch { /* keep raw */ }
-  const gemini = envOf().VITE_GEMINI_API_KEY;
-  const geminiConfigured = typeof gemini === 'string' && gemini.length > 0 ? true : typeof gemini === 'undefined' ? null : false;
 
   return (
     <div className="flex flex-col gap-5">
@@ -488,18 +500,33 @@ export const SettingsPage: React.FC<AdminPageProps> = () => {
             </div>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]">Gemini API key</p>
-                {geminiConfigured === null ? (
+                <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#475569]"><Sparkles size={12} /> OmniRoute AI Gateway</p>
+                {!aiStatus ? (
                   <Badge tone="zinc">—</Badge>
-                ) : geminiConfigured ? (
-                  <Badge tone="green"><Check size={10} /> Configured</Badge>
+                ) : !aiStatus.configured ? (
+                  <Badge tone="amber">Not configured</Badge>
+                ) : aiStatus.reachable === true ? (
+                  <Badge tone="green"><Check size={10} /> Online</Badge>
+                ) : aiStatus.reachable === false ? (
+                  <Badge tone="red">Unreachable</Badge>
                 ) : (
-                  <Badge tone="zinc">Not detected</Badge>
+                  <Badge tone="steel">Configured</Badge>
                 )}
               </div>
               <p className="mt-2 text-[11px] leading-relaxed text-[#64748B]">
-                Presence only, derived from the build environment. Key values are NEVER read, stored or displayed here.
+                All AI requests are routed server-side through OmniRoute — provider keys (OpenAI, Gemini, Claude,
+                DeepSeek, Groq) never reach the browser.
               </p>
+              {aiStatus && (
+                <p className="mt-2 text-[11px] text-[#6B7280]">
+                  Blog model: <span className="font-mono text-[#8F6B2D]">{aiStatus.blog_model}</span>
+                  {' · '}{aiStatus.blog_model_set
+                    ? 'set via OMNIROUTE_BLOG_MODEL'
+                    : `fallback (${aiStatus.blog_model_source})`}
+                  {aiStatus.reachable === false && ' · start OmniRoute and retry'}
+                </p>
+              )}
+              {aiStatusErr && <p className="mt-2 text-[11px] text-amber-600">Status unavailable: {aiStatusErr}</p>}
             </div>
           </div>
         </Card>

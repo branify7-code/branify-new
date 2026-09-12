@@ -30,6 +30,15 @@ export default defineConfig(() => {
       hmr: process.env.DISABLE_HMR !== 'true',
       // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      // AI endpoints: Vercel serves /api/ai/* as serverless functions in
+      // production; in dev they are proxied to the local AI API
+      // (scripts/local-api.ts, port 3033 — start with `npm run api`).
+      proxy: {
+        '/api/ai': {
+          target: 'http://127.0.0.1:3033',
+          changeOrigin: false,
+        },
+      },
     },
   };
 });

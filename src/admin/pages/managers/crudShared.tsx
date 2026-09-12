@@ -111,6 +111,12 @@ export interface CrudConfig<T extends { id: string; archived?: boolean }> {
   emptyTitle?: string;
   emptyHint?: string;
   icon?: React.ComponentType<{ size?: number | string; className?: string }>;
+  /** optional extra header button (e.g. "AI Draft") rendered before the create button */
+  headerAction?: {
+    label: string;
+    icon?: React.ComponentType<{ size?: number | string; className?: string }>;
+    onClick: () => void;
+  };
 }
 
 // ------------------------------------------------------------------ form value coercion
@@ -511,6 +517,11 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
               </Select>
             )}
             {config.headerActions && config.headerActions({ openCreateWith, navigate: props.navigate })}
+            {config.headerAction && (
+              <Btn variant="outline" icon={config.headerAction.icon} onClick={config.headerAction.onClick}>
+                {config.headerAction.label}
+              </Btn>
+            )}
             <Btn variant="gold" icon={Plus} onClick={openCreate}>New {config.entity}</Btn>
           </div>
         </div>

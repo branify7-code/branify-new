@@ -1,13 +1,16 @@
 // =============================================================================
 // BRANIFY ADMIN — Blog manager (collection: blog_posts)
 // -----------------------------------------------------------------------------
-// Route hub:
-//   /blog             → post list (shared CRUD table)
+// Route hub + OmniRoute AI drafts:
+//   /blog             → post list (shared CRUD table) + "AI Draft" generator
 //   /blog?post=new    → full-page Blog Editor (CMS-style, visual + HTML)
 //   /blog?post=<id>   → full-page Blog Editor for an existing post
+// The AI Draft button routes through the server-side OmniRoute gateway
+// (/api/ai/blog); the generated draft is saved as a normal blog_posts row and
+// the list refreshes by remounting the CRUD page (key bump) after the save.
 // =============================================================================
-import React from 'react';
-import { Eye, Newspaper, Star, TrendingUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Eye, Newspaper, Sparkles, Star, TrendingUp } from 'lucide-react';
 import type { AdminPageProps } from '../../lib/auth';
 import type { BlogRow } from '../../lib/types';
 import { fmtDate, timeAgo } from '../../lib/format';
@@ -15,7 +18,7 @@ import { Badge } from '../../ui';
 import type { Column } from '../../ui/DataTable';
 import { makeCrudPage } from './crudShared';
 import { BlogEditor } from './BlogEditor';
-import { BlogAiGenerator } from './BlogAiGenerator';
+import AiBlogDraftModal from '../../components/AiBlogDraftModal';
 
 const StatusPill: React.FC<{ row: BlogRow }> = ({ row }) => {
   const scheduled = row.status === 'published' && row.published_at
@@ -88,6 +91,9 @@ const columns: Column<BlogRow>[] = [
   },
 ];
 
+/** Event used to open the AI draft modal from the module-scope CRUD config. */
+const AI_DRAFT_EVENT = 'branify:ai-blog-draft';
+
 const ListPage = makeCrudPage<BlogRow>({
   collection: 'blog_posts',
   title: 'Blog Posts',
@@ -99,6 +105,11 @@ const ListPage = makeCrudPage<BlogRow>({
   icon: Newspaper,
   defaultSort: 'created_at',
   defaultDir: 'desc',
+  headerAction: {
+    label: 'AI Draft',
+    icon: Sparkles,
+    onClick: () => window.dispatchEvent(new CustomEvent(AI_DRAFT_EVENT)),
+  },
   filter: {
     param: 'status',
     label: 'Status',
@@ -160,21 +171,42 @@ const ListPage = makeCrudPage<BlogRow>({
   }),
   emptyTitle: 'No posts yet',
   emptyHint: 'Write your first article — published posts appear instantly on the public /blog.',
-  headerActions: ({ navigate }) => <BlogAiGenerator navigate={navigate} />,
   openEditor: (row) => navBridge.current(row ? `/blog?post=${row.id}` : '/blog?post=new'),
 });
 
 /** Module-level navigation bridge — the list config routes New/Edit here. */
 const navBridge: { current: (pathUnderAdmin: string) => void } = { current: () => {} };
 
+/**
+ * Blog manager shell: route hub (list ↔ full-page editor) plus the OmniRoute
+ * AI draft generator. Remounting the CRUD page (refreshKey) reloads the list
+ * after a generated draft lands.
+ */
 export const BlogManager: React.FC<AdminPageProps> = (props) => {
   const postId = props.query.get('post');
+  const [aiOpen, setAiOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   navBridge.current = props.navigate;
+
+  useEffect(() => {
+    const open = () => setAiOpen(true);
+    window.addEventListener(AI_DRAFT_EVENT, open);
+    return () => window.removeEventListener(AI_DRAFT_EVENT, open);
+  }, []);
 
   if (postId) {
     return <BlogEditor postId={postId === 'new' ? null : postId} {...props} />;
   }
-  return <ListPage {...props} />;
+  return (
+    <>
+      <ListPage key={refreshKey} {...props} />
+      <AiBlogDraftModal
+        open={aiOpen}
+        onClose={() => setAiOpen(false)}
+        onCreated={() => setRefreshKey((k) => k + 1)}
+      />
+    </>
+  );
 };
 
 export type BlogManagerProps = AdminPageProps;
