@@ -1,4 +1,4 @@
-/* GENERATED FILE — do not edit by hand. Source: server/ai/*.ts + lib/ai/*. Regenerate with `npm run api:build`. */
+/* GENERATED FILE — do not edit by hand. Source: server/* (see scripts/build-api.mjs). Regenerate with `npm run api:build`. */
 
 // lib/ai/omniroute.ts
 var OmniRouteError = class extends Error {
