@@ -275,7 +275,12 @@ function applyOverrides(p: OverridesPayload): void {
     if (str(o.description)) t.description = str(o.description);
     if (str(o.thumbnail)) t.thumbnail = str(o.thumbnail);
     if (str(o.preview_image)) t.previewImage = str(o.preview_image);
-    if (str(o.demo_url)) t.previewImage = str(o.demo_url);
+    // Admin "Demo URL" is an external live-preview link - kept OUT of
+    // previewImage (an external URL must never end up in an <img src>);
+    // exposed as a runtime demoUrl instead.
+    if (str(o.demo_url) && /^https:\/\//.test(str(o.demo_url))) {
+      (t as unknown as { demoUrl?: string }).demoUrl = str(o.demo_url);
+    }
     if (bool(o.featured) !== undefined) t.featured = bool(o.featured);
     const seo = o.seo as { title?: string; description?: string } | null;
     if (seo && typeof seo === 'object') {

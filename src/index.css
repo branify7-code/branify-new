@@ -270,6 +270,23 @@
 
   border-bottom: 1px solid rgba(201, 164, 92, 0.16);
   overflow: hidden;
+
+  /* Smooth collapse on dismiss — no hard layout jump */
+  transition:
+    height 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    min-height 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    max-height 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 260ms ease,
+    border-bottom-width 320ms ease;
+}
+
+.announcement-bar.is-closing {
+  height: 0;
+  min-height: 0;
+  max-height: 0;
+  opacity: 0;
+  border-bottom-width: 0;
+  pointer-events: none;
 }
 
 .announcement-inner {
@@ -318,6 +335,13 @@
   font-weight: 800;
   cursor: pointer;
   transition: color 180ms ease, text-shadow 180ms ease;
+}
+
+/* Ellipsis on announcement copy at every width (was mobile-only) */
+.announcement-message span:not(.announcement-spark),
+.announcement-message strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .announcement-action:hover {

@@ -220,7 +220,7 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
       <Seo
         title={seo.title}
         description={seo.description}
-        canonicalPath="/free-templates"
+        canonicalPath={initialCategory && FREE_TEMPLATE_CATEGORY_SEO[initialCategory] ? `/free-templates/${initialCategory}` : '/free-templates'}
       />
 
       {/* Hero */}

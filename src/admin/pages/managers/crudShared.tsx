@@ -587,6 +587,8 @@ export function makeCrudPage<T extends { id: string; archived?: boolean }>(confi
 // CREATE / EDIT FORM MODAL
 // ==============================================================================
 interface FormModalProps<T extends { id: string; archived?: boolean }> {
+  /** React remount key (consumed by React, declared to satisfy generic JSX checking). */
+  key?: React.Key;
   config: CrudConfig<T>;
   initial: Record<string, unknown>;
   editingId: string | null;

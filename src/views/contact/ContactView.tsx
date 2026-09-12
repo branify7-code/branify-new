@@ -23,6 +23,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Lead capture context: /contact?template=<slug> (template detail CTA),
   // /contact?category=<slug> (category "Request Custom Design") or
@@ -82,29 +83,36 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
     e.preventDefault();
     if (!name || !email) return;
     setIsSubmitting(true);
+    setSubmitError(null);
 
+    const inquiryRecord = {
+      name,
+      email,
+      company: company || 'Not specified',
+      services: selectedServices,
+      timeline: selectedTimeline,
+      details: message || 'Direct Contact Form Inquiry',
+      source: 'contact_form',
+      created_at: new Date().toISOString()
+    };
+
+    let stored = false;
     try {
-      const inquiryRecord = {
-        name,
-        email,
-        company: company || 'Not specified',
-        services: selectedServices,
-        timeline: selectedTimeline,
-        details: message || 'Direct Contact Form Inquiry',
-        source: 'contact_form',
-        created_at: new Date().toISOString()
-      };
-      await supabase.from('inquiries').insert([inquiryRecord]);
-      mirrorLeadToPreview(inquiryRecord);
+      const { error } = await supabase.from('inquiries').insert([inquiryRecord]);
+      stored = !error;
+      if (error) console.error('Contact inquiry insert failed:', error.message);
     } catch (err) {
-      console.log('Supabase contact note:', err);
+      console.error('Contact inquiry insert threw:', err);
     }
+    mirrorLeadToPreview(inquiryRecord);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setIsSubmitting(false);
+    if (stored) {
       setIsSubmitted(true);
       trackEvent('contact_submit', { services: selectedServices, timeline: selectedTimeline, source: 'contact_form' });
-    }, 800);
+    } else {
+      setSubmitError('Your inquiry could not be delivered right now. Please email support@branify.store directly and we will respond promptly.');
+    }
   };
 
   return (
@@ -131,7 +139,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
 
         <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] leading-[1.08] text-[#111827]">
           Initiate Your <br />
-          <span className="text-gold-gradient">Digital Sovereignity</span>
+          <span className="text-gold-gradient">Digital Sovereignty</span>
         </h1>
 
         <p className="text-sm sm:text-lg text-[#475569] font-light leading-relaxed">
@@ -275,6 +283,12 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
                 </div>
               </div>
 
+              {submitError && (
+                <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-xs text-red-700 leading-relaxed">
+                  {submitError}
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -349,7 +363,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onNavigateHome }) => {
               Book an immediate 30-minute technical discovery call directly with our engineering lead.
             </p>
             <a
-              href="mailto:support@branify.store?subject=Schedule%20Discovery%20Call"
+              href="mailto:admin@branify.store?subject=Schedule%20Discovery%20Call"
               className="block w-full text-center py-3 rounded-xl bg-white hover:border-[#5B5FEF]/50 hover:text-[#5B5FEF] border border-[#E2E8F0] text-xs font-mono uppercase tracking-wider text-[#334155] transition-all cursor-pointer shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
             >
               Request Calendar Invite

@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { ArrowRight, Sparkles, ArrowDown } from 'lucide-react';
-import { HeroScene } from '../components/HeroScene';
+
+// Three.js scene is heavy - load it async so first paint never waits for WebGL.
+const HeroScene = lazy(() =>
+  import('../components/HeroScene').then((m) => ({ default: m.HeroScene }))
+);
 
 interface HeroProps {
   onStartProject: () => void;
@@ -78,7 +82,9 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
 
         {/* 3D Interactive Centerpiece (Glass, Metallic Gold B Monogram & Orbital Rings) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-auto">
-          <HeroScene className="w-full h-full max-w-6xl mx-auto" />
+          <Suspense fallback={<div className="w-full h-full max-w-6xl mx-auto" aria-hidden="true" />}>
+            <HeroScene className="w-full h-full max-w-6xl mx-auto" />
+          </Suspense>
         </div>
 
         {/* The Luminous Horizon Arc (Gold Rim on Light Atmosphere) */}

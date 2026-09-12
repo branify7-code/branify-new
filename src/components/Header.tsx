@@ -387,6 +387,7 @@ export default function Header({
     return true;
   });
   const [currentMsgIndex, setCurrentMsgIndex] = useState(0);
+  const [announcementClosing, setAnnouncementClosing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const currencyMenuRef = useRef<HTMLDivElement>(null);
@@ -434,7 +435,7 @@ export default function Header({
     };
   }, []);
 
-  // ESC closes menus
+  // ESC closes menus, then dismisses the announcement bar (matches its tooltip)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -443,6 +444,8 @@ export default function Header({
           setOpenMobileMenu(null);
         } else if (currencyDropdownOpen) {
           setCurrencyDropdownOpen(false);
+        } else if (announcementVisible) {
+          handleCloseAnnouncement();
         } else {
           setOpenMenu(null);
         }
@@ -450,7 +453,8 @@ export default function Header({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mobileOpen, currencyDropdownOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mobileOpen, currencyDropdownOpen, announcementVisible]);
 
   // Close currency dropdown on outside click
   useEffect(() => {
@@ -593,10 +597,14 @@ export default function Header({
   };
 
   const handleCloseAnnouncement = () => {
-    setAnnouncementVisible(false);
-    try {
-      sessionStorage.setItem("branify_announcement_closed", "true");
-    } catch {}
+    if (announcementClosing) return;
+    setAnnouncementClosing(true);
+    window.setTimeout(() => {
+      setAnnouncementVisible(false);
+      try {
+        sessionStorage.setItem("branify_announcement_closed", "true");
+      } catch {}
+    }, 340);
   };
 
   const handleActionClick = (msg: AnnouncementMessage) => {
@@ -639,7 +647,7 @@ export default function Header({
       ========================================== */}
       {announcementVisible && (
         <div
-          className="announcement-bar"
+          className={`announcement-bar ${announcementClosing ? "is-closing" : ""}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           role="region"
@@ -895,7 +903,7 @@ export default function Header({
 
           {/* SEARCH / CURRENCY / CART PILL */}
           <div
-            className="flex items-center gap-1.5 bg-[#F8FAFC] border border-[#C9A45C]/25 rounded-full px-2.5 py-1"
+            className="relative flex items-center gap-1.5 bg-[#F8FAFC] border border-[#C9A45C]/25 rounded-full px-2.5 py-1"
             ref={currencyMenuRef}
           >
             <button

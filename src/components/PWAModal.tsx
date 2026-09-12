@@ -70,7 +70,7 @@ export const PWAModal: React.FC<PWAModalProps> = ({
         </div>
 
         <p className="text-xs text-[#475569] leading-relaxed">
-          Install the Branify flagship app onto your device for instant offline access, ultra-fast launch speeds, full-screen view, and uninterrupted AI & developer tools.
+          Install the Branify flagship app onto your device for ultra-fast launch speeds, full-screen view, and one-tap access to AI & developer tools.
         </p>
 
         {/* Quick Native Install Button if available */}

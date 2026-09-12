@@ -17,6 +17,7 @@ import Seo from '../../components/Seo';
 import { servicesRegistry, AgencyService, ServicePackage } from '../../data/servicesRegistry';
 import { useCurrency } from '../../lib/currency';
 import { supabase } from '../../lib/supabase';
+import { trackNotFound } from '../../lib/track';
 
 const CONTACT_WHATSAPP = '+92 332 1029333';
 
@@ -397,8 +398,9 @@ interface ServiceDetailPageProps {
 
 export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNavigate }) => {
   const { currency, currencyInfo, format } = useCurrency();
-  // Live behavior: unknown slugs (e.g. shopify-website-development) fall back to the first service
-  const service = servicesRegistry.find((s) => s.slug === slug) || servicesRegistry[0];
+  // Unknown slugs render a real not-found state (noindex) instead of silently
+  // serving the first service — prevents soft-404s and an infinite URL space.
+  const service = servicesRegistry.find((s) => s.slug === slug);
 
   const [openFaq, setOpenFaq] = useState<number>(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -406,6 +408,8 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
 
   useEffect(() => {
     setOpenFaq(0);
+    if (!service) trackNotFound(`/services/${slug}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   const handlePackageAction = (pkg: ServicePackage) => {
@@ -419,7 +423,29 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
     setModalOpen(true);
   };
 
-  const related = useMemo(() => servicesRegistry.filter((s) => s.id !== service.id).slice(0, 3), [service.id]);
+  const related = useMemo(() => servicesRegistry.filter((s) => s.id !== service?.id).slice(0, 3), [service?.id]);
+
+  if (!service) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-24 text-center space-y-6">
+        <Seo
+          title="Service Not Found | BRANIFY"
+          description="The service you requested is not part of the BRANIFY services catalog."
+          robots="noindex, follow"
+        />
+        <h1 className="text-2xl font-black text-[#F1F2EE] uppercase tracking-tight">Service Not Found</h1>
+        <p className="text-zinc-400 text-sm">
+          The service <span className="text-[#D4AF37] font-bold">/services/{slug}</span> doesn’t exist. Browse all BRANIFY services instead.
+        </p>
+        <button
+          onClick={() => onNavigate('/services')}
+          className="btn-gold-primary inline-flex items-center gap-2 px-6 py-3 font-extrabold text-xs uppercase tracking-widest rounded-full"
+        >
+          View All Services
+        </button>
+      </div>
+    );
+  }
 
   const seoTitle = service.slug === 'website-development' ? 'Website Development Services | BRANIFY' : `${service.name} Services | BRANIFY`;
   const seoDescription =

@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import {
-  AlignLeft, ArrowRight, ArrowRightLeft, ArrowUpDown, BookOpen, Bot, Calculator, Clock, Code,
+  AlignLeft, ArrowRight, ArrowRightLeft, ArrowUpDown, BarChart2, BookOpen, Bot, Calculator, Clock, Code,
   Combine, Cpu, CreditCard, Crop, Database, DollarSign, Download, EyeOff, FileCheck, FileCode,
   FileDigit, FileImage, FileText, Globe, Hash, HelpCircle, Home, Image as ImageIcon, Info, Key,
-  Laptop, Layers, Layout, Lightbulb, Link as LinkIcon, List, ListFilter, ListOrdered, Lock,
-  Mail, Map, Monitor, Moon, MousePointer, Network, Palette, Percent, PieChart, PiggyBank,
-  QrCode, Receipt, RefreshCw, RotateCcw, RotateCw, Search, Shield, ShieldCheck, Shuffle,
+  Laptop, Layers, Layout, Lightbulb, Link as LinkIcon, Link2, List, ListFilter, ListOrdered, Lock,
+  Mail, Map, Maximize2, Minimize2, Monitor, Moon, MousePointer, Network, Palette, Percent, PieChart, PiggyBank,
+  QrCode, Receipt, RefreshCw, RotateCcw, RotateCw, Search, Share2, Shield, ShieldCheck, Shuffle,
   Sliders, Smartphone, Sparkles, Stamp, Star, Tag, Target, Terminal, TrendingUp, Type, User,
-  Users,
+  Users, Volume2,
 } from 'lucide-react';
 import { TiltCard } from '../components/TiltCard';
 import { allTools } from '../tools';
@@ -18,13 +18,13 @@ interface ToolsSectionProps {
 }
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  AlignLeft, ArrowRightLeft, ArrowUpDown, BookOpen, Bot, Calculator, Clock, Code, Combine, Cpu,
+  AlignLeft, ArrowRightLeft, ArrowUpDown, BarChart2, BookOpen, Bot, Calculator, Clock, Code, Combine, Cpu,
   CreditCard, Crop, Database, DollarSign, Download, EyeOff, FileCheck, FileCode, FileDigit,
   FileImage, FileText, Globe, Hash, HelpCircle, Home, Image: ImageIcon, Info, Key, Laptop,
-  Layers, Layout, Lightbulb, Link: LinkIcon, List, ListFilter, ListOrdered, Lock, Mail, Map,
-  Monitor, Moon, MousePointer, Network, Palette, Percent, PieChart, PiggyBank, QrCode, Receipt,
-  RefreshCw, RotateCcw, RotateCw, Search, Shield, ShieldCheck, Shuffle, Sliders, Smartphone,
-  Sparkles, Stamp, Star, Tag, Target, Terminal, TrendingUp, Type, User, Users,
+  Layers, Layout, Lightbulb, Link: LinkIcon, Link2, List, ListFilter, ListOrdered, Lock, Mail, Map,
+  Maximize2, Minimize2, Monitor, Moon, MousePointer, Network, Palette, Percent, PieChart, PiggyBank, QrCode, Receipt,
+  RefreshCw, RotateCcw, RotateCw, Search, Share2, Shield, ShieldCheck, Shuffle, Sliders, Smartphone,
+  Sparkles, Stamp, Star, Tag, Target, Terminal, TrendingUp, Type, User, Users, Volume2,
 };
 
 const IconFor = ({ name, className }: { name: string; className?: string }) => {

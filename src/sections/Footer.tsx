@@ -122,7 +122,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
               {isPWAInstalled ? 'BRANIFY Is Installed On This Device' : 'Get BRANIFY on Your Mobile & Desktop Device'}
             </h3>
             <p className="text-slate-500 text-xs sm:text-sm max-w-xl">
-              Install the official BRANIFY app for instant offline access to 100+ free online tools, service quotes, and digital templates.
+              Install the official BRANIFY app for one-tap access to 100+ free online tools, service quotes, and digital templates.
             </p>
           </div>
           <button
