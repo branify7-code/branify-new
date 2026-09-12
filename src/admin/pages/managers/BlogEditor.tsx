@@ -196,6 +196,7 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
         if (seed) {
           const seeded = draftToSeed(seed);
           const f: BlogForm = { ...defaultForm(), ...seeded, seo: { ...defaultSeo(), ...seeded.seo } };
+          setAiCoverPrompt(seeded.coverImagePrompt || '');
           formRef.current = f;
           setFormState(f);
           snapshotRef.current = JSON.stringify(f);
@@ -250,6 +251,9 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
     }, 600);
     return () => clearTimeout(t);
   }, [formState, otherPosts]);
+
+  // Phase 3: image prompt from the AI draft — pre-fills "Generate with AI" cover
+  const [aiCoverPrompt, setAiCoverPrompt] = useState('');
 
   // ---------------------------------------------------------------- save
   const validate = useCallback((f: BlogForm): Record<string, string> => {
@@ -709,6 +713,8 @@ export const BlogEditor: React.FC<AdminPageProps & { postId: string | null }> = 
                 coverImage={f.coverImage}
                 coverAlt={f.coverAlt}
                 onChange={(patch) => update({ coverImage: patch.coverImage ?? f.coverImage, coverAlt: patch.coverAlt ?? f.coverAlt })}
+                suggestedPrompt={aiCoverPrompt}
+                blogTitle={f.title}
               />
             </>
           )}

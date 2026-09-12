@@ -179,13 +179,49 @@ async function publishFacebook(post: { caption: string; media_url: string }, con
   return String(r.id || '');
 }
 
+const IMAGE_MIME_RE = /^image\/(jpeg|png|webp)(;|$)/;
+const MAX_MEDIA_BYTES = 8 * 1024 * 1024;
+
+/**
+ * Phase 3 pre-flight: Instagram is image-only, so the media URL must exist AND
+ * be publicly fetchable by Meta before we build the container. A failed
+ * validation leaves the post in `failed` with a "pending asset" message
+ * (never a silent skip), and text-only FB posts are unaffected.
+ */
+async function validateMediaForInstagram(mediaUrl: string): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(mediaUrl, { method: 'HEAD', signal: AbortSignal.timeout(8000) });
+    if (!res.ok && res.status === 405) {
+      // Some hosts reject HEAD — fall back to a ranged GET (2 KB is enough for headers).
+      res = await fetch(mediaUrl, { headers: { Range: 'bytes=0-2047' }, signal: AbortSignal.timeout(8000) });
+    }
+  } catch {
+    throw new PubError('invalid_media', 400, 'Instagram post is pending its asset: the image URL is not publicly reachable. Generate an image for this post (or attach a public one), then publish.');
+  }
+  if (!res.ok) {
+    throw new PubError('invalid_media', 400, `Instagram post is pending its asset: the image URL returned HTTP ${res.status}. Fix or regenerate the image, then publish.`);
+  }
+  const mime = (res.headers.get('content-type') || '').toLowerCase();
+  if (!IMAGE_MIME_RE.test(mime)) {
+    throw new PubError('invalid_media', 400, `Instagram post is pending its asset: unsupported media type (${mime || 'unknown'}) — Instagram needs jpg, png or webp.`);
+  }
+  const lenHeader = res.headers.get('content-length') || res.headers.get('content-range') || '';
+  const total = /\/(\d+)\s*$/.exec(lenHeader)?.[1];
+  const bytes = Number(total || lenHeader || 0);
+  if (bytes > MAX_MEDIA_BYTES) {
+    throw new PubError('invalid_media', 400, 'Instagram post is pending its asset: the image exceeds 8 MB. Use a smaller image.');
+  }
+}
+
 async function publishInstagram(post: { caption: string; media_url: string; hashtags: string[] }, conn: ConnectionRow, token: string): Promise<string> {
   if (!conn.ig_user_id) {
     throw new PubError('no_instagram_account', 409, 'No Instagram Professional account is linked to the connected Facebook Page. Link one in Meta Business Suite, then reconnect.');
   }
   if (!post.media_url) {
-    throw new PubError('invalid_media', 400, 'Instagram posts require an image. Add a public image URL to this post first.');
+    throw new PubError('invalid_media', 400, 'Instagram post is pending its asset: no image attached. Click Generate Image on the post (or attach a public image URL), then publish.');
   }
+  await validateMediaForInstagram(post.media_url);
   const caption = `${post.caption}${post.hashtags.length ? '\n\n' + post.hashtags.join(' ') : ''}`.slice(0, 2200);
   const container = await graphPost(`${conn.ig_user_id}/media`, { image_url: post.media_url, caption, access_token: token });
   const creationId = String(container.id || '');

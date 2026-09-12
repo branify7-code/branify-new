@@ -453,8 +453,20 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
                       </span>
                       {p.error_message && <span className="text-[11px] text-red-600">⚠ {p.error_message.slice(0, 90)}</span>}
                     </div>
-                    <p className="line-clamp-2 whitespace-pre-wrap text-[13px] text-[#475569]">{p.caption}</p>
-                    {p.media_url && <p className="mt-1 text-[11px] text-[#475569]">🖼 media attached</p>}
+                    <div className="mt-1 flex gap-2">
+                      {p.media_url && (
+                        <img
+                          src={p.media_url}
+                          alt={String((p.metadata as { alt_text?: string } | null)?.alt_text || `${p.title || 'post'} media`)}
+                          className="h-16 w-16 shrink-0 rounded-lg border border-[#E2E8F0] object-cover"
+                          loading="lazy"
+                        />
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <p className="line-clamp-2 whitespace-pre-wrap text-[13px] text-[#475569]">{p.caption}</p>
+                        {p.media_url && <p className="mt-0.5 text-[11px] text-[#475569]">media attached{p.media_type ? ` (${p.media_type})` : ''}</p>}
+                      </div>
+                    </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {['draft', 'pending_approval', 'scheduled'].includes(p.status) && p.approval_required && !p.approved_at && (
                         <Btn size="sm" variant="outline" loading={busy === p.id} onClick={() => approve(p)}>Approve</Btn>

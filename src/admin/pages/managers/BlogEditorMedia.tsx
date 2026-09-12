@@ -4,16 +4,19 @@
 // • MediaPickerModal  — pick/upload an image from the EXISTING Media Library
 //   (media_assets + Supabase Storage in production). No duplicate storage, no
 //   duplicate upload architecture — the same backend layer /admin/media uses.
-// • FeaturedImagePanel — cover image preview / replace / remove / alt text.
+// • FeaturedImagePanel — cover image preview / replace / remove / alt text
+//   + Phase 3: "Generate with AI" (server-side Gemini image generation; the
+//   asset lands in the same media library and is attached as the cover).
 // =============================================================================
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ImagePlus, Link2, Search, Trash2, UploadCloud } from 'lucide-react';
+import { ImagePlus, Link2, Loader2, Search, Sparkles, Trash2, UploadCloud } from 'lucide-react';
 import { AdminError, listRows, resolveAssetUrl, uploadMedia } from '../../lib/backend';
 import type { MediaRow } from '../../lib/types';
 import {
-  Badge, Btn, Card, EmptyState, ErrorBlock, Field, Input, LoadingBlock, Modal, Tabs, cx, useToast,
+  Badge, Btn, Card, EmptyState, ErrorBlock, Field, Input, LoadingBlock, Modal, Tabs, Textarea, cx, useToast,
 } from '../../ui';
 import { fmtBytes, truncate } from '../../lib/format';
+import { AiImageError, generateAiImage } from '../../lib/aiImage';
 
 const PAGE_SIZE = 24;
 
@@ -270,11 +273,53 @@ export const FeaturedImagePanel: React.FC<{
   coverImage: string;
   coverAlt: string;
   onChange: (patch: { coverImage?: string; coverAlt?: string }) => void;
-}> = ({ coverImage, coverAlt, onChange }) => {
+  /** Phase 3: image prompt produced by the AI blog generator (if any). */
+  suggestedPrompt?: string;
+  /** Blog title — used as the visual brief when no prompt exists. */
+  blogTitle?: string;
+}> = ({ coverImage, coverAlt, onChange, suggestedPrompt, blogTitle }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
+  // Phase 3: AI cover generation
+  const [genOpen, setGenOpen] = useState(false);
+  const [genPrompt, setGenPrompt] = useState('');
+  const [genBusy, setGenBusy] = useState(false);
+  const [genError, setGenError] = useState('');
+
+  const runGenerate = async () => {
+    setGenBusy(true);
+    setGenError('');
+    try {
+      const prompt = genPrompt.trim();
+      const asset = await generateAiImage({
+        prompt: prompt || undefined,
+        brief: prompt ? undefined : (blogTitle || 'BRANIFY blog cover visual').slice(0, 400),
+        aspectRatio: '16:9',
+        imageSize: '1K',
+        purpose: 'blog',
+        platform: 'both',
+      });
+      onChange({ coverImage: asset.imageUrl, coverAlt: asset.altText });
+    } catch (e) {
+      const msg = e instanceof AiImageError ? e.message : (e as Error).message || 'Image generation failed.';
+      setGenError(msg);
+    } finally {
+      setGenBusy(false);
+    }
+  };
 
   return (
-    <Card title="Featured image" subtitle="Cards, article header and social share fallback">
+    <Card
+      title="Featured image"
+      subtitle="Cards, article header and social share fallback"
+      actions={
+        <Btn size="sm" variant="subtle" icon={Sparkles} onClick={() => {
+          setGenOpen((v) => !v);
+          if (!genOpen && !genPrompt) setGenPrompt(suggestedPrompt || '');
+        }}>
+          ✨ Generate with AI
+        </Btn>
+      }
+    >
       <div className="flex flex-col gap-3">
         {coverImage ? (
           <div className="relative overflow-hidden rounded-xl border border-[#E2E8F0]">
@@ -312,6 +357,33 @@ export const FeaturedImagePanel: React.FC<{
             <Btn size="sm" variant="ghost" onClick={() => onChange({ coverImage: '', coverAlt: '' })}>Remove</Btn>
           )}
         </div>
+
+        {genOpen && (
+          <div className="space-y-2 rounded-xl border border-[#C9A45C]/30 bg-[#FDFBF6] p-3">
+            <Field
+              label="Visual prompt"
+              hint="Empty = the AI crafts the prompt from the blog title. The generated image is saved to the Media Library."
+            >
+              <Textarea
+                rows={3}
+                value={genPrompt}
+                onChange={(e) => setGenPrompt(e.target.value)}
+                placeholder="e.g. Abstract 3D flow of gold light forming a website wireframe on a dark background"
+              />
+            </Field>
+            {genBusy ? (
+              <p className="flex items-center gap-2 text-xs text-[#8F6B2D]"><Loader2 size={13} className="animate-spin" /> Generating cover image… up to a minute.</p>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Btn size="sm" variant="gold" icon={Sparkles} onClick={() => void runGenerate()}>
+                  {coverImage ? 'Regenerate cover' : 'Generate cover'}
+                </Btn>
+                {coverImage && <span className="text-[11px] text-[#64748B]">Generating creates a NEW asset — the current cover is kept until you save.</span>}
+              </div>
+            )}
+            {genError && <p className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-xs text-red-600">{genError}</p>}
+          </div>
+        )}
       </div>
 
       <MediaPickerModal

@@ -319,6 +319,10 @@ export interface MediaRow {
   size_bytes: number;
   mime: string;
   created_at: string;
+  /** Phase 3: 'upload' (default) | 'ai' — populated by supabase/image-schema.sql */
+  source?: string;
+  /** Phase 3: AI provenance (provider/model/prompt/aspect) when source='ai' */
+  metadata?: Record<string, unknown>;
 }
 
 export interface EventRow {

@@ -29,6 +29,8 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  // Phase 3: source filter — 'all' | 'ai' | 'upload' (column via supabase/image-schema.sql)
+  const [source, setSource] = useState<'all' | 'ai' | 'upload'>('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<{ title: string; message: string } | null>(null);
 
@@ -47,11 +49,15 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
   const [confirmDelete, setConfirmDelete] = useState<MediaRow | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const fetchRows = useCallback(async (p: number, q: string) => {
+  const fetchRows = useCallback(async (p: number, q: string, src: 'all' | 'ai' | 'upload') => {
     setLoading(true);
     setError(null);
     try {
-      const res = await listRows<MediaRow>('media_assets', { page: p, pageSize: PAGE_SIZE, search: q || undefined, sort: 'created_at', dir: 'desc' });
+      const res = await listRows<MediaRow>('media_assets', {
+        page: p, pageSize: PAGE_SIZE, search: q || undefined, sort: 'created_at', dir: 'desc',
+        // 'all' stays undefined so the param is not sent at all
+        source: src === 'all' ? undefined : src,
+      });
       setRows(res.rows);
       setTotal(res.total);
       setPage(res.page);
@@ -62,7 +68,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
     }
   }, []);
 
-  useEffect(() => { void fetchRows(page, search); }, [fetchRows, page, search]);
+  useEffect(() => { void fetchRows(page, search, source); }, [fetchRows, page, search, source]);
 
   // debounce the search box
   useEffect(() => {
@@ -89,7 +95,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
     setUploading(null);
     setAlt('');
     if (fileInput.current) fileInput.current.value = '';
-    await fetchRows(1, search);
+    await fetchRows(1, search, source);
   };
 
   const copyUrl = async (row: MediaRow) => {
@@ -109,7 +115,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
       await updateRow<MediaRow>('media_assets', editRow.id, { alt: editAlt.trim() });
       push('success', 'Alt text updated');
       setEditRow(null);
-      await fetchRows(page, search);
+      await fetchRows(page, search, source);
     } catch (e) {
       push('error', `Update failed: ${(e as Error).message}`);
     } finally {
@@ -124,7 +130,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
       await deleteRow('media_assets', confirmDelete.id);
       push('success', `Deleted ${truncate(confirmDelete.filename, 30)}`);
       setConfirmDelete(null);
-      await fetchRows(page, search);
+      await fetchRows(page, search, source);
     } catch (e) {
       push('error', `Delete failed: ${(e as Error).message}`);
       setConfirmDelete(null);
@@ -197,20 +203,33 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
         title="Assets"
         subtitle="Newest first"
         actions={
-          <div className="relative">
-            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-            <input
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search filename, alt, mime…"
-              aria-label="Search media assets"
-              className="h-8 w-44 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 pl-7 pr-2 text-xs text-[#111827] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
-            />
+          <div className="flex items-center gap-2">
+            {/* Phase 3: source filter (AI Generated / Uploaded) */}
+            <div className="flex overflow-hidden rounded-lg border border-[#E2E8F0]">
+              {([['all', 'All'], ['ai', 'AI Generated'], ['upload', 'Uploaded']] as Array<['all' | 'ai' | 'upload', string]>).map(([id, label]) => (
+                <button
+                  key={id}
+                  onClick={() => { setSource(id); setPage(1); }}
+                  className={cx('px-2.5 py-1.5 text-xs font-semibold transition-colors',
+                    source === id ? 'bg-[#C9A45C]/15 text-[#8F6B2D]' : 'text-[#475569] hover:bg-black/[0.03]')}
+                >{label}</button>
+              ))}
+            </div>
+            <div className="relative">
+              <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+              <input
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search filename, alt, mime…"
+                aria-label="Search media assets"
+                className="h-8 w-44 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]/80 pl-7 pr-2 text-xs text-[#111827] placeholder-[#5A6472] outline-none focus:border-[#C9A45C]/60"
+              />
+            </div>
           </div>
         }
       >
         {error ? (
-          <ErrorBlock title={error.title} message={error.message} onRetry={() => void fetchRows(page, search)} />
+          <ErrorBlock title={error.title} message={error.message} onRetry={() => void fetchRows(page, search, source)} />
         ) : loading && rows.length === 0 ? (
           <LoadingBlock label="Loading assets…" />
         ) : rows.length === 0 ? (
@@ -241,6 +260,7 @@ export const MediaPage: React.FC<AdminPageProps> = () => {
                     <p className="truncate text-[10px] text-[#64748B]" title={row.alt || 'No alt text'}>{row.alt || 'No alt text'}</p>
                     <div className="flex flex-wrap items-center gap-1">
                       <Badge tone="steel" className="max-w-full"><span className="truncate normal-case tracking-normal">{row.mime || 'file'}</span></Badge>
+                      {row.source === 'ai' && <Badge tone="gold">AI</Badge>}
                     </div>
                     <p className="text-[10px] text-[#64748B]">{fmtBytes(row.size_bytes)} · {timeAgo(row.created_at)}</p>
                     <div className="mt-auto flex items-center gap-1 pt-1.5">

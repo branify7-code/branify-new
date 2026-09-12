@@ -20,6 +20,8 @@ export interface AiBlogFormSeed {
   contentHtml: string;
   coverImage: string;
   coverAlt: string;
+  /** Phase 3: image prompt from the AI draft — feeds "Generate with AI" cover. */
+  coverImagePrompt: string;
   authorName: string;
   authorRole: string;
   publishedAtLocal: string;
@@ -48,6 +50,7 @@ export function draftToSeed(draft: GeneratedBlogDraft): AiBlogFormSeed {
     contentHtml: draft.contentHtml || '',
     coverImage: '',
     coverAlt: draft.coverAlt || '',
+    coverImagePrompt: draft.coverImagePrompt || '',
     authorName: draft.authorName || 'BRANIFY Team',
     authorRole: draft.authorRole || '',
     publishedAtLocal: '',
