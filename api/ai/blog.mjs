@@ -367,6 +367,79 @@ async function generateBlog(input) {
   return draft;
 }
 
+// lib/ai/adminAuth.ts
+var SB_URL = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+var SB_ANON = process.env.SUPABASE_ANON_KEY || "sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw";
+function adminAuthRequired() {
+  return (process.env.OMNIROUTE_REQUIRE_AUTH || "").trim().toLowerCase() === "true";
+}
+function bearerToken(req) {
+  const raw = req.headers?.authorization;
+  const value = Array.isArray(raw) ? String(raw[0] || "") : String(raw || "");
+  const match = /^Bearer\s+(.+)$/i.exec(value.trim());
+  return match ? match[1].trim() : "";
+}
+async function requireAdminAuth(req) {
+  if (!adminAuthRequired()) return null;
+  const token = bearerToken(req);
+  if (!token) {
+    return new OmniRouteError(
+      "unauthorized",
+      "Sign in to BRANIFY Admin to use AI features.",
+      401
+    );
+  }
+  let identity;
+  try {
+    const uRes = await fetch(`${SB_URL}/auth/v1/user`, {
+      headers: { apikey: SB_ANON, Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(8e3)
+    });
+    if (!uRes.ok) {
+      return new OmniRouteError(
+        "unauthorized",
+        "Your admin session is invalid or expired. Sign in again.",
+        401
+      );
+    }
+    const user = await uRes.json();
+    if (!user?.email) {
+      return new OmniRouteError(
+        "unauthorized",
+        "Your admin session is invalid or expired. Sign in again.",
+        401
+      );
+    }
+    identity = { id: user.id || user.email, email: user.email };
+  } catch {
+    return new OmniRouteError(
+      "upstream",
+      "Admin verification is temporarily unavailable. Try again shortly.",
+      502
+    );
+  }
+  try {
+    const aRes = await fetch(
+      `${SB_URL}/rest/v1/admin_users?email=eq.${encodeURIComponent(identity.email)}&select=email,active,role`,
+      { headers: { apikey: SB_ANON, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8e3) }
+    );
+    if (!aRes.ok) {
+      return new OmniRouteError("upstream", "Admin verification failed.", 502);
+    }
+    const admins = await aRes.json();
+    if (!admins.some((a) => a.active)) {
+      return new OmniRouteError(
+        "forbidden",
+        "This account is not on the BRANIFY admin allowlist.",
+        403
+      );
+    }
+  } catch {
+    return new OmniRouteError("upstream", "Admin verification failed.", 502);
+  }
+  return null;
+}
+
 // lib/ai/routes.ts
 var MAX_BODY_BYTES = 64 * 1024;
 async function readJsonBody(req) {
@@ -413,6 +486,8 @@ function requireMethod(req, method) {
 async function handleAiBlog(req) {
   const methodErr = requireMethod(req, "POST");
   if (methodErr) return errorResult(methodErr);
+  const authErr = await requireAdminAuth(req);
+  if (authErr) return errorResult(authErr);
   let body;
   try {
     body = await readJsonBody(req);

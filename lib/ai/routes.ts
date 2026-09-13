@@ -24,6 +24,7 @@ import {
   type OmniRouteRole,
 } from './omniroute';
 import { generateBlog, resolveBlogModel, type BlogDraftInput } from './blog';
+import { requireAdminAuth } from './adminAuth';
 
 export interface HandlerResult {
   status: number;
@@ -88,6 +89,9 @@ export async function handleAiStatus(req: IncomingMessage): Promise<HandlerResul
   const methodErr = requireMethod(req, 'GET');
   if (methodErr) return errorResult(methodErr);
 
+  const authErr = await requireAdminAuth(req);
+  if (authErr) return errorResult(authErr);
+
   const url = new URL(req.url || '/', 'http://local');
   const probe = url.searchParams.get('probe') === '1';
   const info = await getOmniRouteStatus(probe);
@@ -114,6 +118,9 @@ export async function handleAiStatus(req: IncomingMessage): Promise<HandlerResul
 export async function handleAiGenerate(req: IncomingMessage): Promise<HandlerResult> {
   const methodErr = requireMethod(req, 'POST');
   if (methodErr) return errorResult(methodErr);
+
+  const authErr = await requireAdminAuth(req);
+  if (authErr) return errorResult(authErr);
 
   let body: Record<string, unknown>;
   try {
@@ -203,6 +210,9 @@ export async function handleAiGenerate(req: IncomingMessage): Promise<HandlerRes
 export async function handleAiBlog(req: IncomingMessage): Promise<HandlerResult> {
   const methodErr = requireMethod(req, 'POST');
   if (methodErr) return errorResult(methodErr);
+
+  const authErr = await requireAdminAuth(req);
+  if (authErr) return errorResult(authErr);
 
   let body: Record<string, unknown>;
   try {

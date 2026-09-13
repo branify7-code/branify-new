@@ -77,7 +77,10 @@ export type OmniRouteErrorKind =
   | 'provider'        // upstream provider failed (5xx behind the gateway)
   | 'timeout'         // request exceeded the allowed time
   | 'unavailable'     // gateway not reachable (connection refused / DNS)
-  | 'malformed';      // gateway replied but the body is not valid OpenAI JSON
+  | 'malformed'       // gateway replied but the body is not valid OpenAI JSON
+  | 'unauthorized'    // caller is not signed in (admin gate, /api/ai/*)
+  | 'forbidden'       // caller signed in but not on the admin allowlist
+  | 'upstream';       // admin verification itself failed (Supabase unreachable)
 
 export class OmniRouteError extends Error {
   kind: OmniRouteErrorKind;

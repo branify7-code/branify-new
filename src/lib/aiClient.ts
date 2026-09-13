@@ -12,6 +12,8 @@
 // mapped to friendly, non-technical copy here.
 // =============================================================================
 
+import { supabase } from './supabase';
+
 export type AiErrorKind =
   | 'config'
   | 'auth'
@@ -83,14 +85,22 @@ const TIMEOUT_STATUS_MS = 8_000;
 // ------------------------------------------------------------------ internals
 
 /**
- * Attach the admin session token when one exists so the optional
- * OMNIROUTE_REQUIRE_AUTH hardening works without a second code path.
- * The token is the admin's own Supabase session — never a gateway key.
+ * Attach the signed-in admin's own Supabase session token so the optional
+ * OMNIROUTE_REQUIRE_AUTH server hardening works without a second code path.
+ * The token is the admin's own session JWT — never a gateway or provider key.
+ * Production (Supabase mode) reads the live session; the legacy local-preview
+ * keys remain as a fallback for the dev sandbox.
  */
-function authHeaders(): Record<string, string> {
+async function authHeaders(): Promise<Record<string, string>> {
   try {
-    const token = sessionStorage.getItem('branify_admin_token');
+    const { data } = await supabase.auth.getSession();
+    const token = data?.session?.access_token;
     if (token) return { Authorization: `Bearer ${token}` };
+  } catch { /* no Supabase session — fall through to local-preview keys */ }
+  try {
+    const legacy = sessionStorage.getItem('branify_admin_token')
+      || localStorage.getItem('branify_admin_token');
+    if (legacy) return { Authorization: `Bearer ${legacy}` };
   } catch { /* storage unavailable — proceed unauthenticated */ }
   return {};
 }
@@ -162,7 +172,7 @@ function friendlyMessage(kind: AiErrorKind, serverMessage: string): string {
 export async function fetchAiStatus(probe = false): Promise<AiStatus> {
   return requestJson<AiStatus>(`/api/ai/status${probe ? '?probe=1' : ''}`, {
     method: 'GET',
-    headers: { ...authHeaders() },
+    headers: { ...(await authHeaders()) },
     timeoutMs: TIMEOUT_STATUS_MS,
   });
 }
@@ -170,7 +180,7 @@ export async function fetchAiStatus(probe = false): Promise<AiStatus> {
 export async function generateAiBlog(input: BlogDraftInput): Promise<BlogDraft> {
   const res = await requestJson<{ draft: BlogDraft }>('/api/ai/blog', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
     body: JSON.stringify(input),
     timeoutMs: TIMEOUT_BLOG_MS,
   });
@@ -180,7 +190,7 @@ export async function generateAiBlog(input: BlogDraftInput): Promise<BlogDraft> 
 export async function generateAiText(prompt: string, opts: { temperature?: number; max_tokens?: number } = {}): Promise<string> {
   const res = await requestJson<{ content: string }>('/api/ai/generate', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
     body: JSON.stringify({ prompt, ...opts }),
     timeoutMs: TIMEOUT_BLOG_MS,
   });
