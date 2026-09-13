@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "node scripts/build-api.mjs && vite build",
+    "build": "node scripts/build-api.mjs && node scripts/sitemap-build.mjs && vite build",
     "api:build": "node scripts/build-api.mjs",
     "preview": "vite preview",
     "api": "tsx scripts/local-api.ts",

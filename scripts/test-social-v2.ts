@@ -46,7 +46,7 @@ global.fetch = async (input: unknown, init?: unknown): Promise<Response> => {
 
 // ---------- 4. call the real handler ----------
 interface TestRes {
-  status: number;
+  statusCode: number;
   body: Record<string, unknown>;
   status(code: number): TestRes;
   json(b: unknown): void;
@@ -54,14 +54,13 @@ interface TestRes {
   setHeader(): TestRes;
 }
 function makeRes(): TestRes {
-  const r: TestRes = {
-    status: 0,
-    body: {},
-    status(c) { r.status = c; return r; },
-    json(b) { r.body = b as Record<string, unknown>; },
-    send() { /* noop */ },
-    setHeader() { return r; },
-  };
+  const r = {} as TestRes;
+  r.statusCode = 0;
+  r.body = {};
+  r.status = (c) => { r.statusCode = c; return r; };
+  r.json = (b) => { r.body = b as Record<string, unknown>; };
+  r.send = () => { /* noop */ };
+  r.setHeader = () => r;
   return r;
 }
 
@@ -75,7 +74,7 @@ async function callHandler(body: Record<string, unknown>): Promise<{ status: num
   };
   const res = makeRes();
   await (mod.default as (rq: unknown, rs: unknown) => Promise<void>)(req, res);
-  return { status: res.status, body: res.body };
+  return { status: res.statusCode, body: res.body };
 }
 
 interface Post {

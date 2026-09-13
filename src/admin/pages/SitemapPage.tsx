@@ -21,11 +21,6 @@ import {
 } from './seoShared';
 import type { ContentRowLike } from './seoShared';
 
-async function countOf(key: CollectionKey, extra: Record<string, unknown> = {}): Promise<number> {
-  const res = await listRows<Record<string, unknown>>(key, { page: 1, pageSize: 1, ...extra });
-  return res.total;
-}
-
 async function listAll<T>(key: CollectionKey): Promise<T[]> {
   const pageSize = 200;
   let page = 1;
@@ -38,6 +33,28 @@ async function listAll<T>(key: CollectionKey): Promise<T[]> {
     if (page > 6) break;
   }
   return all;
+}
+
+/** ONE source of truth for BOTH the coverage check and the regenerate preview:
+ *  the exact builder that `npm run build` executes to ship /public/sitemap.xml
+ *  (buildPageInventory + sitemapEntries, live Supabase rows, noindex excluded).
+ *  Hand-rolled count formulas drifted from the builder and produced a false
+ *  "mismatch" alarm — this guarantees coverage always equals the shipped file. */
+async function buildLiveSitemap(): Promise<{ count: number; xml: string }> {
+  const [services, tools, aiTools, products, blog, portfolio, overrides, settings] = await Promise.all([
+    listAll<ServiceRow>('services'),
+    listAll<ToolRow>('tools'),
+    listAll<AiToolRow>('ai_tools'),
+    listAll<ProductRow>('products'),
+    listAll<BlogRow>('blog_posts'),
+    listAll<PortfolioRow>('portfolio_projects'),
+    listAll<SeoOverrideRow>('seo_overrides'),
+    getSettings(),
+  ]);
+  const rows: Record<string, ContentRowLike[]> = { services, tools, aiTools, products, blog, portfolio };
+  const inventory = buildPageInventory(rows);
+  const entries = sitemapEntries(inventory, overrides, settings as SiteSettings, new Date().toISOString().slice(0, 10));
+  return { count: entries.length, xml: buildSitemapXml(entries) };
 }
 
 interface LiveSitemap {
@@ -84,20 +101,12 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
   const fetchCoverage = useCallback(async () => {
     setCoverageErr(null);
     try {
-      const [services, tools, products, blogPublished, portfolio] = await Promise.all([
-        countOf('services', { archived: false }),
-        countOf('tools', { archived: false }),
-        countOf('products', { archived: false }),
-        countOf('blog_posts', { archived: false, status: 'published' }),
-        countOf('portfolio_projects', { archived: false }),
-      ]);
-      // 9 statics (/, about, contact, pricing + 5 legal) + 6 hub/directory routes
-      // (/services, /tools, /ai-tools, /free-templates, /blog, /portfolio) + detail
-      // pages. AI-tool rows are EXTERNAL links — they are NOT site pages and must
-      // not be counted (kept identical to buildPageInventory / the audit total).
-      setCoverage(9 + 6 + services + tools + products + blogPublished + portfolio);
+      // Same builder that ships /public/sitemap.xml — coverage must equal the
+      // file's <loc> count by construction, never a parallel formula.
+      const { count } = await buildLiveSitemap();
+      setCoverage(count);
     } catch (e) {
-      setCoverageErr((e as Error).message || 'Could not count content rows');
+      setCoverageErr((e as Error).message || 'Could not count content routes');
     }
   }, []);
 
@@ -108,22 +117,9 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
     setGenerating(true);
     setGenErr(null);
     try {
-      const [services, tools, aiTools, products, blog, portfolio, overrides, settings] = await Promise.all([
-        listAll<ServiceRow>('services'),
-        listAll<ToolRow>('tools'),
-        listAll<AiToolRow>('ai_tools'),
-        listAll<ProductRow>('products'),
-        listAll<BlogRow>('blog_posts'),
-        listAll<PortfolioRow>('portfolio_projects'),
-        listAll<SeoOverrideRow>('seo_overrides'),
-        getSettings(),
-      ]);
-      const rows: Record<string, ContentRowLike[]> = { services, tools, aiTools, products, blog, portfolio };
-      const inventory = buildPageInventory(rows);
-      const entries = sitemapEntries(inventory, overrides, settings as SiteSettings, new Date().toISOString().slice(0, 10));
-      const xml = buildSitemapXml(entries);
-      setGen({ xml, count: entries.length, bytes: new Blob([xml]).size });
-      push('success', `Preview generated — ${entries.length} URLs`);
+      const { count, xml } = await buildLiveSitemap();
+      setGen({ xml, count, bytes: new Blob([xml]).size });
+      push('success', `Preview generated — ${count} URLs`);
     } catch (e) {
       setGenErr((e as Error).message || 'Regeneration failed');
     } finally {
@@ -213,7 +209,7 @@ export const SitemapPage: React.FC<AdminPageProps> = () => {
           <div className="flex flex-col gap-3">
             <div className="grid gap-3 sm:grid-cols-3">
               <StatTile label="Live sitemap URLs" value={live?.urlCount ?? '—'} />
-              <StatTile label="Indexable audited routes" value={coverage} sub="statics + hubs + live content" />
+              <StatTile label="Indexable audited routes" value={coverage} sub="same builder that ships the file" />
               <StatTile
                 label="Status"
                 value={
