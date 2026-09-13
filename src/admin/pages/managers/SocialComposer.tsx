@@ -8,6 +8,10 @@
 //                 concept + carousel outline) — uses the REAL /blog/{slug} URL
 //   from_service  promote an existing BRANIFY service (servicesRegistry only)
 //
+// v2 (31-rule upgrade, additive): Smart CTA goal selector; preview cards show
+// pillar tag, alt hooks (one-click swap into the caption), suggested posting
+// time (weekly plan) and the FB link-card text. Existing flows untouched.
+//
 // Duplicate protection: recent captions + recent blog titles are sent to the
 // model and a client-side similarity warning is shown before generating.
 // Nothing auto-publishes: saving a generated post always starts as a draft
@@ -23,7 +27,7 @@ import { createRow } from '../../lib/backend';
 import type { SocialPostRow } from '../../lib/types';
 import {
   SocialApiError, generateSocialContent,
-  type GeneratedSocialPost, type GenerateSocialPayload, type GenerateSocialResult, type SocialGenMode, type SocialTone,
+  type GeneratedSocialPost, type GenerateSocialPayload, type GenerateSocialResult, type SocialCtaGoal, type SocialGenMode, type SocialTone,
 } from '../../lib/socialApi';
 import {
   AiImageError, generateAiImage, defaultAspect,
@@ -47,6 +51,24 @@ const TONES: Array<{ id: SocialTone; label: string }> = [
   { id: 'conversational', label: 'Conversational' },
   { id: 'premium', label: 'Premium' },
 ];
+
+const CTA_GOALS: Array<{ id: SocialCtaGoal; label: string }> = [
+  { id: 'auto', label: 'Auto (Smart CTA)' },
+  { id: 'awareness', label: 'Awareness — grow reach' },
+  { id: 'engagement', label: 'Engagement — comments & saves' },
+  { id: 'traffic', label: 'Traffic — clicks to site' },
+  { id: 'conversion', label: 'Conversion — leads & quotes' },
+];
+
+const PILLAR_LABEL: Record<string, string> = {
+  website_development: 'Web Dev',
+  business_growth: 'Growth',
+  ai_automation: 'AI & Automation',
+  branding_ui_ux: 'Branding/UI-UX',
+  digital_marketing: 'Marketing',
+  portfolio: 'Portfolio',
+  educational: 'Educational',
+};
 
 const MODES: Array<{ id: SocialGenMode; label: string; icon: React.ComponentType<{ size?: number | string }> }> = [
   { id: 'single', label: 'Generate Post', icon: Sparkles },
@@ -103,6 +125,21 @@ function nextOccurrence(day: string, time: string): string {
   return d.toISOString();
 }
 
+/** Next occurrence of an HH:mm time (today if still ahead, else tomorrow). */
+function nextTimeOccurrence(hhmm: string): string {
+  const [hh, mm] = hhmm.split(':').map((n) => parseInt(n, 10) || 0);
+  const d = new Date();
+  d.setHours(hh, mm, 0, 0);
+  if (d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+  return d.toISOString();
+}
+
+/** Swap the caption's first line for an alternative hook (v2 alt hooks). */
+function applyHook(caption: string, hook: string): string {
+  const lines = caption.split('\n');
+  return lines.length > 1 ? [hook, ...lines.slice(1)].join('\n') : `${hook}\n${caption}`;
+}
+
 function toLocalInput(iso: string): string {
   const d = new Date(iso);
   const pad = (n: number) => String(n).padStart(2, '0');
@@ -156,6 +193,7 @@ const PostPreview: React.FC<{
           <span className="text-xs font-bold text-[#111827]">{isFb ? 'Facebook' : 'Instagram'}</span>
           <Badge tone="zinc">{CONTENT_TYPES.find((c) => c.id === post.content_type)?.label || post.content_type}</Badge>
           {post.day && <Badge tone="gold">{post.day}</Badge>}
+          {post.pillar && PILLAR_LABEL[post.pillar] && <Badge tone="steel">{PILLAR_LABEL[post.pillar]}</Badge>}
         </div>
         <button className="text-xs text-[#8F6B2D] hover:underline" onClick={() => setEditing((v) => !v)}>
           {editing ? 'Done' : 'Edit'}
@@ -181,7 +219,27 @@ const PostPreview: React.FC<{
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#111827]">{post.caption}</p>
           {hashtagLine && <p className="mt-2 text-[13px] font-medium text-[#1877F2]">{hashtagLine}</p>}
           {post.cta && <p className="mt-1 text-xs font-semibold text-[#8F6B2D]">CTA · {post.cta}</p>}
+          {post.link_preview_text && (
+            <p className="mt-2 rounded-lg border border-[#0F172A]/[0.06] bg-white/70 p-2 text-[11px] italic text-[#475569]">
+              <span className="font-semibold not-italic">Link card text · </span>{post.link_preview_text}
+            </p>
+          )}
           {post.image_prompt && <p className="mt-2 rounded-lg bg-[#0F172A]/[0.04] p-2 text-[11px] italic text-[#475569]">Image prompt · {post.image_prompt}</p>}
+          {!editing && !!post.alt_hooks?.length && (
+            <div className="mt-2 space-y-1">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#64748B]">Alt hooks</p>
+              {post.alt_hooks.map((h, hi) => (
+                <div key={hi} className="flex items-start justify-between gap-2 rounded-lg bg-[#0F172A]/[0.04] px-2 py-1">
+                  <span className="text-[11px] leading-snug text-[#475569]">{h}</span>
+                  <button
+                    className="shrink-0 text-[10px] font-bold text-[#8F6B2D] hover:underline"
+                    title="Replace the caption's first line with this hook"
+                    onClick={() => onEdit(index, { caption: applyHook(post.caption, h) })}
+                  >Use</button>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 
@@ -261,6 +319,18 @@ const PostPreview: React.FC<{
       <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#0F172A]/[0.06] pt-2">
         <Btn size="sm" variant="outline" loading={busyHere} onClick={() => onSaveDraft(post)}>Save Draft</Btn>
         <Input type="datetime-local" className="h-8 w-56 text-xs" value={slot} onChange={(e) => setSlot(e.target.value)} />
+        {post.suggested_time && (
+          <button
+            className="text-[10px] font-bold text-[#8F6B2D] hover:underline"
+            title={`Apply the AI-suggested slot (${post.day ? `${post.day} ` : ''}${post.suggested_time})`}
+            onClick={() => {
+              const iso = post.day ? nextOccurrence(post.day, post.suggested_time || '18:00') : nextTimeOccurrence(post.suggested_time || '18:00');
+              setSlot(toLocalInput(iso));
+            }}
+          >
+            Use {post.suggested_time}{post.day ? ` · ${post.day}` : ''}
+          </button>
+        )}
         <Btn size="sm" variant="outline" disabled={!slot || busyHere} onClick={() => onSchedule(post, slot ? new Date(slot).toISOString() : '')}>Schedule</Btn>
         <Btn size="sm" variant="gold" loading={busyHere} onClick={() => onPublishNow(post)}>Publish Now</Btn>
       </div>
@@ -287,6 +357,7 @@ export const SocialComposer: React.FC<ComposerProps> = ({
   const [topic, setTopic] = useState('');
   const [audience, setAudience] = useState('');
   const [cta, setCta] = useState('');
+  const [ctaGoal, setCtaGoal] = useState<SocialCtaGoal>('auto');
   const [tone, setTone] = useState<SocialTone>('professional');
   const [withHashtags, setWithHashtags] = useState(true);
   const [withCreative, setWithCreative] = useState(true);
@@ -306,6 +377,7 @@ export const SocialComposer: React.FC<ComposerProps> = ({
   const buildPayload = useCallback((m: SocialGenMode): GenerateSocialPayload => {
     const base: GenerateSocialPayload = {
       mode: m, tone, include_hashtags: withHashtags, include_creative_prompt: withCreative,
+      cta_goal: ctaGoal, brand_voice: brandVoice || undefined,
       recentCaptions: recentCaptions.slice(0, 8), recentTitles: recentBlogTitles.slice(0, 10),
     };
     if (m === 'single') {
@@ -324,7 +396,7 @@ export const SocialComposer: React.FC<ComposerProps> = ({
       };
     }
     return base; // weekly
-  }, [platform, contentType, topic, audience, cta, tone, withHashtags, withCreative, recentCaptions, recentBlogTitles, blogs, services]);
+  }, [platform, contentType, topic, audience, cta, ctaGoal, tone, withHashtags, withCreative, brandVoice, recentCaptions, recentBlogTitles, blogs, services]);
 
   const run = useCallback(async (m: SocialGenMode) => {
     setGenerating(true);
@@ -431,7 +503,8 @@ export const SocialComposer: React.FC<ComposerProps> = ({
       source_id: mode === 'from_blog' ? blogIdRef.current : mode === 'from_service' ? serviceSlugRef.current : '',
       created_by: 'ai',
       metadata: {
-        cta: p.cta, image_prompt: p.image?.prompt || p.image_prompt, alt_text: p.image?.altText || p.alt_text, creative_prompt: p.creative_prompt,
+        cta: p.cta, cta_goal: ctaGoal, image_prompt: p.image?.prompt || p.image_prompt, alt_text: p.image?.altText || p.alt_text, creative_prompt: p.creative_prompt,
+        pillar: p.pillar || '', alt_hooks: p.alt_hooks || [], suggested_time: p.suggested_time || '', link_preview_text: p.link_preview_text || '',
         plan_day: p.day || null, brand_voice: brandVoice, model: result?.model || '', provider: result?.provider || '',
         generated_at: new Date().toISOString(),
         image: p.image ? {
@@ -441,7 +514,7 @@ export const SocialComposer: React.FC<ComposerProps> = ({
       },
     };
     return payload;
-  }, [mode, brandVoice, result, approvalRequired]);
+  }, [mode, brandVoice, result, approvalRequired, ctaGoal]);
 
   const saveDraft = async (p: ComposerPost) => {
     const key = `post-${result?.posts.indexOf(p)}`;
@@ -578,6 +651,11 @@ export const SocialComposer: React.FC<ComposerProps> = ({
           </Field>
           <Field label="CTA (optional)">
             <Input value={cta} onChange={(e) => setCta(e.target.value)} placeholder="e.g. Request a consultation" />
+          </Field>
+          <Field label="CTA goal (Smart CTA)" hint="Used when the CTA field is empty — the AI picks a matching call to action.">
+            <Select value={ctaGoal} onChange={(e) => setCtaGoal(e.target.value as SocialCtaGoal)}>
+              {CTA_GOALS.map((g) => <option key={g.id} value={g.id}>{g.label}</option>)}
+            </Select>
           </Field>
           <Field label="Tone">
             <Select value={tone} onChange={(e) => setTone(e.target.value as SocialTone)}>

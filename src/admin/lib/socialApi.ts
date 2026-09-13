@@ -29,6 +29,8 @@ export class SocialApiError extends Error {
 // ------------------------------------------------------------------ types
 export type SocialGenMode = 'single' | 'weekly' | 'from_blog' | 'from_service';
 export type SocialTone = 'professional' | 'expert' | 'conversational' | 'premium';
+/** Smart CTA engine goal (v2) — 'auto' lets the model pick contextually. */
+export type SocialCtaGoal = 'auto' | 'awareness' | 'engagement' | 'traffic' | 'conversion';
 
 export interface GeneratedSocialPost {
   platform: SocialPlatform;
@@ -41,6 +43,11 @@ export interface GeneratedSocialPost {
   alt_text: string;
   creative_prompt: string;
   day: string;
+  // v2 additive fields (may be absent from older server deployments)
+  pillar?: string;
+  alt_hooks?: string[];
+  suggested_time?: string;
+  link_preview_text?: string;
 }
 
 export interface GenerateSocialPayload {
@@ -51,9 +58,11 @@ export interface GenerateSocialPayload {
   service?: string;
   audience?: string;
   cta?: string;
+  cta_goal?: SocialCtaGoal;
   tone?: SocialTone;
   include_hashtags?: boolean;
   include_creative_prompt?: boolean;
+  brand_voice?: string;
   recentCaptions?: string[];
   recentTitles?: string[];
   blog?: { title: string; url: string; excerpt?: string };

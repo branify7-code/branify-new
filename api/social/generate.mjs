@@ -160,18 +160,62 @@ confident, human, helpful. Visual identity: black/dark luxury-gold, clean, moder
 - No exaggerated promises ("guaranteed 10x sales"). No spammy or pushy CTAs.
 - At most 1 emoji per post, only when it truly fits the brand. No hashtag stuffing.
 
-## Platform rules
+## Platform rules (baseline)
 Facebook: 60\u2013130 words. Hook first line, then a short useful explanation with concrete value,
 close with ONE clear CTA (e.g. "Visit Branify", "Contact Branify", "Explore our services",
 "Request a consultation"). May include the real URLs given in the brief \u2014 never invent URLs.
 Instagram: visual-first. Strong scannable first line, short paragraphs (1\u20132 lines), useful CTA,
 then 5\u201310 highly relevant hashtags (no random mega-blocks). If include_hashtags=false, return [].
 
+## Platform playbooks (deep differentiation \u2014 follow per platform)
+FACEBOOK (community + authority):
+1. 40\u2013110 words sweet spot; hook first line \u2264 12 words; 1\u20133 short paragraphs with breathing room.
+2. Links appear on their OWN line near the end \u2014 never inside the first line, never bare ">>>" spam.
+3. Hashtags: 0\u20133 max on Facebook. A hashtag wall reads as spam there \u2014 prefer none.
+4. CTA reads like a plain sentence ("Request a consultation"), never "link in bio" (that's IG-only).
+INSTAGRAM (visual-first + save-worthy):
+5. First line = hook before the fold (\u2264 8 words): curiosity, benefit or bold claim. No warm-up.
+6. Micro-paragraphs of 1\u20132 lines with blank lines between; scannable in 3 seconds.
+7. Hashtags: 5\u201310 niche + branded mix (e.g. #webdevelopment #dubaibranding #branify). Never mega-generic (#love #like).
+8. CTA uses IG-native actions: "Save this", "Share with a founder", "Link in bio".
+CROSS-PLATFORM:
+9. When writing both platforms, the two posts must differ in structure AND opening \u2014 an IG caption
+   must never read as the FB post with different line breaks.
+
+## Smart CTA engine
+10. If the brief supplies an explicit CTA, preserve its intent (light polish allowed, never spammy).
+11. Else pick ONE CTA aligned with the brief's CTA goal:
+    awareness  \u2192 "Follow BRANIFY for weekly growth insights" \xB7 "Share this with someone building a brand"
+    engagement \u2192 "Which one is costing you sales? Tell us in the comments" \xB7 "Save this checklist"
+    traffic    \u2192 "Read the full guide: <real url>" \xB7 "Explore the full breakdown \u2014 link below"
+    conversion \u2192 "Request a free consultation" \xB7 "Get a quote for your project"
+12. Never reuse a CTA (or a hook) that appears in RECENT POSTS. Exactly ONE CTA per post, on the last line.
+
+## Blog-to-Social rules
+13. Use the given blog URL verbatim \u2014 never invent, shorten or dress up URLs.
+14. Lead with the reader's takeaway (what they learn), not with "we published a new post".
+15. For the facebook item also return "link_preview_text": \u2264 140 chars shown under the link card.
+16. Return "alt_hooks": up to 2 alternative opening lines (different angle than the caption's hook).
+17. Carousel outlines: Slide 1 = hook/promise, Slides 2-4 = one concrete idea each, Slide 5 = CTA.
+18. The IG caption must TEASE (curiosity gap) while the FB post SUMMARISES (value upfront).
+
+## Content Calendar support
+19. Tag every post with "pillar": website_development | business_growth | ai_automation |
+    branding_ui_ux | digital_marketing | portfolio | educational.
+20. For weekly plans, add "suggested_time": "HH:mm" 24h per post (Facebook 09:00\u201311:00,
+    Instagram 17:00\u201319:00) \u2014 advisory only, the admin decides the final slot.
+21. Respect the brand voice directive when the brief includes one; it overrides your default style.
+
 ## Output contract
 Return ONLY a JSON object \u2014 no prose around it. Shape:
 {"posts":[{"platform":"facebook"|"instagram","content_type":"facebook_post"|"instagram_image"|"instagram_carousel","title":"short internal title","caption":"final post text WITHOUT hashtags appended","hashtags":["#tag",...],"cta":"the call to action used or empty","image_prompt":"image generation prompt when requested, else empty","alt_text":"8-14 word accessibility description when image is involved, else empty","creative_prompt":"extra creative direction when requested, else empty","day":"Mon|Tue|Wed|Thu|Fri|Sat|Sun (weekly plan only, else empty)"}]}
+Extended optional fields on each post: "pillar" (see rule 19, else empty), "alt_hooks"
+(array of up to 2 alternative first lines, else []), "suggested_time" ("HH:mm", weekly plan
+only, else empty), "link_preview_text" (\u2264140 chars, facebook item of from_blog/from_service
+only, else empty).
 Captions must NOT include the hashtags inside "caption" \u2014 hashtags live in the "hashtags" array.
 Every caption must be publish-ready: correct line breaks, no placeholder text, no markdown symbols.`;
+var CTA_GOALS = ["auto", "awareness", "engagement", "traffic", "conversion"];
 var CONTENT_TYPES = ["facebook_post", "instagram_image", "instagram_carousel", "instagram_reel_idea", "instagram_story_idea"];
 var TONES = ["professional", "expert", "conversational", "premium"];
 function validateRequest(b) {
@@ -187,6 +231,7 @@ function validateRequest(b) {
   const strList = (v, maxItems, maxLen) => Array.isArray(v) ? v.slice(0, maxItems).map((x) => str(x, maxLen)).filter(Boolean) : [];
   const blog = b.blog && typeof b.blog === "object" ? b.blog : {};
   const svc = b.serviceData && typeof b.serviceData === "object" ? b.serviceData : {};
+  const cta_goal = CTA_GOALS.includes(String(b.cta_goal)) ? String(b.cta_goal) : "auto";
   const req = {
     mode,
     platform,
@@ -195,6 +240,8 @@ function validateRequest(b) {
     service: str(b.service, 200),
     audience: str(b.audience, 300),
     cta: str(b.cta, 200),
+    cta_goal,
+    brand_voice: str(b.brand_voice, 400),
     tone,
     include_hashtags: b.include_hashtags !== false,
     include_creative_prompt: b.include_creative_prompt === true,
@@ -240,6 +287,8 @@ function baseBrief(r) {
   if (r.service) lines.push(`Service focus: ${r.service}`);
   if (r.audience) lines.push(`Target audience: ${r.audience}`);
   if (r.cta) lines.push(`Call to action to use (verbatim intent, not spammy): ${r.cta}`);
+  lines.push(`CTA goal (Smart CTA engine): ${r.cta_goal || "auto"}`);
+  if (r.brand_voice) lines.push(`Brand voice directive (overrides your default style): ${r.brand_voice}`);
   lines.push(`Tone: ${r.tone}`);
   lines.push(`Include hashtags: ${r.include_hashtags ? "yes" : "no \u2014 return empty arrays"}`);
   lines.push(`Generate image prompt: ${r.include_creative_prompt ? "yes" : "no \u2014 return empty image_prompt/creative_prompt"}`);
@@ -278,8 +327,10 @@ Public URL (use verbatim in the Facebook post): ${r.blog?.url}
 Blog excerpt: ${r.blog?.excerpt || "(none given \u2014 stay strictly within the title topic)"}
 
 Return {"posts":[\u2026]} with EXACTLY these items:
-1. facebook_post \u2014 hook + why it matters + what the reader learns + CTA "Read the full article: ${r.blog?.url}" (shortened naturally).
-2. instagram_image caption \u2014 visual-first tease of the article; CTA "Link in bio".
+1. facebook_post \u2014 lead with the reader's takeaway (rule 14), then why it matters + what the
+   reader learns + CTA "Read the full article: ${r.blog?.url}" (shortened naturally).
+   Fill link_preview_text with a \u2264140-char line for the link card.
+2. instagram_image caption \u2014 TEASE the article (curiosity gap, no full summary); CTA "Link in bio".
 3. instagram_image VISUAL CONCEPT \u2014 title starts with "Visual concept:", caption describes the artwork to create (scene, mood, BRANIFY black/gold identity), image_prompt filled.
 4. instagram_carousel OUTLINE \u2014 title starts with "Carousel outline:", caption = slide-by-slide outline (Slide 1..5, one line each).`;
     }
@@ -292,12 +343,13 @@ Tagline: ${r.serviceData?.tagline || "(none)"}
 Description: ${r.serviceData?.description || "(none)"}
 
 Return {"posts":[\u2026]} with EXACTLY these items:
-1. facebook_post \u2014 value-first promo with the service page URL.
+1. facebook_post \u2014 value-first promo with the service page URL + link_preview_text (\u2264140 chars).
 2. instagram_image caption \u2014 visual-first promo + CTA to the service page.
 3. instagram_image VISUAL CONCEPT \u2014 title starts with "Visual concept:", BRANIFY black/gold art direction, image_prompt filled.`;
     }
   }
 }
+var PILLARS = ["website_development", "business_growth", "ai_automation", "branding_ui_ux", "digital_marketing", "portfolio", "educational"];
 function postCount(r) {
   if (r.mode === "weekly") return 7;
   if (r.mode === "single") return r.platform === "both" ? 2 : 1;
@@ -325,7 +377,11 @@ function sanitizePosts(raw, r) {
       image_prompt: String(o.image_prompt || "").slice(0, 900).trim(),
       alt_text: String(o.alt_text || "").slice(0, 160).trim(),
       creative_prompt: String(o.creative_prompt || "").slice(0, 900).trim(),
-      day: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(String(o.day)) ? String(o.day) : ""
+      day: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(String(o.day)) ? String(o.day) : "",
+      pillar: PILLARS.includes(String(o.pillar)) ? String(o.pillar) : "",
+      alt_hooks: Array.isArray(o.alt_hooks) ? o.alt_hooks.slice(0, 2).map((x) => String(x || "").replace(/\s+/g, " ").slice(0, 200).trim()).filter(Boolean) : [],
+      suggested_time: /^([01]\d|2[0-3]):[0-5]\d$/.test(String(o.suggested_time || "")) ? String(o.suggested_time) : "",
+      link_preview_text: String(o.link_preview_text || "").replace(/\s+/g, " ").slice(0, 220).trim()
     });
   }
   return { posts: out, repaired: out.length >= expected };

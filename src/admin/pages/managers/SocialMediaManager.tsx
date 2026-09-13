@@ -238,6 +238,39 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
     } finally { setBusy(''); }
   };
 
+  // v2 approval flow: send a pending post back to draft with a recorded reason
+  const [rejecting, setRejecting] = useState<{ post: SocialPostRow; reason: string } | null>(null);
+
+  const sendBack = async (post: SocialPostRow, reason: string): Promise<void> => {
+    setBusy(post.id);
+    try {
+      const trimmed = reason.trim();
+      await updateRow<SocialPostRow>('social_posts', post.id, {
+        status: 'draft',
+        updated_at: new Date().toISOString(),
+        metadata: { ...post.metadata, rejection: { reason: trimmed, at: new Date().toISOString() } },
+      });
+      void logActivity('supabase', null, 'social.send_back', 'social_post', post.id, { platform: post.platform, reason: trimmed.slice(0, 200) });
+      push('success', 'Sent back to drafts' + (trimmed ? ' with your note.' : '.'));
+      void loadAll(true);
+    } catch (e) {
+      push('error', e instanceof Error ? e.message : 'Send back failed.');
+    } finally { setBusy(''); }
+  };
+
+  // v2 approval flow: push a draft into the review queue
+  const submitForApproval = async (p: SocialPostRow) => {
+    setBusy(p.id);
+    try {
+      await updateRow<SocialPostRow>('social_posts', p.id, { status: 'pending_approval', updated_at: new Date().toISOString() });
+      void logActivity('supabase', null, 'social.submit_review', 'social_post', p.id, { platform: p.platform });
+      push('success', 'Submitted for approval.');
+      void loadAll(true);
+    } catch (e) {
+      push('error', e instanceof Error ? e.message : 'Submit failed.');
+    } finally { setBusy(''); }
+  };
+
   const schedule = async (p: SocialPostRow, slot: string) => {
     setBusy(p.id);
     try {
@@ -471,6 +504,12 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
                       {['draft', 'pending_approval', 'scheduled'].includes(p.status) && p.approval_required && !p.approved_at && (
                         <Btn size="sm" variant="outline" loading={busy === p.id} onClick={() => approve(p)}>Approve</Btn>
                       )}
+                      {p.status === 'draft' && (
+                        <Btn size="sm" variant="subtle" loading={busy === p.id} onClick={() => submitForApproval(p)}>Submit for Approval</Btn>
+                      )}
+                      {p.status === 'pending_approval' && (
+                        <Btn size="sm" variant="subtle" loading={busy === p.id} onClick={() => setRejecting({ post: p, reason: '' })}>Send back</Btn>
+                      )}
                       {p.status !== 'published' && p.status !== 'publishing' && (
                         <>
                           <Btn size="sm" variant="subtle" onClick={() => openEditor(p)}>Edit</Btn>
@@ -501,6 +540,7 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
         <Card title="Content calendar" subtitle="Month / week / day · drag chips to reschedule">
           <SocialCalendar
             posts={posts}
+            postingDays={settings.posting_days}
             onOpenPost={(p) => openEditor(p)}
             onAddOnDay={(iso) => openEditor(null, iso)}
             onReschedule={(p, iso) => {
@@ -604,6 +644,37 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
         onSaved={() => void loadAll(true)}
       />
 
+      {/* send-back reason modal (v2 approval flow) */}
+      <Modal
+        open={Boolean(rejecting)}
+        onClose={() => setRejecting(null)}
+        title="Send back to drafts"
+        subtitle="Tell the author what to change — the note shows on the post afterwards."
+        width="md"
+        footer={
+          <>
+            <Btn variant="ghost" onClick={() => setRejecting(null)}>Cancel</Btn>
+            <Btn
+              variant="gold"
+              loading={Boolean(rejecting) && busy === rejecting?.post.id}
+              onClick={() => {
+                const { post, reason } = rejecting!;
+                setRejecting(null);
+                void sendBack(post, reason);
+              }}
+            >Send back</Btn>
+          </>
+        }
+      >
+        <Textarea
+          rows={4}
+          value={rejecting?.reason || ''}
+          onChange={(e) => setRejecting((r) => (r ? { ...r, reason: e.target.value } : r))}
+          placeholder="e.g. Hook is too generic — lead with the client pain point instead."
+          aria-label="Reason for sending back"
+        />
+      </Modal>
+
       {/* editor */}
       <Modal
         open={Boolean(editing)}
@@ -613,6 +684,9 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
         footer={
           <>
             <Btn variant="ghost" onClick={() => setEditing(null)}>Cancel</Btn>
+            {editing?.id && editing.status === 'pending_approval' && (
+              <Btn variant="outline" loading={busy === editing.id} onClick={() => { setEditing(null); setRejecting({ post: editing, reason: '' }); }}>Send back</Btn>
+            )}
             {editing?.id && ['draft', 'pending_approval', 'approved', 'scheduled'].includes(editing.status) && !form.approved_at && form.approval_required && (
               <Btn variant="outline" loading={busy === editing.id} onClick={() => { setEditing(null); void approve(editing); }}>Approve</Btn>
             )}
@@ -620,6 +694,16 @@ export const SocialMediaManager: React.FC<AdminPageProps> = ({ query }) => {
           </>
         }
       >
+        {(() => {
+          const m = (editing?.metadata || {}) as { rejection?: { reason?: string; at?: string } };
+          return m.rejection?.reason ? (
+            <div className="mb-3 rounded-lg border border-amber-500/40 bg-amber-500/10 p-2.5 text-xs text-amber-700">
+              <span className="font-bold">Sent back</span>
+              {m.rejection.at ? ` · ${new Date(m.rejection.at).toLocaleDateString()} — ` : ' — '}
+              {m.rejection.reason}
+            </div>
+          ) : null;
+        })()}
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Platform">
             <Select value={String(form.platform || 'facebook')} onChange={(e) => {

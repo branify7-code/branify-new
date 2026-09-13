@@ -5,9 +5,13 @@
 // day to reschedule (keeps the time of day; logs social.schedule). Click a
 // day to add a post on that date. Status-coloured chips give the pipeline
 // view: draft / pending / approved / scheduled / published / failed.
+//
+// v2 (additive): coverage awareness — days that match the configured weekly
+// posting days but carry no scheduled/published post are highlighted as open
+// slots, with a summary count in the footer.
 // =============================================================================
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge, Btn, cx } from '../../ui';
 import type { SocialPostRow, SocialStatus } from '../../lib/types';
@@ -25,6 +29,7 @@ export const STATUS_TONE: Record<SocialStatus, 'gold' | 'green' | 'amber' | 'red
 
 const DAY_LETTERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const DAY_FULL = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const ALL_DAYS = DAY_LETTERS;
 
 function sameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -62,12 +67,19 @@ const Chip: React.FC<{ post: SocialPostRow; onOpen: (p: SocialPostRow) => void }
 
 export const SocialCalendar: React.FC<{
   posts: SocialPostRow[];
+  /** v2 — configured weekly posting days (default: all seven). */
+  postingDays?: string[];
   onOpenPost: (p: SocialPostRow) => void;
   onAddOnDay: (dateIso: string) => void;
   onReschedule: (p: SocialPostRow, dateIso: string) => void;
-}> = ({ posts, onOpenPost, onAddOnDay, onReschedule }) => {
+}> = ({ posts, postingDays, onOpenPost, onAddOnDay, onReschedule }) => {
   const [view, setView] = useState<'month' | 'week' | 'day'>('month');
   const [cursor, setCursor] = useState(() => new Date());
+
+  const enabledDays = useMemo(() => {
+    const set = new Set((postingDays && postingDays.length ? postingDays : ALL_DAYS).map((d) => d.slice(0, 3)));
+    return ALL_DAYS.filter((d) => set.has(d));
+  }, [postingDays]);
 
   const postsByDay = useMemo(() => {
     const map = new Map<string, SocialPostRow[]>();
@@ -83,6 +95,17 @@ export const SocialCalendar: React.FC<{
     return map;
   }, [posts]);
 
+  /** v2 — a day is an open slot when it is an enabled posting day, today or
+   *  later, and carries no scheduled/published post. */
+  const isOpenSlot = useCallback((d: Date): boolean => {
+    if (!enabledDays.includes(DAY_LETTERS[(d.getDay() + 6) % 7])) return false;
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    if (d.getTime() < startOfToday.getTime()) return false;
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    return !(postsByDay.get(key) || []).length;
+  }, [enabledDays, postsByDay]);
+
   const cells = useMemo(() => {
     if (view === 'week') {
       const start = startOfWeek(cursor);
@@ -93,6 +116,11 @@ export const SocialCalendar: React.FC<{
     const gridStart = startOfWeek(first);
     return Array.from({ length: 42 }, (_, i) => new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i));
   }, [cursor, view]);
+
+  const openSlotCount = useMemo(
+    () => cells.reduce((acc, d) => acc + (view !== 'day' && isOpenSlot(d) ? 1 : 0), 0),
+    [cells, view, isOpenSlot],
+  );
 
   const shift = (dir: number) => {
     const d = new Date(cursor);
@@ -147,6 +175,7 @@ export const SocialCalendar: React.FC<{
                 'min-h-[86px] rounded-lg border p-1.5 transition-colors',
                 dim ? 'border-[#E2E8F0]/60 bg-white/40 opacity-55' : 'border-[#E2E8F0] bg-white/70',
                 isToday && 'border-[#C9A45C] ring-1 ring-[#C9A45C]/40',
+                isOpenSlot(d) && 'border-dashed border-amber-500/60 bg-amber-50/40',
               )}
             >
               <div className="mb-1 flex items-center justify-between">
@@ -177,6 +206,11 @@ export const SocialCalendar: React.FC<{
         {(['draft', 'pending_approval', 'approved', 'scheduled', 'published', 'failed'] as SocialStatus[]).map((s) => (
           <Badge key={s} tone={STATUS_TONE[s]}>{s.replace('_', ' ')}</Badge>
         ))}
+        {openSlotCount > 0 && (
+          <span className="ml-1 rounded-md border border-dashed border-amber-500/60 bg-amber-50/60 px-1.5 py-0.5 font-semibold text-amber-700">
+            {openSlotCount} open slot{openSlotCount === 1 ? '' : 's'} · {enabledDays.join(' / ')}
+          </span>
+        )}
       </div>
     </div>
   );
