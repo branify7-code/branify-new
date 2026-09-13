@@ -231,43 +231,93 @@ function resolveBlogModel() {
   return { model: "auto", source: "fallback:auto-router" };
 }
 var LENGTH_HINTS = {
-  short: "roughly 500-700 words",
-  medium: "roughly 900-1200 words",
-  long: "roughly 1500-2000 words"
+  short: "800-1500 words (announcement / news / update depth \u2014 use only when the topic is genuinely simple)",
+  medium: "1800-2600 words (standard educational depth)",
+  long: "2500-3500 words (comprehensive pillar depth)"
 };
+var MIN_WORDS = { short: 800, medium: 1800, long: 2500 };
+var INTERNAL_LINK_WHITELIST = [
+  "/services",
+  "/services/website-development",
+  "/templates",
+  "/tools",
+  "/ai-tools",
+  "/portfolio",
+  "/about",
+  "/contact",
+  "/blog"
+];
 function buildMessages(input) {
   const tone = input.tone || "professional";
   const length = LENGTH_HINTS[input.length || "medium"] || LENGTH_HINTS.medium;
+  const minWords = MIN_WORDS[input.length || "medium"] || MIN_WORDS.medium;
   const category = (input.category || "").trim();
   const keywords = (input.keywords || []).map((k) => k.trim()).filter(Boolean).slice(0, 10);
   const system = {
     role: "system",
     content: [
-      "You are the senior content strategist for BRANIFY, a luxury digital studio and futuristic technology agency based in Dubai that builds websites, AI tools and brand systems for ambitious businesses.",
-      "You write publication-ready blog articles for the BRANIFY website: confident, precise, practical, lightly aspirational, never fluffy, never salesy.",
+      "You are the BRANIFY Blog Engine: part SEO content strategist, part researcher, part editor, part writer. BRANIFY is a luxury digital studio and futuristic technology agency based in Dubai that builds websites, AI tools and brand systems for ambitious businesses.",
+      "You write publication-ready, search-intent-aligned articles for the BRANIFY blog. You are NOT a generic AI blog generator: usefulness beats keyword density and word count, always.",
+      "",
+      "BEFORE WRITING (silently, no preamble in the output):",
+      "- Determine the primary search intent (informational / commercial investigation / educational / comparison / tool guide) and what the reader actually wants to learn or decide.",
+      "- List the secondary questions a reader will likely want answered after the main one.",
+      "- Decide the subtopics, a practical example or two, and where BRANIFY genuinely fits (it usually fits only in one or two places \u2014 not everywhere).",
+      "",
+      "STRUCTURE:",
+      "- Begin with a ## section (the website renders the title itself; never add an H1).",
+      "- First 100-150 words: establish the problem or question, give context, and state what the reader will learn. No throat-clearing.",
+      "- If the topic is a question, give a concise direct answer near the top, then expand with details, exceptions and practical guidance.",
+      "- Use ## and ### in a logical hierarchy; headings describe what the section contains (never keyword-stuffed).",
+      "- Short paragraphs (2-4 sentences). Include at least one actionable framework, checklist or step list the reader can apply.",
+      "- Include a small markdown comparison table ONLY when it genuinely aids a decision (features, costs, options, trade-offs). Tables must be short and mobile-friendly.",
+      '- Add a "## FAQ" section near the end: 6-10 real user-intent questions with concise answers that do NOT merely repeat the article.',
+      '- Close with "## Key Takeaways" (short bullet list) and a final paragraph with ONE natural next step that fits the topic (read a related guide, explore templates/tools, or contact BRANIFY). Never "In conclusion..." / "To sum up...".',
+      "",
+      "VOICE AND STYLE (write like an experienced human editor):",
+      `- Tone: ${tone}. Write in en-US. No emoji. No placeholders like "[insert here]".`,
+      "- Clear sentences with varied lengths. Concrete examples over abstractions. Useful transitions.",
+      `- BANNED phrasings unless genuinely appropriate: "In today's fast-paced digital world", "Whether you're a ... looking to", "Unlock the power of", "Revolutionize your", "Game-changing", "Cutting-edge", "Welcome to our latest blog".`,
+      "- Original analysis and structure only: do not mirror competitor articles or rewrite search snippets sentence-by-sentence.",
+      "",
+      "FACTUAL DISCIPLINE (non-negotiable):",
+      "- Never invent statistics, studies, quotes, client names, testimonials, awards, partnerships or market-share figures.",
+      '- If a figure is uncertain, write it as an approximate illustrative range ("typically", "often") or omit it.',
+      "- For fast-changing facts (pricing, features, policies), say the reader should check the official source for the latest details.",
+      "",
+      "INTERNAL LINKS (markdown only, to REAL pages that exist on branify.store):",
+      `- Allowed targets exactly: ${INTERNAL_LINK_WHITELIST.join(", ")}. No other paths, no made-up URLs.`,
+      "- Use 3-8 contextual links in a long article, only where they genuinely help the reader continue (e.g. a website-cost article linking to BRANIFY's website development service or templates).",
+      `- Anchor text must be descriptive ("explore BRANIFY's website templates"), never "click here".`,
+      "",
+      "BRAND RATIO:",
+      "- 80-90% genuinely useful content, 10-20% brand relevance. BRANIFY is introduced naturally where it truly helps; educational sections must stand on their own even if the reader never clicks a BRANIFY link.",
       "",
       "OUTPUT CONTRACT \u2014 respond with ONE JSON object and nothing else (no code fences, no commentary):",
       "{",
       '  "title": string,                     // 45-65 chars, no quotes inside',
-      '  "slug": string,                      // kebab-case, ascii, 3-6 words',
-      '  "excerpt": string,                   // <= 200 chars summary for cards + meta description',
-      '  "content_markdown": string,          // the full article in markdown',
+      '  "slug": string,                      // kebab-case, ascii, 3-6 words, contains the primary keyword naturally',
+      '  "excerpt": string,                   // <= 200 chars summary for cards + meta description fallback',
+      '  "content_markdown": string,          // the full article in markdown (no H1)',
       '  "category": string,                  // one lowercase word or hyphenated phrase',
       '  "tags": string[],                    // 3-6 short topical tags',
-      '  "seo": { "title": string, "description": string, "keywords": string[] }',
+      '  "seo": {',
+      '    "title": string,                   // 50-60 chars, ONE primary keyword, no multi-keyword stuffing',
+      '    "description": string,             // 140-160 chars, reflects search intent, no clickbait, no unmet promises',
+      '    "keywords": string[]               // FIRST entry = the single focus keyword; then 3-6 secondary semantic terms',
+      "  }",
       "}",
       "",
-      "CONTENT RULES:",
-      "- Start the article with a ## H2 section. Do NOT repeat the title as an H1; the website renders the title separately.",
-      "- Use ## for section headings and ### for sub-points, short paragraphs, - bullet lists where they help, **bold** for key phrases, and `code` sparingly.",
-      "- Include one actionable framework, checklist or step list the reader can apply.",
-      '- Close with a short "## Key Takeaways" list and a final paragraph that invites the reader to contact BRANIFY.',
-      "- Do not invent statistics with fake precision. General industry knowledge is fine; specific numbers only when you are certain.",
-      '- Write in en-US. No emoji. No placeholders like "[insert here]".',
-      `- Target length: ${length}. Tone: ${tone}.`,
+      "LENGTH AND DEPTH:",
+      `- Target length: ${length}. Depth must match search intent \u2014 never pad to hit a number, never stay thin when the topic needs depth.`,
       category ? `- Primary category: "${category}".` : "",
-      keywords.length ? `- Work these keywords in naturally: ${keywords.join(", ")}.` : "",
-      input.notes ? `- Extra editor instructions: ${input.notes.slice(0, 400)}` : ""
+      keywords.length ? `- Candidate keywords (weave in naturally where relevant; the first is the focus keyword): ${keywords.join(", ")}.` : "",
+      input.notes ? `- Extra editor instructions: ${input.notes.slice(0, 400)}` : "",
+      "",
+      "MANDATORY SELF-CHECK \u2014 run silently before responding; a draft failing any item is NOT acceptable, fix it and only then output the JSON:",
+      `- The article body contains at least ${minWords} words of substantive content. If your draft is shorter, deepen the weakest sections with concrete examples, specifics and short explanations \u2014 never filler or repetition.`,
+      '- A "## FAQ" section exists with AT LEAST 6 questions (### per question), each answered concisely in 1-3 sentences without repeating the article body.',
+      '- "## Key Takeaways" exists; there is no H1; every internal link points ONLY to the allowed targets.'
     ].filter(Boolean).join("\n")
   };
   const user = {
@@ -275,6 +325,64 @@ function buildMessages(input) {
     content: `Write the article now. Topic: ${input.topic.trim()}`
   };
   return [system, user];
+}
+function buildRevisionMessages(input, draft, minWords) {
+  const system = {
+    role: "system",
+    content: [
+      "You are the BRANIFY Blog Engine editor-in-chief. You revise drafts to meet the publication standard. Same rules as the original brief: en-US, no emoji, no invented statistics, no H1, ##/### markdown structure.",
+      "The previous draft FAILED one or more mandatory checks: it is too short and/or it lacks at least 3 contextual internal links to allowed BRANIFY pages.",
+      `- Expand the body to at least ${minWords} words by deepening the weakest sections: add concrete examples, practical specifics, short explanations, and useful transitions. Do NOT pad with repetition or filler.`,
+      '- Weave in at least 3 markdown internal links where they genuinely help the reader continue. Allowed targets ONLY: /services, /services/website-development, /templates, /tools, /ai-tools, /portfolio, /about, /contact, /blog. Descriptive anchor text, never "click here".',
+      '- Keep the "## FAQ" section (6+ questions) and "## Key Takeaways". Keep any comparison table.',
+      "",
+      "OUTPUT CONTRACT \u2014 return the FULL revised article as ONE JSON object (same shape as the original; no code fences, no commentary):",
+      '{ "title": string, "slug": string, "excerpt": string (<=200 chars), "content_markdown": string, "category": string, "tags": string[], "seo": { "title": string, "description": string (140-160 chars), "keywords": string[] } }'
+    ].join("\n")
+  };
+  const user = {
+    role: "user",
+    content: [
+      `Original topic: ${input.topic.trim()}`,
+      "",
+      "Previous draft (revise and return the FULL JSON):",
+      JSON.stringify({ title: draft.title, slug: draft.slug, excerpt: draft.excerpt, content_markdown: draft.content, category: draft.category, tags: draft.tags, seo: draft.seo })
+    ].join("\n")
+  };
+  return [system, user];
+}
+function countWords(md) {
+  return md.replace(/[#*`>|_\-[\]]/g, " ").split(/\s+/).filter(Boolean).length;
+}
+function countInternalLinks(md) {
+  return (md.match(/\]\(\/[^)]*\)/g) || []).length;
+}
+function pickRelatedLinks(draft) {
+  const hay = `${draft.category} ${draft.tags.join(" ")} ${draft.content.slice(0, 3e3)}`.toLowerCase();
+  const links = [];
+  if (/website|web |landing page|site|wordpress|develop/.test(hay)) {
+    links.push({ href: "/services/website-development", label: "explore BRANIFY's website development services for a custom, conversion-focused build" });
+    links.push({ href: "/templates", label: "browse BRANIFY's website templates to launch faster on a smaller budget" });
+  }
+  if (/ai|automation|chatbot|tool/.test(hay)) {
+    links.push({ href: "/ai-tools", label: "explore BRANIFY's AI tools directory for practical, ready-to-use options" });
+  }
+  if (/seo|marketing|content|traffic|conversion/.test(hay)) {
+    links.push({ href: "/tools", label: "use BRANIFY's free tools to audit and improve your site" });
+  }
+  links.push({ href: "/blog", label: "read more BRANIFY guides on planning, building and growing your website" });
+  return links.slice(0, 4);
+}
+function ensureInternalLinks(draft) {
+  if (countInternalLinks(draft.content) >= 2) return draft;
+  const items = pickRelatedLinks(draft).map((l) => `- [${l.label}](/${l.href.replace(/^\//, "")})`).join("\n");
+  const block = `
+
+## Continue with BRANIFY
+
+${items}
+`;
+  return { ...draft, content: `${draft.content}${block}` };
 }
 function slugify(input) {
   return input.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80) || "ai-draft";
@@ -341,8 +449,8 @@ function parseDraft(raw, model, modelSource, usage) {
     meta: { model, model_source: modelSource, usage }
   };
 }
-var BLOG_DRAFT_TIMEOUT_MS = 9e4;
-var BLOG_MAX_TOKENS_DEFAULT = 3e3;
+var BLOG_DRAFT_TIMEOUT_MS = 15e4;
+var BLOG_MAX_TOKENS_DEFAULT = 6500;
 var BLOG_TEMPERATURE_DEFAULT = 0.7;
 async function generateBlog(input) {
   const topic = (input.topic || "").trim();
@@ -352,6 +460,7 @@ async function generateBlog(input) {
   const { model, source } = resolveBlogModel();
   const maxTokensRaw = Number(process.env.OMNIROUTE_BLOG_MAX_TOKENS || "");
   const maxTokens = Number.isFinite(maxTokensRaw) && maxTokensRaw >= 256 ? maxTokensRaw : BLOG_MAX_TOKENS_DEFAULT;
+  const expandEnabled = (process.env.OMNIROUTE_BLOG_EXPAND || "true").trim().toLowerCase() !== "false";
   logSafe(`blog draft requested (model=${model}, source=${source}, topic length=${topic.length})`);
   const result = await generateWithOmniRoute({
     model,
@@ -362,7 +471,28 @@ async function generateBlog(input) {
     // no `stream` → parsed chat result (streaming is available via the same
     // function with { stream: true } when needed, no architectural change).
   });
-  const draft = parseDraft(result.content, result.model, source, result.usage);
+  let draft = parseDraft(result.content, result.model, source, result.usage);
+  const floor = MIN_WORDS[input.length || "medium"] || MIN_WORDS.medium;
+  if (expandEnabled && (countWords(draft.content) < floor || countInternalLinks(draft.content) < 2)) {
+    logSafe(`blog draft below spec (words=${countWords(draft.content)}, floor=${floor}, links=${countInternalLinks(draft.content)}) \u2014 one expansion pass`);
+    try {
+      const revision = await generateWithOmniRoute({
+        model,
+        messages: buildRevisionMessages(input, draft, floor),
+        temperature: BLOG_TEMPERATURE_DEFAULT,
+        max_tokens: maxTokens,
+        timeout_ms: BLOG_DRAFT_TIMEOUT_MS
+      });
+      const redraft = parseDraft(revision.content, revision.model, source, revision.usage);
+      if (countWords(redraft.content) > countWords(draft.content)) {
+        draft = redraft;
+        logSafe(`blog draft expanded (words=${countWords(draft.content)}, links=${countInternalLinks(draft.content)})`);
+      }
+    } catch (err) {
+      logSafe(`blog expansion pass skipped (${err instanceof Error ? err.message : "unknown"})`);
+    }
+  }
+  draft = ensureInternalLinks(draft);
   logSafe(`blog draft generated (title length=${draft.title.length}, body chars=${draft.content.length})`);
   return draft;
 }
