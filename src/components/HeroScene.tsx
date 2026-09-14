@@ -247,7 +247,7 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
       new THREE.Color('#5B5FEF'), // Brand indigo spark
     ];
 
-    const domeRadius = 2.15;
+    const domeRadius = 2.08;
 
     for (let i = 0; i < particleCount; i++) {
       const u = Math.random();
@@ -259,7 +259,7 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
       const currentRadius = domeRadius + rOffset;
 
       const x = currentRadius * Math.sin(phi) * Math.cos(theta);
-      const y = currentRadius * Math.cos(phi) - 0.2;
+      const y = currentRadius * Math.cos(phi) - 0.32;
       const z = currentRadius * Math.sin(phi) * Math.sin(theta) * 0.9;
 
       positions[i * 3] = x;
@@ -271,7 +271,7 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
       originalPositions[i * 3 + 2] = z;
 
       const chosenColor = goldPalette[Math.floor(Math.random() * goldPalette.length)];
-      const heightFactor = Math.max(0, Math.min(1, (y + 0.2) / 1.6));
+      const heightFactor = Math.max(0, Math.min(1, (y + 0.32) / 1.6));
       const finalColor = chosenColor.clone().lerp(new THREE.Color('#F3D27A'), (1.0 - heightFactor) * 0.6);
 
       colors[i * 3] = finalColor.r;
@@ -319,16 +319,23 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
     const stardustPos = new Float32Array(stardustCount * 3);
     for (let s = 0; s < stardustCount; s++) {
       stardustPos[s * 3] = (Math.random() - 0.5) * 8.5;
-      stardustPos[s * 3 + 1] = (Math.random() - 0.25) * 3.5;
+      // Keep stardust in the LOWER band of the scene — full-height spawn let
+      // particles drift up next to the headline/subtitle text on short viewports.
+      stardustPos[s * 3 + 1] = (Math.random() - 0.74) * 2.7;
       stardustPos[s * 3 + 2] = (Math.random() - 0.5) * 4.5;
     }
     stardustGeo.setAttribute('position', new THREE.BufferAttribute(stardustPos, 3));
     const stardustMat = new THREE.PointsMaterial({
-      size: 0.028,
+      size: 0.03,
+      // MUST have a soft round sprite map — untextured points render as SQUARES
+      // (visible as stray gold blocks near the hero text).
+      map: particleTexture,
       color: 0xF3D27A,
       transparent: true,
-      opacity: 0.32,
+      opacity: 0.3,
+      alphaTest: 0.02,
       blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
     const stardust = new THREE.Points(stardustGeo, stardustMat);
     scene.add(stardust);
@@ -395,7 +402,7 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
       const posAttr = particleGeo.getAttribute('position') as THREE.BufferAttribute;
       const posArray = posAttr.array as Float32Array;
 
-      for (let p = 0; p < particleCount; p += 3) {
+      for (let p = 0; p < particleCount; p++) {
         const ox = originalPositions[p * 3];
         const oy = originalPositions[p * 3 + 1];
         const oz = originalPositions[p * 3 + 2];
