@@ -13,6 +13,7 @@ import { TOOL_CATEGORIES } from '../../data/toolsRegistry';
 import { allTools } from '../../tools';
 import Seo from '../../components/Seo';
 import { STATIC_PAGE_SEO } from '../../data/seoMeta';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 interface FreeToolsViewProps {
   onNavigate: (path: string) => void;
@@ -94,6 +95,8 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, onClick }) => {
 /* ------------------------------ directory view ------------------------------ */
 
 const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCategory, onOpenPWA }) => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const validInitial = initialCategory && TOOL_CATEGORIES.includes(initialCategory as never) ? initialCategory : 'All';
   const [activeCategory, setActiveCategory] = useState<string>(validInitial);
   const [query, setQuery] = useState('');
@@ -117,7 +120,7 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
         (t.keywords || []).some((k) => k.toLowerCase().includes(q))
       );
     });
-  }, [activeCategory, query]);
+  }, [activeCategory, query, overridesTick]);
 
   const openTool = (slug: string) => onNavigate(`/tools/${slug}`);
 

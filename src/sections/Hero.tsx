@@ -6,6 +6,42 @@ const HeroScene = lazy(() =>
   import('../components/HeroScene').then((m) => ({ default: m.HeroScene }))
 );
 
+/**
+ * Mobile & low-power devices skip the three.js bundle ENTIRELY (no ~600 KB
+ * gzipped chunk download, no WebGL context, no rAF loop, no battery drain):
+ * they get a static CSS rendition of the same gold monogram centerpiece.
+ * Desktop keeps the interactive 3D scene.
+ */
+const LITE_HERO =
+  typeof window !== 'undefined' &&
+  (window.matchMedia('(max-width: 820px)').matches ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    (navigator as Navigator & { deviceMemory?: number }).deviceMemory !== undefined &&
+      (navigator as Navigator & { deviceMemory?: number }).deviceMemory! <= 2 ||
+    Boolean(
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData,
+    ));
+
+/** Static gold-monogram centerpiece — the no-3D rendition of HeroScene.
+ *  Pure DOM/CSS (zero JS beyond the markup, zero GPU work) so mobile keeps
+ *  the luxury composition without the per-frame render loop. */
+const HeroEmblemStatic: React.FC = () => (
+  <div
+    className="relative w-[240px] h-[280px] sm:w-[300px] sm:h-[340px] flex items-center justify-center"
+    aria-hidden="true"
+  >
+    {/* Orbital ring 1 (wide, tilted like the 3D gimbal) */}
+    <div className="absolute w-[230px] sm:w-[290px] h-[86px] sm:h-[104px] rounded-[50%] border-[1.5px] border-[#C9A45C]/50 rotate-[-16deg] shadow-[0_0_28px_rgba(201,164,92,0.18)]" />
+    {/* Orbital ring 2 (counter-tilt, fainter) */}
+    <div className="absolute w-[260px] sm:w-[320px] h-[74px] sm:h-[92px] rounded-[50%] border border-[#C9A45C]/30 rotate-[22deg]" />
+    {/* Glass plaque + gold monogram */}
+    <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl border border-[#C9A45C]/55 bg-gradient-to-b from-white/90 via-white/70 to-[#EEF2FF]/80 backdrop-blur-xl flex items-center justify-center shadow-[0_20px_48px_-18px_rgba(201,164,92,0.5),inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="absolute inset-[5px] rounded-xl border border-[#C9A45C]/25" />
+      <span className="font-display text-7xl sm:text-8xl font-extrabold text-gold-gradient select-none">B</span>
+    </div>
+  </div>
+);
+
 interface HeroProps {
   onStartProject: () => void;
   onExploreWork: () => void;
@@ -80,11 +116,17 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
       {/* CENTER SECTION: 3D BRANIFY Centerpiece + Light Horizon Composition */}
       <div className="relative z-10 w-full my-[-15px] sm:my-[-25px] flex items-center justify-center min-h-[400px] sm:min-h-[480px] md:min-h-[540px]">
 
-        {/* 3D Interactive Centerpiece (Glass, Metallic Gold B Monogram & Orbital Rings) */}
+        {/* 3D Interactive Centerpiece (Glass, Metallic Gold B Monogram & Orbital Rings)
+            — mobile/low-power devices render the static emblem instead: the
+            three.js chunk is never downloaded there (perf) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-auto">
-          <Suspense fallback={<div className="w-full h-full max-w-6xl mx-auto" aria-hidden="true" />}>
-            <HeroScene className="w-full h-full max-w-6xl mx-auto" />
-          </Suspense>
+          {LITE_HERO ? (
+            <HeroEmblemStatic />
+          ) : (
+            <Suspense fallback={<div className="w-full h-full max-w-6xl mx-auto" aria-hidden="true" />}>
+              <HeroScene className="w-full h-full max-w-6xl mx-auto" />
+            </Suspense>
+          )}
         </div>
 
         {/* The Luminous Horizon Arc (Gold Rim on Light Atmosphere) */}

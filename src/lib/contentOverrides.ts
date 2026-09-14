@@ -67,6 +67,25 @@ const LOCAL_ENABLED = Boolean((import.meta as { env?: Record<string, unknown> })
 const CACHE_KEY = 'branify_public_overrides_v1';
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
+// Set once overrides have been merged into the compiled registries. Views that
+// mount AFTER the boot event already fired (e.g. lazy chunks) can check this
+// synchronously instead of waiting for another event.
+let appliedFlag = false;
+
+/** True once admin overrides have been applied at least this session. */
+export function overridesApplied(): boolean {
+  return appliedFlag;
+}
+
+/** Fired after overrides merge into the registries so the mounted app can
+ *  re-render with admin-managed content (see App.tsx useOverridesTick). */
+function notifyOverridesApplied(): void {
+  appliedFlag = true;
+  try {
+    window.dispatchEvent(new CustomEvent('branify:overrides'));
+  } catch { /* ancient browsers: re-render tick is best-effort */ }
+}
+
 interface OverridesPayload {
   fetchedAt: number;
   template_categories?: Array<Record<string, unknown>>;
@@ -417,13 +436,17 @@ async function fetchOverrides(): Promise<OverridesPayload | null> {
   }
 }
 
-/** Called once at app boot, BEFORE React renders. Never blocks longer than ~1.2s
- *  (registry chunks download in parallel with the overrides fetch, not after). */
+/** Called once at app boot. Does NOT block first paint: React renders the
+ *  compiled registries immediately while overrides load in the background;
+ *  when they land, 'branify:overrides' triggers an app-wide re-render.
+ *  (Blocking render on this used to delay LCP by up to ~1.2s on cold visits.)
+ *  Cold fetches get a 3s ceiling — generous, since nothing is blocked. */
 export async function applyPublicContentOverrides(): Promise<void> {
   try {
     const cached = readCache();
     if (cached) {
       await applyOverrides(cached);
+      notifyOverridesApplied();
       // refresh quietly for next load
       void fetchOverrides().then((fresh) => {
         if (fresh) { try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(fresh)); } catch { /* noop */ } }
@@ -432,11 +455,12 @@ export async function applyPublicContentOverrides(): Promise<void> {
     }
     const fresh = await Promise.race([
       fetchOverrides(),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 1200)),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000)),
     ]);
     if (fresh) {
       try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(fresh)); } catch { /* noop */ }
       await applyOverrides(fresh);
+      notifyOverridesApplied();
     }
   } catch { /* public site stays on compiled registries */ }
 }

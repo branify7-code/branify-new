@@ -21,6 +21,7 @@ import {
   getToolsForTask, FINDER_TASKS, BEGINNER_OPTIONS, aiToolCategories,
   COMPARISON_ROWS, type AIDirectoryTool, type PricingFilter,
 } from '../../lib/aiToolsData';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 interface AIToolsViewProps {
   onNavigate?: (path: string) => void;
@@ -126,6 +127,8 @@ const ToolCard: React.FC<{
 
 /* ------------------------------------------------------------------ view */
 export const AIToolsView: React.FC<AIToolsViewProps> = () => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [pricing, setPricing] = useState<PricingFilter>('All');
@@ -137,8 +140,8 @@ export const AIToolsView: React.FC<AIToolsViewProps> = () => {
   const searchDebounce = useRef<number | null>(null);
   const directoryRef = useRef<HTMLDivElement>(null);
 
-  const allTools = useMemo(() => getAllAiTools(), []);
-  const featured = useMemo(() => getFeaturedAiTools(6), []);
+  const allTools = useMemo(() => getAllAiTools(), [overridesTick]);
+  const featured = useMemo(() => getFeaturedAiTools(6), [overridesTick]);
 
   /* task finder → directory, pre-filtered */
   const taskTools = useMemo(() => {

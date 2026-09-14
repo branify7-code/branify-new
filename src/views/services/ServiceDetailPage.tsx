@@ -18,6 +18,7 @@ import { servicesRegistry, AgencyService, ServicePackage } from '../../data/serv
 import { useCurrency } from '../../lib/currency';
 import { supabase } from '../../lib/supabase';
 import { trackNotFound } from '../../lib/track';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 const CONTACT_WHATSAPP = '+92 332 1029333';
 
@@ -397,6 +398,8 @@ interface ServiceDetailPageProps {
 }
 
 export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNavigate }) => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const { currency, currencyInfo, format } = useCurrency();
   // Unknown slugs render a real not-found state (noindex) instead of silently
   // serving the first service — prevents soft-404s and an infinite URL space.
@@ -423,7 +426,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug, onNa
     setModalOpen(true);
   };
 
-  const related = useMemo(() => servicesRegistry.filter((s) => s.id !== service?.id).slice(0, 3), [service?.id]);
+  const related = useMemo(() => servicesRegistry.filter((s) => s.id !== service?.id).slice(0, 3), [service?.id, overridesTick]);
 
   if (!service) {
     return (

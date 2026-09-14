@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useOverridesTick } from '../hooks/useOverridesTick';
 import {
   AlignLeft, ArrowRight, ArrowRightLeft, ArrowUpDown, BarChart2, BookOpen, Bot, Calculator, Clock, Code,
   Combine, Cpu, CreditCard, Crop, Database, DollarSign, Download, EyeOff, FileCheck, FileCode,
@@ -36,6 +37,8 @@ const IconFor = ({ name, className }: { name: string; className?: string }) => {
 const PREVIEW_LIMIT = 12;
 
 export const ToolsSection: React.FC<ToolsSectionProps> = ({ onNavigate }) => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
   // Popular tools first so the homepage preview leads with the strongest utilities.
@@ -43,7 +46,7 @@ export const ToolsSection: React.FC<ToolsSectionProps> = ({ onNavigate }) => {
     const popular = allTools.filter((t) => t.popular);
     const rest = allTools.filter((t) => !t.popular);
     return [...popular, ...rest];
-  }, []);
+  }, [overridesTick]);
 
   const filtered = useMemo(
     () =>

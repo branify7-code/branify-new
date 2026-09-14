@@ -51,7 +51,9 @@ export const HeroScene: React.FC<HeroSceneProps> = ({ className = '' }) => {
     }
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // DPR cap 1.75: on 2x/3x displays the full-res dome costs 23-75% more
+    // fragment work for a glow that is visually identical at this density.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);

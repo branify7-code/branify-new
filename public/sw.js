@@ -10,7 +10,7 @@
 // Caches are versioned; activate removes every previous branify-* cache.
 // =========================================================
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL_CACHE = `branify-shell-${VERSION}`;
 const ASSET_CACHE = `branify-assets-${VERSION}`;
 
@@ -18,7 +18,12 @@ const SHELL_URLS = [
   '/',
   '/manifest.json',
   '/branify-icon.png',
+  '/favicon.png',
+  '/apple-touch-icon.png',
   '/brand/branify-logo.png',
+  // Self-hosted critical faces (headline + body) — instant repeat visits
+  '/fonts/sora-latin-800.woff2',
+  '/fonts/inter-latin-400.woff2',
 ];
 
 self.addEventListener('install', (event) => {

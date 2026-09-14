@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Self-hosted Sora / Inter / JetBrains Mono (public/fonts, unicode-range'd) —
+   replaces the render-blocking fonts.googleapis.com stylesheet. */
+@import "./fonts.css";
 
 /* ============================================================================
    BRANIFY GLOBAL DESIGN SYSTEM

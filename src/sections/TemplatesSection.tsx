@@ -12,14 +12,17 @@ import {
   TEMPLATE_CATEGORIES, categoryCounts, categoryHref,
   featuredTemplates, templateCount,
 } from '../data/templates';
+import { useOverridesTick } from '../hooks/useOverridesTick';
 
 interface TemplatesSectionProps {
   onNavigate: (path: string) => void;
 }
 
 export const TemplatesSection: React.FC<TemplatesSectionProps> = ({ onNavigate }) => {
-  const featured = useMemo(() => featuredTemplates(8), []);
-  const counts = useMemo(() => categoryCounts(), []);
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
+  const featured = useMemo(() => featuredTemplates(8), [overridesTick]);
+  const counts = useMemo(() => categoryCounts(), [overridesTick]);
 
   return (
     <section id="templates" className="relative py-28 sm:py-36 bg-gradient-to-b from-[#F7F5FF] to-white text-[#111827] overflow-hidden">

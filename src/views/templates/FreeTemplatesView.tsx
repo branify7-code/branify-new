@@ -13,6 +13,7 @@ import { Download, Eye, Gift, Search, X } from 'lucide-react';
 import Seo from '../../components/Seo';
 import { freeTemplates, templateCategories, FreeTemplate } from '../../data/freeTemplatesRegistry';
 import { FREE_TEMPLATE_CATEGORY_SEO, FREE_TEMPLATES_HUB_SEO } from '../../data/seoMeta';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 export interface FreeTemplatesViewProps {
   onNavigate: (path: string) => void;
@@ -192,6 +193,8 @@ export const FreeTemplateCard: React.FC<FreeTemplateCardProps> = ({ template, on
 /* ------------------------------------------------------------------ */
 
 export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate, initialCategory = '' }) => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const validInitial = templateCategories.some((c) => c.slug === initialCategory && c.slug !== '') ? initialCategory : '';
   const [activeCategory, setActiveCategory] = useState<string>(validInitial);
   const [query, setQuery] = useState('');
@@ -208,7 +211,7 @@ export const FreeTemplatesView: React.FC<FreeTemplatesViewProps> = ({ onNavigate
           t.tags.some((tag) => tag.toLowerCase().includes(q))
       )
       .sort((a, b) => a.sortOrder - b.sortOrder);
-  }, [activeCategory, query]);
+  }, [activeCategory, query, overridesTick]);
 
   const activeLabel =
     activeCategory === ''

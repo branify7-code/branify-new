@@ -13,6 +13,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Seo from '../../components/Seo';
 import { BlogArticleBody } from '../../components/BlogArticleBody';
 import { blogPosts, BlogPost } from '../../data/blogPosts';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 /* ------------------------------------------------------------------ */
 /* Shared props                                                        */
@@ -42,7 +43,9 @@ const CategoryBadge: React.FC<{ category: string }> = ({ category }) => (
 /* ------------------------------------------------------------------ */
 
 export const BlogIndex: React.FC<BlogIndexProps> = ({ onNavigate }) => {
-  const featured = useMemo(() => blogPosts.find((p) => p.featured) || blogPosts[0], []);
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
+  const featured = useMemo(() => blogPosts.find((p) => p.featured) || blogPosts[0], [overridesTick]);
   const rest = useMemo(() => blogPosts.filter((p) => p.slug !== featured.slug), [featured]);
 
   return (

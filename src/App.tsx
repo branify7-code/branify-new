@@ -7,6 +7,7 @@ import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { usePWA } from './hooks/usePWA';
 import { trackNotFound } from './lib/track';
 import { getSeoOverride, getRedirectTarget } from './lib/contentOverrides';
+import { useOverridesTick } from './hooks/useOverridesTick';
 import { STATIC_PAGE_SEO } from './data/seoMeta';
 
 // Views — route-split via React.lazy so each public page only downloads what
@@ -69,6 +70,9 @@ function isKnownRoute(pathname: string): boolean {
 }
 
 export default function App() {
+  // Admin content overrides → bumps when live content lands (see hook above).
+  const overridesTick = useOverridesTick();
+
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return window.location.pathname + window.location.search || '/';
@@ -102,7 +106,8 @@ export default function App() {
   // Admin SEO overrides (priority #1) — applied on EVERY route change AFTER the
   // views' own <Seo>/document.title effects, so an override always wins. Pages
   // without a <Seo> mount (About, Contact, Portfolio, tool pages…) are covered
-  // too. No-op when no override exists for the path.
+  // too. No-op when no override exists for the path. Re-runs when admin
+  // overrides land (overridesTick) so late-loaded overrides still apply.
   useEffect(() => {
     try {
       const path = window.location.pathname;
@@ -122,7 +127,7 @@ export default function App() {
         document.querySelector('meta[name="robots"]')?.setAttribute('content', ov.robots.replace(/,\s*/g, ', '));
       }
     } catch { /* overrides are optional */ }
-  }, [currentRoute]);
+  }, [currentRoute, overridesTick]);
 
   // Redirects (legacy aliases + admin Redirect Manager) then 404 logging.
   // A path that matches an active admin redirect is rewritten in place
@@ -138,7 +143,9 @@ export default function App() {
       return;
     }
     if (path !== '/' && !isKnownRoute(path)) trackNotFound(path);
-  }, [currentRoute]);
+    // Re-check when the admin redirect map lands (overridesTick) so a redirect
+    // for the CURRENT url still applies if it loaded after first paint.
+  }, [currentRoute, overridesTick]);
   useEffect(() => {
     const legacyToolMap: Record<string, string> = {
       'pdf-tools': 'pdf-merge-planner',

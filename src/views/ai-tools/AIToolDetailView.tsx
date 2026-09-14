@@ -21,6 +21,7 @@ import { ToolIcon } from '../../components/ToolIcon';
 import {
   getAiToolBySlug, getRelatedAiTools, getToolSeo, groupPromptsByCategory,
 } from '../../lib/aiToolsData';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 interface AIToolDetailViewProps {
   slug: string;
@@ -63,7 +64,9 @@ const CopyButton: React.FC<{ text: string; name: string }> = ({ text, name }) =>
 };
 
 export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
-  const tool = useMemo(() => getAiToolBySlug(slug), [slug]);
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
+  const tool = useMemo(() => getAiToolBySlug(slug), [slug, overridesTick]);
   const [openFaq, setOpenFaq] = useState<number>(0);
 
   useEffect(() => {

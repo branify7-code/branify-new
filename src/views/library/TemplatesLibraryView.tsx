@@ -14,6 +14,7 @@ import {
   TEMPLATE_CATEGORIES, allTemplates, categoryCounts, getCategoryBySlug,
   searchTemplates, templateCount,
 } from '../../data/templates';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 interface TemplatesLibraryViewProps {
   onNavigate: (path: string) => void;
@@ -25,6 +26,8 @@ interface TemplatesLibraryViewProps {
 const PAGE_SIZE = 24;
 
 const TemplatesLibraryView: React.FC<TemplatesLibraryViewProps> = ({ onNavigate, initialCategory, initialQuery }) => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const validInitial = initialCategory && getCategoryBySlug(initialCategory) ? initialCategory : 'All';
   const [category, setCategory] = useState<string>(validInitial);
   const [query, setQuery] = useState(initialQuery || '');
@@ -48,7 +51,7 @@ const TemplatesLibraryView: React.FC<TemplatesLibraryViewProps> = ({ onNavigate,
     return () => clearTimeout(t);
   }, [query]);
 
-  const counts = useMemo(() => categoryCounts(), []);
+  const counts = useMemo(() => categoryCounts(), [overridesTick]);
 
   const filtered = useMemo(() => {
     let list = category === 'All' ? allTemplates() : allTemplates().filter((t) => t.categorySlug === category);

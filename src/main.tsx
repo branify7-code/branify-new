@@ -38,15 +38,17 @@ if (typeof window !== 'undefined' && import.meta.env.PROD && 'serviceWorker' in 
   });
 }
 
-// Apply admin-managed content overrides before first render (no-op when the
-// admin database is absent — public site then renders the compiled registries).
-const overridesReady = applyPublicContentOverrides();
+// First paint is NEVER blocked by the overrides network round-trip: React
+// renders the compiled registries immediately (the LCP hero is static content),
+// while admin-managed overrides load in the background. When they land,
+// contentOverrides dispatches 'branify:overrides' and App re-renders with the
+// live content (previously render waited up to ~1.2s — a guaranteed LCP hit
+// on every cold visit).
+void applyPublicContentOverrides();
 
-Promise.resolve(overridesReady).finally(() => {
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
-});
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
 

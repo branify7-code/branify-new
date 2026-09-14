@@ -34,13 +34,27 @@ export interface CompleteTool extends ToolRegistryEntry {
   definition: ToolDefinition;
 }
 
-/** All 136 tools with their executable definitions, in live-site registry order. */
-export const allTools: CompleteTool[] = toolsRegistry.map((entry) => {
-  const definition =
-    definitionMap.get(entry.slug) ||
-    ({ slug: entry.slug, fields: [], run: () => ({ output: entry.description }) } as ToolDefinition);
-  return { ...entry, definition };
-});
+/** All 136 tools with their executable definitions, in live-site registry order.
+ *  Rebuilt when admin content overrides land ('branify:overrides'): overrides
+ *  mutate toolsRegistry AFTER first paint (render is no longer blocked on
+ *  them), so the derived list must refresh. ES live bindings + the App-level
+ *  re-render make the new array visible to every consumer. */
+function buildAllTools(): CompleteTool[] {
+  return toolsRegistry.map((entry) => {
+    const definition =
+      definitionMap.get(entry.slug) ||
+      ({ slug: entry.slug, fields: [], run: () => ({ output: entry.description }) } as ToolDefinition);
+    return { ...entry, definition };
+  });
+}
+
+export let allTools: CompleteTool[] = buildAllTools();
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('branify:overrides', () => {
+    allTools = buildAllTools();
+  });
+}
 
 export const getCompleteTool = (slug: string): CompleteTool | undefined =>
   allTools.find((t) => t.slug === slug);

@@ -14,6 +14,7 @@ import {
   TEMPLATE_CATEGORIES, categoryHref, getCategoryBySlug,
   getTemplatesByCategory, searchTemplates,
 } from '../../data/templates';
+import { useOverridesTick } from '../../hooks/useOverridesTick';
 
 interface TemplatesCategoryViewProps {
   categorySlug: string;
@@ -21,6 +22,8 @@ interface TemplatesCategoryViewProps {
 }
 
 const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categorySlug, onNavigate }) => {
+  // Admin content overrides — recompute derived registry data when they land
+  const overridesTick = useOverridesTick();
   const category = getCategoryBySlug(categorySlug);
   const [query, setQuery] = useState('');
 
@@ -32,7 +35,7 @@ const TemplatesCategoryView: React.FC<TemplatesCategoryViewProps> = ({ categoryS
     return () => { document.title = 'Custom Web Development & Digital Agency | BRANIFY'; };
   }, [category]);
 
-  const templates = useMemo(() => (category ? searchTemplates(getTemplatesByCategory(category.slug), query) : []), [category, query]);
+  const templates = useMemo(() => (category ? searchTemplates(getTemplatesByCategory(category.slug), query) : []), [category, query, overridesTick]);
 
   if (!category) {
     // Unknown category → existing 404 system
