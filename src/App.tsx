@@ -5,7 +5,7 @@ import { PWAModal } from './components/PWAModal';
 import { ProjectInquiryModal } from './components/ProjectInquiryModal';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { usePWA } from './hooks/usePWA';
-import { trackNotFound } from './lib/track';
+import { trackEvent, trackNotFound } from './lib/track';
 import { getSeoOverride, getRedirectTarget } from './lib/contentOverrides';
 import { useOverridesTick } from './hooks/useOverridesTick';
 import { STATIC_PAGE_SEO } from './data/seoMeta';
@@ -174,6 +174,7 @@ export default function App() {
   };
 
   const handleOpenInquiry = (serviceId?: string) => {
+    trackEvent('start_project_click', { serviceId: serviceId || null, path: window.location.pathname });
     setSelectedServiceForInquiry(serviceId);
     setInquiryModalOpen(true);
   };
