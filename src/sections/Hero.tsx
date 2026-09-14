@@ -96,7 +96,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
         {/* Primary Impact Headline with Indigo→Blue Editorial Accent */}
         <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-extrabold tracking-[-0.03em] leading-[1.06] text-[#111827] max-w-4xl mx-auto">
           Digital{' '}
-          <span className="relative inline-block italic text-transparent bg-clip-text bg-gradient-to-r from-[#5B5FEF] via-[#3B82F6] to-[#8B5CF6]">
+          <span className="relative inline-block italic text-transparent bg-clip-text bg-gradient-to-r from-[#5B5FEF] via-[#3B82F6] to-[#8B5CF6] pr-[0.16em] -mr-[0.16em]">
             Excellence
           </span>{' '}
           Redefined<span className="text-[#C9A45C]">.</span>
