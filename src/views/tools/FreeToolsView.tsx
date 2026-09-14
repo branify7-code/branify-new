@@ -14,11 +14,14 @@ import { allTools } from '../../tools';
 import Seo from '../../components/Seo';
 import { STATIC_PAGE_SEO } from '../../data/seoMeta';
 import { useOverridesTick } from '../../hooks/useOverridesTick';
+import ToolsPromoBanner from '../../components/ToolsPromoBanner';
 
 interface FreeToolsViewProps {
   onNavigate: (path: string) => void;
   initialCategory?: string | null;
   onOpenPWA?: () => void;
+  /** Opens the existing START A PROJECT estimator modal (App.handleOpenInquiry). */
+  onStartInquiry?: () => void;
 }
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -94,7 +97,7 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, onClick }) => {
 
 /* ------------------------------ directory view ------------------------------ */
 
-const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCategory, onOpenPWA }) => {
+const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCategory, onOpenPWA, onStartInquiry }) => {
   // Admin content overrides — recompute derived registry data when they land
   const overridesTick = useOverridesTick();
   const validInitial = initialCategory && TOOL_CATEGORIES.includes(initialCategory as never) ? initialCategory : 'All';
@@ -136,6 +139,9 @@ const FreeToolsView: React.FC<FreeToolsViewProps> = ({ onNavigate, initialCatego
         canonicalPath="/tools"
         breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Free Tools', url: '/tools' }]}
       />
+      {/* Promo banner — custom web app / AI chatbot (dark premium card) */}
+      <ToolsPromoBanner onStartInquiry={onStartInquiry} />
+
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">

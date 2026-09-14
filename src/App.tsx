@@ -270,6 +270,7 @@ export default function App() {
             onNavigate={navigateTo}
             initialCategory={queryParams.get('category')}
             onOpenPWA={openPWAModal}
+            onStartInquiry={() => handleOpenInquiry()}
           />
         )}
 
