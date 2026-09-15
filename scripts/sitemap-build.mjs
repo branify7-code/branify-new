@@ -38,9 +38,19 @@ try {
 }
 
 try {
-  const r = spawnSync(process.execPath, [outfile], { stdio: 'inherit', cwd: root, timeout: 90_000 });
-  if (r.status !== 0) {
-    console.warn('[sitemap] WARN: generator exited non-zero — keeping committed sitemap.xml');
+  const r = spawnSync(process.execPath, [outfile], { stdio: 'pipe', cwd: root, timeout: 90_000 });
+  const out = (r.stdout || '').toString().trim();
+  const errOut = (r.stderr || '').toString().trim();
+  if (out) console.log(out);
+  if (r.status === 0) {
+    // generator already logged its own [sitemap] lines above
+  } else if (r.error) {
+    console.warn(`[sitemap] WARN: generator spawn failed (${r.error}) — keeping committed sitemap.xml`);
+  } else if (r.signal) {
+    console.warn(`[sitemap] WARN: generator killed with signal ${r.signal} — keeping committed sitemap.xml`);
+  } else {
+    console.warn(`[sitemap] WARN: generator exited ${r.status} — keeping committed sitemap.xml`);
+    if (errOut) console.warn(`[sitemap] generator stderr: ${errOut.slice(0, 2000)}`);
   }
 } finally {
   try { fs.rmSync(outfile, { force: true }); } catch { /* best effort */ }
