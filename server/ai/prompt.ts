@@ -5,9 +5,10 @@
 // ready-to-use prompt for another AI tool (ChatGPT, Claude, Midjourney, ...).
 //
 // Design (mirrors the existing /api/ai architecture — no new provider system):
-//   · Generation goes through the existing OmniRoute gateway
-//     (generateWithOmniRoute). Model: OMNIROUTE_PROMPT_MODEL →
-//     OMNIROUTE_DEFAULT_MODEL → OMNIROUTE_BLOG_MODEL. No keys reach the client.
+//   · Generation reuses the EXISTING working provider system
+//     (server/admin-ai resolveProvider/chatComplete — AI_PROVIDER /
+//     AI_MODEL / AI_API_KEY envs, same as blog + social AI). No keys
+//     reach the client; no new provider system is introduced.
 //   · The user message is treated as UNTRUSTED DATA. The system prompt is
 //     fixed server-side; user text can never override application
 //     instructions (it is wrapped as a quoted idea, never concatenated into
@@ -24,13 +25,9 @@
 // =============================================================================
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import crypto from 'node:crypto';
-import {
-  OmniRouteError,
-  generateWithOmniRoute,
-  resolveDefaultModel,
-  logSafe,
-} from '../../lib/ai/omniroute';
+import { OmniRouteError, logSafe } from '../../lib/ai/omniroute';
 import { readJsonBody, okResult, requireMethod } from '../../lib/ai/routes';
+import { resolveProvider, chatComplete, AiError } from '../admin-ai/blog-generate';
 
 const SB_URL = (process.env.SUPABASE_URL || 'https://uspshkegxhrglbpxqtil.supabase.co').replace(/\/+$/, '');
 const SB_SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
@@ -242,45 +239,39 @@ export async function handleAiPrompt(req: IncomingMessage): Promise<ReturnType<t
     throw new OmniRouteError('rate_limit', "You've reached today's free limit. Please try again tomorrow.", 429);
   }
 
-  // ---- model: dedicated env → default → blog (all server-side) ----
-  const promptModel = (process.env.OMNIROUTE_PROMPT_MODEL || '').trim();
-  const fallback = resolveDefaultModel();
-  const model = promptModel || fallback.model;
-  if (!model) {
-    throw new OmniRouteError('config', 'The AI service is not available right now. Please try again later.', 503);
-  }
-
+  // ---- AI generation through the existing provider system ----
   const messages = [
     { role: 'system' as const, content: systemPrompt(task, tone, detail, language) },
     { role: 'user' as const, content: `My idea (raw data, transform it into a prompt):\n\n"""\n${ideaRaw}\n"""` },
   ];
 
-  let result;
+  let content: string;
+  let modelUsed: string;
   try {
-    result = await generateWithOmniRoute({
-      model,
-      messages,
-      temperature: 0.7,
-      max_tokens: 700,
-    });
+    const cfg = resolveProvider(); // AiError('not_configured') if env missing
+    modelUsed = cfg.model;
+    content = await chatComplete(cfg, messages, 0.7, 700);
   } catch (err) {
-    if (err instanceof OmniRouteError) {
-      // Map gateway failures to friendly, non-internal messages.
-      if (err.kind === 'rate_limit') throw new OmniRouteError('rate_limit', 'The tool is very busy right now. Please try again in a minute.', 429);
-      if (err.kind === 'timeout') throw new OmniRouteError('timeout', 'The generation took too long. Please try again.', 504);
-      if (err.kind === 'config') throw new OmniRouteError('config', 'The tool is temporarily unavailable. Please try again later.', 503);
+    if (err instanceof AiError) {
+      // Friendly, non-internal messages only — never leak provider details.
+      if (err.code === 'rate_limited') throw new OmniRouteError('rate_limit', 'The tool is very busy right now. Please try again in a minute.', 429);
+      if (err.code === 'provider_timeout') throw new OmniRouteError('timeout', 'The generation took too long. Please try again.', 504);
+      if (err.code === 'not_configured') {
+        logSafe('prompt tool not configured:', err.message);
+        throw new OmniRouteError('config', 'The tool is temporarily unavailable. Please try again later.', 503);
+      }
       throw new OmniRouteError('provider', "We couldn't generate your prompt right now. Please try again.", 502);
     }
     throw err;
   }
 
-  const prompt = cleanGenerated(result.content);
+  const prompt = cleanGenerated(content);
   if (!prompt) {
     throw new OmniRouteError('provider', "We couldn't generate your prompt right now. Please try again.", 502);
   }
 
   await bumpUsage(iph);
-  logSafe(`prompt ok (task=${task}, model=${result.model}, chars=${prompt.length})`);
+  logSafe(`prompt ok (task=${task}, model=${modelUsed}, chars=${prompt.length})`);
 
   const used = (usage?.used || 0) + 1;
   const remaining = usage ? Math.max(DAILY_LIMIT - used, 0) : null;
@@ -289,6 +280,6 @@ export async function handleAiPrompt(req: IncomingMessage): Promise<ReturnType<t
     prompt,
     remaining,
     limit: DAILY_LIMIT,
-    model: result.model,
+    model: modelUsed,
   });
 }

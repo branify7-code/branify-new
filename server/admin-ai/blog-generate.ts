@@ -40,7 +40,7 @@ const SB_ANON = process.env.SUPABASE_ANON_KEY || 'sb_publishable_X11QDwMSfS2ivSe
 
 export const maxDuration = 120;
 
-class AiError extends Error {
+export class AiError extends Error {
   code: string;
   status: number;
   constructor(code: string, status: number, message: string) {
@@ -176,7 +176,7 @@ export function resolveProvider(oidcToken?: string): AiProviderConfig {
 
 interface ChatMessage { role: 'system' | 'user' | 'assistant'; content: string }
 
-async function chatComplete(cfg: AiProviderConfig, messages: ChatMessage[], temperature: number, maxTokens: number): Promise<string> {
+export async function chatComplete(cfg: AiProviderConfig, messages: ChatMessage[], temperature: number, maxTokens: number): Promise<string> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), cfg.timeoutMs);
   let res: Response;

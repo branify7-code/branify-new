@@ -460,7 +460,112 @@ function sendStream(res, result) {
 
 // server/ai/prompt.ts
 import crypto from "node:crypto";
-var SB_URL2 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+
+// server/admin-ai/blog-generate.ts
+var SB_URL2 = process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co";
+var SB_ANON2 = process.env.SUPABASE_ANON_KEY || "sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw";
+var AiError = class extends Error {
+  constructor(code, status, message) {
+    super(message);
+    this.code = code;
+    this.status = status;
+  }
+};
+var PROVIDER_DEFAULTS = {
+  glm: { baseUrl: "https://api.z.ai/api/paas/v4", model: "glm-4.6" },
+  openai: { baseUrl: "https://api.openai.com/v1", model: "gpt-4o" },
+  // Gemini via its OpenAI-compatible endpoint. Reuses the project's existing
+  // GEMINI_API_KEY env var when AI_API_KEY is not set (see resolveProvider).
+  gemini: { baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai", model: "gemini-2.5-flash" },
+  // Vercel AI Gateway — one OpenAI-compatible endpoint for every model.
+  // Authenticates with the deployment's auto-injected OIDC token, so no
+  // static key is needed when this endpoint runs on Vercel itself.
+  gateway: { baseUrl: "https://ai-gateway.vercel.sh/v1", model: "zai/glm-4.6" },
+  custom: { baseUrl: "", model: "" }
+};
+function resolveProvider(oidcToken) {
+  const name = (process.env.AI_PROVIDER || "glm").toLowerCase().trim();
+  const preset = PROVIDER_DEFAULTS[name] || PROVIDER_DEFAULTS.custom;
+  const baseUrl = (process.env.AI_API_BASE_URL || preset.baseUrl).replace(/\/+$/, "");
+  const apiKey = (process.env.AI_API_KEY || (name === "gemini" ? process.env.GEMINI_API_KEY : "") || (name === "gateway" ? oidcToken || process.env.VERCEL_OIDC_TOKEN || "" : "") || "").trim();
+  const model = (process.env.AI_MODEL || preset.model).trim();
+  if (!apiKey) {
+    throw new AiError(
+      "not_configured",
+      503,
+      name === "gemini" ? "AI generation (gemini provider) needs AI_API_KEY or GEMINI_API_KEY in the server environment variables, then redeploy." : name === "gateway" ? "AI generation (gateway provider) needs an AI Gateway API key in AI_API_KEY (Vercel dashboard \u2192 AI Gateway \u2192 API keys). On Vercel deployments the OIDC token is used automatically." : "AI generation is not configured yet. Add AI_API_KEY (and optionally AI_PROVIDER, AI_API_BASE_URL, AI_MODEL) to the server environment variables, then redeploy."
+    );
+  }
+  if (!baseUrl) throw new AiError("not_configured", 503, "AI base URL is missing. Set AI_API_BASE_URL for the configured provider.");
+  if (!model) throw new AiError("not_configured", 503, "AI model is missing. Set AI_MODEL in the server environment.");
+  const rawTimeout = process.env.AI_TIMEOUT_MS ? Number(process.env.AI_TIMEOUT_MS) : NaN;
+  const timeoutMs = Math.min(1e5, Math.max(15e3, Number.isFinite(rawTimeout) ? rawTimeout : 5e4));
+  return { name, baseUrl, apiKey, model, timeoutMs };
+}
+async function chatComplete(cfg, messages, temperature, maxTokens) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), cfg.timeoutMs);
+  let res;
+  const body = {
+    model: cfg.model,
+    messages,
+    temperature,
+    max_tokens: maxTokens,
+    stream: false
+  };
+  if (cfg.name === "gemini") body.reasoning_effort = "low";
+  try {
+    res = await fetch(`${cfg.baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${cfg.apiKey}` },
+      body: JSON.stringify(body),
+      signal: ctrl.signal
+    });
+  } catch (e) {
+    const aborted = e instanceof Error && (e.name === "AbortError" || /abort/i.test(e.message || ""));
+    if (aborted) {
+      throw new AiError(
+        "provider_timeout",
+        504,
+        "The AI provider took too long to respond. Retry \u2014 long articles can occasionally exceed the generation window."
+      );
+    }
+    throw new AiError("network", 502, "The AI provider could not be reached. Check connectivity and try again.");
+  } finally {
+    clearTimeout(timer);
+  }
+  const text = await res.text();
+  if (!res.ok) {
+    let msg = "";
+    try {
+      msg = JSON.parse(text)?.error?.message || "";
+    } catch {
+    }
+    msg = (msg || text || "").slice(0, 300);
+    if (res.status === 401 || res.status === 403) {
+      throw new AiError(
+        "provider_auth",
+        502,
+        `The AI provider rejected the server credential (HTTP ${res.status}).${msg ? " Provider said: " + msg : " Verify AI_API_KEY on the server."}`
+      );
+    }
+    if (res.status === 429) throw new AiError("rate_limited", 429, "The AI provider rate limit was hit. Wait a minute and try again.");
+    if (res.status === 404) throw new AiError("provider_model", 502, `The model "${cfg.model}" was not found on the provider. Check AI_MODEL.`);
+    throw new AiError("upstream", 502, `AI provider error (HTTP ${res.status}).${msg ? " " + msg : ""}`);
+  }
+  let content = "";
+  try {
+    const j = JSON.parse(text);
+    content = j.choices?.[0]?.message?.content || "";
+  } catch {
+  }
+  if (!content.trim()) throw new AiError("empty_content", 502, "The AI provider returned an empty response. Try again.");
+  return content;
+}
+var RATE_WINDOW_MS = 60 * 60 * 1e3;
+
+// server/ai/prompt.ts
+var SB_URL3 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
 var SB_SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 function intEnv(name, fallback) {
   const n = Number((process.env[name] || "").trim());
@@ -513,7 +618,7 @@ function prune(doc) {
   return { c: Object.fromEntries(entries.slice(0, 1e3)), total: doc.total || 0 };
 }
 async function sbFetch(path, init) {
-  return fetch(`${SB_URL2}/rest/v1/${path}`, {
+  return fetch(`${SB_URL3}/rest/v1/${path}`, {
     ...init,
     headers: {
       apikey: SB_SERVICE,
@@ -625,12 +730,6 @@ async function handleAiPrompt(req) {
   if (usage && usage.total >= GLOBAL_DAILY_LIMIT) {
     throw new OmniRouteError("rate_limit", "You've reached today's free limit. Please try again tomorrow.", 429);
   }
-  const promptModel = (process.env.OMNIROUTE_PROMPT_MODEL || "").trim();
-  const fallback = resolveDefaultModel();
-  const model = promptModel || fallback.model;
-  if (!model) {
-    throw new OmniRouteError("config", "The AI service is not available right now. Please try again later.", 503);
-  }
   const messages = [
     { role: "system", content: systemPrompt(task, tone, detail, language) },
     { role: "user", content: `My idea (raw data, transform it into a prompt):
@@ -639,36 +738,37 @@ async function handleAiPrompt(req) {
 ${ideaRaw}
 """` }
   ];
-  let result;
+  let content;
+  let modelUsed;
   try {
-    result = await generateWithOmniRoute({
-      model,
-      messages,
-      temperature: 0.7,
-      max_tokens: 700
-    });
+    const cfg = resolveProvider();
+    modelUsed = cfg.model;
+    content = await chatComplete(cfg, messages, 0.7, 700);
   } catch (err) {
-    if (err instanceof OmniRouteError) {
-      if (err.kind === "rate_limit") throw new OmniRouteError("rate_limit", "The tool is very busy right now. Please try again in a minute.", 429);
-      if (err.kind === "timeout") throw new OmniRouteError("timeout", "The generation took too long. Please try again.", 504);
-      if (err.kind === "config") throw new OmniRouteError("config", "The tool is temporarily unavailable. Please try again later.", 503);
+    if (err instanceof AiError) {
+      if (err.code === "rate_limited") throw new OmniRouteError("rate_limit", "The tool is very busy right now. Please try again in a minute.", 429);
+      if (err.code === "provider_timeout") throw new OmniRouteError("timeout", "The generation took too long. Please try again.", 504);
+      if (err.code === "not_configured") {
+        logSafe("prompt tool not configured:", err.message);
+        throw new OmniRouteError("config", "The tool is temporarily unavailable. Please try again later.", 503);
+      }
       throw new OmniRouteError("provider", "We couldn't generate your prompt right now. Please try again.", 502);
     }
     throw err;
   }
-  const prompt = cleanGenerated(result.content);
+  const prompt = cleanGenerated(content);
   if (!prompt) {
     throw new OmniRouteError("provider", "We couldn't generate your prompt right now. Please try again.", 502);
   }
   await bumpUsage(iph);
-  logSafe(`prompt ok (task=${task}, model=${result.model}, chars=${prompt.length})`);
+  logSafe(`prompt ok (task=${task}, model=${modelUsed}, chars=${prompt.length})`);
   const used = (usage?.used || 0) + 1;
   const remaining = usage ? Math.max(DAILY_LIMIT - used, 0) : null;
   return okResult(200, {
     prompt,
     remaining,
     limit: DAILY_LIMIT,
-    model: result.model
+    model: modelUsed
   });
 }
 

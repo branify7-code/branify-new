@@ -500,8 +500,10 @@ async function handler(req, res) {
   }
 }
 export {
+  AiError,
   BRANIFY_SYSTEM_PROMPT,
   buildUserPrompt,
+  chatComplete,
   handler as default,
   extractJsonObject,
   maxDuration,
