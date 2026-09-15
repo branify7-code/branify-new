@@ -10,7 +10,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
-  Sparkles, Search, ArrowUpRight, BookOpen, X, Scale, ChevronRight,
+  Sparkles, Search, ArrowUpRight, ArrowRight, BookOpen, X, Scale, ChevronRight,
   Wand2, LayoutGrid, Star,
 } from 'lucide-react';
 import Seo from '../../components/Seo';
@@ -111,16 +111,27 @@ const ToolCard: React.FC<{
         View Guide
         <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
       </button>
-      <a
-        href={tool.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => { trackEvent('ai_tool_visit', { name: tool.name, url: tool.url }); trackEvent('ai_tool_click', { name: tool.name, url: tool.url }); }}
-        className="inline-flex items-center gap-1 text-xs font-bold text-[#64748B] hover:text-[#111827] transition-colors"
-      >
-        Visit Tool
-        <ArrowUpRight className="w-3.5 h-3.5" />
-      </a>
+      {tool.url.startsWith('/') ? (
+        <a
+          href={tool.url}
+          onClick={() => { trackEvent('ai_tool_click', { name: tool.name, url: tool.url }); }}
+          className="inline-flex items-center gap-1 text-xs font-extrabold text-[#8F6B2D] hover:text-[#4338CA] transition-colors"
+        >
+          Try Free
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        </a>
+      ) : (
+        <a
+          href={tool.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => { trackEvent('ai_tool_visit', { name: tool.name, url: tool.url }); trackEvent('ai_tool_click', { name: tool.name, url: tool.url }); }}
+          className="inline-flex items-center gap-1 text-xs font-bold text-[#64748B] hover:text-[#111827] transition-colors"
+        >
+          Visit Tool
+          <ArrowUpRight className="w-3.5 h-3.5" />
+        </a>
+      )}
     </div>
   </article>
 );

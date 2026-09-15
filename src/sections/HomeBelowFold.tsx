@@ -11,6 +11,7 @@ import { TemplatesSection } from './TemplatesSection';
 import { PortfolioSection } from './PortfolioSection';
 import { ToolsSection } from './ToolsSection';
 import { AIToolsSection } from './AIToolsSection';
+import { PromptToolHighlight } from './PromptToolHighlight';
 import { ProcessSection } from './ProcessSection';
 import { WhyBranifySection } from './WhyBranifySection';
 import { StatsSection } from './StatsSection';
@@ -48,6 +49,9 @@ export const HomeBelowFold: React.FC<HomeBelowFoldProps> = ({
 
       {/* 7. AI Powered Tools Showcase — mirrors the /ai-tools page */}
       <AIToolsSection onNavigate={onNavigate} />
+
+      {/* 7b. Free AI Prompt Generator highlight — BRANIFY-owned free tool */}
+      <PromptToolHighlight onNavigate={onNavigate} />
 
       {/* 8. 5-Phase Process Timeline */}
       <ProcessSection />

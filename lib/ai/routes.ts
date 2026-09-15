@@ -37,7 +37,7 @@ const MAX_BODY_BYTES = 64 * 1024; // AI prompts are small; refuse larger bodies
 
 // ------------------------------------------------------------------ helpers
 
-async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
+export async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
   const chunks: Buffer[] = [];
   let total = 0;
   for await (const chunk of req) {
@@ -57,7 +57,7 @@ async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknow
   }
 }
 
-function errorResult(err: unknown): HandlerResult {
+export function errorResult(err: unknown): HandlerResult {
   if (err instanceof OmniRouteError) {
     return {
       status: err.status,
@@ -72,11 +72,11 @@ function errorResult(err: unknown): HandlerResult {
   };
 }
 
-function okResult(status: number, json: unknown): HandlerResult {
+export function okResult(status: number, json: unknown): HandlerResult {
   return { status, json: { ok: true, ...json as object } };
 }
 
-function requireMethod(req: IncomingMessage, method: 'GET' | 'POST'): OmniRouteError | null {
+export function requireMethod(req: IncomingMessage, method: 'GET' | 'POST'): OmniRouteError | null {
   if (!req.method || req.method.toUpperCase() !== method) {
     return new OmniRouteError('provider', 'Method not allowed for this AI endpoint.', 405);
   }

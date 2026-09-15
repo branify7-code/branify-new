@@ -18,6 +18,7 @@ import {
 import Seo from '../../components/Seo';
 import { trackEvent } from '../../lib/track';
 import { ToolIcon } from '../../components/ToolIcon';
+import FreePromptGenerator from '../../components/FreePromptGenerator';
 import {
   getAiToolBySlug, getRelatedAiTools, getToolSeo, groupPromptsByCategory,
 } from '../../lib/aiToolsData';
@@ -94,6 +95,8 @@ export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
   const toolSeo = getToolSeo(tool);
   const promptGroups = guide?.prompts?.length ? groupPromptsByCategory(guide.prompts) : [];
   const outputs = (tool.seo?.outputs || []).filter((o) => o.image);
+  // BRANIFY-owned interactive tool: url is internal, header CTA scrolls to it
+  const isBranifyTool = tool.url.startsWith('/');
 
   const breadcrumbs = [
     { name: 'Home', url: 'https://branify.store/' },
@@ -168,16 +171,28 @@ export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
               <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-[-0.02em]">{tool.name}</h1>
               <p className="text-[#475569] text-sm sm:text-base leading-relaxed">{tool.desc}</p>
               <div className="flex flex-wrap items-center gap-3 pt-1">
-                <a
-                  href={tool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => { trackEvent('ai_tool_visit', { name: tool.name, url: tool.url }); trackEvent('ai_tool_click', { name: tool.name, url: tool.url }); }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#5B5FEF] text-white text-xs font-extrabold uppercase tracking-widest shadow-lg shadow-[#5B5FEF]/25 hover:bg-[#4C46E8] transition-colors"
-                >
-                  Visit official website <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
-                <span className="text-[11px] text-[#94A3B8] font-mono">{tool.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                {isBranifyTool ? (
+                  <a
+                    href="#prompt-generator-tool"
+                    onClick={() => { trackEvent('ai_tool_click', { name: tool.name, url: tool.url }); }}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-b from-[#F6DF84] via-[#D4AF37] to-[#B3841F] text-[#1A1206] text-xs font-extrabold uppercase tracking-widest shadow-lg shadow-[#D4AF37]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#D4AF37]/40 transition-all"
+                  >
+                    Try the free tool <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                ) : (
+                  <>
+                    <a
+                      href={tool.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => { trackEvent('ai_tool_visit', { name: tool.name, url: tool.url }); trackEvent('ai_tool_click', { name: tool.name, url: tool.url }); }}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#5B5FEF] text-white text-xs font-extrabold uppercase tracking-widest shadow-lg shadow-[#5B5FEF]/25 hover:bg-[#4C46E8] transition-colors"
+                    >
+                      Visit official website <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                    <span className="text-[11px] text-[#94A3B8] font-mono">{tool.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -185,6 +200,13 @@ export const AIToolDetailView: React.FC<AIToolDetailViewProps> = ({ slug }) => {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pb-20 space-y-10">
+        {/* ==================== BRANIFY-OWNED INTERACTIVE TOOL ==================== */}
+        {isBranifyTool && (
+          <div id="prompt-generator-tool" className="scroll-mt-24">
+            <FreePromptGenerator />
+          </div>
+        )}
+
         {/* ==================== ABOUT ==================== */}
         {guide?.about && (
           <section aria-labelledby="about-heading" className="bg-white border border-[#E2E8F0] rounded-3xl p-6 sm:p-8">

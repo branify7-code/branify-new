@@ -19,6 +19,7 @@
 import { aiToolGuidesBuild } from './aiToolGuides.build';
 import { aiToolGuidesImage } from './aiToolGuides.media';
 import { aiToolGuidesWork } from './aiToolGuides.work';
+import { aiToolGuidesBranify } from './aiToolGuides.branify';
 
 export interface AIToolGuideStep {
   title: string;
@@ -57,7 +58,7 @@ export interface AIToolGuideContent {
   faqs: AIToolFaq[];
 }
 
-const g = (tool: AIToolGuideContent): AIToolGuideContent => tool;
+export const g = (tool: AIToolGuideContent): AIToolGuideContent => tool;
 
 export const aiToolGuides: Record<string, AIToolGuideContent> = {
   /* ============================== CHAT ASSISTANTS ============================== */
@@ -319,6 +320,7 @@ export const aiToolGuides: Record<string, AIToolGuideContent> = {
   ...aiToolGuidesImage,
   ...aiToolGuidesBuild,
   ...aiToolGuidesWork,
+  ...aiToolGuidesBranify,
 };
 
 export const AI_TOOL_GUIDE_COUNT = Object.keys(aiToolGuides).length;

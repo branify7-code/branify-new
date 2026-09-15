@@ -93,6 +93,7 @@ type SeedTool = Pick<AIDirectoryTool, 'name' | 'desc' | 'category' | 'pricing' |
 
 export const aiToolsDirectory: AIDirectoryTool[] = (
   [
+  { name: 'Free AI Prompt Generator', desc: 'Turn simple ideas into ready-to-use AI prompts for image, writing, social, marketing, coding and more — free BRANIFY tool, no sign-up.', category: 'Writing & Content', pricing: 'Free', url: '/ai-tools/free-ai-prompt-generator' },
   { name: 'ChatGPT', desc: 'General-purpose AI assistant for writing, coding, research, and images.', category: 'Chat Assistants', pricing: 'Freemium', url: 'https://chat.openai.com' },
   { name: 'Claude', desc: 'AI assistant strong at writing, coding, and reasoning-heavy tasks.', category: 'Chat Assistants', pricing: 'Freemium', url: 'https://claude.ai' },
   { name: 'Gemini', desc: "Google's AI assistant, integrated with Gmail, Docs, and Sheets.", category: 'Chat Assistants', pricing: 'Freemium', url: 'https://gemini.google.com' },
