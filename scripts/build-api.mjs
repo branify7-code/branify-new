@@ -36,7 +36,6 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const entries = [
   ['server/ai/status.ts', 'ai/status'],
   ['server/ai/generate.ts', 'ai/generate'],
-  ['server/ai/prompt-http.ts', 'ai/prompt'],
   ['server/ai/blog.ts', 'ai/blog'],
   ['server/gsc.ts', 'gsc'],
   ['server/social/generate.ts', 'social/generate'],
