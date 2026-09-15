@@ -42,8 +42,11 @@ try {
   const out = (r.stdout || '').toString().trim();
   const errOut = (r.stderr || '').toString().trim();
   if (out) console.log(out);
+  // The generator exits 0 even when it skips generation (warnings go to
+  // stderr) — always surface stderr so the build log tells the whole story.
+  if (errOut) console.warn(`[sitemap] generator stderr: ${errOut.slice(0, 2000)}`);
   if (r.status === 0) {
-    // generator already logged its own [sitemap] lines above
+    // done — outputs above
   } else if (r.error) {
     console.warn(`[sitemap] WARN: generator spawn failed (${r.error}) — keeping committed sitemap.xml`);
   } else if (r.signal) {
