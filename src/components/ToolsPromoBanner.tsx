@@ -88,82 +88,99 @@ const MeshDecor: React.FC = () => (
   </svg>
 );
 
-/** Glassmorphism browser-card mockup with chart skeleton + chatbot panel. */
+/** Glassmorphism app UI shown ON a desktop monitor (bezel + stand), per design. */
 const AppMockup: React.FC = () => (
-  <div className="relative mx-auto w-full max-w-[340px] sm:max-w-[400px] animate-brn-float motion-reduce:animate-none">
-    {/* floating glass chips around the card */}
-    <div className="absolute -top-4 -left-3 sm:-left-6 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md shadow-lg animate-brn-float-slow motion-reduce:animate-none">
+  <div className="relative mx-auto w-full max-w-[360px] sm:max-w-[430px]">
+    {/* floating glass chips around the monitor (like the design) */}
+    <div className="absolute -top-4 -left-3 sm:-left-7 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md shadow-lg animate-brn-float-slow motion-reduce:animate-none">
       <BarChart2 className="h-4 w-4 text-[#F6DF84]" aria-hidden="true" />
       <span className="block h-1.5 w-10 rounded-full bg-white/40" aria-hidden="true" />
     </div>
-    <div className="absolute -bottom-5 -right-2 sm:-right-5 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md shadow-lg animate-brn-float motion-reduce:animate-none" style={{ animationDelay: '1.2s' }}>
+    <div className="absolute top-1/3 -right-2 sm:-right-6 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md shadow-lg animate-brn-float motion-reduce:animate-none" style={{ animationDelay: '1.2s' }}>
       <PieChart className="h-4 w-4 text-[#F6DF84]" aria-hidden="true" />
       <span className="block h-1.5 w-8 rounded-full bg-white/40" aria-hidden="true" />
     </div>
 
-    {/* browser card */}
-    <div className="relative z-10 rounded-2xl border border-white/20 bg-white/10 p-3 shadow-[0_30px_60px_-20px_rgba(2,8,23,0.7)] backdrop-blur-xl transition-transform duration-500 hover:-translate-y-1.5">
-      {/* chrome bar */}
-      <div className="flex items-center gap-2 px-1 pb-3">
-        <span className="h-2 w-2 rounded-full bg-white/25" />
-        <span className="h-2 w-2 rounded-full bg-white/25" />
-        <span className="h-2 w-2 rounded-full bg-white/25" />
-        <span className="ml-2 h-4 flex-1 rounded-md bg-white/10 border border-white/10" />
-      </div>
-      {/* body: sidebar + content */}
-      <div className="grid grid-cols-[52px_1fr] sm:grid-cols-[60px_1fr] gap-2.5">
-        {/* sidebar skeleton */}
-        <div className="space-y-2 rounded-xl bg-white/5 border border-white/10 p-2.5" aria-hidden="true">
-          <span className="block h-2 w-8 rounded-full bg-[#D4AF37]/70" />
-          <span className="block h-2 w-6 rounded-full bg-white/25" />
-          <span className="block h-2 w-7 rounded-full bg-white/25" />
-          <span className="block h-2 w-5 rounded-full bg-white/25" />
-          <span className="block h-2 w-7 rounded-full bg-white/25" />
-        </div>
-        {/* main panel: chart + chat */}
-        <div className="space-y-2.5">
-          {/* mini bar chart card */}
-          <div className="rounded-xl bg-white/95 p-3 shadow-lg" aria-hidden="true">
-            <span className="mb-2 block h-1.5 w-14 rounded-full bg-slate-300" />
-            <div className="flex h-12 items-end gap-1.5">
-              {[40, 70, 55, 90, 65, 100].map((h, i) => (
-                <span
-                  key={i}
-                  className="w-full rounded-t bg-gradient-to-b from-[#F6DF84] to-[#D4AF37]"
-                  style={{ height: `${h}%` }}
-                />
-              ))}
+    {/* monitor: bezel + screen + stand */}
+    <div className="relative z-10 transition-transform duration-500 hover:-translate-y-1">
+      {/* bezel */}
+      <div className="rounded-[20px] bg-[linear-gradient(180deg,#232D40_0%,#0C1220_100%)] p-[7px] sm:p-[10px] shadow-[0_40px_80px_-24px_rgba(2,8,23,0.85)] ring-1 ring-white/15">
+        {/* screen — glassmorphism app UI */}
+        <div className="overflow-hidden rounded-[13px] bg-[linear-gradient(160deg,rgba(20,42,76,0.85)_0%,rgba(9,20,40,0.92)_100%)] backdrop-blur-xl">
+          <div className="p-3">
+            {/* chrome bar */}
+            <div className="flex items-center gap-2 px-1 pb-3" aria-hidden="true">
+              <span className="h-2 w-2 rounded-full bg-white/25" />
+              <span className="h-2 w-2 rounded-full bg-white/25" />
+              <span className="h-2 w-2 rounded-full bg-white/25" />
+              <span className="ml-2 h-4 flex-1 rounded-md bg-white/10 border border-white/10" />
+            </div>
+            {/* body: sidebar + content */}
+            <div className="grid grid-cols-[52px_1fr] sm:grid-cols-[60px_1fr] gap-2.5">
+              {/* sidebar skeleton */}
+              <div className="space-y-2 rounded-xl bg-white/5 border border-white/10 p-2.5" aria-hidden="true">
+                <span className="block h-2 w-8 rounded-full bg-[#D4AF37]/70" />
+                <span className="block h-2 w-6 rounded-full bg-white/25" />
+                <span className="block h-2 w-7 rounded-full bg-white/25" />
+                <span className="block h-2 w-5 rounded-full bg-white/25" />
+                <span className="block h-2 w-7 rounded-full bg-white/25" />
+              </div>
+              {/* main panel: chart + chat */}
+              <div className="space-y-2.5">
+                {/* mini bar chart card */}
+                <div className="rounded-xl bg-white/95 p-3 shadow-lg" aria-hidden="true">
+                  <span className="mb-2 block h-1.5 w-14 rounded-full bg-slate-300" />
+                  <div className="flex h-12 items-end gap-1.5">
+                    {[40, 70, 55, 90, 65, 100].map((h, i) => (
+                      <span
+                        key={i}
+                        className="w-full rounded-t bg-gradient-to-b from-[#F6DF84] to-[#D4AF37]"
+                        style={{ height: `${h}%` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {/* chatbot thread */}
+                <div className="rounded-xl bg-white/10 border border-white/15 p-2.5 space-y-2 backdrop-blur-sm">
+                  <div className="flex items-start gap-2">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/90 shadow">
+                      <Bot className="h-3.5 w-3.5 text-[#0D1F3C]" aria-hidden="true" />
+                    </span>
+                    <span className="rounded-lg rounded-tl-none bg-white/90 px-2.5 py-1.5" aria-hidden="true">
+                      <span className="block h-1.5 w-16 rounded-full bg-slate-300" />
+                      <span className="mt-1 block h-1.5 w-10 rounded-full bg-slate-200" />
+                    </span>
+                  </div>
+                  <div className="flex justify-end pl-8">
+                    <span className="rounded-lg rounded-tr-none bg-gradient-to-b from-[#F6DF84] to-[#D4AF37] px-2.5 py-1.5 shadow" aria-hidden="true">
+                      <span className="block h-1.5 w-16 rounded-full bg-[#1A1206]/30" />
+                      <span className="mt-1 block h-1.5 w-12 rounded-full bg-[#1A1206]/20" />
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          {/* chatbot thread */}
-          <div className="rounded-xl bg-white/10 border border-white/15 p-2.5 space-y-2 backdrop-blur-sm">
-            <div className="flex items-start gap-2">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/90 shadow">
-                <Bot className="h-3.5 w-3.5 text-[#0D1F3C]" aria-hidden="true" />
-              </span>
-              <span className="rounded-lg rounded-tl-none bg-white/90 px-2.5 py-1.5" aria-hidden="true">
-                <span className="block h-1.5 w-16 rounded-full bg-slate-300" />
-                <span className="mt-1 block h-1.5 w-10 rounded-full bg-slate-200" />
-              </span>
-            </div>
-            <div className="flex justify-end pl-8">
-              <span className="rounded-lg rounded-tr-none bg-gradient-to-b from-[#F6DF84] to-[#D4AF37] px-2.5 py-1.5 shadow" aria-hidden="true">
-                <span className="block h-1.5 w-16 rounded-full bg-[#1A1206]/30" />
-                <span className="mt-1 block h-1.5 w-12 rounded-full bg-[#1A1206]/20" />
-              </span>
-            </div>
-          </div>
+          {/* subtle screen glare */}
+          <div className="pointer-events-none h-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.10),transparent)]" aria-hidden="true" />
         </div>
       </div>
+      {/* stand: neck + base */}
+      <div
+        className="mx-auto h-7 sm:h-9 w-14 sm:w-20 bg-[linear-gradient(180deg,#CBD4E0_0%,#94A0B2_100%)]"
+        style={{ clipPath: 'polygon(22% 0, 78% 0, 100% 100%, 0 100%)' }}
+        aria-hidden="true"
+      />
+      <div className="mx-auto h-2.5 sm:h-3 w-36 sm:w-48 rounded-[50%] bg-[linear-gradient(180deg,#E2E8F0_0%,#9AA6B5_100%)] shadow-[0_14px_24px_-10px_rgba(2,8,23,0.7)]" aria-hidden="true" />
     </div>
 
     {/* gold sparkle star + chatbot badge (bottom-right, like the design) */}
     <div
-      className="absolute -bottom-6 -right-3 sm:-right-6 z-0 h-16 w-16 sm:h-20 sm:w-20 rotate-12 bg-gradient-to-br from-[#F6DF84] via-[#D4AF37] to-[#B3841F] opacity-90"
+      className="absolute bottom-2 -right-2 sm:-right-5 z-0 h-14 w-14 sm:h-16 sm:w-16 rotate-12 bg-gradient-to-br from-[#F6DF84] via-[#D4AF37] to-[#B3841F] opacity-90"
       style={{ clipPath: 'polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%)' }}
       aria-hidden="true"
     />
-    <div className="absolute -bottom-3 right-8 sm:right-14 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-[#0D1F3C]/80 backdrop-blur-md shadow-lg animate-brn-float-slow motion-reduce:animate-none">
+    <div className="absolute -bottom-2 right-9 sm:right-16 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-[#0D1F3C]/80 backdrop-blur-md shadow-lg animate-brn-float-slow motion-reduce:animate-none">
       <MessageSquare className="h-4 w-4 text-[#F6DF84]" aria-hidden="true" />
     </div>
   </div>
