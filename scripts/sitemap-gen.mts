@@ -72,12 +72,23 @@ const USING_SERVICE_ROLE = Boolean(pick('SUPABASE_SERVICE_ROLE'));
 // ------------------------------------------------------------------ fetching
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+// Build containers occasionally hang on outbound REST calls (observed on
+// Vercel: the whole child process hit the 90s spawn kill before any fetch
+// resolved). Bound every request AND the whole run so this step stays a
+// fast, clean no-op instead of eating the build budget.
+const FETCH_TIMEOUT_MS = 10_000;
+const RUN_DEADLINE_MS = 60_000;
+const runStartedAt = Date.now();
+
 /** GET one table, ALL rows, sequentially paged. Retries transient junk (proxies
  *  occasionally answer bursts with an HTML block page — retries fix that). */
 async function listAll(table: string): Promise<Record<string, unknown>[]> {
   const out: Record<string, unknown>[] = [];
   const page = 200;
   for (let from = 0; ; from += page) {
+    if (Date.now() - runStartedAt > RUN_DEADLINE_MS) {
+      throw new Error(`run deadline exceeded before ${table} (build egress to Supabase likely blocked)`);
+    }
     let rows: Record<string, unknown>[] | null = null;
     let total = 0;
     let lastErr = '';
@@ -89,6 +100,7 @@ async function listAll(table: string): Promise<Record<string, unknown>[]> {
             Authorization: `Bearer ${KEY}`,
             ...(USING_SERVICE_ROLE ? { Range: `${from}-${from + page - 1}` } : {}),
           },
+          signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
         });
         const ct = res.headers.get('content-type') || '';
         const text = await res.text();
