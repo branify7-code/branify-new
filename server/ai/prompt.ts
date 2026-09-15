@@ -79,10 +79,19 @@ function burstAllow(key: string): boolean {
 
 function clientIp(req: IncomingMessage): string {
   const h = req.headers || {};
-  const real = h['x-real-ip'];
-  const fwd = h['x-forwarded-for'];
-  const raw = (Array.isArray(real) ? real[0] : real) || (Array.isArray(fwd) ? fwd[0] : fwd) || '';
-  return String(raw).split(',')[0].trim() || 'unknown';
+  const one = (v: string | string[] | undefined): string =>
+    (Array.isArray(v) ? v[0] : v) || '';
+  // 1) Vercel/CDN-set real IP, 2) Vercel's own forwarded-for header,
+  // 3) the LAST x-forwarded-for entry — the one appended by the trusted
+  //    edge proxy. Client-supplied earlier entries are spoofable and
+  //    must never be trusted for quota hashing.
+  const real = one(h['x-real-ip']).trim();
+  if (real) return real.split(',')[0].trim();
+  const vercelFwd = one(h['x-vercel-forwarded-for']).trim();
+  if (vercelFwd) return vercelFwd.split(',')[0].trim();
+  const fwd = (Array.isArray(h['x-forwarded-for']) ? h['x-forwarded-for'][0] : h['x-forwarded-for']) || '';
+  const parts = String(fwd).split(',').map((s) => s.trim()).filter(Boolean);
+  return parts[parts.length - 1] || 'unknown';
 }
 
 function ipHash(req: IncomingMessage): string {
