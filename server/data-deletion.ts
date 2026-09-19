@@ -6,8 +6,10 @@
 // Contract (https://developers.facebook.com/docs/development/create-an-app/
 // app-dashboard/data-deletion-callback):
 //   · Meta POSTs application/x-www-form-urlencoded with one field:
-//     signed_request = base64url(payload JSON) + "." + base64url(HMAC-SHA256)
-//     — payload first, signature second; HMAC keyed with the App Secret.
+//     signed_request = base64url(HMAC-SHA256(payload_b64)) + "." + base64url(payload JSON)
+//     — SIGNATURE FIRST, payload second (opposite of JWT!), and the HMAC is
+//     computed over the base64url-encoded payload STRING, keyed with the App
+//     Secret (matches Meta's official parse_signed_request sample).
 //   · payload = { algorithm: "HMAC-SHA256", issued_at, user_id }
 //   · The endpoint MUST verify the signature, then respond 200 with JSON:
 //       { "url": "<status page>", "confirmation_code": "<code>" }
@@ -47,12 +49,14 @@ function b64urlDecode(part: string): Buffer {
   return Buffer.from(part.replace(/-/g, '+').replace(/_/g, '/'), 'base64');
 }
 
-/** Verify payload.hmac signature and decode the payload (constant-time compare). */
+/** Verify signature and decode the payload (constant-time compare).
+ *  Meta format: signed_request = <sig_b64>.<payload_b64>; HMAC over the
+ *  base64url payload string. Returns null on any mismatch. */
 function parseSignedRequest(raw: string, appSecret: string): SignedRequest | null {
   const dot = raw.indexOf('.');
   if (dot <= 0) return null;
-  const payloadB64 = raw.slice(0, dot);
-  const sigB64 = raw.slice(dot + 1);
+  const sigB64 = raw.slice(0, dot);          // FIRST part = signature
+  const payloadB64 = raw.slice(dot + 1);     // SECOND part = payload
   if (!payloadB64 || !sigB64) return null;
 
   let expected: Buffer;

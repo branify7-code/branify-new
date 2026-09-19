@@ -2056,8 +2056,8 @@ function b64urlDecode(part) {
 function parseSignedRequest(raw, appSecret) {
   const dot = raw.indexOf(".");
   if (dot <= 0) return null;
-  const payloadB64 = raw.slice(0, dot);
-  const sigB64 = raw.slice(dot + 1);
+  const sigB64 = raw.slice(0, dot);
+  const payloadB64 = raw.slice(dot + 1);
   if (!payloadB64 || !sigB64) return null;
   let expected;
   let got;
