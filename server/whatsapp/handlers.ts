@@ -90,6 +90,14 @@ function pathOf(req: IncomingMessage): string {
 }
 
 export async function handleWhatsapp(req: IncomingMessage): Promise<HandlerResult> {
+  try {
+    return await routeWhatsapp(req);
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+async function routeWhatsapp(req: IncomingMessage): Promise<HandlerResult> {
   const path = pathOf(req);
   const method = (req.method || 'GET').toUpperCase();
 

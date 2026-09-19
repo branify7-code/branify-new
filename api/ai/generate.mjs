@@ -1826,6 +1826,29 @@ var WaError = class extends Error {
 function ok(json = {}, status = 200) {
   return { status, json: { ok: true, ...json } };
 }
+function fail(e) {
+  if (e instanceof WaError || e instanceof SendError) {
+    const err = e;
+    return { status: err.status, json: { ok: false, error: { code: err.code, message: err.message } } };
+  }
+  const msg = e instanceof Error ? e.message : "Something went wrong.";
+  const known = [
+    "not configured yet",
+    "token is invalid or expired",
+    "required to",
+    "window is CLOSED",
+    "opted out",
+    "not created yet",
+    "no messages in this conversation",
+    "database",
+    "WhatsApp"
+  ].some((s) => msg.includes(s));
+  if (known) {
+    const code = /schema|created yet/.test(msg) ? "schema_missing" : /token|configur/i.test(msg) ? "config" : "wa_error";
+    return { status: /schema/.test(code) ? 503 : 400, json: { ok: false, error: { code, message: msg } } };
+  }
+  return { status: 500, json: { ok: false, error: { code: "internal", message: "Something went wrong in the WhatsApp module." } } };
+}
 function bearerOf(req) {
   const raw = String(req.headers.authorization || "");
   const m = /^Bearer\s+(.+)$/i.exec(raw.trim());
@@ -1850,6 +1873,13 @@ function pathOf(req) {
   return (req.url || "/").split("?")[0].replace(/\/+$/, "") || "/";
 }
 async function handleWhatsapp(req) {
+  try {
+    return await routeWhatsapp(req);
+  } catch (e) {
+    return fail(e);
+  }
+}
+async function routeWhatsapp(req) {
   const path = pathOf(req);
   const method = (req.method || "GET").toUpperCase();
   if (path === "/api/whatsapp/webhook") {
