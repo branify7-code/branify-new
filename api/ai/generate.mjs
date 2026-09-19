@@ -188,9 +188,9 @@ async function generateWithOmniRoute(opts) {
       throw new OmniRouteError(mapped.kind, mapped.message, mapped.status, mapped.detail);
     }
     const text = await res.text();
-    let json;
+    let json2;
     try {
-      json = JSON.parse(text);
+      json2 = JSON.parse(text);
     } catch {
       throw new OmniRouteError(
         "malformed",
@@ -199,22 +199,22 @@ async function generateWithOmniRoute(opts) {
         redactSecrets(text.slice(0, 200))
       );
     }
-    const content = extractContent(json);
-    const usageRaw = json.usage;
+    const content = extractContent(json2);
+    const usageRaw = json2.usage;
     const usage = usageRaw && typeof usageRaw === "object" ? usageRaw : null;
     return {
       stream: false,
       content,
-      finish_reason: json.choices?.[0]?.finish_reason ?? null,
-      model: json.model || model,
+      finish_reason: json2.choices?.[0]?.finish_reason ?? null,
+      model: json2.model || model,
       usage
     };
   } finally {
     clearTimeout(timer);
   }
 }
-function extractContent(json) {
-  const choices = json.choices;
+function extractContent(json2) {
+  const choices = json2.choices;
   if (!Array.isArray(choices) || choices.length === 0) {
     throw new OmniRouteError("malformed", "The AI gateway response had no completion choices.", 502);
   }
@@ -341,8 +341,8 @@ function errorResult(err) {
     json: { ok: false, error: { kind: "internal", message: "Something went wrong while handling the AI request." } }
   };
 }
-function okResult(status, json) {
-  return { status, json: { ok: true, ...json } };
+function okResult(status, json2) {
+  return { status, json: { ok: true, ...json2 } };
 }
 function requireMethod(req, method) {
   if (!req.method || req.method.toUpperCase() !== method) {
@@ -811,16 +811,16 @@ async function run(method, path, body, extra = {}) {
     throw new StoreError("network", 502, "Could not reach the BRANIFY database. Please try again.");
   }
   const text = await res.text();
-  let json = null;
+  let json2 = null;
   try {
-    json = text ? JSON.parse(text) : null;
+    json2 = text ? JSON.parse(text) : null;
   } catch {
-    json = null;
+    json2 = null;
   }
-  return { status: res.status, json, text };
+  return { status: res.status, json: json2, text };
 }
-function sbMessage(json, fallback) {
-  const j = json;
+function sbMessage(json2, fallback) {
+  const j = json2;
   return j && (j.message || j.error_description || j.error) || fallback;
 }
 function isSchemaMissing(err) {
@@ -829,12 +829,12 @@ function isSchemaMissing(err) {
   return /PGRST205|does not exist|schema_missing/i.test(msg);
 }
 async function sbSelect(path) {
-  const { status, json, text } = await run("GET", path.startsWith("/") ? path : `/${path}`);
+  const { status, json: json2, text } = await run("GET", path.startsWith("/") ? path : `/${path}`);
   if (status === 404 || text.includes("PGRST205")) {
     throw new StoreError("schema_missing", 503, "The WhatsApp CRM database tables are not created yet.");
   }
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database read failed (HTTP ${status}).`));
-  return Array.isArray(json) ? json : [];
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database read failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
 }
 async function sbSelectOne(path) {
   const rows = await sbSelect(path);
@@ -844,21 +844,21 @@ async function sbInsert(table, row, opts = {}) {
   const extra = {};
   if (opts.represent) extra.Prefer = opts.onConflictIgnore ? "resolution=ignore-duplicates,return=representation" : "return=representation";
   else if (opts.onConflictIgnore) extra.Prefer = "resolution=ignore-duplicates";
-  const { status, json } = await run("POST", `/${table}`, row, extra);
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database insert failed (HTTP ${status}).`));
-  return Array.isArray(json) ? json : [];
+  const { status, json: json2 } = await run("POST", `/${table}`, row, extra);
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database insert failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
 }
 async function sbUpdate(table, search, patch, represent = false) {
-  const { status, json } = await run("PATCH", `/${table}?${search}`, patch, represent ? { Prefer: "return=representation" } : {});
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database update failed (HTTP ${status}).`));
-  return Array.isArray(json) ? json : [];
+  const { status, json: json2 } = await run("PATCH", `/${table}?${search}`, patch, represent ? { Prefer: "return=representation" } : {});
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database update failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
 }
 async function sbUpsert(table, row, conflict, represent = false) {
-  const { status, json } = await run("POST", `/${table}?on_conflict=${conflict}`, row, {
+  const { status, json: json2 } = await run("POST", `/${table}?on_conflict=${conflict}`, row, {
     Prefer: represent ? "resolution=merge-duplicates,return=representation" : "resolution=merge-duplicates"
   });
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database upsert failed (HTTP ${status}).`));
-  return Array.isArray(json) ? json : [];
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database upsert failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
 }
 
 // server/whatsapp/store.ts
@@ -970,9 +970,9 @@ async function call(method, path, cfg, body, timeoutMs = 25e3) {
       aborted ? "WhatsApp did not respond in time. Try again." : "Could not reach the WhatsApp API. Check connectivity."
     );
   }
-  const json = await res.json().catch(() => ({}));
+  const json2 = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const err = json.error || {};
+    const err = json2.error || {};
     throw new GraphError(
       "graph",
       res.status,
@@ -981,7 +981,7 @@ async function call(method, path, cfg, body, timeoutMs = 25e3) {
       err.error_subcode ?? null
     );
   }
-  return json;
+  return json2;
 }
 async function testConnection(cfg) {
   if (!cfg.phoneNumberId || !cfg.accessToken) {
@@ -1823,8 +1823,8 @@ var WaError = class extends Error {
     this.status = status;
   }
 };
-function ok(json = {}, status = 200) {
-  return { status, json: { ok: true, ...json } };
+function ok(json2 = {}, status = 200) {
+  return { status, json: { ok: true, ...json2 } };
 }
 function fail(e) {
   if (e instanceof WaError || e instanceof SendError) {
@@ -2043,6 +2043,107 @@ function sendWhatsappResponse(res, result) {
   res.end(JSON.stringify(result.json));
 }
 
+// server/data-deletion.ts
+import crypto3 from "node:crypto";
+var STATUS_PAGE_URL = "https://branify.store/data-deletion";
+var MAX_BODY_BYTES2 = 16 * 1024;
+function json(status, body) {
+  return { status, json: { ok: status < 400, ...body } };
+}
+function b64urlDecode(part) {
+  return Buffer.from(part.replace(/-/g, "+").replace(/_/g, "/"), "base64");
+}
+function parseSignedRequest(raw, appSecret) {
+  const dot = raw.indexOf(".");
+  if (dot <= 0) return null;
+  const payloadB64 = raw.slice(0, dot);
+  const sigB64 = raw.slice(dot + 1);
+  if (!payloadB64 || !sigB64) return null;
+  let expected;
+  let got;
+  try {
+    expected = crypto3.createHmac("sha256", appSecret).update(payloadB64, "utf8").digest();
+    got = b64urlDecode(sigB64);
+  } catch {
+    return null;
+  }
+  if (expected.length !== got.length) return null;
+  try {
+    if (!crypto3.timingSafeEqual(expected, got)) return null;
+  } catch {
+    return null;
+  }
+  try {
+    const payload = JSON.parse(b64urlDecode(payloadB64).toString("utf8"));
+    if (payload.algorithm !== "HMAC-SHA256" || !payload.user_id) return null;
+    return { userId: String(payload.user_id), issuedAt: Number(payload.issued_at || 0) };
+  } catch {
+    return null;
+  }
+}
+async function readFormBody(req) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > MAX_BODY_BYTES2) throw new Error("body_too_large");
+    chunks.push(chunk);
+  }
+  return new URLSearchParams(Buffer.concat(chunks).toString("utf8"));
+}
+async function handleDataDeletion(req) {
+  const method = (req.method || "GET").toUpperCase();
+  if (method === "GET") {
+    return json(200, {
+      endpoint: "Meta data deletion request callback",
+      method: "POST",
+      content_type: "application/x-www-form-urlencoded",
+      field: "signed_request",
+      returns: { url: STATUS_PAGE_URL, confirmation_code: "<generated per request>" }
+    });
+  }
+  if (method !== "POST") {
+    return json(405, { error: { code: "method_not_allowed", message: "Use POST with a signed_request form field." } });
+  }
+  const cfg = await loadConfig();
+  if (!cfg.appSecret) {
+    return json(503, {
+      error: {
+        code: "config",
+        message: "App secret is not configured yet. Add the Meta App Secret in BRANIFY Admin \u2192 WhatsApp CRM \u2192 Settings, then retry."
+      }
+    });
+  }
+  let form;
+  try {
+    form = await readFormBody(req);
+  } catch {
+    return json(400, { error: { code: "bad_request", message: "Request body could not be read." } });
+  }
+  const raw = (form.get("signed_request") || "").trim();
+  if (!raw) {
+    return json(400, { error: { code: "bad_request", message: "Missing signed_request form field." } });
+  }
+  const parsed = parseSignedRequest(raw, cfg.appSecret);
+  if (!parsed) {
+    return json(401, { error: { code: "invalid_signature", message: "signed_request signature verification failed." } });
+  }
+  const confirmationCode = `brn_${crypto3.randomBytes(12).toString("hex")}`;
+  await logActivityServer(
+    "data_deletion_requested",
+    "meta_user",
+    parsed.userId,
+    {
+      confirmation_code: confirmationCode,
+      issued_at: parsed.issuedAt || void 0,
+      status_page: STATUS_PAGE_URL,
+      note: "Deletion requests are handled manually via the contact email on /data-deletion."
+    },
+    "data-deletion-callback"
+  );
+  return json(200, { url: STATUS_PAGE_URL, confirmation_code: confirmationCode });
+}
+
 // server/ai/generate.ts
 function requestPath(req) {
   const raw = req.url || "/";
@@ -2054,6 +2155,14 @@ async function handler(req, res) {
       sendWhatsappResponse(res, await handleWhatsapp(req));
     } catch (err) {
       sendWhatsappResponse(res, errorResult(err));
+    }
+    return;
+  }
+  if (requestPath(req) === "/api/data-deletion") {
+    try {
+      sendJson(res, await handleDataDeletion(req));
+    } catch (err) {
+      sendJson(res, errorResult(err));
     }
     return;
   }

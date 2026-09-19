@@ -9,6 +9,10 @@
       "destination": "/api/ai/generate"
     },
     {
+      "source": "/api/data-deletion",
+      "destination": "/api/ai/generate"
+    },
+    {
       "source": "/api/whatsapp",
       "destination": "/api/ai/generate"
     },
