@@ -134,16 +134,17 @@ export const WhatsAppPage: React.FC<AdminPageProps & { section: WaSection }> = (
       {/* body */}
       {ready === null ? (
         <LoadingBlock label="Checking WhatsApp CRM schema…" />
-      ) : !ready ? (
+      ) : !ready && section !== 'settings' ? (
         <SetupPanel />
       ) : (
         <div className="flex flex-col gap-4">
-          {section === 'inbox' && <InboxSection onOpenSettings={() => navigate(tabTo('settings'))} />}
-          {section === 'contacts' && <ContactsSection />}
-          {section === 'leads' && <LeadsSection />}
-          {section === 'templates' && <TemplatesSection />}
-          {section === 'automations' && <AutomationsSection />}
-          {section === 'analytics' && <AnalyticsSection />}
+          {section === 'settings' && ready === false && <SetupPanel />}
+          {section === 'inbox' && ready && <InboxSection onOpenSettings={() => navigate(tabTo('settings'))} />}
+          {section === 'contacts' && ready && <ContactsSection />}
+          {section === 'leads' && ready && <LeadsSection />}
+          {section === 'templates' && ready && <TemplatesSection />}
+          {section === 'automations' && ready && <AutomationsSection />}
+          {section === 'analytics' && ready && <AnalyticsSection />}
           {section === 'settings' && <SettingsSection onChanged={refreshStatus} />}
         </div>
       )}
