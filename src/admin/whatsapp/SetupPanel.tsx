@@ -31,8 +31,8 @@ export const SetupPanel: React.FC = () => {
         </div>
       </div>
       <ol className="mt-4 space-y-2 text-xs leading-relaxed text-[#334155]">
-        <li><b>1.</b> Open the Supabase SQL Editor: <span className="font-mono text-[10.5px]">supabase.com/dashboard/project/uspshkegxhrglbpxqtil/sql/new</span></li>
-        <li><b>2.</b> Copy the WhatsApp CRM schema (button below, or file <span className="font-mono text-[10.5px]">supabase/whatsapp-schema.sql</span>) and paste it.</li>
+        <li><b>1.</b> Open the Supabase SQL Editor: <span className="break-all font-mono text-[10.5px]">supabase.com/dashboard/project/uspshkegxhrglbpxqtil/sql/new</span></li>
+        <li><b>2.</b> Copy the WhatsApp CRM schema (button below, or file <span className="break-all font-mono text-[10.5px]">supabase/whatsapp-schema.sql</span>) and paste it.</li>
         <li><b>3.</b> Run it — it is fully idempotent and creates 9 RLS-protected <span className="font-mono">whatsapp_*</span> tables.</li>
         <li><b>4.</b> Reload this page — the Inbox, Contacts, Leads, Templates, Automations and Analytics unlock automatically.</li>
       </ol>
