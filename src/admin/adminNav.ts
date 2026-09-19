@@ -12,7 +12,7 @@ import type { LucideIcon } from 'lucide-react';
 import {
   Activity, BarChart3, Briefcase, CreditCard, FileText,
   FolderKanban, FolderTree, Gauge, HeartPulse, Image as ImageIcon, LayoutDashboard,
-  LayoutTemplate, Search, Settings, Share2, ShoppingBag, Sparkles, Users, Wrench,
+  LayoutTemplate, MessageCircle, Search, Settings, Share2, ShoppingBag, Sparkles, Users, Wrench,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -55,6 +55,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { path: '/customers', label: 'Customers', icon: Users },
       { path: '/leads', label: 'Leads', icon: Users, badgeKey: 'leads_new' },
+      { path: '/whatsapp', label: 'WhatsApp CRM', icon: MessageCircle },
       { path: '/payments', label: 'Payments', icon: CreditCard },
     ],
   },

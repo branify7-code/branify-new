@@ -116,7 +116,7 @@ function mapHttpStatus(status, bodyPreview) {
   };
 }
 async function generateWithOmniRoute(opts) {
-  const env = getOmniRouteEnv();
+  const env2 = getOmniRouteEnv();
   const { model, messages } = opts;
   if (!model || typeof model !== "string") {
     throw new OmniRouteError(
@@ -129,16 +129,16 @@ async function generateWithOmniRoute(opts) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OmniRouteError("provider", "The AI request contained no messages.", 502);
   }
-  const url = `${env.baseUrl}/chat/completions`;
+  const url = `${env2.baseUrl}/chat/completions`;
   const controller = new AbortController();
-  const timeoutMs = opts.timeout_ms && opts.timeout_ms >= 1e3 ? opts.timeout_ms : env.timeoutMs;
+  const timeoutMs = opts.timeout_ms && opts.timeout_ms >= 1e3 ? opts.timeout_ms : env2.timeoutMs;
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   let res;
   try {
     res = await fetch(url, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${env.apiKey}`,
+        "Authorization": `Bearer ${env2.apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -599,10 +599,14 @@ function burstAllow(key) {
 }
 function clientIp(req) {
   const h = req.headers || {};
-  const real = h["x-real-ip"];
-  const fwd = h["x-forwarded-for"];
-  const raw = (Array.isArray(real) ? real[0] : real) || (Array.isArray(fwd) ? fwd[0] : fwd) || "";
-  return String(raw).split(",")[0].trim() || "unknown";
+  const one = (v) => (Array.isArray(v) ? v[0] : v) || "";
+  const real = one(h["x-real-ip"]).trim();
+  if (real) return real.split(",")[0].trim();
+  const vercelFwd = one(h["x-vercel-forwarded-for"]).trim();
+  if (vercelFwd) return vercelFwd.split(",")[0].trim();
+  const fwd = (Array.isArray(h["x-forwarded-for"]) ? h["x-forwarded-for"][0] : h["x-forwarded-for"]) || "";
+  const parts = String(fwd).split(",").map((s) => s.trim()).filter(Boolean);
+  return parts[parts.length - 1] || "unknown";
 }
 function ipHash(req) {
   const secret = (process.env.OMNIROUTE_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "branify-fallback-secret").trim();
@@ -772,12 +776,1257 @@ ${ideaRaw}
   });
 }
 
+// server/whatsapp/sb.ts
+var SB_URL4 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+var SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE || "";
+function serviceRoleConfigured() {
+  return Boolean(SERVICE_ROLE);
+}
+function headers(extra = {}) {
+  return {
+    apikey: SERVICE_ROLE,
+    Authorization: `Bearer ${SERVICE_ROLE}`,
+    "Content-Type": "application/json",
+    ...extra
+  };
+}
+var StoreError = class extends Error {
+  constructor(code, status, message) {
+    super(message);
+    this.code = code;
+    this.status = status;
+  }
+};
+async function run(method, path, body, extra = {}) {
+  if (!SERVICE_ROLE) throw new StoreError("server_config", 500, "Supabase service credentials are not configured on the server.");
+  let res;
+  try {
+    res = await fetch(`${SB_URL4}/rest/v1${path}`, {
+      method,
+      headers: headers(extra),
+      body: body === void 0 ? void 0 : JSON.stringify(body),
+      signal: AbortSignal.timeout(15e3)
+    });
+  } catch {
+    throw new StoreError("network", 502, "Could not reach the BRANIFY database. Please try again.");
+  }
+  const text = await res.text();
+  let json = null;
+  try {
+    json = text ? JSON.parse(text) : null;
+  } catch {
+    json = null;
+  }
+  return { status: res.status, json, text };
+}
+function sbMessage(json, fallback) {
+  const j = json;
+  return j && (j.message || j.error_description || j.error) || fallback;
+}
+function isSchemaMissing(err) {
+  if (err instanceof StoreError && err.code === "schema_missing") return true;
+  const msg = err instanceof Error ? err.message : "";
+  return /PGRST205|does not exist|schema_missing/i.test(msg);
+}
+async function sbSelect(path) {
+  const { status, json, text } = await run("GET", path.startsWith("/") ? path : `/${path}`);
+  if (status === 404 || text.includes("PGRST205")) {
+    throw new StoreError("schema_missing", 503, "The WhatsApp CRM database tables are not created yet.");
+  }
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database read failed (HTTP ${status}).`));
+  return Array.isArray(json) ? json : [];
+}
+async function sbSelectOne(path) {
+  const rows = await sbSelect(path);
+  return rows.length ? rows[0] : null;
+}
+async function sbInsert(table, row, opts = {}) {
+  const extra = {};
+  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? "resolution=ignore-duplicates,return=representation" : "return=representation";
+  else if (opts.onConflictIgnore) extra.Prefer = "resolution=ignore-duplicates";
+  const { status, json } = await run("POST", `/${table}`, row, extra);
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database insert failed (HTTP ${status}).`));
+  return Array.isArray(json) ? json : [];
+}
+async function sbUpdate(table, search, patch, represent = false) {
+  const { status, json } = await run("PATCH", `/${table}?${search}`, patch, represent ? { Prefer: "return=representation" } : {});
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database update failed (HTTP ${status}).`));
+  return Array.isArray(json) ? json : [];
+}
+async function sbUpsert(table, row, conflict, represent = false) {
+  const { status, json } = await run("POST", `/${table}?on_conflict=${conflict}`, row, {
+    Prefer: represent ? "resolution=merge-duplicates,return=representation" : "resolution=merge-duplicates"
+  });
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json, `Database upsert failed (HTTP ${status}).`));
+  return Array.isArray(json) ? json : [];
+}
+
+// server/whatsapp/store.ts
+var env = (k) => (process.env[k] || "").trim();
+async function loadConfig() {
+  let db = {};
+  try {
+    db = await sbSelectOne("/whatsapp_settings?select=*") || {};
+  } catch (e) {
+    if (!isSchemaMissing(e)) throw e;
+    db = {};
+  }
+  const pick = (envKey, dbValue) => {
+    const e = env(envKey);
+    if (e) return { value: e, source: "env" };
+    if (dbValue && dbValue.trim()) return { value: dbValue.trim(), source: "database" };
+    return { value: "", source: "none" };
+  };
+  const waba = pick("WHATSAPP_WABA_ID", db.waba_id);
+  const phone = pick("WHATSAPP_PHONE_NUMBER_ID", db.phone_number_id);
+  const token = pick("WHATSAPP_ACCESS_TOKEN", db.access_token);
+  const verify = pick("WHATSAPP_VERIFY_TOKEN", db.verify_token);
+  const secret = pick("WHATSAPP_APP_SECRET", db.app_secret);
+  return {
+    wabaId: waba.value,
+    phoneNumberId: phone.value,
+    displayNumber: (db.display_number || "").trim(),
+    accessToken: token.value,
+    verifyToken: verify.value,
+    appSecret: secret.value,
+    mockMode: Boolean(db.mock_mode),
+    sources: {
+      waba_id: waba.source,
+      phone_number_id: phone.source,
+      access_token: token.source,
+      verify_token: verify.source,
+      app_secret: secret.source
+    }
+  };
+}
+var tail4 = (v) => v.length > 4 ? `\u2022\u2022\u2022\u2022${v.slice(-4)}` : v ? "\u2022\u2022\u2022\u2022" : "";
+function maskedConfig(cfg, schemaReady2) {
+  return {
+    configured: Boolean(cfg.phoneNumberId && cfg.accessToken),
+    waba_id: { set: Boolean(cfg.wabaId), value: cfg.wabaId, source: cfg.sources.waba_id },
+    phone_number_id: { set: Boolean(cfg.phoneNumberId), value: cfg.phoneNumberId, source: cfg.sources.phone_number_id },
+    access_token: { set: Boolean(cfg.accessToken), last4: tail4(cfg.accessToken), source: cfg.sources.access_token },
+    verify_token: { set: Boolean(cfg.verifyToken), last4: tail4(cfg.verifyToken), source: cfg.sources.verify_token },
+    app_secret: { set: Boolean(cfg.appSecret), last4: tail4(cfg.appSecret), source: cfg.sources.app_secret },
+    mock_mode: cfg.mockMode,
+    schema_ready: schemaReady2
+  };
+}
+async function saveConfig(patch, updatedBy) {
+  const row = { updated_at: (/* @__PURE__ */ new Date()).toISOString(), updated_by: updatedBy };
+  if (patch.wabaId !== void 0) row.waba_id = patch.wabaId.trim();
+  if (patch.phoneNumberId !== void 0) row.phone_number_id = patch.phoneNumberId.trim();
+  if (patch.accessToken !== void 0 && patch.accessToken.trim() !== "") row.access_token = patch.accessToken.trim();
+  if (patch.verifyToken !== void 0 && patch.verifyToken.trim() !== "") row.verify_token = patch.verifyToken.trim();
+  if (patch.appSecret !== void 0 && patch.appSecret.trim() !== "") row.app_secret = patch.appSecret.trim();
+  if (patch.mockMode !== void 0) row.mock_mode = patch.mockMode;
+  const existing = await sbSelectOne("/whatsapp_settings?select=id");
+  if (existing) await sbUpdate("whatsapp_settings", "id=eq.true", row);
+  else await sbUpsert("whatsapp_settings", { id: true, ...row }, "id");
+}
+
+// server/whatsapp/graph.ts
+var GRAPH_VERSION = "v21.0";
+var GRAPH_BASE = `https://graph.facebook.com/${GRAPH_VERSION}`;
+var GraphError = class extends Error {
+  constructor(code, status, message, metaCode = null, metaSubcode = null) {
+    super(message);
+    this.code = code;
+    this.status = status;
+    this.metaCode = metaCode;
+    this.metaSubcode = metaSubcode;
+  }
+};
+function friendly(metaCode, metaSubcode, fallback) {
+  if (metaCode === 190) return "The WhatsApp access token is invalid or expired. Generate a fresh System User token and update it in Settings.";
+  if (metaSubcode === 2494055 || metaCode === 131047) return "Re-engagement required \u2014 the 24-hour customer service window is closed for this person. Send an approved template message instead.";
+  if (metaCode === 131026 || metaSubcode === 2105005) return "The message could not be delivered to this WhatsApp number.";
+  if (metaCode === 131049) return "This customer selected to stop messages from this business number. Marketing contact is no longer permitted.";
+  if (metaCode === 130429 || metaCode === 80007) return "The WhatsApp Cloud API rate limit was hit. Wait a moment and try again.";
+  if (metaCode === 100) return "The request to WhatsApp was missing a required parameter. Check the configuration in Settings.";
+  if (metaCode === 10 || metaCode === 200) return "The WhatsApp access token does not have permission for this action. Check the token scopes in Meta Business settings.";
+  return fallback;
+}
+async function call(method, path, cfg, body, timeoutMs = 25e3) {
+  if (!cfg.accessToken) throw new GraphError("config", 400, "WhatsApp is not configured yet. Add the credentials in WhatsApp CRM \u2192 Settings.");
+  let url = `${GRAPH_BASE}/${path.replace(/^\//, "")}`;
+  if (method === "GET") url += (url.includes("?") ? "&" : "?") + `access_token=${encodeURIComponent(cfg.accessToken)}`;
+  let res;
+  try {
+    res = await fetch(url, {
+      method,
+      headers: method === "POST" ? {
+        Authorization: `Bearer ${cfg.accessToken}`,
+        "Content-Type": "application/json"
+      } : void 0,
+      body: method === "POST" ? JSON.stringify(body || {}) : void 0,
+      signal: AbortSignal.timeout(timeoutMs)
+    });
+  } catch (e) {
+    const aborted = e instanceof Error && (e.name === "AbortError" || /timeout|abort/i.test(e.message || ""));
+    throw new GraphError(
+      aborted ? "timeout" : "network",
+      aborted ? 504 : 502,
+      aborted ? "WhatsApp did not respond in time. Try again." : "Could not reach the WhatsApp API. Check connectivity."
+    );
+  }
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = json.error || {};
+    throw new GraphError(
+      "graph",
+      res.status,
+      friendly(err.code ?? null, err.error_subcode ?? null, err.message || `WhatsApp API error (HTTP ${res.status}).`),
+      err.code ?? null,
+      err.error_subcode ?? null
+    );
+  }
+  return json;
+}
+async function testConnection(cfg) {
+  if (!cfg.phoneNumberId || !cfg.accessToken) {
+    return { ok: false, error: new GraphError("config", 400, "Phone Number ID and Access Token are required to test the connection.") };
+  }
+  try {
+    const phone = await call("GET", `/${cfg.phoneNumberId}?fields=id,display_phone_number,verified_name,quality_rating,name_status`, cfg);
+    return { ok: true, phone };
+  } catch (e) {
+    return { ok: false, error: e instanceof GraphError ? e : new GraphError("graph", 502, "The WhatsApp API test failed.") };
+  }
+}
+async function fetchTemplates(cfg) {
+  if (!cfg.wabaId) throw new GraphError("config", 400, "WhatsApp Business Account ID is required to sync templates.");
+  const data = await call("GET", `/${cfg.wabaId}/message_templates?limit=200&fields=id,name,language,category,status,quality,components`, cfg);
+  return data.data || [];
+}
+async function sendPayload(cfg, payload, to) {
+  const out = await call("POST", `/${cfg.phoneNumberId}/messages`, cfg, { messaging_product: "whatsapp", recipient_type: "individual", to, ...payload });
+  const messageId = out.messages?.[0]?.id || "";
+  if (!messageId) throw new GraphError("graph", 502, "WhatsApp accepted the request but returned no message id.");
+  return { messageId, waId: to };
+}
+async function sendText(cfg, to, text) {
+  return sendPayload(cfg, { type: "text", text: { preview_url: true, body: text } }, to);
+}
+async function sendMedia(cfg, to, kind, media) {
+  const mediaPayload = { caption: media.caption || void 0 };
+  if (media.link) mediaPayload.link = media.link;
+  else if (media.id) mediaPayload.id = media.id;
+  if (kind === "document" && media.filename) mediaPayload.filename = media.filename;
+  return sendPayload(cfg, { type: kind, [kind]: mediaPayload }, to);
+}
+async function sendTemplate(cfg, to, templateName, language, bodyParams) {
+  const components = bodyParams.length ? [{ type: "body", parameters: bodyParams.map((text) => ({ type: "text", text })) }] : void 0;
+  return sendPayload(cfg, {
+    type: "template",
+    template: { name: templateName, language: { code: language || "en" }, ...components ? { components } : {} }
+  }, to);
+}
+async function fetchMediaBuffer(cfg, mediaId) {
+  const meta = await call("GET", `/${mediaId}`, cfg);
+  if (!meta.url) throw new GraphError("graph", 404, "WhatsApp returned no downloadable link for this media.");
+  let res;
+  try {
+    res = await fetch(meta.url, { headers: { Authorization: `Bearer ${cfg.accessToken}` }, signal: AbortSignal.timeout(3e4) });
+  } catch {
+    throw new GraphError("network", 502, "Could not download the media from WhatsApp.");
+  }
+  if (!res.ok) throw new GraphError("graph", res.status, "WhatsApp refused the media download.");
+  const buf = Buffer.from(await res.arrayBuffer());
+  return { buffer: buf, mime: meta.mime_type || res.headers.get("content-type") || "application/octet-stream" };
+}
+
+// server/whatsapp/webhook.ts
+import crypto2 from "node:crypto";
+
+// server/whatsapp/activity.ts
+async function logActivityServer(action, targetType, targetId, meta = {}, userEmail = "whatsapp-crm") {
+  try {
+    await sbInsert("activity_log", {
+      user_email: userEmail,
+      action,
+      target_type: targetType,
+      target_id: String(targetId || ""),
+      meta
+    });
+  } catch {
+  }
+}
+
+// server/whatsapp/automations.ts
+async function listRules(trigger) {
+  const q = trigger ? `/whatsapp_automations?select=*&trigger=eq.${trigger}&enabled=eq.true` : "/whatsapp_automations?select=*&enabled=eq.true";
+  return sbSelect(q);
+}
+async function fireAutomation(trigger, ctx) {
+  if (!trigger) return 0;
+  let rules;
+  try {
+    rules = await listRules(trigger);
+  } catch {
+    return 0;
+  }
+  let ran = 0;
+  for (const rule of rules) {
+    try {
+      for (const action of rule.actions || []) await applyAction(action, ctx);
+      await sbUpdate("whatsapp_automations", `id=eq.${rule.id}`, {
+        run_count: await bumpRuns(rule.id),
+        last_run_at: (/* @__PURE__ */ new Date()).toISOString()
+      });
+      await logActivityServer("whatsapp_automation_triggered", "whatsapp_automation", rule.id, { trigger, name: rule.name, wa_id: ctx.waId });
+      ran += 1;
+    } catch {
+    }
+  }
+  return ran;
+}
+async function bumpRuns(id) {
+  const rows = await sbSelect(`/whatsapp_automations?select=run_count&id=eq.${id}`);
+  return (rows[0]?.run_count || 0) + 1;
+}
+async function applyAction(action, ctx) {
+  const contact = (await sbSelect(`/whatsapp_contacts?select=name,email,company,wa_id,tags,assigned_to&id=eq.${ctx.contactId}`))[0];
+  if (!contact) return;
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  switch (action.type) {
+    case "create_lead": {
+      const existing = await sbSelect(`/inquiries?select=id&email=eq.${encodeURIComponent(contact.email || "not-provided@whatsapp.local")}&order=created_at.desc&limit=1`);
+      if (existing.length) break;
+      await sbInsert("inquiries", {
+        name: contact.name || `WhatsApp +${contact.wa_id}`,
+        email: contact.email || "not-provided@whatsapp.local",
+        company: contact.company || "Not specified",
+        services: [],
+        budget: "",
+        timeline: "",
+        details: `Lead created automatically from WhatsApp conversation (+${contact.wa_id}) by the WhatsApp CRM automations.`,
+        status: "new"
+      });
+      await logActivityServer("whatsapp_lead_created", "whatsapp_contact", ctx.contactId, { wa_id: contact.wa_id });
+      break;
+    }
+    case "update_lead": {
+      const status = action.params?.status;
+      if (status && ["new", "contacted", "qualified", "proposal", "won", "lost"].includes(status)) {
+        await sbUpdate("whatsapp_contacts", `id=eq.${ctx.contactId}`, { lead_status: status, updated_at: now });
+      }
+      break;
+    }
+    case "add_tag": {
+      const tag = (action.params?.tag || "").trim();
+      if (tag && !contact.tags.includes(tag)) {
+        await sbUpdate("whatsapp_contacts", `id=eq.${ctx.contactId}`, { tags: [...contact.tags, tag], updated_at: now });
+      }
+      break;
+    }
+    case "assign_agent": {
+      const agent = (action.params?.agent || "").trim();
+      if (agent) {
+        await sbUpdate("whatsapp_contacts", `id=eq.${ctx.contactId}`, { assigned_to: agent, updated_at: now });
+        await sbUpdate("whatsapp_conversations", `id=eq.${ctx.conversationId}`, { assigned_to: agent, updated_at: now });
+      }
+      break;
+    }
+    case "ai_summary": {
+      await sbInsert("whatsapp_notes", {
+        contact_id: ctx.contactId,
+        body: "AI summary requested by automation \u2014 open the conversation and run \u201CSummarize\u201D (human review required).",
+        author_email: "automation"
+      });
+      break;
+    }
+    case "create_followup": {
+      const days = Math.max(0, Number(action.params?.days ?? 1) || 1);
+      const due = new Date(Date.now() + days * 24 * 60 * 60 * 1e3);
+      await sbUpdate("whatsapp_conversations", `id=eq.${ctx.conversationId}`, {
+        followup_due_at: due.toISOString(),
+        followup_note: action.params?.note || "Follow up with this customer",
+        updated_at: now
+      });
+      break;
+    }
+  }
+}
+
+// server/whatsapp/webhook.ts
+var digitsOf = (v) => (v || "").replace(/[^\d]/g, "");
+var isoPlus24h = (d) => new Date(d.getTime() + 24 * 60 * 60 * 1e3);
+function previewOf(body, kind) {
+  if (body) return body.length > 90 ? `${body.slice(0, 90)}\u2026` : body;
+  const labels = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Voice note", video: "\u{1F3AC} Video", template: "\u{1F4CB} Template", unsupported: "Message" };
+  return labels[kind] || "Message";
+}
+async function webhookVerify(url) {
+  const cfg = await loadConfig();
+  const mode = url.searchParams.get("hub.mode");
+  const token = url.searchParams.get("hub.verify_token") || "";
+  const challenge = url.searchParams.get("hub.challenge") || "";
+  if (mode === "subscribe" && token && cfg.verifyToken && token === cfg.verifyToken) {
+    return { status: 200, body: challenge };
+  }
+  if (!cfg.verifyToken) return { status: 400, body: "whatsapp: webhook verify token is not configured yet" };
+  return { status: 403, body: "whatsapp: verification failed" };
+}
+async function signatureValid(raw, header, appSecret) {
+  if (!appSecret) return true;
+  if (!header || !header.startsWith("sha256=")) return false;
+  const expected = crypto2.createHmac("sha256", appSecret).update(raw, "utf8").digest("hex");
+  const got = header.slice(7);
+  if (expected.length !== got.length) return false;
+  try {
+    return crypto2.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(got, "hex"));
+  } catch {
+    return false;
+  }
+}
+function parseInbound(value) {
+  const kind = String(value.type || "unsupported");
+  const base = {
+    from: String(value.from || ""),
+    profileName: String(value.profile?.name || ""),
+    wamid: String(value.id || ""),
+    ts: new Date(Number(value.timestamp || 0) * 1e3 || Date.now())
+  };
+  const mediaOf = (v, captionKey) => ({
+    media_id: v.id || "",
+    mime: v.mime_type || "",
+    filename: v.filename || "",
+    caption: v[captionKey] || "",
+    sha256: v.sha256 || ""
+  });
+  switch (kind) {
+    case "text":
+      return { ...base, kind, body: String(value.text?.body || ""), media: {} };
+    case "image":
+      return { ...base, kind, body: "", media: mediaOf(value.image, "caption") };
+    case "document":
+      return { ...base, kind, body: String(value.document?.caption || ""), media: mediaOf(value.document, "caption") };
+    case "audio":
+      return { ...base, kind, body: "", media: mediaOf(value.audio, "caption") };
+    case "video":
+      return { ...base, kind, body: String(value.video?.caption || ""), media: mediaOf(value.video, "caption") };
+    case "sticker":
+    case "contacts":
+    case "location":
+      return { ...base, kind: "unsupported", body: `[${kind}]`, media: {} };
+    default:
+      return { ...base, kind: "unsupported", body: "", media: {} };
+  }
+}
+async function ensureContactConversation(waId, profileName, ts) {
+  const existing = await sbSelectOne(`/whatsapp_contacts?select=id,name&wa_id=eq.${waId}`);
+  let contactId;
+  let isNewContact = false;
+  if (existing) {
+    contactId = existing.id;
+    if (!existing.name && profileName) {
+      await sbUpdate("whatsapp_contacts", `id=eq.${contactId}`, { name: profileName, updated_at: (/* @__PURE__ */ new Date()).toISOString() });
+    }
+  } else {
+    const inserted = await sbInsert("whatsapp_contacts", {
+      wa_id: waId,
+      name: profileName || "",
+      source: "WhatsApp",
+      lead_status: "new"
+    }, { represent: true, onConflictIgnore: true });
+    if (inserted.length) {
+      contactId = inserted[0].id;
+      isNewContact = true;
+    } else {
+      const again = await sbSelectOne(`/whatsapp_contacts?select=id&wa_id=eq.${waId}`);
+      if (!again) throw new Error("contact_upsert_failed");
+      contactId = again.id;
+    }
+  }
+  const conv = await sbSelectOne(`/whatsapp_conversations?select=id&contact_id=eq.${contactId}`);
+  if (conv) return { contactId, conversationId: conv.id, isNewContact, isNewConversation: false };
+  const created = await sbInsert("whatsapp_conversations", {
+    contact_id: contactId,
+    wa_id: waId,
+    status: "open",
+    unread_count: 0,
+    last_message_at: ts.toISOString(),
+    last_in_at: ts.toISOString(),
+    window_expires_at: isoPlus24h(ts).toISOString()
+  }, { represent: true, onConflictIgnore: true });
+  const conversationId = created[0]?.id || (await sbSelectOne(`/whatsapp_conversations?select=id&contact_id=eq.${contactId}`))?.id || "";
+  if (!conversationId) throw new Error("conversation_create_failed");
+  return { contactId, conversationId, isNewContact, isNewConversation: true };
+}
+async function webhookProcess(raw, signatureHeader) {
+  const cfg = await loadConfig();
+  if (!await signatureValid(raw, signatureHeader, cfg.appSecret)) {
+    const e = new Error("invalid signature");
+    e.statusCode = 401;
+    throw e;
+  }
+  const outcome = { processed: 0, skipped: 0, detail: [] };
+  let payload;
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    const e = new Error("invalid json");
+    e.statusCode = 400;
+    throw e;
+  }
+  for (const entry of payload.entry || []) {
+    for (const change of entry.changes || []) {
+      const value = change.value || {};
+      if (value.metadata?.phone_number_id && cfg.phoneNumberId && value.metadata.phone_number_id !== cfg.phoneNumberId) {
+        outcome.skipped += 1;
+        outcome.detail.push("ignored: payload belongs to a different phone number");
+        continue;
+      }
+      for (const st of value.statuses || []) {
+        const wamid = String(st.id || "");
+        const status = String(st.status || "");
+        const key = `status:${wamid}:${status}`;
+        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: `status_${status}`, payload: { wamid, status, ts: st.timestamp } }, { onConflictIgnore: true });
+        if (!dedupe.length) {
+          outcome.skipped += 1;
+          continue;
+        }
+        if (!wamid || !["sent", "delivered", "read", "failed"].includes(status)) {
+          outcome.skipped += 1;
+          continue;
+        }
+        const err = st.errors?.[0];
+        const patch = { status };
+        if (status === "failed" && err) patch.error = { code: err.code, title: err.title, message: err.message };
+        const updated = await sbUpdate("whatsapp_messages", `wa_message_id=eq.${encodeURIComponent(wamid)}`, patch, true);
+        if (updated.length) {
+          outcome.processed += 1;
+          outcome.detail.push(`status ${status} \u2192 ${wamid}`);
+          if (status === "failed") {
+            await logActivityServer("whatsapp_message_failed", "whatsapp_message", String(updated[0].id || wamid), { wamid, error: patch.error || {} });
+          }
+        } else {
+          outcome.skipped += 1;
+          outcome.detail.push(`status ${status}: no local message ${wamid}`);
+        }
+      }
+      for (const m of value.messages || []) {
+        const inbound = parseInbound(m);
+        if (!inbound || !inbound.from || !inbound.wamid) {
+          outcome.skipped += 1;
+          continue;
+        }
+        const key = `msg:${inbound.wamid}`;
+        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: "message_in", payload: { wamid: inbound.wamid, from: inbound.from, type: inbound.kind } }, { onConflictIgnore: true });
+        if (!dedupe.length) {
+          outcome.skipped += 1;
+          outcome.detail.push(`duplicate message ${inbound.wamid}`);
+          continue;
+        }
+        try {
+          const waId = digitsOf(inbound.from);
+          const profileName = inbound.profileName || ((value.contacts || []).find((c) => String(c.wa_id || "") === String(inbound.from))?.profile?.name || "");
+          const { contactId, conversationId, isNewContact, isNewConversation } = await ensureContactConversation(waId, profileName, inbound.ts);
+          await sbInsert("whatsapp_messages", {
+            conversation_id: conversationId,
+            wa_id: waId,
+            wa_message_id: inbound.wamid,
+            direction: "in",
+            type: inbound.kind,
+            body: inbound.body,
+            media: inbound.media,
+            status: "received",
+            timestamp: inbound.ts.toISOString()
+          });
+          await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, {
+            unread_count: await bumpUnread(conversationId, 1),
+            last_message_preview: previewOf(inbound.body, inbound.kind),
+            last_message_at: inbound.ts.toISOString(),
+            last_in_at: inbound.ts.toISOString(),
+            window_expires_at: isoPlus24h(inbound.ts).toISOString(),
+            updated_at: (/* @__PURE__ */ new Date()).toISOString()
+          });
+          await sbUpdate("whatsapp_contacts", `id=eq.${contactId}`, { last_message_at: inbound.ts.toISOString(), updated_at: (/* @__PURE__ */ new Date()).toISOString() });
+          outcome.processed += 1;
+          outcome.detail.push(`message ${inbound.wamid} (${inbound.kind}) from +${waId}`);
+          await logActivityServer("whatsapp_message_received", "whatsapp_conversation", conversationId, { wa_id: waId, type: inbound.kind });
+          await fireAutomation(isNewConversation ? "new_conversation" : isNewContact ? "new_lead" : null, { contactId, conversationId, waId });
+        } catch (e) {
+          if (isSchemaMissing(e)) throw e;
+          outcome.detail.push(`message ${inbound.wamid} processing failed: ${e instanceof Error ? e.message : "error"}`);
+        }
+      }
+      const tplId = String(value.message_template_id || "");
+      const tplStatus = String(change.field === "message_template_status_update" && value.message_template_status || "");
+      if (tplId && tplStatus) {
+        const key = `tpl:${tplId}:${tplStatus}`;
+        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: "template_status", payload: { tplId, tplStatus } }, { onConflictIgnore: true });
+        if (dedupe.length && ["APPROVED", "PENDING", "REJECTED", "PAUSED", "ARCHIVED", "DELETED"].includes(tplStatus)) {
+          await sbUpdate("whatsapp_templates", `template_id=eq.${encodeURIComponent(tplId)}`, { status: tplStatus, updated_at: (/* @__PURE__ */ new Date()).toISOString() });
+          outcome.processed += 1;
+          outcome.detail.push(`template ${tplId} \u2192 ${tplStatus}`);
+        }
+      }
+    }
+  }
+  return outcome;
+}
+async function bumpUnread(conversationId, delta) {
+  const row = await sbSelectOne(`/whatsapp_conversations?select=unread_count&id=eq.${conversationId}`);
+  return Math.max(0, (row?.unread_count || 0) + delta);
+}
+
+// server/whatsapp/send.ts
+var SendError = class extends Error {
+  constructor(code, status, message, metaCode = null) {
+    super(message);
+    this.code = code;
+    this.status = status;
+    this.metaCode = metaCode;
+  }
+};
+async function loadConversation(conversationId) {
+  const conv = await sbSelectOne(`/whatsapp_conversations?select=id,contact_id,wa_id,window_expires_at,last_in_at,unread_count,assigned_to,status&id=eq.${conversationId}`);
+  if (!conv) throw new SendError("not_found", 404, "This conversation no longer exists.");
+  const contact = await sbSelectOne(`/whatsapp_contacts?select=opt_out&id=eq.${conv.contact_id}`);
+  return { conv, optOut: Boolean(contact?.opt_out) };
+}
+function windowOpen(conv) {
+  if (!conv.window_expires_at) return false;
+  return new Date(conv.window_expires_at).getTime() > Date.now();
+}
+async function finalize(conv, agentEmail, preview, ts) {
+  await sbUpdate("whatsapp_conversations", `id=eq.${conv.id}`, {
+    last_message_preview: preview,
+    last_message_at: ts,
+    last_out_at: ts,
+    unread_count: 0,
+    status: conv.status === "archived" ? "open" : conv.status,
+    assigned_to: conv.assigned_to || agentEmail,
+    updated_at: ts
+  });
+}
+async function sendFreeForm(opts) {
+  const cfg = await loadConfig();
+  const { conv, optOut } = await loadConversation(opts.conversationId);
+  if (optOut) throw new SendError("opted_out", 409, "This customer opted out of messages. Respect their preference and do not contact them here.");
+  if (!opts.conversationId) throw new SendError("bad_request", 400, "Conversation is required.");
+  if (opts.kind === "text" && !(opts.text || "").trim()) throw new SendError("bad_request", 400, "Type a message before sending.");
+  if (opts.kind !== "text" && !opts.media?.link) throw new SendError("bad_request", 400, "A media link is required to send media.");
+  if (!windowOpen(conv)) {
+    throw new SendError(
+      "template_required",
+      409,
+      "The 24-hour customer service window is CLOSED. WhatsApp only allows approved template messages to this customer right now."
+    );
+  }
+  const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+  const inserted = await sbInsert("whatsapp_messages", {
+    conversation_id: conv.id,
+    wa_id: conv.wa_id,
+    direction: "out",
+    type: opts.kind,
+    body: opts.kind === "text" ? (opts.text || "").trim() : opts.media?.caption || "",
+    media: opts.kind === "text" ? {} : { link: opts.media?.link || "", caption: opts.media?.caption || "", filename: opts.media?.filename || "" },
+    status: "queued",
+    timestamp: nowIso
+  }, { represent: true });
+  const rowId = inserted[0]?.id || "";
+  try {
+    const result = opts.kind === "text" ? await sendText(cfg, conv.wa_id, (opts.text || "").trim()) : await sendMedia(cfg, conv.wa_id, opts.kind, { link: opts.media?.link, caption: opts.media?.caption, filename: opts.media?.filename });
+    await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { status: "sent", wa_message_id: result.messageId });
+    await finalize(conv, opts.agentEmail, previewOf2(opts.kind === "text" ? opts.text || "" : mediaLabel(opts.kind, opts.media?.caption)), nowIso);
+    await logActivityServer("whatsapp_message_sent", "whatsapp_conversation", conv.id, { type: opts.kind, wa_id: conv.wa_id }, opts.agentEmail);
+    return { messageId: result.messageId, conversationId: conv.id, status: "sent" };
+  } catch (e) {
+    const g = e;
+    await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, {
+      status: "failed",
+      error: { code: g.metaCode ?? 0, title: "Send failed", message: g.message }
+    });
+    await logActivityServer("whatsapp_message_failed", "whatsapp_conversation", conv.id, { stage: "send", reason: g.message }, opts.agentEmail);
+    throw new SendError(g.code === "config" ? "config" : "send_failed", g.status || 502, g.message, g.metaCode ?? null);
+  }
+}
+function mediaLabel(kind, caption) {
+  const icons = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Audio", video: "\u{1F3AC} Video" };
+  return `${icons[kind] || "Media"}${caption ? ` \u2014 ${caption}` : ""}`;
+}
+async function sendTemplateMessage(input) {
+  const cfg = await loadConfig();
+  const { conv, optOut } = await loadConversation(input.conversationId);
+  if (!input.name) throw new SendError("bad_request", 400, "Select a template to send.");
+  if (optOut && (input.category || "MARKETING").toUpperCase() === "MARKETING") {
+    throw new SendError("opted_out", 409, "This customer opted out of marketing messages. Only utility templates (e.g. appointment or support) may be considered, and only with the customer's consent.");
+  }
+  const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+  const inserted = await sbInsert("whatsapp_messages", {
+    conversation_id: conv.id,
+    wa_id: conv.wa_id,
+    direction: "out",
+    type: "template",
+    body: `Template: ${input.name}`,
+    media: {},
+    template_name: input.name,
+    status: "queued",
+    timestamp: nowIso
+  }, { represent: true });
+  const rowId = inserted[0]?.id || "";
+  try {
+    const result = await sendTemplate(cfg, conv.wa_id, input.name, input.language || "en", input.bodyParams);
+    await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { status: "sent", wa_message_id: result.messageId });
+    await finalize(conv, input.agentEmail, `\u{1F4CB} ${input.name}`, nowIso);
+    await logActivityServer("whatsapp_template_sent", "whatsapp_conversation", conv.id, { template: input.name, language: input.language }, input.agentEmail);
+    return { messageId: result.messageId, conversationId: conv.id, status: "sent" };
+  } catch (e) {
+    const g = e;
+    await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, {
+      status: "failed",
+      error: { code: g.metaCode ?? 0, title: "Template send failed", message: g.message }
+    });
+    await logActivityServer("whatsapp_message_failed", "whatsapp_conversation", conv.id, { stage: "template_send", template: input.name, reason: g.message }, input.agentEmail);
+    throw new SendError(g.code === "config" ? "config" : "send_failed", g.status || 502, g.message, g.metaCode ?? null);
+  }
+}
+async function markConversationRead(conversationId) {
+  try {
+    await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, { unread_count: 0, updated_at: (/* @__PURE__ */ new Date()).toISOString() });
+  } catch (e) {
+    if (!isSchemaMissing(e)) throw e;
+  }
+}
+function previewOf2(body) {
+  return body.length > 90 ? `${body.slice(0, 90)}\u2026` : body;
+}
+
+// server/whatsapp/templates.ts
+var VALID_STATUS = /* @__PURE__ */ new Set(["APPROVED", "PENDING", "REJECTED", "PAUSED", "ARCHIVED", "DELETED"]);
+async function syncTemplates(agentEmail) {
+  const cfg = await loadConfig();
+  const remote = await fetchTemplates(cfg);
+  const statuses = {};
+  for (const t of remote) {
+    const status = VALID_STATUS.has(String(t.status).toUpperCase()) ? String(t.status).toUpperCase() : "PENDING";
+    statuses[status] = (statuses[status] || 0) + 1;
+    await sbUpsert("whatsapp_templates", {
+      template_id: String(t.id),
+      name: String(t.name || ""),
+      language: String(t.language || "en"),
+      category: String(t.category || "MARKETING").toUpperCase(),
+      status,
+      quality: String(t.quality || ""),
+      components: t.components ?? {},
+      synced_at: (/* @__PURE__ */ new Date()).toISOString(),
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    }, "template_id");
+  }
+  const remoteIds = new Set(remote.map((t) => String(t.id)));
+  const local = await sbSelect("/whatsapp_templates?select=id,template_id,status");
+  for (const row of local) {
+    if (!remoteIds.has(row.template_id) && row.status !== "DELETED") {
+      await sbUpdate("whatsapp_templates", `id=eq.${row.id}`, { status: "DELETED", updated_at: (/* @__PURE__ */ new Date()).toISOString() });
+    }
+  }
+  await logActivityServer("whatsapp_templates_synced", "whatsapp_templates", "", { count: remote.length }, agentEmail);
+  return { synced: remote.length, statuses };
+}
+
+// server/whatsapp/ai-actions.ts
+var CATEGORIES = ["Website Development", "Ecommerce", "AI Solutions", "SEO", "Branding", "Templates", "Support", "General Inquiry", "Existing Client", "Other"];
+var LEAD_FIELDS = ["name", "company", "email", "phone", "service", "industry", "project_type", "urgency", "requirements"];
+async function transcript(conversationId, max = 60) {
+  const conv = (await sbSelect(`/whatsapp_conversations?select=wa_id,contact_id&id=eq.${conversationId}`))[0];
+  if (!conv) throw new Error("conversation not found");
+  const rows = await sbSelect(`/whatsapp_messages?select=direction,type,body,template_name,timestamp,status&conversation_id=eq.${conversationId}&order=timestamp.asc&limit=${max}`);
+  const contact = (await sbSelect(`/whatsapp_contacts?select=name&id=eq.${conv.contact_id}`))[0];
+  const lines = rows.map((m) => {
+    const who = m.direction === "in" ? "Customer" : "Agent";
+    const kind = m.type === "text" ? m.body : m.type === "template" ? `[template ${m.template_name || ""}]` : `[${m.type} message]`;
+    return `${who}: ${kind || "[empty]"}`;
+  });
+  return { lines, waId: conv.wa_id, contactName: contact?.name || "" };
+}
+function aiFail(e) {
+  const msg = e instanceof Error ? e.message : "AI request failed";
+  const err = new Error(msg);
+  err.code = "ai_failed";
+  err.statusCode = 502;
+  throw err;
+}
+async function complete(system, user, maxTokens = 900) {
+  try {
+    return (await chatComplete(resolveProvider(), [
+      { role: "system", content: system },
+      { role: "user", content: user }
+    ], 0.4, maxTokens)).trim();
+  } catch (e) {
+    aiFail(e);
+  }
+}
+var BASE_RULES = "You support the BRANIFY agency team inside their WhatsApp CRM. Use ONLY the information in the conversation. Never invent names, emails, prices, requirements or facts. Be concise and factual.";
+async function runAiAction(action, conversationId, opts = {}, agentEmail = "") {
+  const t = await transcript(conversationId);
+  if (!t.lines.length) {
+    const err = new Error("There are no messages in this conversation yet.");
+    err.code = "empty_conversation";
+    err.statusCode = 400;
+    throw err;
+  }
+  const convo = `Customer WhatsApp number: +${t.waId}${t.contactName ? ` (saved name: ${t.contactName})` : ""}
+
+Conversation transcript:
+${t.lines.join("\n")}`;
+  let result;
+  switch (action) {
+    case "summarize": {
+      const out = await complete(
+        `${BASE_RULES} Produce an INTERNAL summary for the team in exactly this plain-text shape:
+Customer wants:
+<one line or "Not stated">
+
+Requirements:
+<bullet list or "Not stated">
+
+Urgency:
+<High | Medium | Low | Not stated>
+
+Notes:
+<at most 2 short factual bullets>`,
+        convo,
+        700
+      );
+      result = { text: out };
+      break;
+    }
+    case "extract": {
+      const out = await complete(
+        `${BASE_RULES} Extract lead information from the conversation. Return ONLY a JSON object with these keys, using null for anything not explicitly present in the conversation (never guess): ${LEAD_FIELDS.join(", ")}. urgency must be one of High|Medium|Low|null.`,
+        convo,
+        700
+      );
+      let parsed = null;
+      try {
+        parsed = JSON.parse(out.slice(out.indexOf("{"), out.lastIndexOf("}") + 1));
+      } catch {
+        parsed = null;
+      }
+      if (!parsed) {
+        const err = new Error("The AI returned an unreadable extraction. Try again.");
+        err.code = "ai_failed";
+        err.statusCode = 502;
+        throw err;
+      }
+      const clean = {};
+      for (const f of LEAD_FIELDS) clean[f] = parsed[f] ?? null;
+      result = { fields: clean };
+      break;
+    }
+    case "suggest": {
+      const out = await complete(
+        `${BASE_RULES} Draft ONE short professional reply (max 120 words, plain text, no signature, no placeholders like [name]) from BRANIFY to the customer's last message. Match their language. Be helpful and concrete; ask at most one clarifying question if something essential is missing.`,
+        convo,
+        500
+      );
+      result = { text: out, requires_approval: true };
+      break;
+    }
+    case "rewrite": {
+      const draft = (opts.draft || "").trim();
+      if (!draft) {
+        const err = new Error("Write or select a draft first, then use Rewrite.");
+        err.code = "bad_request";
+        err.statusCode = 400;
+        throw err;
+      }
+      const out = await complete(
+        `${BASE_RULES} Rewrite the AGENT'S draft reply below so it is clear, professional and friendly (max 120 words, plain text). Keep every factual claim exactly as written; fix tone and grammar only. Return the rewritten reply only.
+
+Draft:
+${draft}`,
+        convo,
+        500
+      );
+      result = { text: out, requires_approval: true };
+      break;
+    }
+    case "translate": {
+      const draft = (opts.draft || "").trim();
+      if (!draft) {
+        const err = new Error("Write the text to translate first.");
+        err.code = "bad_request";
+        err.statusCode = 400;
+        throw err;
+      }
+      const out = await complete(
+        `${BASE_RULES} Translate the text below into ${opts.language || "the customer's conversation language"}. Return the translation only, preserving meaning exactly.
+
+Text:
+${draft}`,
+        convo,
+        500
+      );
+      result = { text: out, requires_approval: true };
+      break;
+    }
+    case "followup": {
+      const out = await complete(
+        `${BASE_RULES} Write a short internal follow-up reminder for the team about this conversation: what to follow up on and why it matters (max 60 words, plain text). Internal only \u2014 never sent to the customer.`,
+        convo,
+        300
+      );
+      result = { text: out };
+      break;
+    }
+    case "classify": {
+      const out = await complete(
+        `${BASE_RULES} Classify the customer's inquiry into exactly ONE of these BRANIFY categories: ${CATEGORIES.join(" | ")}. Return ONLY the category name.`,
+        convo,
+        60
+      );
+      const category = CATEGORIES.find((c) => c.toLowerCase() === out.toLowerCase().trim()) || "Other";
+      result = { category };
+      break;
+    }
+  }
+  await logActivityServer(`whatsapp_ai_${action}`, "whatsapp_conversation", conversationId, { action }, agentEmail);
+  return result;
+}
+async function saveAiNote(contactId, title, body, authorEmail) {
+  await sbInsert("whatsapp_notes", {
+    contact_id: contactId,
+    body: `[AI \xB7 ${title}]
+${body}`,
+    author_email: authorEmail || "whatsapp-crm"
+  });
+}
+
+// server/whatsapp/analytics.ts
+function resolveRange(preset, customStart, customEnd) {
+  const now = /* @__PURE__ */ new Date();
+  const end = new Date(now);
+  const start = new Date(now);
+  switch (preset) {
+    case "today":
+      start.setHours(0, 0, 0, 0);
+      break;
+    case "7d":
+      start.setDate(start.getDate() - 7);
+      break;
+    case "28d":
+      start.setDate(start.getDate() - 28);
+      break;
+    case "3m":
+      start.setMonth(start.getMonth() - 3);
+      break;
+    case "custom": {
+      const s = customStart ? new Date(customStart) : new Date(now.getTime() - 7 * 864e5);
+      const e = customEnd ? new Date(customEnd) : now;
+      s.setHours(0, 0, 0, 0);
+      e.setHours(23, 59, 59, 999);
+      return { start: s, end: e, label: "custom" };
+    }
+    default:
+      start.setDate(start.getDate() - 7);
+  }
+  return { start, end, label: preset };
+}
+var iso = (d) => d.toISOString();
+async function analyticsFor(range) {
+  const from = iso(range.start);
+  const to = iso(range.end);
+  const conversations = await sbSelect(
+    `/whatsapp_conversations?select=id,assigned_to,status,unread_count,created_at&last_message_at=gte.${from}&last_message_at=lte.${to}&limit=5000`
+  );
+  const allOpen = await sbSelect(`/whatsapp_conversations?select=id,unread_count&status=in.(open,waiting)&limit=5000`);
+  const messages = await sbSelect(
+    `/whatsapp_messages?select=direction,status,type,template_name,conversation_id,timestamp,wa_id&timestamp=gte.${from}&timestamp=lte.${to}&limit=8000`
+  );
+  const contacts = await sbSelect(
+    `/whatsapp_contacts?select=id,lead_status,assigned_to,created_at&created_at=gte.${from}&limit=5000`
+  );
+  const statusTotals = await sbSelect(`/whatsapp_contacts?select=lead_status&limit=5000`);
+  const received = messages.filter((m) => m.direction === "in").length;
+  const sent = messages.filter((m) => m.direction === "out").length;
+  const failed = messages.filter((m) => m.status === "failed").length;
+  const templatesUsed = messages.filter((m) => m.type === "template" && m.direction === "out").length;
+  const templateBreakdown = {};
+  for (const m of messages) {
+    if (m.type === "template" && m.template_name) templateBreakdown[m.template_name] = (templateBreakdown[m.template_name] || 0) + 1;
+  }
+  const unreadNow = allOpen.reduce((acc, c) => acc + (c.unread_count || 0), 0);
+  const byConversation = /* @__PURE__ */ new Map();
+  for (const m of messages) {
+    const t = new Date(m.timestamp).getTime();
+    const entry = byConversation.get(m.conversation_id) || { inTs: null, outTs: null };
+    if (m.direction === "in" && (entry.inTs === null || t < entry.inTs)) entry.inTs = t;
+    if (m.direction === "out" && (entry.outTs === null || t < entry.outTs)) entry.outTs = t;
+    byConversation.set(m.conversation_id, entry);
+  }
+  const responseTimes = [];
+  for (const { inTs, outTs } of byConversation.values()) {
+    if (inTs !== null && outTs !== null && outTs > inTs) responseTimes.push(outTs - inTs);
+  }
+  const avgResponseMs = responseTimes.length ? Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length) : null;
+  const humanize = (ms) => {
+    if (ms === null) return null;
+    const mins = Math.round(ms / 6e4);
+    if (mins < 60) return `${mins} min`;
+    const hours = Math.floor(mins / 60);
+    return `${hours}h ${mins % 60}m`;
+  };
+  const teamMap = /* @__PURE__ */ new Map();
+  for (const c of conversations) {
+    const agent = c.assigned_to || "";
+    if (!agent) continue;
+    const entry = teamMap.get(agent) || { conversations: 0, resolved: 0, responseMs: [], qualified: 0 };
+    entry.conversations += 1;
+    if (c.status === "closed") entry.resolved += 1;
+    teamMap.set(agent, entry);
+  }
+  for (const c of contacts) {
+    const agent = c.assigned_to || "";
+    if (!agent) continue;
+    const entry = teamMap.get(agent) || { conversations: 0, resolved: 0, responseMs: [], qualified: 0 };
+    if (["qualified", "proposal", "won"].includes(c.lead_status)) entry.qualified += 1;
+    teamMap.set(agent, entry);
+  }
+  const team = Array.from(teamMap.entries()).map(([agent, v]) => ({
+    agent,
+    conversations: v.conversations,
+    resolved: v.resolved,
+    qualified_leads: v.qualified,
+    response_time: humanize(v.responseMs.length ? Math.round(v.responseMs.reduce((a, b) => a + b, 0) / v.responseMs.length) : null)
+  }));
+  const statusCount = {};
+  for (const c of statusTotals) statusCount[c.lead_status] = (statusCount[c.lead_status] || 0) + 1;
+  return {
+    range: { label: range.label, start: from, end: to },
+    conversations: conversations.length,
+    new_contacts: contacts.length,
+    messages_received: received,
+    messages_sent: sent,
+    unread_now: unreadNow,
+    response_time: humanize(avgResponseMs),
+    qualified_leads: statusCount.qualified || 0,
+    won_leads: statusCount.won || 0,
+    failed_messages: failed,
+    templates_used: templatesUsed,
+    template_breakdown: templateBreakdown,
+    lead_status_totals: statusCount,
+    team
+  };
+}
+
+// server/whatsapp/handlers.ts
+var SB_URL5 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+var SB_ANON3 = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw";
+var WaError = class extends Error {
+  constructor(code, status, message) {
+    super(message);
+    this.code = code;
+    this.status = status;
+  }
+};
+function ok(json = {}, status = 200) {
+  return { status, json: { ok: true, ...json } };
+}
+function bearerOf(req) {
+  const raw = String(req.headers.authorization || "");
+  const m = /^Bearer\s+(.+)$/i.exec(raw.trim());
+  return m ? m[1].trim() : "";
+}
+async function requireAdmin(req) {
+  const token = bearerOf(req);
+  if (!token) throw new WaError("unauthorized", 401, "Sign in to BRANIFY Admin first.");
+  const uRes = await fetch(`${SB_URL5}/auth/v1/user`, { headers: { apikey: SB_ANON3, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(1e4) });
+  if (!uRes.ok) throw new WaError("unauthorized", 401, "Your admin session is invalid or expired. Sign in again.");
+  const user = await uRes.json();
+  if (!user?.email) throw new WaError("unauthorized", 401, "Your admin session is invalid or expired. Sign in again.");
+  const aRes = await fetch(`${SB_URL5}/rest/v1/admin_users?email=eq.${encodeURIComponent(user.email)}&select=email,active`, {
+    headers: { apikey: SB_ANON3, Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(1e4)
+  });
+  const admins = aRes.ok ? await aRes.json() : [];
+  if (!admins.some((a) => a.active)) throw new WaError("forbidden", 403, "This account is not on the BRANIFY admin allowlist.");
+  return { id: user.id || user.email, email: user.email };
+}
+function pathOf(req) {
+  return (req.url || "/").split("?")[0].replace(/\/+$/, "") || "/";
+}
+async function handleWhatsapp(req) {
+  const path = pathOf(req);
+  const method = (req.method || "GET").toUpperCase();
+  if (path === "/api/whatsapp/webhook") {
+    if (method === "GET") {
+      const url = new URL(req.url || "/", "http://x");
+      const v = await webhookVerify(url);
+      return { status: v.status, json: v.body, raw: true };
+    }
+    if (method === "POST") {
+      const rawChunks = [];
+      for await (const chunk of req) rawChunks.push(chunk);
+      const raw = Buffer.concat(rawChunks).toString("utf8");
+      try {
+        const outcome = await webhookProcess(raw, String(req.headers["x-hub-signature-256"] || ""));
+        return ok({ webhook: outcome });
+      } catch (e) {
+        const statusCode = e.statusCode;
+        if (statusCode === 401) return { status: 401, json: { ok: false, error: { code: "signature", message: "Webhook signature check failed." } } };
+        if (isSchemaMissing(e)) {
+          return ok({ webhook: { processed: 0, skipped: 0, detail: ["schema not created yet"] } });
+        }
+        return { status: 200, json: { ok: true, webhook: { processed: 0, skipped: 0, detail: ["processing deferred"] } } };
+      }
+    }
+    throw new WaError("bad_request", 405, "Method not allowed for the webhook.");
+  }
+  const admin = await requireAdmin(req);
+  const body = method === "POST" || method === "PATCH" ? await readJsonBody(req) : {};
+  if (path === "/api/whatsapp/config") {
+    if (method === "GET") {
+      const cfg = await loadConfig();
+      return ok({ config: maskedConfig(cfg, await schemaReady()) });
+    }
+    if (method === "POST") {
+      await saveConfig({
+        wabaId: strOf(body.waba_id),
+        phoneNumberId: strOf(body.phone_number_id),
+        accessToken: strOf(body.access_token),
+        verifyToken: strOf(body.verify_token),
+        appSecret: strOf(body.app_secret)
+      }, admin.email);
+      await logActivityServer("whatsapp_settings_updated", "whatsapp_settings", "singleton", {}, admin.email);
+      const cfg = await loadConfig();
+      return ok({ config: maskedConfig(cfg, await schemaReady()) });
+    }
+  }
+  if (path === "/api/whatsapp/status" && method === "GET") {
+    const cfg = await loadConfig();
+    const masked = maskedConfig(cfg, await schemaReady());
+    if (!masked.configured) {
+      return ok({ state: "Configuration Required", detail: "Add the Phone Number ID and Access Token in Settings.", config: masked });
+    }
+    const test = await testConnection(cfg);
+    if ("error" in test && test.error) {
+      const state = test.error.code === "config" ? "Configuration Required" : test.error.code === "timeout" ? "Webhook Error" : "Disconnected";
+      return ok({ state, detail: test.error.message, config: masked });
+    }
+    const phone = test.phone;
+    return ok({
+      state: "Connected",
+      detail: `Verified against the WhatsApp Cloud API \u2014 ${phone.verified_name || phone.display_phone_number} (${phone.display_phone_number})`,
+      phone: { id: phone.id, display: phone.display_phone_number, verified_name: phone.verified_name, quality: phone.quality_rating || "" },
+      config: masked
+    });
+  }
+  if (path === "/api/whatsapp/send" && method === "POST") {
+    const kind = strOf(body.kind) || "text";
+    if (kind === "template") {
+      const result2 = await sendTemplateMessage({
+        conversationId: strOf(body.conversation_id),
+        agentEmail: admin.email,
+        name: strOf(body.template_name),
+        language: strOf(body.language) || "en",
+        category: strOf(body.category),
+        bodyParams: Array.isArray(body.body_params) ? body.body_params.map(String) : []
+      });
+      return ok({ result: result2 });
+    }
+    const result = await sendFreeForm({
+      conversationId: strOf(body.conversation_id),
+      agentEmail: admin.email,
+      kind: ["image", "document", "audio", "video"].includes(kind) ? kind : "text",
+      text: strOf(body.text),
+      media: body.media || void 0
+    });
+    return ok({ result });
+  }
+  if (path === "/api/whatsapp/read" && method === "POST") {
+    await markConversationRead(strOf(body.conversation_id));
+    return ok();
+  }
+  if (path === "/api/whatsapp/templates/sync" && method === "POST") {
+    const result = await syncTemplates(admin.email);
+    return ok({ result });
+  }
+  if (path === "/api/whatsapp/ai" && method === "POST") {
+    const action = strOf(body.action);
+    const convId = strOf(body.conversation_id);
+    if (!convId) throw new WaError("bad_request", 400, "Open a conversation first.");
+    const result = await runAiAction(action, convId, { draft: strOf(body.draft), language: strOf(body.language) }, admin.email);
+    if (strOf(body.save_as_note) === "true" && convId) {
+      const conv = (await sbSelect(`/whatsapp_conversations?select=contact_id&id=eq.${convId}`))[0];
+      const text = String(result.text || result.category || "");
+      if (conv && text) await saveAiNote(conv.contact_id, action, text, admin.email);
+    }
+    return ok({ result });
+  }
+  if (path === "/api/whatsapp/analytics" && method === "POST") {
+    const range = resolveRange(strOf(body.preset) || "7d", strOf(body.start), strOf(body.end));
+    const data = await analyticsFor(range);
+    return ok({ analytics: data });
+  }
+  if (path === "/api/whatsapp/automations/run" && method === "POST") {
+    if (!serviceRoleConfigured()) throw new WaError("server_config", 500, "Server database credentials are missing.");
+    const cutoff = new Date(Date.now() - 7 * 864e5).toISOString();
+    const stale = await sbSelect(`/whatsapp_conversations?select=id,contact_id,wa_id&status=in.(open,waiting)&or=(last_in_at.is.null,last_in_at.lt.${cutoff})&limit=50`);
+    let affected = 0;
+    for (const conv of stale) {
+      affected += await fireAutomation("customer_inactive", { contactId: conv.contact_id, conversationId: conv.id, waId: conv.wa_id });
+    }
+    await logActivityServer("whatsapp_automations_run", "whatsapp_automations", "customer_inactive", { checked: stale.length, affected }, admin.email);
+    return ok({ checked: stale.length, affected });
+  }
+  if (path.startsWith("/api/whatsapp/media/") && method === "GET") {
+    const mediaId = path.split("/").pop() || "";
+    if (!/^[A-Za-z0-9_-]+$/.test(mediaId)) throw new WaError("bad_request", 400, "Invalid media id.");
+    const cfg = await loadConfig();
+    const { buffer, mime } = await fetchMediaBuffer(cfg, mediaId);
+    return { status: 200, json: "", raw: true, buffer, mime };
+  }
+  throw new WaError("not_found", 404, "Unknown WhatsApp CRM endpoint.");
+}
+function strOf(v) {
+  return typeof v === "string" ? v.trim() : "";
+}
+async function schemaReady() {
+  try {
+    await sbSelect("/whatsapp_settings?select=id&limit=1");
+    return true;
+  } catch {
+    return false;
+  }
+}
+function sendWhatsappResponse(res, result) {
+  const extra = result;
+  if (extra.raw && extra.buffer) {
+    res.statusCode = extra.status;
+    res.setHeader("Content-Type", extra.mime || "application/octet-stream");
+    res.setHeader("Cache-Control", "private, max-age=300");
+    res.end(extra.buffer);
+    return;
+  }
+  if (extra.raw) {
+    res.statusCode = extra.status;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.end(String(extra.json ?? ""));
+    return;
+  }
+  res.statusCode = result.status;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(result.json));
+}
+
 // server/ai/generate.ts
 function requestPath(req) {
   const raw = req.url || "/";
   return raw.split("?")[0].replace(/\/+$/, "") || "/";
 }
 async function handler(req, res) {
+  if (requestPath(req).startsWith("/api/whatsapp")) {
+    try {
+      sendWhatsappResponse(res, await handleWhatsapp(req));
+    } catch (err) {
+      sendWhatsappResponse(res, errorResult(err));
+    }
+    return;
+  }
   if (requestPath(req) === "/api/ai/prompt") {
     try {
       sendJson(res, await handleAiPrompt(req));

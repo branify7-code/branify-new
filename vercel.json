@@ -5,6 +5,18 @@
       "destination": "/api/ai/generate"
     },
     {
+      "source": "/api/whatsapp/webhook",
+      "destination": "/api/ai/generate"
+    },
+    {
+      "source": "/api/whatsapp",
+      "destination": "/api/ai/generate"
+    },
+    {
+      "source": "/api/whatsapp/:path*",
+      "destination": "/api/ai/generate"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

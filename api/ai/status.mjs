@@ -217,6 +217,37 @@ async function handleAiStatus(req) {
   const probe = url.searchParams.get("probe") === "1";
   const info = await getOmniRouteStatus(probe);
   const blog = resolveBlogModel();
+  const PROBED_ENV_KEYS = [
+    "AI_PROVIDER",
+    "AI_API_BASE_URL",
+    "AI_API_KEY",
+    "AI_MODEL",
+    "AI_TIMEOUT_MS",
+    "GEMINI_API_KEY",
+    "IMAGE_AI_PROVIDER",
+    "IMAGE_AI_MODEL",
+    "IMAGE_AI_API_KEY",
+    "OMNIROUTE_BASE_URL",
+    "OMNIROUTE_API_KEY",
+    "OMNIROUTE_BLOG_MODEL",
+    "OMNIROUTE_DEFAULT_MODEL",
+    "OMNIROUTE_ALLOWED_MODELS",
+    "OMNIROUTE_TIMEOUT_MS",
+    "OMNIROUTE_REQUIRE_AUTH",
+    "SUPABASE_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY",
+    "APP_URL",
+    "CRON_SECRET",
+    "META_APP_ID",
+    "META_APP_SECRET",
+    "META_GRAPH_API_VERSION",
+    "META_REDIRECT_URI",
+    "META_TOKEN_ENCRYPTION_KEY"
+  ];
+  const env_probe = {};
+  for (const k of PROBED_ENV_KEYS) env_probe[k] = Boolean((process.env[k] || "").trim());
   return okResult(200, {
     gateway: "omniroute",
     configured: info.configured,
@@ -229,7 +260,8 @@ async function handleAiStatus(req) {
     blog_model_source: blog.source,
     // The combo name is configuration metadata, not a secret — it lets the
     // admin verify the right combo is wired without exposing any key.
-    blog_model: blog.model
+    blog_model: blog.model,
+    env_probe
   });
 }
 function sendJson(res, result) {

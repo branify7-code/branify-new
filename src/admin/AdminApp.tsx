@@ -47,6 +47,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { ActivityPage } from './pages/ActivityPage';
 import { SystemPage } from './pages/SystemPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { WhatsAppPage } from './whatsapp/WhatsAppPage';
 
 const BADGES_SEEN_KEY = 'branify_admin_badges_seen';
 
@@ -216,6 +217,13 @@ const AdminShell: React.FC<{
       case '/social': return <SocialMediaManager {...pageProps} />;
       case '/leads': return <LeadsPage {...pageProps} />;
       case '/customers': return <CustomersPage {...pageProps} />;
+      case '/whatsapp': return <WhatsAppPage {...pageProps} section="inbox" />;
+      case '/whatsapp/contacts': return <WhatsAppPage {...pageProps} section="contacts" />;
+      case '/whatsapp/leads': return <WhatsAppPage {...pageProps} section="leads" />;
+      case '/whatsapp/templates': return <WhatsAppPage {...pageProps} section="templates" />;
+      case '/whatsapp/automations': return <WhatsAppPage {...pageProps} section="automations" />;
+      case '/whatsapp/analytics': return <WhatsAppPage {...pageProps} section="analytics" />;
+      case '/whatsapp/settings': return <WhatsAppPage {...pageProps} section="settings" />;
       case '/payments': return <PaymentsPage {...pageProps} />;
       case '/contacts': return <ContactsPage {...pageProps} />;
       case '/seo': return <SeoDashboard {...pageProps} />;
