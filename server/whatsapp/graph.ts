@@ -112,28 +112,62 @@ export interface SendResult {
   waId: string;
 }
 
-async function sendPayload(cfg: WaConfig, payload: Record<string, unknown>, to: string): Promise<SendResult> {
-  const out = await call<{ messages?: Array<{ id: string }> }>('POST', `/${cfg.phoneNumberId}/messages`, cfg, { messaging_product: 'whatsapp', recipient_type: 'individual', to, ...payload });
+async function sendPayload(cfg: WaConfig, payload: Record<string, unknown>, to: string, contextWamid?: string): Promise<SendResult> {
+  const body: Record<string, unknown> = { messaging_product: 'whatsapp', recipient_type: 'individual', to, ...payload };
+  // Official reply threading: context.message_id references the quoted wamid.
+  if (contextWamid) body.context = { message_id: contextWamid };
+  const out = await call<{ messages?: Array<{ id: string }> }>('POST', `/${cfg.phoneNumberId}/messages`, cfg, body);
   const messageId = out.messages?.[0]?.id || '';
   if (!messageId) throw new GraphError('graph', 502, 'WhatsApp accepted the request but returned no message id.');
   return { messageId, waId: to };
 }
 
-export async function sendText(cfg: WaConfig, to: string, text: string): Promise<SendResult> {
-  return sendPayload(cfg, { type: 'text', text: { preview_url: true, body: text } }, to);
+export async function sendText(cfg: WaConfig, to: string, text: string, contextWamid?: string): Promise<SendResult> {
+  return sendPayload(cfg, { type: 'text', text: { preview_url: true, body: text } }, to, contextWamid);
 }
 
-export type OutgoingMediaType = 'image' | 'document' | 'audio' | 'video';
+export type OutgoingMediaType = 'image' | 'document' | 'audio' | 'video' | 'sticker';
 
 export async function sendMedia(
   cfg: WaConfig, to: string, kind: OutgoingMediaType,
   media: { link?: string; id?: string; caption?: string; filename?: string },
+  contextWamid?: string,
 ): Promise<SendResult> {
-  const mediaPayload: Record<string, unknown> = { caption: media.caption || undefined };
+  const mediaPayload: Record<string, unknown> = {};
+  if (kind !== 'sticker') mediaPayload.caption = media.caption || undefined;
   if (media.link) mediaPayload.link = media.link;
   else if (media.id) mediaPayload.id = media.id;
   if (kind === 'document' && media.filename) mediaPayload.filename = media.filename;
-  return sendPayload(cfg, { type: kind, [kind]: mediaPayload }, to);
+  // Stickers ride in the sticker{} object and only accept a media ID (static .webp).
+  return sendPayload(cfg, { type: kind, [kind]: mediaPayload }, to, contextWamid);
+}
+
+export interface OutgoingLocation {
+  latitude: string | number;
+  longitude: string | number;
+  name?: string;
+  address?: string;
+}
+
+export async function sendLocation(cfg: WaConfig, to: string, loc: OutgoingLocation, contextWamid?: string): Promise<SendResult> {
+  return sendPayload(cfg, {
+    type: 'location',
+    location: {
+      latitude: String(loc.latitude), longitude: String(loc.longitude),
+      name: loc.name || undefined, address: loc.address || undefined,
+    },
+  }, to, contextWamid);
+}
+
+export interface OutgoingContactCard {
+  name: { formatted_name: string; first_name?: string; last_name?: string };
+  phones?: Array<{ phone: string; type?: string; wa_id?: string }>;
+  emails?: Array<{ email: string; type?: string }>;
+  urls?: Array<{ url: string; type?: string }>;
+}
+
+export async function sendContacts(cfg: WaConfig, to: string, cards: OutgoingContactCard[], contextWamid?: string): Promise<SendResult> {
+  return sendPayload(cfg, { type: 'contacts', contacts: cards }, to, contextWamid);
 }
 
 export interface TemplateComponent {
@@ -141,18 +175,77 @@ export interface TemplateComponent {
   parameters?: Array<{ type: string; text?: string }>;
 }
 
-/** Send an APPROVED template with validated body variables. */
+/** Send an APPROVED template with validated body variables (+ optional media/header params). */
 export async function sendTemplate(
   cfg: WaConfig, to: string, templateName: string, language: string,
   bodyParams: string[],
+  headerParam?: { kind: 'image' | 'document' | 'video'; link?: string; id?: string; filename?: string },
+  contextWamid?: string,
 ): Promise<SendResult> {
-  const components: TemplateComponent[] | undefined = bodyParams.length
-    ? [{ type: 'body', parameters: bodyParams.map((text) => ({ type: 'text', text })) }]
-    : undefined;
+  const components: TemplateComponent[] = [];
+  if (headerParam) {
+    const key = headerParam.kind;
+    const val: Record<string, unknown> = {};
+    if (headerParam.id) val.id = headerParam.id;
+    else if (headerParam.link) val.link = headerParam.link;
+    if (key === 'document' && headerParam.filename) val.filename = headerParam.filename;
+    components.push({ type: 'header', parameters: [{ type: key, [key]: val }] });
+  }
+  if (bodyParams.length) components.push({ type: 'body', parameters: bodyParams.map((text) => ({ type: 'text', text })) });
   return sendPayload(cfg, {
     type: 'template',
-    template: { name: templateName, language: { code: language || 'en' }, ...(components ? { components } : {}) },
-  }, to);
+    template: { name: templateName, language: { code: language || 'en' }, ...(components.length ? { components } : {}) },
+  }, to, contextWamid);
+}
+
+// ------------------------------------------------------------------ media upload
+export interface MediaUploadResult {
+  id: string;
+}
+
+/**
+ * Upload media to Meta (POST /{phone-number-id}/media, multipart) and return
+ * the real Meta media id. Official flow — no invented endpoints.
+ */
+export async function uploadMedia(cfg: WaConfig, buffer: Buffer, mime: string, filename: string): Promise<MediaUploadResult> {
+  if (!cfg.phoneNumberId) throw new GraphError('config', 400, 'Phone Number ID is required to upload media.');
+  const form = new FormData();
+  form.append('messaging_product', 'whatsapp');
+  form.append('file', new Blob([new Uint8Array(buffer)], { type: mime || 'application/octet-stream' }), filename || 'file');
+  form.append('type', mime || 'application/octet-stream');
+  let res: Response;
+  try {
+    res = await fetch(`${GRAPH_BASE}/${cfg.phoneNumberId}/media`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${cfg.accessToken}` },
+      body: form,
+      signal: AbortSignal.timeout(55000),
+    });
+  } catch (e) {
+    const aborted = e instanceof Error && (e.name === 'AbortError' || /timeout|abort/i.test(e.message || ''));
+    throw new GraphError(aborted ? 'timeout' : 'network', aborted ? 504 : 502,
+      aborted ? 'The media upload took too long. Try a smaller file.' : 'Could not reach the WhatsApp media endpoint.');
+  }
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = (json as { error?: { message?: string; code?: number; error_subcode?: number } }).error || {};
+    throw new GraphError('graph', res.status, friendly(err.code ?? null, err.error_subcode ?? null, err.message || `Media upload failed (HTTP ${res.status}).`), err.code ?? null, err.error_subcode ?? null);
+  }
+  const id = (json as { id?: string }).id || '';
+  if (!id) throw new GraphError('graph', 502, 'WhatsApp accepted the media but returned no media id.');
+  return { id };
+}
+
+// ------------------------------------------------------------------ read receipts
+/** Mark an inbound message as read on WhatsApp (official status:read API). Best-effort. */
+export async function markReadApi(cfg: WaConfig, wamid: string): Promise<void> {
+  try {
+    await call('POST', `/${cfg.phoneNumberId}/messages`, cfg, {
+      messaging_product: 'whatsapp', status: 'read', message_id: wamid,
+    });
+  } catch {
+    // Read receipts are cosmetic for the customer; never fail the CRM action.
+  }
 }
 
 // ------------------------------------------------------------------ media download

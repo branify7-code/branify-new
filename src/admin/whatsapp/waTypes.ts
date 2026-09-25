@@ -18,8 +18,17 @@ export const CONTACT_TAGS = ['Website', 'Ecommerce', 'AI', 'SEO', 'Branding', 'T
 export const LEAD_SOURCES = ['WhatsApp', 'Website', 'Facebook', 'Instagram', 'Blog', 'Templates', 'AI Tools', 'Free Tools'] as const;
 
 export type MessageDirection = 'in' | 'out';
-export type MessageType = 'text' | 'image' | 'document' | 'audio' | 'video' | 'template' | 'unsupported';
+export type MessageType = 'text' | 'image' | 'document' | 'audio' | 'video' | 'sticker' | 'location' | 'contacts' | 'interactive' | 'reaction' | 'template' | 'unsupported';
 export type MessageStatus = 'received' | 'queued' | 'sent' | 'delivered' | 'read' | 'failed';
+
+export interface WaQuotedSnapshot {
+  wamid?: string;
+  body?: string;
+  type?: string;
+  direction?: MessageDirection | string;
+  ts?: string;
+  filename?: string;
+}
 
 export interface WaContact {
   id: string;
@@ -52,6 +61,11 @@ export interface WaConversation {
   window_expires_at: string | null;
   followup_due_at: string | null;
   followup_note: string;
+  pinned?: boolean;
+  muted?: boolean;
+  last_read_at?: string | null;
+  /** Embedded contact from the server-side list query (list view). */
+  contact?: Pick<WaContact, 'id' | 'name' | 'email' | 'company' | 'tags' | 'lead_status' | 'opt_out'>;
 }
 
 export interface WaMessage {
@@ -62,7 +76,19 @@ export interface WaMessage {
   direction: MessageDirection;
   type: MessageType;
   body: string;
-  media: { media_id?: string; mime?: string; filename?: string; caption?: string; link?: string };
+  media: {
+    media_id?: string; mime?: string; filename?: string; caption?: string; link?: string;
+    storage_path?: string; meta_id?: string; size?: number;
+    latitude?: number | null; longitude?: number | null; name?: string; address?: string;
+    emoji?: string; message_id?: string;
+    interactive_type?: string; reply_id?: string; title?: string;
+    animated?: boolean;
+    contacts?: Array<{ name?: { formatted_name?: string }; phones?: Array<{ phone?: string; wa_id?: string }> }>;
+    location?: { latitude?: string | number; longitude?: string | number; name?: string; address?: string };
+    template_params?: string[];
+  };
+  reply_to_wamid: string | null;
+  quoted: WaQuotedSnapshot | Record<string, never>;
   status: MessageStatus;
   error: { code?: number; title?: string; message?: string } | null;
   template_name: string | null;
@@ -123,6 +149,12 @@ export interface WaStatusResponse {
   phone?: { id: string; display: string; verified_name: string; quality: string };
   config: WaMaskedConfig;
   webhook_url?: string;
+}
+
+export interface WaHealth {
+  last_event_at: string | null;
+  last_inbound_message_at: string | null;
+  inbound_messages_24h: number;
 }
 
 export interface WaAnalytics {

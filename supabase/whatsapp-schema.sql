@@ -88,12 +88,17 @@ create table if not exists public.whatsapp_conversations (
   window_expires_at timestamptz,                            -- last_in_at + 24h (customer service window)
   followup_due_at timestamptz,
   followup_note text default '',
+  pinned boolean not null default false,                    -- inbox v2: pinned to top
+  muted boolean not null default false,                     -- inbox v2: notification mute
+  last_read_at timestamptz,                                 -- inbox v2: unread divider anchor
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 create index if not exists whatsapp_conversations_contact_idx on public.whatsapp_conversations (contact_id);
 create index if not exists whatsapp_conversations_last_msg_idx on public.whatsapp_conversations (last_message_at desc);
 create index if not exists whatsapp_conversations_assigned_idx on public.whatsapp_conversations (assigned_to);
+create index if not exists whatsapp_conversations_status_recent_idx on public.whatsapp_conversations (status, last_message_at desc);
+create index if not exists whatsapp_conversations_pinned_idx on public.whatsapp_conversations (pinned, last_message_at desc);
 alter table public.whatsapp_conversations enable row level security;
 
 drop policy if exists "admins full access whatsapp_conversations" on public.whatsapp_conversations;
@@ -110,9 +115,11 @@ create table if not exists public.whatsapp_messages (
   wa_message_id text unique,                                -- Meta wamid (dedupe key for webhook retries)
   direction text not null check (direction in ('in','out')),
   type text not null default 'text'
-    check (type in ('text','image','document','audio','video','template','unsupported')),
+    check (type in ('text','image','document','audio','video','sticker','location','contacts','interactive','reaction','template','unsupported')),
   body text default '',
-  media jsonb not null default '{}'::jsonb,                 -- {media_id, mime, filename, caption, size}
+  media jsonb not null default '{}'::jsonb,                 -- {media_id, mime, filename, caption, size, storage_path}
+  reply_to_wamid text,                                      -- inbox v2: WhatsApp context message id (reply/quote)
+  quoted jsonb not null default '{}'::jsonb,                -- inbox v2: {body,type,direction,ts} snapshot for bubble render
   status text not null default 'received'
     check (status in ('received','queued','sent','delivered','read','failed')),
   error jsonb default '{}',                                 -- {code,title,message} on failed
@@ -123,6 +130,20 @@ create table if not exists public.whatsapp_messages (
 create index if not exists whatsapp_messages_conversation_idx on public.whatsapp_messages (conversation_id, timestamp desc);
 create index if not exists whatsapp_messages_wamid_idx on public.whatsapp_messages (wa_message_id);
 create index if not exists whatsapp_messages_ts_idx on public.whatsapp_messages (timestamp desc);
+create index if not exists whatsapp_messages_reply_idx on public.whatsapp_messages (reply_to_wamid);
+create extension if not exists pg_trgm;
+create index if not exists whatsapp_messages_body_trgm_idx on public.whatsapp_messages using gin (body gin_trgm_ops);
+create index if not exists whatsapp_contacts_name_trgm_idx on public.whatsapp_contacts using gin (name gin_trgm_ops);
+
+-- inbox v2: private media storage (inbound persistence + outbound uploads)
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('whatsapp-media', 'whatsapp-media', false, 104857600)
+on conflict (id) do nothing;
+drop policy if exists "admins manage whatsapp-media objects" on storage.objects;
+create policy "admins manage whatsapp-media objects" on storage.objects
+  for all to authenticated
+  using (bucket_id = 'whatsapp-media' and public.branify_is_admin())
+  with check (bucket_id = 'whatsapp-media' and public.branify_is_admin());
 alter table public.whatsapp_messages enable row level security;
 
 drop policy if exists "admins full access whatsapp_messages" on public.whatsapp_messages;

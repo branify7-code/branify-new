@@ -29,7 +29,7 @@ const isoPlus24h = (d: Date): Date => new Date(d.getTime() + 24 * 60 * 60 * 1000
 
 function previewOf(body: string, kind: string): string {
   if (body) return body.length > 90 ? `${body.slice(0, 90)}…` : body;
-  const labels: Record<string, string> = { image: '📷 Photo', document: '📄 Document', audio: '🎵 Voice note', video: '🎬 Video', template: '📋 Template', unsupported: 'Message' };
+  const labels: Record<string, string> = { image: '📷 Photo', document: '📄 Document', audio: '🎵 Voice note', video: '🎬 Video', sticker: '🩹 Sticker', location: '📍 Location', contacts: '👤 Contact card', interactive: '🔘 Button reply', reaction: '❤️ Reaction', template: '📋 Template', unsupported: 'Message' };
   return labels[kind] || 'Message';
 }
 
@@ -67,6 +67,7 @@ interface WaInbound {
   kind: string;
   body: string;
   media: Record<string, unknown>;
+  replyToWamid: string;
   ts: Date;
 }
 
@@ -76,6 +77,8 @@ function parseInbound(value: Record<string, unknown>): WaInbound | null {
     from: String(value.from || ''),
     profileName: String((value.profile as { name?: string } | undefined)?.name || ''),
     wamid: String(value.id || ''),
+    // Official reply threading: value.context.id references the quoted wamid.
+    replyToWamid: String((value.context as { id?: string } | undefined)?.id || ''),
     ts: new Date(Number(value.timestamp || 0) * 1000 || Date.now()),
   };
   const mediaOf = (v: Record<string, unknown>, captionKey: string): Record<string, unknown> => ({
@@ -97,9 +100,30 @@ function parseInbound(value: Record<string, unknown>): WaInbound | null {
     case 'video':
       return { ...base, kind, body: String((value.video as { caption?: string })?.caption || ''), media: mediaOf(value.video as Record<string, unknown>, 'caption') };
     case 'sticker':
-    case 'contacts':
-    case 'location':
-      return { ...base, kind: 'unsupported', body: `[${kind}]`, media: {} };
+      // Sticker = webp media object; displayed via the same secure media path.
+      return { ...base, kind, body: '', media: { ...mediaOf(value.sticker as Record<string, unknown>, 'caption'), animated: Boolean((value.sticker as { animated?: boolean } | undefined)?.animated) } };
+    case 'location': {
+      const loc = (value.location || {}) as { latitude?: number; longitude?: number; name?: string; address?: string; url?: string };
+      return { ...base, kind, body: [loc.name, loc.address].filter(Boolean).join(' — '), media: { latitude: loc.latitude ?? null, longitude: loc.longitude ?? null, name: loc.name || '', address: loc.address || '', url: loc.url || '' } };
+    }
+    case 'contacts': {
+      const cards = (value.contacts || []) as Array<{ name?: { formatted_name?: string }; phones?: Array<{ phone?: string; wa_id?: string }> }>;
+      const label = cards.map((c) => c.name?.formatted_name || c.phones?.[0]?.phone || 'contact').join(', ');
+      return { ...base, kind, body: `[Contact card] ${label}`, media: { contacts: cards } };
+    }
+    case 'reaction': {
+      const r = (value.reaction || {}) as { emoji?: string; message_id?: string };
+      return { ...base, kind, body: r.emoji ? `[reaction ${r.emoji}]` : '[reaction removed]', media: { emoji: r.emoji || '', message_id: r.message_id || '' } };
+    }
+    case 'interactive': {
+      const it = (value.interactive || {}) as { type?: string; button_reply?: { id?: string; title?: string }; list_reply?: { id?: string; title?: string } };
+      const title = it.button_reply?.title || it.list_reply?.title || '';
+      return { ...base, kind, body: title ? `[${it.type || 'interactive'}] ${title}` : '[interactive message]', media: { interactive_type: it.type || '', reply_id: it.button_reply?.id || it.list_reply?.id || '', title } };
+    }
+    case 'button': {
+      const b = (value.button || {}) as { text?: string; payload?: string };
+      return { ...base, kind: 'interactive', body: `[button] ${b.text || ''}`, media: { interactive_type: 'button', reply_id: b.payload || '', title: b.text || '' } };
+    }
     default:
       return { ...base, kind: 'unsupported', body: '', media: {} };
   }
@@ -227,9 +251,18 @@ export async function webhookProcess(raw: string, signatureHeader: string): Prom
           const waId = digitsOf(inbound.from);
           const profileName = inbound.profileName || ((value.contacts || []).find((c) => String(c.wa_id || '') === String(inbound.from))?.profile?.name || '');
           const { contactId, conversationId, isNewContact, isNewConversation } = await ensureContactConversation(waId, profileName, inbound.ts);
+          // Resolve the quoted message locally for bubble rendering (only real rows).
+          let quoted: Record<string, unknown> = {};
+          if (inbound.replyToWamid) {
+            const q = await sbSelectOne<{ body: string; type: string; direction: string; timestamp: string }>(
+              `/whatsapp_messages?select=body,type,direction,timestamp&conversation_id=eq.${conversationId}&wa_message_id=eq.${encodeURIComponent(inbound.replyToWamid)}&limit=1`,
+            );
+            if (q) quoted = { wamid: inbound.replyToWamid, body: q.body, type: q.type, direction: q.direction, ts: q.timestamp };
+          }
           await sbInsert('whatsapp_messages', {
             conversation_id: conversationId, wa_id: waId, wa_message_id: inbound.wamid,
             direction: 'in', type: inbound.kind, body: inbound.body, media: inbound.media,
+            reply_to_wamid: inbound.replyToWamid || null, quoted,
             status: 'received', timestamp: inbound.ts.toISOString(),
           });
           await sbUpdate('whatsapp_conversations', `id=eq.${conversationId}`, {

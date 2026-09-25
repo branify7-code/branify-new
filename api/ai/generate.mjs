@@ -1,4 +1,213 @@
 /* GENERATED FILE — do not edit by hand. Source: server/* (see scripts/build-api.mjs). Regenerate with `npm run api:build`. */
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+
+// server/whatsapp/sb.ts
+var sb_exports = {};
+__export(sb_exports, {
+  StoreError: () => StoreError,
+  isSchemaMissing: () => isSchemaMissing,
+  sbDelete: () => sbDelete,
+  sbInsert: () => sbInsert,
+  sbSelect: () => sbSelect,
+  sbSelectOne: () => sbSelectOne,
+  sbUpdate: () => sbUpdate,
+  sbUpsert: () => sbUpsert,
+  serviceRoleConfigured: () => serviceRoleConfigured
+});
+function serviceRoleConfigured() {
+  return Boolean(SERVICE_ROLE);
+}
+function headers(extra = {}) {
+  return {
+    apikey: SERVICE_ROLE,
+    Authorization: `Bearer ${SERVICE_ROLE}`,
+    "Content-Type": "application/json",
+    ...extra
+  };
+}
+async function run(method, path, body, extra = {}) {
+  if (!SERVICE_ROLE) throw new StoreError("server_config", 500, "Supabase service credentials are not configured on the server.");
+  let res;
+  try {
+    res = await fetch(`${SB_URL4}/rest/v1${path}`, {
+      method,
+      headers: headers(extra),
+      body: body === void 0 ? void 0 : JSON.stringify(body),
+      signal: AbortSignal.timeout(15e3)
+    });
+  } catch {
+    throw new StoreError("network", 502, "Could not reach the BRANIFY database. Please try again.");
+  }
+  const text = await res.text();
+  let json2 = null;
+  try {
+    json2 = text ? JSON.parse(text) : null;
+  } catch {
+    json2 = null;
+  }
+  return { status: res.status, json: json2, text };
+}
+function sbMessage(json2, fallback) {
+  const j = json2;
+  return j && (j.message || j.error_description || j.error) || fallback;
+}
+function isSchemaMissing(err) {
+  if (err instanceof StoreError && err.code === "schema_missing") return true;
+  const msg = err instanceof Error ? err.message : "";
+  return /PGRST205|does not exist|schema_missing/i.test(msg);
+}
+async function sbSelect(path) {
+  const { status, json: json2, text } = await run("GET", path.startsWith("/") ? path : `/${path}`);
+  if (status === 404 || text.includes("PGRST205")) {
+    throw new StoreError("schema_missing", 503, "The WhatsApp CRM database tables are not created yet.");
+  }
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database read failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
+}
+async function sbSelectOne(path) {
+  const rows = await sbSelect(path);
+  return rows.length ? rows[0] : null;
+}
+async function sbInsert(table, row, opts = {}) {
+  const extra = {};
+  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? "resolution=ignore-duplicates,return=representation" : "return=representation";
+  else if (opts.onConflictIgnore) extra.Prefer = "resolution=ignore-duplicates";
+  const { status, json: json2 } = await run("POST", `/${table}`, row, extra);
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database insert failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
+}
+async function sbUpdate(table, search, patch, represent = false) {
+  const { status, json: json2 } = await run("PATCH", `/${table}?${search}`, patch, represent ? { Prefer: "return=representation" } : {});
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database update failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
+}
+async function sbUpsert(table, row, conflict, represent = false) {
+  const { status, json: json2 } = await run("POST", `/${table}?on_conflict=${conflict}`, row, {
+    Prefer: represent ? "resolution=merge-duplicates,return=representation" : "resolution=merge-duplicates"
+  });
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database upsert failed (HTTP ${status}).`));
+  return Array.isArray(json2) ? json2 : [];
+}
+async function sbDelete(table, search) {
+  const { status, json: json2 } = await run("DELETE", `/${table}?${search}`);
+  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database delete failed (HTTP ${status}).`));
+}
+var SB_URL4, SERVICE_ROLE, StoreError;
+var init_sb = __esm({
+  "server/whatsapp/sb.ts"() {
+    SB_URL4 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+    SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE || "";
+    StoreError = class extends Error {
+      constructor(code, status, message) {
+        super(message);
+        this.code = code;
+        this.status = status;
+      }
+    };
+  }
+});
+
+// server/whatsapp/storage.ts
+var storage_exports = {};
+__export(storage_exports, {
+  MEDIA_BUCKET: () => MEDIA_BUCKET,
+  createSignedUrl: () => createSignedUrl,
+  deleteObject: () => deleteObject,
+  downloadObject: () => downloadObject,
+  mediaPath: () => mediaPath,
+  uploadObject: () => uploadObject
+});
+function authHeaders(extra = {}) {
+  return { Authorization: `Bearer ${SERVICE_ROLE2}`, apikey: SERVICE_ROLE2, ...extra };
+}
+function requireService() {
+  if (!SERVICE_ROLE2) throw new StoreError("server_config", 500, "Supabase service credentials are not configured on the server.");
+}
+async function uploadObject(path, buffer, mime) {
+  requireService();
+  const res = await fetch(`${SB_URL5}/storage/v1/object/${MEDIA_BUCKET}/${path}`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": mime || "application/octet-stream", "x-upsert": "true" }),
+    body: new Uint8Array(buffer),
+    signal: AbortSignal.timeout(3e4)
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new StoreError("storage", 502, `Media storage failed (HTTP ${res.status}).${text ? " " + text.slice(0, 140) : ""}`);
+  }
+}
+async function downloadObject(path) {
+  requireService();
+  const res = await fetch(`${SB_URL5}/storage/v1/object/${MEDIA_BUCKET}/${path}`, {
+    headers: authHeaders(),
+    signal: AbortSignal.timeout(3e4)
+  });
+  if (!res.ok) throw new StoreError("storage", res.status === 404 ? 404 : 502, "Stored media could not be read.");
+  const buffer = Buffer.from(await res.arrayBuffer());
+  return { buffer, mime: res.headers.get("content-type") || "application/octet-stream" };
+}
+async function createSignedUrl(path, expiresSec = 3600) {
+  requireService();
+  const res = await fetch(`${SB_URL5}/storage/v1/object/sign/${MEDIA_BUCKET}/${path}`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ expiresIn: expiresSec }),
+    signal: AbortSignal.timeout(15e3)
+  });
+  if (!res.ok) throw new StoreError("storage", 502, "Could not create a media link.");
+  const json2 = await res.json();
+  const signed = json2.signedURL || json2.signedUrl || "";
+  if (!signed) throw new StoreError("storage", 502, "Media link response was empty.");
+  return `${SB_URL5}/storage/v1${signed}`;
+}
+async function deleteObject(path) {
+  if (!SERVICE_ROLE2) return;
+  await fetch(`${SB_URL5}/storage/v1/object/${MEDIA_BUCKET}/${path}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+    signal: AbortSignal.timeout(15e3)
+  }).catch(() => void 0);
+}
+function mediaPath(prefix, key, filename, mime) {
+  const safeName = (filename || "").replace(/[^A-Za-z0-9._-]+/g, "_").slice(-80) || "file";
+  const ext = safeName.includes(".") ? "" : extFromMime(mime);
+  return `${prefix}/${key}${ext ? "." + ext : ""}-${safeName}`.replace(/\/+/g, "/");
+}
+function extFromMime(mime) {
+  const map = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif",
+    "video/mp4": "mp4",
+    "video/3gpp": "3gp",
+    "audio/ogg": "ogg",
+    "audio/mpeg": "mp3",
+    "audio/mp4": "m4a",
+    "audio/aac": "aac",
+    "audio/amr": "amr",
+    "application/pdf": "pdf",
+    "text/plain": "txt"
+  };
+  return map[(mime || "").toLowerCase()] || "bin";
+}
+var SB_URL5, SERVICE_ROLE2, MEDIA_BUCKET;
+var init_storage = __esm({
+  "server/whatsapp/storage.ts"() {
+    init_sb();
+    SB_URL5 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+    SERVICE_ROLE2 = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE || "";
+    MEDIA_BUCKET = "whatsapp-media";
+  }
+});
 
 // lib/ai/omniroute.ts
 var OmniRouteError = class extends Error {
@@ -776,92 +985,8 @@ ${ideaRaw}
   });
 }
 
-// server/whatsapp/sb.ts
-var SB_URL4 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
-var SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE || "";
-function serviceRoleConfigured() {
-  return Boolean(SERVICE_ROLE);
-}
-function headers(extra = {}) {
-  return {
-    apikey: SERVICE_ROLE,
-    Authorization: `Bearer ${SERVICE_ROLE}`,
-    "Content-Type": "application/json",
-    ...extra
-  };
-}
-var StoreError = class extends Error {
-  constructor(code, status, message) {
-    super(message);
-    this.code = code;
-    this.status = status;
-  }
-};
-async function run(method, path, body, extra = {}) {
-  if (!SERVICE_ROLE) throw new StoreError("server_config", 500, "Supabase service credentials are not configured on the server.");
-  let res;
-  try {
-    res = await fetch(`${SB_URL4}/rest/v1${path}`, {
-      method,
-      headers: headers(extra),
-      body: body === void 0 ? void 0 : JSON.stringify(body),
-      signal: AbortSignal.timeout(15e3)
-    });
-  } catch {
-    throw new StoreError("network", 502, "Could not reach the BRANIFY database. Please try again.");
-  }
-  const text = await res.text();
-  let json2 = null;
-  try {
-    json2 = text ? JSON.parse(text) : null;
-  } catch {
-    json2 = null;
-  }
-  return { status: res.status, json: json2, text };
-}
-function sbMessage(json2, fallback) {
-  const j = json2;
-  return j && (j.message || j.error_description || j.error) || fallback;
-}
-function isSchemaMissing(err) {
-  if (err instanceof StoreError && err.code === "schema_missing") return true;
-  const msg = err instanceof Error ? err.message : "";
-  return /PGRST205|does not exist|schema_missing/i.test(msg);
-}
-async function sbSelect(path) {
-  const { status, json: json2, text } = await run("GET", path.startsWith("/") ? path : `/${path}`);
-  if (status === 404 || text.includes("PGRST205")) {
-    throw new StoreError("schema_missing", 503, "The WhatsApp CRM database tables are not created yet.");
-  }
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database read failed (HTTP ${status}).`));
-  return Array.isArray(json2) ? json2 : [];
-}
-async function sbSelectOne(path) {
-  const rows = await sbSelect(path);
-  return rows.length ? rows[0] : null;
-}
-async function sbInsert(table, row, opts = {}) {
-  const extra = {};
-  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? "resolution=ignore-duplicates,return=representation" : "return=representation";
-  else if (opts.onConflictIgnore) extra.Prefer = "resolution=ignore-duplicates";
-  const { status, json: json2 } = await run("POST", `/${table}`, row, extra);
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database insert failed (HTTP ${status}).`));
-  return Array.isArray(json2) ? json2 : [];
-}
-async function sbUpdate(table, search, patch, represent = false) {
-  const { status, json: json2 } = await run("PATCH", `/${table}?${search}`, patch, represent ? { Prefer: "return=representation" } : {});
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database update failed (HTTP ${status}).`));
-  return Array.isArray(json2) ? json2 : [];
-}
-async function sbUpsert(table, row, conflict, represent = false) {
-  const { status, json: json2 } = await run("POST", `/${table}?on_conflict=${conflict}`, row, {
-    Prefer: represent ? "resolution=merge-duplicates,return=representation" : "resolution=merge-duplicates"
-  });
-  if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database upsert failed (HTTP ${status}).`));
-  return Array.isArray(json2) ? json2 : [];
-}
-
 // server/whatsapp/store.ts
+init_sb();
 var env = (k) => (process.env[k] || "").trim();
 async function loadConfig() {
   let db = {};
@@ -999,28 +1124,95 @@ async function fetchTemplates(cfg) {
   const data = await call("GET", `/${cfg.wabaId}/message_templates?limit=200&fields=id,name,language,category,status,quality,components`, cfg);
   return data.data || [];
 }
-async function sendPayload(cfg, payload, to) {
-  const out = await call("POST", `/${cfg.phoneNumberId}/messages`, cfg, { messaging_product: "whatsapp", recipient_type: "individual", to, ...payload });
+async function sendPayload(cfg, payload, to, contextWamid) {
+  const body = { messaging_product: "whatsapp", recipient_type: "individual", to, ...payload };
+  if (contextWamid) body.context = { message_id: contextWamid };
+  const out = await call("POST", `/${cfg.phoneNumberId}/messages`, cfg, body);
   const messageId = out.messages?.[0]?.id || "";
   if (!messageId) throw new GraphError("graph", 502, "WhatsApp accepted the request but returned no message id.");
   return { messageId, waId: to };
 }
-async function sendText(cfg, to, text) {
-  return sendPayload(cfg, { type: "text", text: { preview_url: true, body: text } }, to);
+async function sendText(cfg, to, text, contextWamid) {
+  return sendPayload(cfg, { type: "text", text: { preview_url: true, body: text } }, to, contextWamid);
 }
-async function sendMedia(cfg, to, kind, media) {
-  const mediaPayload = { caption: media.caption || void 0 };
+async function sendMedia(cfg, to, kind, media, contextWamid) {
+  const mediaPayload = {};
+  if (kind !== "sticker") mediaPayload.caption = media.caption || void 0;
   if (media.link) mediaPayload.link = media.link;
   else if (media.id) mediaPayload.id = media.id;
   if (kind === "document" && media.filename) mediaPayload.filename = media.filename;
-  return sendPayload(cfg, { type: kind, [kind]: mediaPayload }, to);
+  return sendPayload(cfg, { type: kind, [kind]: mediaPayload }, to, contextWamid);
 }
-async function sendTemplate(cfg, to, templateName, language, bodyParams) {
-  const components = bodyParams.length ? [{ type: "body", parameters: bodyParams.map((text) => ({ type: "text", text })) }] : void 0;
+async function sendLocation(cfg, to, loc, contextWamid) {
+  return sendPayload(cfg, {
+    type: "location",
+    location: {
+      latitude: String(loc.latitude),
+      longitude: String(loc.longitude),
+      name: loc.name || void 0,
+      address: loc.address || void 0
+    }
+  }, to, contextWamid);
+}
+async function sendContacts(cfg, to, cards, contextWamid) {
+  return sendPayload(cfg, { type: "contacts", contacts: cards }, to, contextWamid);
+}
+async function sendTemplate(cfg, to, templateName, language, bodyParams, headerParam, contextWamid) {
+  const components = [];
+  if (headerParam) {
+    const key = headerParam.kind;
+    const val = {};
+    if (headerParam.id) val.id = headerParam.id;
+    else if (headerParam.link) val.link = headerParam.link;
+    if (key === "document" && headerParam.filename) val.filename = headerParam.filename;
+    components.push({ type: "header", parameters: [{ type: key, [key]: val }] });
+  }
+  if (bodyParams.length) components.push({ type: "body", parameters: bodyParams.map((text) => ({ type: "text", text })) });
   return sendPayload(cfg, {
     type: "template",
-    template: { name: templateName, language: { code: language || "en" }, ...components ? { components } : {} }
-  }, to);
+    template: { name: templateName, language: { code: language || "en" }, ...components.length ? { components } : {} }
+  }, to, contextWamid);
+}
+async function uploadMedia(cfg, buffer, mime, filename) {
+  if (!cfg.phoneNumberId) throw new GraphError("config", 400, "Phone Number ID is required to upload media.");
+  const form = new FormData();
+  form.append("messaging_product", "whatsapp");
+  form.append("file", new Blob([new Uint8Array(buffer)], { type: mime || "application/octet-stream" }), filename || "file");
+  form.append("type", mime || "application/octet-stream");
+  let res;
+  try {
+    res = await fetch(`${GRAPH_BASE}/${cfg.phoneNumberId}/media`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${cfg.accessToken}` },
+      body: form,
+      signal: AbortSignal.timeout(55e3)
+    });
+  } catch (e) {
+    const aborted = e instanceof Error && (e.name === "AbortError" || /timeout|abort/i.test(e.message || ""));
+    throw new GraphError(
+      aborted ? "timeout" : "network",
+      aborted ? 504 : 502,
+      aborted ? "The media upload took too long. Try a smaller file." : "Could not reach the WhatsApp media endpoint."
+    );
+  }
+  const json2 = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = json2.error || {};
+    throw new GraphError("graph", res.status, friendly(err.code ?? null, err.error_subcode ?? null, err.message || `Media upload failed (HTTP ${res.status}).`), err.code ?? null, err.error_subcode ?? null);
+  }
+  const id = json2.id || "";
+  if (!id) throw new GraphError("graph", 502, "WhatsApp accepted the media but returned no media id.");
+  return { id };
+}
+async function markReadApi(cfg, wamid) {
+  try {
+    await call("POST", `/${cfg.phoneNumberId}/messages`, cfg, {
+      messaging_product: "whatsapp",
+      status: "read",
+      message_id: wamid
+    });
+  } catch {
+  }
 }
 async function fetchMediaBuffer(cfg, mediaId) {
   const meta = await call("GET", `/${mediaId}`, cfg);
@@ -1038,8 +1230,10 @@ async function fetchMediaBuffer(cfg, mediaId) {
 
 // server/whatsapp/webhook.ts
 import crypto2 from "node:crypto";
+init_sb();
 
 // server/whatsapp/activity.ts
+init_sb();
 async function logActivityServer(action, targetType, targetId, meta = {}, userEmail = "whatsapp-crm") {
   try {
     await sbInsert("activity_log", {
@@ -1054,6 +1248,7 @@ async function logActivityServer(action, targetType, targetId, meta = {}, userEm
 }
 
 // server/whatsapp/automations.ts
+init_sb();
 async function listRules(trigger) {
   const q = trigger ? `/whatsapp_automations?select=*&trigger=eq.${trigger}&enabled=eq.true` : "/whatsapp_automations?select=*&enabled=eq.true";
   return sbSelect(q);
@@ -1154,7 +1349,7 @@ var digitsOf = (v) => (v || "").replace(/[^\d]/g, "");
 var isoPlus24h = (d) => new Date(d.getTime() + 24 * 60 * 60 * 1e3);
 function previewOf(body, kind) {
   if (body) return body.length > 90 ? `${body.slice(0, 90)}\u2026` : body;
-  const labels = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Voice note", video: "\u{1F3AC} Video", template: "\u{1F4CB} Template", unsupported: "Message" };
+  const labels = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Voice note", video: "\u{1F3AC} Video", sticker: "\u{1FA79} Sticker", location: "\u{1F4CD} Location", contacts: "\u{1F464} Contact card", interactive: "\u{1F518} Button reply", reaction: "\u2764\uFE0F Reaction", template: "\u{1F4CB} Template", unsupported: "Message" };
   return labels[kind] || "Message";
 }
 async function webhookVerify(url) {
@@ -1186,6 +1381,8 @@ function parseInbound(value) {
     from: String(value.from || ""),
     profileName: String(value.profile?.name || ""),
     wamid: String(value.id || ""),
+    // Official reply threading: value.context.id references the quoted wamid.
+    replyToWamid: String(value.context?.id || ""),
     ts: new Date(Number(value.timestamp || 0) * 1e3 || Date.now())
   };
   const mediaOf = (v, captionKey) => ({
@@ -1207,9 +1404,29 @@ function parseInbound(value) {
     case "video":
       return { ...base, kind, body: String(value.video?.caption || ""), media: mediaOf(value.video, "caption") };
     case "sticker":
-    case "contacts":
-    case "location":
-      return { ...base, kind: "unsupported", body: `[${kind}]`, media: {} };
+      return { ...base, kind, body: "", media: { ...mediaOf(value.sticker, "caption"), animated: Boolean(value.sticker?.animated) } };
+    case "location": {
+      const loc = value.location || {};
+      return { ...base, kind, body: [loc.name, loc.address].filter(Boolean).join(" \u2014 "), media: { latitude: loc.latitude ?? null, longitude: loc.longitude ?? null, name: loc.name || "", address: loc.address || "", url: loc.url || "" } };
+    }
+    case "contacts": {
+      const cards = value.contacts || [];
+      const label = cards.map((c) => c.name?.formatted_name || c.phones?.[0]?.phone || "contact").join(", ");
+      return { ...base, kind, body: `[Contact card] ${label}`, media: { contacts: cards } };
+    }
+    case "reaction": {
+      const r = value.reaction || {};
+      return { ...base, kind, body: r.emoji ? `[reaction ${r.emoji}]` : "[reaction removed]", media: { emoji: r.emoji || "", message_id: r.message_id || "" } };
+    }
+    case "interactive": {
+      const it = value.interactive || {};
+      const title = it.button_reply?.title || it.list_reply?.title || "";
+      return { ...base, kind, body: title ? `[${it.type || "interactive"}] ${title}` : "[interactive message]", media: { interactive_type: it.type || "", reply_id: it.button_reply?.id || it.list_reply?.id || "", title } };
+    }
+    case "button": {
+      const b = value.button || {};
+      return { ...base, kind: "interactive", body: `[button] ${b.text || ""}`, media: { interactive_type: "button", reply_id: b.payload || "", title: b.text || "" } };
+    }
     default:
       return { ...base, kind: "unsupported", body: "", media: {} };
   }
@@ -1323,6 +1540,13 @@ async function webhookProcess(raw, signatureHeader) {
           const waId = digitsOf(inbound.from);
           const profileName = inbound.profileName || ((value.contacts || []).find((c) => String(c.wa_id || "") === String(inbound.from))?.profile?.name || "");
           const { contactId, conversationId, isNewContact, isNewConversation } = await ensureContactConversation(waId, profileName, inbound.ts);
+          let quoted = {};
+          if (inbound.replyToWamid) {
+            const q = await sbSelectOne(
+              `/whatsapp_messages?select=body,type,direction,timestamp&conversation_id=eq.${conversationId}&wa_message_id=eq.${encodeURIComponent(inbound.replyToWamid)}&limit=1`
+            );
+            if (q) quoted = { wamid: inbound.replyToWamid, body: q.body, type: q.type, direction: q.direction, ts: q.timestamp };
+          }
           await sbInsert("whatsapp_messages", {
             conversation_id: conversationId,
             wa_id: waId,
@@ -1331,6 +1555,8 @@ async function webhookProcess(raw, signatureHeader) {
             type: inbound.kind,
             body: inbound.body,
             media: inbound.media,
+            reply_to_wamid: inbound.replyToWamid || null,
+            quoted,
             status: "received",
             timestamp: inbound.ts.toISOString()
           });
@@ -1373,6 +1599,8 @@ async function bumpUnread(conversationId, delta) {
 }
 
 // server/whatsapp/send.ts
+init_sb();
+init_storage();
 var SendError = class extends Error {
   constructor(code, status, message, metaCode = null) {
     super(message);
@@ -1402,13 +1630,47 @@ async function finalize(conv, agentEmail, preview, ts) {
     updated_at: ts
   });
 }
+async function metaMediaId(cfg, kind, m) {
+  if (m.meta_id) return m.meta_id;
+  if (m.storage_path) {
+    const { buffer, mime } = await downloadObject(m.storage_path);
+    const up = await uploadMedia(cfg, buffer, mime || String(m.mime || "application/octet-stream"), m.filename || "file");
+    return up.id;
+  }
+  if (m.link) return "";
+  throw new SendError("bad_request", 400, "Provide a file, a stored media path, or a public link.");
+}
+async function quotedSnapshot(conversationId, replyToWamid) {
+  if (!replyToWamid) return {};
+  const row = await sbSelectOne(
+    `/whatsapp_messages?select=body,type,direction,timestamp,media&conversation_id=eq.${conversationId}&wa_message_id=eq.${encodeURIComponent(replyToWamid)}&limit=1`
+  );
+  if (!row) return {};
+  return {
+    wamid: replyToWamid,
+    body: row.body || "",
+    type: row.type,
+    direction: row.direction,
+    ts: row.timestamp,
+    filename: row.media?.filename || ""
+  };
+}
 async function sendFreeForm(opts) {
   const cfg = await loadConfig();
   const { conv, optOut } = await loadConversation(opts.conversationId);
   if (optOut) throw new SendError("opted_out", 409, "This customer opted out of messages. Respect their preference and do not contact them here.");
   if (!opts.conversationId) throw new SendError("bad_request", 400, "Conversation is required.");
+  const mediaKind = ["image", "document", "audio", "video", "sticker"].includes(opts.kind);
   if (opts.kind === "text" && !(opts.text || "").trim()) throw new SendError("bad_request", 400, "Type a message before sending.");
-  if (opts.kind !== "text" && !opts.media?.link) throw new SendError("bad_request", 400, "A media link is required to send media.");
+  if (mediaKind && !opts.media) throw new SendError("bad_request", 400, "A file is required to send media.");
+  if (opts.kind === "location" && !opts.media?.location) throw new SendError("bad_request", 400, "Location coordinates are required.");
+  if (opts.kind === "contacts" && !(opts.media?.contacts || []).length) throw new SendError("bad_request", 400, "A contact card is required.");
+  if (opts.kind === "sticker") {
+    const mime = String(opts.media?.mime || "");
+    if (opts.media?.storage_path && !/webp/i.test(mime) && !/\.webp$/i.test(opts.media.storage_path)) {
+      throw new SendError("unsupported_file", 415, "Stickers must be static .webp images (512\xD7512 recommended).");
+    }
+  }
   if (!windowOpen(conv)) {
     throw new SendError(
       "template_required",
@@ -1416,22 +1678,39 @@ async function sendFreeForm(opts) {
       "The 24-hour customer service window is CLOSED. WhatsApp only allows approved template messages to this customer right now."
     );
   }
+  const replyTo = (opts.replyToWamid || "").trim();
   const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+  const quoted = replyTo ? await quotedSnapshot(conv.id, replyTo) : {};
+  const m = opts.media || {};
+  const rowMedia = opts.kind === "text" ? {} : opts.kind === "location" ? { location: m.location } : opts.kind === "contacts" ? { contacts: m.contacts } : { storage_path: m.storage_path || "", meta_id: m.meta_id || "", link: m.link || "", caption: m.caption || "", filename: m.filename || "", mime: m.mime || "", size: m.size || 0 };
   const inserted = await sbInsert("whatsapp_messages", {
     conversation_id: conv.id,
     wa_id: conv.wa_id,
     direction: "out",
     type: opts.kind,
-    body: opts.kind === "text" ? (opts.text || "").trim() : opts.media?.caption || "",
-    media: opts.kind === "text" ? {} : { link: opts.media?.link || "", caption: opts.media?.caption || "", filename: opts.media?.filename || "" },
+    body: opts.kind === "text" ? (opts.text || "").trim() : opts.kind === "location" ? [m.location?.name, m.location?.address].filter(Boolean).join(" \u2014 ") : opts.kind === "contacts" ? (m.contacts || []).map((c) => c.name.formatted_name).join(", ") : m.caption || "",
+    media: rowMedia,
+    reply_to_wamid: replyTo || null,
+    quoted,
     status: "queued",
     timestamp: nowIso
   }, { represent: true });
   const rowId = inserted[0]?.id || "";
   try {
-    const result = opts.kind === "text" ? await sendText(cfg, conv.wa_id, (opts.text || "").trim()) : await sendMedia(cfg, conv.wa_id, opts.kind, { link: opts.media?.link, caption: opts.media?.caption, filename: opts.media?.filename });
+    let result;
+    if (opts.kind === "text") {
+      result = await sendText(cfg, conv.wa_id, (opts.text || "").trim(), replyTo || void 0);
+    } else if (opts.kind === "location") {
+      result = await sendLocation(cfg, conv.wa_id, m.location, replyTo || void 0);
+    } else if (opts.kind === "contacts") {
+      result = await sendContacts(cfg, conv.wa_id, m.contacts || [], replyTo || void 0);
+    } else {
+      const id = await metaMediaId(cfg, opts.kind, m);
+      if (id) await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { media: { ...rowMedia, meta_id: id } });
+      result = await sendMedia(cfg, conv.wa_id, opts.kind, { id: id || void 0, link: id ? void 0 : m.link, caption: m.caption, filename: m.filename }, replyTo || void 0);
+    }
     await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { status: "sent", wa_message_id: result.messageId });
-    await finalize(conv, opts.agentEmail, previewOf2(opts.kind === "text" ? opts.text || "" : mediaLabel(opts.kind, opts.media?.caption)), nowIso);
+    await finalize(conv, opts.agentEmail, previewOf2(opts.kind, opts.kind === "text" ? opts.text || "" : mediaLabel(opts.kind, m)), nowIso);
     await logActivityServer("whatsapp_message_sent", "whatsapp_conversation", conv.id, { type: opts.kind, wa_id: conv.wa_id }, opts.agentEmail);
     return { messageId: result.messageId, conversationId: conv.id, status: "sent" };
   } catch (e) {
@@ -1444,9 +1723,11 @@ async function sendFreeForm(opts) {
     throw new SendError(g.code === "config" ? "config" : "send_failed", g.status || 502, g.message, g.metaCode ?? null);
   }
 }
-function mediaLabel(kind, caption) {
-  const icons = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Audio", video: "\u{1F3AC} Video" };
-  return `${icons[kind] || "Media"}${caption ? ` \u2014 ${caption}` : ""}`;
+function mediaLabel(kind, m) {
+  if (kind === "location" && m.location) return `\u{1F4CD} ${m.location.name || m.location.address || "Location"}`;
+  if (kind === "contacts" && m.contacts) return `\u{1F464} ${(m.contacts || []).map((c) => c.name.formatted_name).join(", ")}`;
+  const icons = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Audio", video: "\u{1F3AC} Video", sticker: "\u{1FA79} Sticker" };
+  return `${icons[kind] || "Media"}${m.caption ? ` \u2014 ${m.caption}` : ""}`;
 }
 async function sendTemplateMessage(input) {
   const cfg = await loadConfig();
@@ -1456,20 +1737,32 @@ async function sendTemplateMessage(input) {
     throw new SendError("opted_out", 409, "This customer opted out of marketing messages. Only utility templates (e.g. appointment or support) may be considered, and only with the customer's consent.");
   }
   const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+  const replyTo = (input.replyToWamid || "").trim();
+  const quoted = replyTo ? await quotedSnapshot(conv.id, replyTo) : {};
+  const headerMeta = input.headerMedia ? { storage_path: input.headerMedia.storage_path || "", meta_id: input.headerMedia.meta_id || "", link: input.headerMedia.link || "", mime: input.headerMedia.mime || "", filename: input.headerMedia.filename || "" } : {};
   const inserted = await sbInsert("whatsapp_messages", {
     conversation_id: conv.id,
     wa_id: conv.wa_id,
     direction: "out",
     type: "template",
     body: `Template: ${input.name}`,
-    media: {},
+    media: { ...headerMeta, template_params: input.bodyParams },
     template_name: input.name,
+    reply_to_wamid: replyTo || null,
+    quoted,
     status: "queued",
     timestamp: nowIso
   }, { represent: true });
   const rowId = inserted[0]?.id || "";
   try {
-    const result = await sendTemplate(cfg, conv.wa_id, input.name, input.language || "en", input.bodyParams);
+    let headerParam;
+    if (input.headerMedia) {
+      const hm = input.headerMedia;
+      const id = hm.meta_id || (hm.storage_path ? (await uploadMedia(cfg, (await downloadObject(hm.storage_path)).buffer, hm.mime || "image/jpeg", hm.filename || "header")).id : "");
+      if (id) await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { media: { ...headerMeta, meta_id: id } });
+      headerParam = { kind: hm.kind, id: id || void 0, link: id ? void 0 : hm.link, filename: hm.filename };
+    }
+    const result = await sendTemplate(cfg, conv.wa_id, input.name, input.language || "en", input.bodyParams, headerParam, replyTo || void 0);
     await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { status: "sent", wa_message_id: result.messageId });
     await finalize(conv, input.agentEmail, `\u{1F4CB} ${input.name}`, nowIso);
     await logActivityServer("whatsapp_template_sent", "whatsapp_conversation", conv.id, { template: input.name, language: input.language }, input.agentEmail);
@@ -1484,18 +1777,69 @@ async function sendTemplateMessage(input) {
     throw new SendError(g.code === "config" ? "config" : "send_failed", g.status || 502, g.message, g.metaCode ?? null);
   }
 }
-async function markConversationRead(conversationId) {
+async function retryFailedMessage(rowId, agentEmail) {
+  const row = await sbSelectOne(`/whatsapp_messages?select=id,conversation_id,wa_id,direction,type,body,media,template_name,status,error&id=eq.${rowId}`);
+  if (!row) throw new SendError("not_found", 404, "This message no longer exists.");
+  if (row.direction !== "out") throw new SendError("bad_request", 400, "Only outgoing messages can be retried.");
+  if (row.status !== "failed") throw new SendError("bad_request", 400, "Only failed messages can be retried.");
+  const kind = row.type;
+  const media = row.media || {};
+  const cfg = await loadConfig();
+  await sbUpdate("whatsapp_messages", `id=eq.${row.id}`, { status: "queued", error: {} });
   try {
-    await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, { unread_count: 0, updated_at: (/* @__PURE__ */ new Date()).toISOString() });
+    let result;
+    if (kind === "text") {
+      result = await sendText(cfg, row.wa_id, row.body);
+    } else if (kind === "template") {
+      result = await sendTemplate(cfg, row.wa_id, row.template_name || "", "en", media.template_params || []);
+    } else if (kind === "location") {
+      result = await sendLocation(cfg, row.wa_id, media.location || {});
+    } else if (kind === "contacts") {
+      result = await sendContacts(cfg, row.wa_id, media.contacts || []);
+    } else {
+      const id = await metaMediaId(cfg, kind, media);
+      if (id) await sbUpdate("whatsapp_messages", `id=eq.${row.id}`, { media: { ...media, meta_id: id } });
+      result = await sendMedia(cfg, row.wa_id, kind, { id: id || void 0, link: id ? void 0 : media.link, caption: media.caption, filename: media.filename });
+    }
+    await sbUpdate("whatsapp_messages", `id=eq.${row.id}`, { status: "sent", wa_message_id: result.messageId });
+    const conv = await sbSelectOne(`/whatsapp_conversations?select=id,contact_id,wa_id,window_expires_at,last_in_at,unread_count,assigned_to,status&id=eq.${row.conversation_id}`);
+    if (conv) await finalize(conv, agentEmail, "", (/* @__PURE__ */ new Date()).toISOString());
+    await logActivityServer("whatsapp_message_retried", "whatsapp_message", row.id, { type: kind }, agentEmail);
+    return { messageId: result.messageId, conversationId: row.conversation_id, status: "sent" };
+  } catch (e) {
+    const g = e;
+    await sbUpdate("whatsapp_messages", `id=eq.${row.id}`, {
+      status: "failed",
+      error: { code: g.metaCode ?? 0, title: "Retry failed", message: g.message }
+    });
+    throw new SendError(g.code === "config" ? "config" : "send_failed", g.status || 502, g.message, g.metaCode ?? null);
+  }
+}
+async function markConversationRead(conversationId) {
+  const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+  try {
+    const prev = await sbSelectOne(`/whatsapp_conversations?select=last_read_at&id=eq.${conversationId}`);
+    await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, { unread_count: 0, last_read_at: nowIso, updated_at: nowIso });
+    const since = prev?.last_read_at || new Date(Date.now() - 864e5).toISOString();
+    const unread = await (await Promise.resolve().then(() => (init_sb(), sb_exports))).sbSelect(
+      `/whatsapp_messages?select=wa_message_id&conversation_id=eq.${conversationId}&direction=eq.in&status=eq.received&timestamp=gt.${since}&order=timestamp.desc&limit=5`
+    );
+    const wamid = unread.map((r) => r.wa_message_id).find(Boolean);
+    if (wamid) {
+      const cfg = await loadConfig();
+      await markReadApi(cfg, wamid);
+    }
   } catch (e) {
     if (!isSchemaMissing(e)) throw e;
   }
 }
-function previewOf2(body) {
-  return body.length > 90 ? `${body.slice(0, 90)}\u2026` : body;
+function previewOf2(kind, body) {
+  const label = kind === "text" ? body : mediaLabel(kind, {});
+  return label.length > 90 ? `${label.slice(0, 90)}\u2026` : label;
 }
 
 // server/whatsapp/templates.ts
+init_sb();
 var VALID_STATUS = /* @__PURE__ */ new Set(["APPROVED", "PENDING", "REJECTED", "PAUSED", "ARCHIVED", "DELETED"]);
 async function syncTemplates(agentEmail) {
   const cfg = await loadConfig();
@@ -1528,6 +1872,7 @@ async function syncTemplates(agentEmail) {
 }
 
 // server/whatsapp/ai-actions.ts
+init_sb();
 var CATEGORIES = ["Website Development", "Ecommerce", "AI Solutions", "SEO", "Branding", "Templates", "Support", "General Inquiry", "Existing Client", "Other"];
 var LEAD_FIELDS = ["name", "company", "email", "phone", "service", "industry", "project_type", "urgency", "requirements"];
 async function transcript(conversationId, max = 60) {
@@ -1697,6 +2042,7 @@ ${body}`,
 }
 
 // server/whatsapp/analytics.ts
+init_sb();
 function resolveRange(preset, customStart, customEnd) {
   const now = /* @__PURE__ */ new Date();
   const end = new Date(now);
@@ -1814,7 +2160,39 @@ async function analyticsFor(range) {
 }
 
 // server/whatsapp/handlers.ts
-var SB_URL5 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
+init_sb();
+
+// server/whatsapp/media.ts
+init_storage();
+init_sb();
+async function ensureStoredMedia(cfg, rowId, media) {
+  if (media.storage_path) {
+    return { storagePath: String(media.storage_path), mime: String(media.mime || ""), size: Number(media.size || 0) };
+  }
+  const mediaId = String(media.media_id || "");
+  if (!mediaId || !/^[A-Za-z0-9_-]+$/.test(mediaId)) return null;
+  const { buffer, mime } = await fetchMediaBuffer(cfg, mediaId);
+  if (buffer.length > 80 * 1024 * 1024) throw new Error("Media exceeds the 80 MB storage limit.");
+  const path = mediaPath("inbound", mediaId, String(media.filename || ""), mime || String(media.mime || ""));
+  await uploadObject(path, buffer, mime);
+  const updated = { ...media, storage_path: path, mime: mime || String(media.mime || ""), size: buffer.length };
+  await sbUpdate("whatsapp_messages", `id=eq.${rowId}`, { media: updated });
+  return { storagePath: path, mime: mime || String(media.mime || ""), size: buffer.length };
+}
+async function signedMediaForMessage(rowId, expiresSec = 3600) {
+  const { sbSelectOne: sbSelectOne2 } = await Promise.resolve().then(() => (init_sb(), sb_exports));
+  const row = await sbSelectOne2(`/whatsapp_messages?select=media&id=eq.${rowId}`);
+  if (!row) return null;
+  const cfg = await loadConfig();
+  const stored = await ensureStoredMedia(cfg, rowId, row.media || {});
+  if (!stored) return null;
+  const { createSignedUrl: createSignedUrl2 } = await Promise.resolve().then(() => (init_storage(), storage_exports));
+  const url = await createSignedUrl2(stored.storagePath, expiresSec);
+  return { url, mime: stored.mime, filename: String(row.media?.filename || ""), storagePath: stored.storagePath };
+}
+
+// server/whatsapp/handlers.ts
+var SB_URL6 = (process.env.SUPABASE_URL || "https://uspshkegxhrglbpxqtil.supabase.co").replace(/\/+$/, "");
 var SB_ANON3 = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw";
 var WaError = class extends Error {
   constructor(code, status, message) {
@@ -1857,11 +2235,11 @@ function bearerOf(req) {
 async function requireAdmin(req) {
   const token = bearerOf(req);
   if (!token) throw new WaError("unauthorized", 401, "Sign in to BRANIFY Admin first.");
-  const uRes = await fetch(`${SB_URL5}/auth/v1/user`, { headers: { apikey: SB_ANON3, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(1e4) });
+  const uRes = await fetch(`${SB_URL6}/auth/v1/user`, { headers: { apikey: SB_ANON3, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(1e4) });
   if (!uRes.ok) throw new WaError("unauthorized", 401, "Your admin session is invalid or expired. Sign in again.");
   const user = await uRes.json();
   if (!user?.email) throw new WaError("unauthorized", 401, "Your admin session is invalid or expired. Sign in again.");
-  const aRes = await fetch(`${SB_URL5}/rest/v1/admin_users?email=eq.${encodeURIComponent(user.email)}&select=email,active`, {
+  const aRes = await fetch(`${SB_URL6}/rest/v1/admin_users?email=eq.${encodeURIComponent(user.email)}&select=email,active`, {
     headers: { apikey: SB_ANON3, Authorization: `Bearer ${token}` },
     signal: AbortSignal.timeout(1e4)
   });
@@ -1948,24 +2326,53 @@ async function routeWhatsapp(req) {
   if (path === "/api/whatsapp/send" && method === "POST") {
     const kind = strOf(body.kind) || "text";
     if (kind === "template") {
+      const hm = body.header_media || null;
       const result2 = await sendTemplateMessage({
         conversationId: strOf(body.conversation_id),
         agentEmail: admin.email,
         name: strOf(body.template_name),
         language: strOf(body.language) || "en",
         category: strOf(body.category),
-        bodyParams: Array.isArray(body.body_params) ? body.body_params.map(String) : []
+        bodyParams: Array.isArray(body.body_params) ? body.body_params.map(String) : [],
+        headerMedia: hm && ["image", "document", "video"].includes(String(hm.kind)) ? { kind: hm.kind, storage_path: hm.storage_path, meta_id: hm.meta_id, link: hm.link, filename: hm.filename, mime: hm.mime } : void 0,
+        replyToWamid: strOf(body.reply_to)
       });
       return ok({ result: result2 });
     }
+    const media = body.media || void 0;
     const result = await sendFreeForm({
       conversationId: strOf(body.conversation_id),
       agentEmail: admin.email,
-      kind: ["image", "document", "audio", "video"].includes(kind) ? kind : "text",
+      kind: ["text", "image", "document", "audio", "video", "sticker", "location", "contacts"].includes(kind) ? kind : "text",
       text: strOf(body.text),
-      media: body.media || void 0
+      media,
+      replyToWamid: strOf(body.reply_to)
     });
     return ok({ result });
+  }
+  if (path === "/api/whatsapp/retry" && method === "POST") {
+    const result = await retryFailedMessage(strOf(body.message_id), admin.email);
+    return ok({ result });
+  }
+  if (path === "/api/whatsapp/media-url" && method === "POST") {
+    const rowId = strOf(body.message_id);
+    if (!/^[0-9a-fA-F-]{36}$/.test(rowId)) throw new WaError("bad_request", 400, "Invalid message id.");
+    const signed = await signedMediaForMessage(rowId);
+    if (!signed) throw new WaError("not_found", 404, "This message has no storable media (it may have expired on WhatsApp).");
+    return ok({ media: signed });
+  }
+  if (path === "/api/whatsapp/health" && method === "GET") {
+    const since = new Date(Date.now() - 864e5).toISOString();
+    const events = await sbSelect(`/whatsapp_events?select=processed_at&processed_at=gte.${since}&order=processed_at.desc&limit=1`);
+    const lastIn = await sbSelectOne(`/whatsapp_messages?select=timestamp&direction=eq.in&order=timestamp.desc&limit=1`);
+    const cnt = await sbSelect(`/whatsapp_events?select=id&event_type=eq.message_in&processed_at=gte.${since}`);
+    return ok({
+      health: {
+        last_event_at: events[0]?.processed_at || null,
+        last_inbound_message_at: lastIn?.timestamp || null,
+        inbound_messages_24h: cnt.length
+      }
+    });
   }
   if (path === "/api/whatsapp/read" && method === "POST") {
     await markConversationRead(strOf(body.conversation_id));

@@ -20,13 +20,14 @@ import { HandlerResult, readJsonBody } from '../../lib/ai/routes';
 import { loadConfig, maskedConfig, saveConfig } from './store';
 import { testConnection, fetchMediaBuffer } from './graph';
 import { webhookVerify, webhookProcess } from './webhook';
-import { sendFreeForm, sendTemplateMessage, markConversationRead, SendError } from './send';
+import { sendFreeForm, sendTemplateMessage, markConversationRead, retryFailedMessage, SendError } from './send';
 import { syncTemplates } from './templates';
 import { runAiAction, saveAiNote, AiAction } from './ai-actions';
 import { analyticsFor, resolveRange } from './analytics';
 import { fireAutomation, WaTrigger } from './automations';
-import { serviceRoleConfigured, sbSelect, isSchemaMissing } from './sb';
+import { serviceRoleConfigured, sbSelect, sbSelectOne, isSchemaMissing } from './sb';
 import { logActivityServer } from './activity';
+import { signedMediaForMessage } from './media';
 
 const SB_URL = (process.env.SUPABASE_URL || 'https://uspshkegxhrglbpxqtil.supabase.co').replace(/\/+$/, '');
 const SB_ANON = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_X11QDwMSfS2ivSePRVDpLQ_xNFY_8vw';
@@ -173,19 +174,57 @@ async function routeWhatsapp(req: IncomingMessage): Promise<HandlerResult> {
   if (path === '/api/whatsapp/send' && method === 'POST') {
     const kind = strOf(body.kind) || 'text';
     if (kind === 'template') {
+      const hm = (body.header_media || null) as { kind?: string; storage_path?: string; meta_id?: string; link?: string; filename?: string; mime?: string } | null;
       const result = await sendTemplateMessage({
         conversationId: strOf(body.conversation_id), agentEmail: admin.email,
         name: strOf(body.template_name), language: strOf(body.language) || 'en',
         category: strOf(body.category), bodyParams: Array.isArray(body.body_params) ? (body.body_params as string[]).map(String) : [],
+        headerMedia: hm && ['image', 'document', 'video'].includes(String(hm.kind))
+          ? { kind: hm.kind as 'image' | 'document' | 'video', storage_path: hm.storage_path, meta_id: hm.meta_id, link: hm.link, filename: hm.filename, mime: hm.mime }
+          : undefined,
+        replyToWamid: strOf(body.reply_to),
       });
       return ok({ result });
     }
+    const media = (body.media || undefined) as {
+      storage_path?: string; meta_id?: string; link?: string; caption?: string; filename?: string; mime?: string; size?: number;
+      location?: { latitude: string | number; longitude: string | number; name?: string; address?: string };
+      contacts?: Array<{ name: { formatted_name: string; first_name?: string; last_name?: string }; phones?: Array<{ phone: string; type?: string }> }>;
+    } | undefined;
     const result = await sendFreeForm({
       conversationId: strOf(body.conversation_id), agentEmail: admin.email,
-      kind: (['image', 'document', 'audio', 'video'].includes(kind) ? kind : 'text') as 'text',
-      text: strOf(body.text), media: (body.media as { link?: string; caption?: string; filename?: string } | undefined) || undefined,
+      kind: (['text', 'image', 'document', 'audio', 'video', 'sticker', 'location', 'contacts'].includes(kind) ? kind : 'text') as 'text',
+      text: strOf(body.text), media, replyToWamid: strOf(body.reply_to),
     });
     return ok({ result });
+  }
+
+  if (path === '/api/whatsapp/retry' && method === 'POST') {
+    const result = await retryFailedMessage(strOf(body.message_id), admin.email);
+    return ok({ result });
+  }
+
+  if (path === '/api/whatsapp/media-url' && method === 'POST') {
+    const rowId = strOf(body.message_id);
+    if (!/^[0-9a-fA-F-]{36}$/.test(rowId)) throw new WaError('bad_request', 400, 'Invalid message id.');
+    const signed = await signedMediaForMessage(rowId);
+    if (!signed) throw new WaError('not_found', 404, 'This message has no storable media (it may have expired on WhatsApp).');
+    return ok({ media: signed });
+  }
+
+  if (path === '/api/whatsapp/health' && method === 'GET') {
+    // Honest inbound health (spec §30): "Connected" ≠ messages actually arriving.
+    const since = new Date(Date.now() - 86400000).toISOString();
+    const events = await sbSelect<{ processed_at: string }>(`/whatsapp_events?select=processed_at&processed_at=gte.${since}&order=processed_at.desc&limit=1`);
+    const lastIn = await sbSelectOne<{ timestamp: string }>(`/whatsapp_messages?select=timestamp&direction=eq.in&order=timestamp.desc&limit=1`);
+    const cnt = await sbSelect<{ id: string }>(`/whatsapp_events?select=id&event_type=eq.message_in&processed_at=gte.${since}`);
+    return ok({
+      health: {
+        last_event_at: events[0]?.processed_at || null,
+        last_inbound_message_at: lastIn?.timestamp || null,
+        inbound_messages_24h: cnt.length,
+      },
+    });
   }
 
   if (path === '/api/whatsapp/read' && method === 'POST') {

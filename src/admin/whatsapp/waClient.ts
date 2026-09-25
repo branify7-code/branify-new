@@ -12,7 +12,7 @@
 import { supabase } from '../../lib/supabase';
 import type {
   WaContact, WaConversation, WaMessage, WaTemplate, WaNote, WaQuickReply,
-  WaAutomation, WaStatusResponse, WaMaskedConfig, WaAnalytics,
+  WaAutomation, WaStatusResponse, WaMaskedConfig, WaAnalytics, WaHealth,
 } from './waTypes';
 
 export class WaError extends Error {
@@ -89,20 +89,52 @@ async function list<T>(table: string, qs: string): Promise<T[]> {
   return (data || []) as T[];
 }
 
-// conversations (ordered by most recent activity — sort happens client-side on last_message_at)
-export const listConversations = (): Promise<WaConversation[]> => list<WaConversation>('whatsapp_conversations', '');
+// conversations — server-side filters + search (spec §2/§28: never dump the DB)
+// search matches contact name/email/company, phone, and last preview via PostgREST.
+export async function listConversations(opts: { search?: string; limit?: number } = {}): Promise<WaConversation[]> {
+  let q = supabase
+    .from('whatsapp_conversations')
+    .select('*, contact:whatsapp_contacts(id,name,email,company,tags,lead_status,opt_out)')
+    .order('last_message_at', { ascending: false, nullsFirst: false })
+    .limit(opts.limit || 120);
+  const s = (opts.search || '').trim();
+  if (s) {
+    const esc = s.replace(/[%,()]/g, ' ').trim();
+    if (esc) q = q.or(`wa_id.ilike.%${esc}%,last_message_preview.ilike.%${esc}%,contact.name.ilike.%${esc}%,contact.email.ilike.%${esc}%,contact.company.ilike.%${esc}%`);
+  }
+  const { data, error } = await q;
+  if (error) sbErr(error, 'Read failed');
+  return (data || []) as unknown as WaConversation[];
+}
+
+/** Conversation ids whose messages match a text query (trigram-indexed, server-side). */
+export async function searchConversationIdsByText(q: string, limit = 30): Promise<string[]> {
+  const s = q.trim();
+  if (!s) return [];
+  const { data, error } = await supabase
+    .from('whatsapp_messages')
+    .select('conversation_id')
+    .ilike('body', `%${s.replace(/[%,()]/g, ' ').trim()}%`)
+    .limit(limit * 4);
+  if (error) sbErr(error, 'Search failed');
+  return Array.from(new Set((data || []).map((r: { conversation_id: string }) => r.conversation_id))).slice(0, limit);
+}
+
 export const listContacts = (): Promise<WaContact[]> => list<WaContact>('whatsapp_contacts', '');
 export const listTemplates = (): Promise<WaTemplate[]> => list<WaTemplate>('whatsapp_templates', '');
 export const listQuickReplies = (): Promise<WaQuickReply[]> => list<WaQuickReply>('whatsapp_quick_replies', '');
 export const listAutomations = (): Promise<WaAutomation[]> => list<WaAutomation>('whatsapp_automations', '');
 
-export async function listMessages(conversationId: string, limit = 200): Promise<WaMessage[]> {
-  const { data, error } = await supabase
+/** Paginated history (oldest page ends at `before`) — infinite scroll, §3. */
+export async function listMessages(conversationId: string, opts: { before?: string; limit?: number } = {}): Promise<WaMessage[]> {
+  let q = supabase
     .from('whatsapp_messages')
     .select('*')
     .eq('conversation_id', conversationId)
     .order('timestamp', { ascending: false })
-    .limit(limit);
+    .limit(opts.limit || 50);
+  if (opts.before) q = q.lt('timestamp', opts.before);
+  const { data, error } = await q;
   if (error) sbErr(error, 'Read failed');
   return ((data || []) as WaMessage[]).slice().reverse();
 }
@@ -170,10 +202,113 @@ export const runInactiveAutomations = (): Promise<{ checked: number; affected: n
 export const analyticsServer = (payload: { preset: string; start?: string; end?: string }): Promise<{ analytics: WaAnalytics }> => post('/analytics', payload);
 export const aiAction = (payload: { action: string; conversation_id: string; draft?: string; language?: string; save_as_note?: boolean }): Promise<{ result: Record<string, unknown> }> => post('/ai', payload);
 
-export const sendMessage = (payload: { conversation_id: string; kind: string; text?: string; media?: { link?: string; caption?: string; filename?: string } }): Promise<{ result: { messageId: string } }> =>
+export const sendMessage = (payload: {
+  conversation_id: string; kind: string; text?: string;
+  media?: { storage_path?: string; meta_id?: string; link?: string; caption?: string; filename?: string; mime?: string; size?: number; location?: { latitude: string | number; longitude: string | number; name?: string; address?: string }; contacts?: Array<{ name: { formatted_name: string; first_name?: string; last_name?: string }; phones?: Array<{ phone: string; type?: string }> }> };
+  reply_to?: string;
+}): Promise<{ result: { messageId: string } }> =>
   post('/send', payload);
 
-export const sendTemplateMessage = (payload: { conversation_id: string; template_name: string; language: string; category: string; body_params: string[] }): Promise<{ result: { messageId: string } }> =>
+export const retryMessage = (messageId: string): Promise<{ result: { messageId: string } }> => post('/retry', { message_id: messageId });
+
+/** Short-lived signed URL for a message's media (inbound lazily persisted on first view). */
+export const mediaSignedUrl = (messageId: string): Promise<{ media: { url: string; mime: string; filename: string; storagePath: string } }> =>
+  post('/media-url', { message_id: messageId });
+
+/** Honest inbound health (spec §30) — "Connected" ≠ messages actually arriving. */
+export const health = (): Promise<{ health: WaHealth }> => call<{ health: WaHealth }>('/health');
+
+// ------------------------------------------------------------------ private storage (outbound attachments)
+const SB_URL = ((import.meta as { env?: Record<string, string> }).env?.VITE_SUPABASE_URL || 'https://uspshkegxhrglbpxqtil.supabase.co').replace(/\/+$/, '');
+const MEDIA_BUCKET = 'whatsapp-media';
+
+/** Sanitize a filename into a storage-safe key segment. */
+function safeName(name: string): string {
+  return (name || 'file').replace(/[^A-Za-z0-9._-]+/g, '_').slice(-80);
+}
+
+export function buildAttachmentPath(conversationId: string, file: File): string {
+  return `outbound/${conversationId}/${Date.now()}-${safeName(file.name)}`;
+}
+
+/**
+ * Upload an attachment to the PRIVATE bucket with real progress (spec §7).
+ * Uses XHR because supabase-js storage upload does not expose progress events.
+ * Storage RLS: authenticated BRANIFY admins only.
+ */
+export function uploadAttachment(path: string, file: File, onProgress?: (pct: number) => void): Promise<void> {
+  return new Promise((resolve, reject) => {
+    void token().then((t) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `${SB_URL}/storage/v1/object/${MEDIA_BUCKET}/${path}`);
+      xhr.setRequestHeader('Authorization', `Bearer ${t}`);
+      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      xhr.upload.onprogress = (e) => { if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100)); };
+      xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new WaError('storage', xhr.status, `Upload failed (HTTP ${xhr.status}).`)));
+      xhr.onerror = () => reject(new WaError('network', 502, 'Upload failed — network error.'));
+      xhr.send(file);
+    }).catch(reject);
+  });
+}
+
+/** Official Meta media constraints — validated BEFORE upload (spec §7/§10/§29). */
+export const MEDIA_LIMITS = {
+  image: { maxMb: 5, mimes: ['image/jpeg', 'image/png', 'image/webp'] },
+  video: { maxMb: 16, mimes: ['video/mp4', 'video/3gpp'] },
+  audio: { maxMb: 16, mimes: ['audio/ogg', 'audio/mpeg', 'audio/mp4', 'audio/aac', 'audio/amr'] },
+  document: { maxMb: 100, mimes: [] as string[] },
+  sticker: { maxMb: 1, mimes: ['image/webp'] },
+} as const;
+
+export function validateAttachment(kind: keyof typeof MEDIA_LIMITS, file: File): string | null {
+  const lim = MEDIA_LIMITS[kind];
+  if (lim.mimes.length && !lim.mimes.some((m) => file.type.startsWith(m.split('/')[0]) && file.type === m)) {
+    return `Unsupported ${kind} format (${file.type || 'unknown'}). Allowed: ${lim.mimes.join(', ')}.`;
+  }
+  if (file.size > lim.maxMb * 1024 * 1024) return `File too large — max ${lim.maxMb} MB for ${kind} (selected ${(file.size / 1048576).toFixed(1)} MB).`;
+  if (file.size === 0) return 'The selected file is empty.';
+  return null;
+}
+
+// ------------------------------------------------------------------ realtime (§22)
+export interface RealtimeHandle { unsubscribe: () => void }
+
+/** Live conversation list updates (INSERT/UPDATE on conversations). */
+export function subscribeConversations(handlers: {
+  onUpsert?: (row: WaConversation) => void;
+  onError?: () => void;
+}): RealtimeHandle {
+  const ch = supabase
+    .channel('wa-conversations')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_conversations' }, (payload) => {
+      const p = payload as unknown as { eventType?: string; new?: WaConversation };
+      if (p.eventType === 'INSERT' || p.eventType === 'UPDATE') {
+        if (p.new) handlers.onUpsert?.(p.new);
+      }
+    })
+    .subscribe((status) => { if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') handlers.onError?.(); });
+  return { unsubscribe: () => { void supabase.removeChannel(ch); } };
+}
+
+/** Live messages for the OPEN conversation (INSERT + status UPDATEs). */
+export function subscribeMessages(conversationId: string, handlers: {
+  onInsert?: (row: WaMessage) => void;
+  onUpdate?: (row: WaMessage) => void;
+  onError?: () => void;
+}): RealtimeHandle {
+  const ch = supabase
+    .channel(`wa-messages-${conversationId}`)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'whatsapp_messages', filter: `conversation_id=eq.${conversationId}` }, (payload) => handlers.onInsert?.(payload.new as WaMessage))
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'whatsapp_messages', filter: `conversation_id=eq.${conversationId}` }, (payload) => handlers.onUpdate?.(payload.new as WaMessage))
+    .subscribe((status) => { if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') handlers.onError?.(); });
+  return { unsubscribe: () => { void supabase.removeChannel(ch); } };
+}
+
+export const sendTemplateMessage = (payload: {
+  conversation_id: string; template_name: string; language: string; category: string; body_params: string[];
+  header_media?: { kind: 'image' | 'document' | 'video'; storage_path?: string; meta_id?: string; link?: string; filename?: string; mime?: string };
+  reply_to?: string;
+}): Promise<{ result: { messageId: string } }> =>
   post('/send', { kind: 'template', ...payload });
 
 export const markRead = (conversationId: string): Promise<void> => post('/read', { conversation_id: conversationId });
