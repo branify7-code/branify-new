@@ -122,6 +122,12 @@ async function quotedSnapshot(conversationId: string, replyToWamid: string): Pro
   };
 }
 
+/** True when the DB is missing an inbox-v2 column (pre-migration). */
+function isMissingColumn(e: unknown, column: string): boolean {
+  const msg = e instanceof Error ? e.message : '';
+  return /42703|PGRST204|does not exist/i.test(msg) && msg.includes(column);
+}
+
 export async function sendFreeForm(opts: {
   conversationId: string; agentEmail: string;
   kind: SendKind;
@@ -168,7 +174,22 @@ export async function sendFreeForm(opts: {
     reply_to_wamid: replyTo || null,
     quoted,
     status: 'queued', timestamp: nowIso,
-  }, { represent: true });
+  }, { represent: true }).catch(async (e) => {
+    // Zero-downtime fallback while the inbox-v2 migration is pending.
+    if (isMissingColumn(e, 'reply_to_wamid') || isMissingColumn(e, 'quoted')) {
+      return sbInsert<{ id: string }>('whatsapp_messages', {
+        conversation_id: conv.id, wa_id: conv.wa_id, direction: 'out',
+        type: opts.kind,
+        body: opts.kind === 'text' ? (opts.text || '').trim()
+          : opts.kind === 'location' ? [m.location?.name, m.location?.address].filter(Boolean).join(' — ')
+          : opts.kind === 'contacts' ? (m.contacts || []).map((c) => c.name.formatted_name).join(', ')
+          : (m.caption || ''),
+        media: rowMedia,
+        status: 'queued', timestamp: nowIso,
+      }, { represent: true });
+    }
+    throw e;
+  });
   const rowId = inserted[0]?.id || '';
   try {
     let result: { messageId: string };
@@ -234,7 +255,16 @@ export async function sendTemplateMessage(input: SendTemplateInput): Promise<Sen
     body: `Template: ${input.name}`, media: { ...headerMeta, template_params: input.bodyParams }, template_name: input.name,
     reply_to_wamid: replyTo || null, quoted,
     status: 'queued', timestamp: nowIso,
-  }, { represent: true });
+  }, { represent: true }).catch(async (e) => {
+    if (isMissingColumn(e, 'reply_to_wamid') || isMissingColumn(e, 'quoted')) {
+      return sbInsert<{ id: string }>('whatsapp_messages', {
+        conversation_id: conv.id, wa_id: conv.wa_id, direction: 'out', type: 'template',
+        body: `Template: ${input.name}`, media: { ...headerMeta, template_params: input.bodyParams }, template_name: input.name,
+        status: 'queued', timestamp: nowIso,
+      }, { represent: true });
+    }
+    throw e;
+  });
   const rowId = inserted[0]?.id || '';
   try {
     let headerParam: Parameters<typeof sendTemplate>[5];
@@ -313,8 +343,14 @@ export async function retryFailedMessage(rowId: string, agentEmail: string): Pro
 export async function markConversationRead(conversationId: string): Promise<void> {
   const nowIso = new Date().toISOString();
   try {
-    const prev = await sbSelectOne<{ last_read_at: string | null }>(`/whatsapp_conversations?select=last_read_at&id=eq.${conversationId}`);
-    await sbUpdate('whatsapp_conversations', `id=eq.${conversationId}`, { unread_count: 0, last_read_at: nowIso, updated_at: nowIso });
+    const prev = await sbSelectOne<{ last_read_at: string | null }>(`/whatsapp_conversations?select=last_read_at&id=eq.${conversationId}`).catch((e) => (isMissingColumn(e, 'last_read_at') ? null : Promise.reject(e)));
+    await sbUpdate('whatsapp_conversations', `id=eq.${conversationId}`, { unread_count: 0, last_read_at: nowIso, updated_at: nowIso }).catch(async (e) => {
+      if (isMissingColumn(e, 'last_read_at')) {
+        await sbUpdate('whatsapp_conversations', `id=eq.${conversationId}`, { unread_count: 0, updated_at: nowIso });
+        return;
+      }
+      throw e;
+    });
     // Best-effort official read receipt for inbound messages newer than last read.
     const since = prev?.last_read_at || new Date(Date.now() - 86400000).toISOString();
     const unread = await (await import('./sb')).sbSelect<{ wa_message_id: string }>(

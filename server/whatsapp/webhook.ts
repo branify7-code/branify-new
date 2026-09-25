@@ -27,6 +27,12 @@ import { fireAutomation } from './automations';
 const digitsOf = (v: string): string => (v || '').replace(/[^\d]/g, '');
 const isoPlus24h = (d: Date): Date => new Date(d.getTime() + 24 * 60 * 60 * 1000);
 
+/** True when a DB failure means an optional column is missing (pre-migration DB). */
+function isMissingColumn(e: unknown, column: string): boolean {
+  const msg = e instanceof Error ? e.message : '';
+  return /42703|PGRST204|does not exist/i.test(msg) && msg.includes(column);
+}
+
 function previewOf(body: string, kind: string): string {
   if (body) return body.length > 90 ? `${body.slice(0, 90)}…` : body;
   const labels: Record<string, string> = { image: '📷 Photo', document: '📄 Document', audio: '🎵 Voice note', video: '🎬 Video', sticker: '🩹 Sticker', location: '📍 Location', contacts: '👤 Contact card', interactive: '🔘 Button reply', reaction: '❤️ Reaction', template: '📋 Template', unsupported: 'Message' };
@@ -264,6 +270,18 @@ export async function webhookProcess(raw: string, signatureHeader: string): Prom
             direction: 'in', type: inbound.kind, body: inbound.body, media: inbound.media,
             reply_to_wamid: inbound.replyToWamid || null, quoted,
             status: 'received', timestamp: inbound.ts.toISOString(),
+          }).catch(async (e) => {
+            // Zero-downtime: store WITHOUT reply threading until the inbox-v2
+            // migration adds the columns (no message is ever lost).
+            if (isMissingColumn(e, 'reply_to_wamid') || isMissingColumn(e, 'quoted')) {
+              await sbInsert('whatsapp_messages', {
+                conversation_id: conversationId, wa_id: waId, wa_message_id: inbound.wamid,
+                direction: 'in', type: inbound.kind, body: inbound.body, media: inbound.media,
+                status: 'received', timestamp: inbound.ts.toISOString(),
+              });
+              return;
+            }
+            throw e;
           });
           await sbUpdate('whatsapp_conversations', `id=eq.${conversationId}`, {
             unread_count: await bumpUnread(conversationId, 1),

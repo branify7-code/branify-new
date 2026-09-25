@@ -1347,6 +1347,10 @@ async function applyAction(action, ctx) {
 // server/whatsapp/webhook.ts
 var digitsOf = (v) => (v || "").replace(/[^\d]/g, "");
 var isoPlus24h = (d) => new Date(d.getTime() + 24 * 60 * 60 * 1e3);
+function isMissingColumn(e, column) {
+  const msg = e instanceof Error ? e.message : "";
+  return /42703|PGRST204|does not exist/i.test(msg) && msg.includes(column);
+}
 function previewOf(body, kind) {
   if (body) return body.length > 90 ? `${body.slice(0, 90)}\u2026` : body;
   const labels = { image: "\u{1F4F7} Photo", document: "\u{1F4C4} Document", audio: "\u{1F3B5} Voice note", video: "\u{1F3AC} Video", sticker: "\u{1FA79} Sticker", location: "\u{1F4CD} Location", contacts: "\u{1F464} Contact card", interactive: "\u{1F518} Button reply", reaction: "\u2764\uFE0F Reaction", template: "\u{1F4CB} Template", unsupported: "Message" };
@@ -1559,6 +1563,22 @@ async function webhookProcess(raw, signatureHeader) {
             quoted,
             status: "received",
             timestamp: inbound.ts.toISOString()
+          }).catch(async (e) => {
+            if (isMissingColumn(e, "reply_to_wamid") || isMissingColumn(e, "quoted")) {
+              await sbInsert("whatsapp_messages", {
+                conversation_id: conversationId,
+                wa_id: waId,
+                wa_message_id: inbound.wamid,
+                direction: "in",
+                type: inbound.kind,
+                body: inbound.body,
+                media: inbound.media,
+                status: "received",
+                timestamp: inbound.ts.toISOString()
+              });
+              return;
+            }
+            throw e;
           });
           await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, {
             unread_count: await bumpUnread(conversationId, 1),
@@ -1655,6 +1675,10 @@ async function quotedSnapshot(conversationId, replyToWamid) {
     filename: row.media?.filename || ""
   };
 }
+function isMissingColumn2(e, column) {
+  const msg = e instanceof Error ? e.message : "";
+  return /42703|PGRST204|does not exist/i.test(msg) && msg.includes(column);
+}
 async function sendFreeForm(opts) {
   const cfg = await loadConfig();
   const { conv, optOut } = await loadConversation(opts.conversationId);
@@ -1694,7 +1718,21 @@ async function sendFreeForm(opts) {
     quoted,
     status: "queued",
     timestamp: nowIso
-  }, { represent: true });
+  }, { represent: true }).catch(async (e) => {
+    if (isMissingColumn2(e, "reply_to_wamid") || isMissingColumn2(e, "quoted")) {
+      return sbInsert("whatsapp_messages", {
+        conversation_id: conv.id,
+        wa_id: conv.wa_id,
+        direction: "out",
+        type: opts.kind,
+        body: opts.kind === "text" ? (opts.text || "").trim() : opts.kind === "location" ? [m.location?.name, m.location?.address].filter(Boolean).join(" \u2014 ") : opts.kind === "contacts" ? (m.contacts || []).map((c) => c.name.formatted_name).join(", ") : m.caption || "",
+        media: rowMedia,
+        status: "queued",
+        timestamp: nowIso
+      }, { represent: true });
+    }
+    throw e;
+  });
   const rowId = inserted[0]?.id || "";
   try {
     let result;
@@ -1752,7 +1790,22 @@ async function sendTemplateMessage(input) {
     quoted,
     status: "queued",
     timestamp: nowIso
-  }, { represent: true });
+  }, { represent: true }).catch(async (e) => {
+    if (isMissingColumn2(e, "reply_to_wamid") || isMissingColumn2(e, "quoted")) {
+      return sbInsert("whatsapp_messages", {
+        conversation_id: conv.id,
+        wa_id: conv.wa_id,
+        direction: "out",
+        type: "template",
+        body: `Template: ${input.name}`,
+        media: { ...headerMeta, template_params: input.bodyParams },
+        template_name: input.name,
+        status: "queued",
+        timestamp: nowIso
+      }, { represent: true });
+    }
+    throw e;
+  });
   const rowId = inserted[0]?.id || "";
   try {
     let headerParam;
@@ -1818,8 +1871,14 @@ async function retryFailedMessage(rowId, agentEmail) {
 async function markConversationRead(conversationId) {
   const nowIso = (/* @__PURE__ */ new Date()).toISOString();
   try {
-    const prev = await sbSelectOne(`/whatsapp_conversations?select=last_read_at&id=eq.${conversationId}`);
-    await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, { unread_count: 0, last_read_at: nowIso, updated_at: nowIso });
+    const prev = await sbSelectOne(`/whatsapp_conversations?select=last_read_at&id=eq.${conversationId}`).catch((e) => isMissingColumn2(e, "last_read_at") ? null : Promise.reject(e));
+    await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, { unread_count: 0, last_read_at: nowIso, updated_at: nowIso }).catch(async (e) => {
+      if (isMissingColumn2(e, "last_read_at")) {
+        await sbUpdate("whatsapp_conversations", `id=eq.${conversationId}`, { unread_count: 0, updated_at: nowIso });
+        return;
+      }
+      throw e;
+    });
     const since = prev?.last_read_at || new Date(Date.now() - 864e5).toISOString();
     const unread = await (await Promise.resolve().then(() => (init_sb(), sb_exports))).sbSelect(
       `/whatsapp_messages?select=wa_message_id&conversation_id=eq.${conversationId}&direction=eq.in&status=eq.received&timestamp=gt.${since}&order=timestamp.desc&limit=5`
