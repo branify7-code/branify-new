@@ -191,8 +191,8 @@ const settings = {
   contact: {
     email: 'admin@branify.store',
     phone: '+8801879176373',
-    whatsapp: '923321029333',
-    whatsapp_display: '+92 332 1029333',
+    whatsapp: '9233706922381',
+    whatsapp_display: '+92 370 6922381',
     offices: [
       { label: 'USA Office', lines: ['Remote-first', 'Serving worldwide'] },
       { label: 'Bangladesh Office', lines: ['Dhaka', 'Bangladesh'] },

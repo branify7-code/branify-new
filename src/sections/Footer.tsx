@@ -184,8 +184,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                 </div>
                 <div className="flex items-center gap-2 pl-0.5 pt-0.5">
                   <Phone className="w-3 h-3 text-[#E7C978] shrink-0" />
-                  <a href="tel:+923321029333" className="text-slate-400 hover:text-[#E7C978] text-[11px] font-semibold transition-colors">
-                    +92 332 1029333
+                  <a href="tel:+9233706922381" className="text-slate-400 hover:text-[#E7C978] text-[11px] font-semibold transition-colors">
+                    +92 370 6922381
                   </a>
                 </div>
               </div>
@@ -207,12 +207,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPWA, isPWAInst
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   <a
-                    href="https://wa.me/923321029333"
+                    href="https://wa.me/9233706922381"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-emerald-400 text-xs font-bold transition-colors flex items-center gap-1.5"
                   >
-                    <span>WhatsApp: +92 332 1029333</span>
+                    <span>WhatsApp: +92 370 6922381</span>
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   </a>
                 </div>

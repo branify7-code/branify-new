@@ -19,7 +19,7 @@ import { trackEvent } from '../lib/track';
    ========================================================================== */
 
 /** Fallback = current central contact setting (matches Footer + estimator). */
-const WA_FALLBACK_DIGITS = '923321029333';
+const WA_FALLBACK_DIGITS = '9233706922381';
 
 let cachedWaDigits: string | null = null;
 

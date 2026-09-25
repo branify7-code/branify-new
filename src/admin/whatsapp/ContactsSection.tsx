@@ -54,7 +54,7 @@ export const ContactsSection: React.FC = () => {
 
   const createContact = async () => {
     const digits = newNumber.replace(/[^\d]/g, '');
-    if (digits.length < 8) { push('error', 'Enter a full WhatsApp number in international format, e.g. 923321029333.'); return; }
+    if (digits.length < 8) { push('error', 'Enter a full WhatsApp number in international format, e.g. 9233706922381.'); return; }
     try {
       await wa.createContact({ wa_id: digits, name: newName.trim() });
       push('success', 'Contact created.');
@@ -93,7 +93,7 @@ export const ContactsSection: React.FC = () => {
         <Modal open onClose={() => setCreating(false)} title="New WhatsApp contact" className="max-w-md">
           <div className="flex flex-col gap-3">
             <Field label="WhatsApp number" hint="International format, digits only — this is the matching key (no duplicates).">
-              <Input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} placeholder="923321029333" className="font-mono text-xs" />
+              <Input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} placeholder="9233706922381" className="font-mono text-xs" />
             </Field>
             <Field label="Name (optional)"><Input value={newName} onChange={(e) => setNewName(e.target.value)} className="text-xs" /></Field>
             <div className="flex justify-end gap-2">

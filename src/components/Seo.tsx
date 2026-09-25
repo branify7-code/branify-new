@@ -174,7 +174,7 @@ export const Seo: React.FC<SeoProps> = ({
         telephone: '+44-7412-831132',
         contactPoint: [
           { '@type': 'ContactPoint', telephone: '+44-7412-831132', contactType: 'customer service', email: 'support@branify.store', availableLanguage: ['English'] },
-          { '@type': 'ContactPoint', telephone: '+92-332-1029333', contactType: 'customer service', email: 'support@branify.store', availableLanguage: ['English', 'Urdu', 'Arabic'] },
+          { '@type': 'ContactPoint', telephone: '+92-370-6922381', contactType: 'customer service', email: 'support@branify.store', availableLanguage: ['English', 'Urdu', 'Arabic'] },
         ],
         sameAs: [
           'https://www.instagram.com/branify001',

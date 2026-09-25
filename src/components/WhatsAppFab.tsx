@@ -13,7 +13,7 @@ const DEFAULT_MESSAGE =
 
 const WHATSAPP_LINES: Array<{ number: string; label: string; flag: string }> = [
   { number: '+44 7412 831132', label: 'WhatsApp — United Kingdom', flag: '🇬🇧' },
-  { number: '+92 332 1029333', label: 'WhatsApp — Pakistan', flag: '🇵🇰' },
+  { number: '+92 370 6922381', label: 'WhatsApp — Pakistan', flag: '🇵🇰' },
 ];
 
 function waLink(number: string, message: string): string {

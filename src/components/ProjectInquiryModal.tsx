@@ -29,7 +29,7 @@ const BUDGET_OPTIONS = ['Under $100', '$500 – $1,000', '$1,000 – $3,000', '$
 const TIMELINE_OPTIONS = ['Urgent (1 day)', 'Standard (3–4 Weeks)', 'Flexible'] as const;
 
 /** Exact setting key in Supabase `settings` (admin SettingsPage edits it). */
-const WA_FALLBACK_DIGITS = '923321029333'; // matches Footer + admin contact setting today
+const WA_FALLBACK_DIGITS = '9233706922381'; // matches Footer + admin contact setting today
 
 /** Human-readable service names for the review chips + WhatsApp message. */
 const SERVICE_LABELS: Record<string, string> = {

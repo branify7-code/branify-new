@@ -201,8 +201,8 @@ export async function officialNumber(): Promise<string> {
   try {
     const { data } = await supabase.from('settings').select('value').eq('key', 'contact').limit(1);
     const value = (data?.[0] as { value?: { whatsapp?: string } } | undefined)?.value;
-    return value?.whatsapp || '923321029333';
+    return value?.whatsapp || '9233706922381';
   } catch {
-    return '923321029333';
+    return '9233706922381';
   }
 }

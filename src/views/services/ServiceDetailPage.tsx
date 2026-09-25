@@ -20,7 +20,7 @@ import { supabase } from '../../lib/supabase';
 import { trackNotFound } from '../../lib/track';
 import { useOverridesTick } from '../../hooks/useOverridesTick';
 
-const CONTACT_WHATSAPP = '+92 332 1029333';
+const CONTACT_WHATSAPP = '+92 370 6922381';
 
 /* ------------------------------------------------------------------ */
 /* Service Inquiry Modal (live replica — dual write: best-effort       */
