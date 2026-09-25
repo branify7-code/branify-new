@@ -78,9 +78,10 @@ async function sbSelectOne(path) {
 }
 async function sbInsert(table, row, opts = {}) {
   const extra = {};
-  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? "resolution=ignore-duplicates,return=representation" : "return=representation";
+  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? "resolution=merge-duplicates,return=representation" : "return=representation";
   else if (opts.onConflictIgnore) extra.Prefer = "resolution=ignore-duplicates";
-  const { status, json: json2 } = await run("POST", `/${table}`, row, extra);
+  const conflict = opts.conflictColumn ? `?on_conflict=${opts.conflictColumn}` : "";
+  const { status, json: json2 } = await run("POST", `/${table}${conflict}`, row, extra);
   if (status >= 400) throw new StoreError("db", 502, sbMessage(json2, `Database insert failed (HTTP ${status}).`));
   return Array.isArray(json2) ? json2 : [];
 }
@@ -1503,7 +1504,7 @@ async function webhookProcess(raw, signatureHeader) {
         const wamid = String(st.id || "");
         const status = String(st.status || "");
         const key = `status:${wamid}:${status}`;
-        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: `status_${status}`, payload: { wamid, status, ts: st.timestamp } }, { onConflictIgnore: true });
+        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: `status_${status}`, payload: { wamid, status, ts: st.timestamp } }, { onConflictIgnore: true, conflictColumn: "dedupe_key" });
         if (!dedupe.length) {
           outcome.skipped += 1;
           continue;
@@ -1534,7 +1535,7 @@ async function webhookProcess(raw, signatureHeader) {
           continue;
         }
         const key = `msg:${inbound.wamid}`;
-        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: "message_in", payload: { wamid: inbound.wamid, from: inbound.from, type: inbound.kind } }, { onConflictIgnore: true });
+        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: "message_in", payload: { wamid: inbound.wamid, from: inbound.from, type: inbound.kind } }, { onConflictIgnore: true, conflictColumn: "dedupe_key" });
         if (!dedupe.length) {
           outcome.skipped += 1;
           outcome.detail.push(`duplicate message ${inbound.wamid}`);
@@ -1602,7 +1603,7 @@ async function webhookProcess(raw, signatureHeader) {
       const tplStatus = String(change.field === "message_template_status_update" && value.message_template_status || "");
       if (tplId && tplStatus) {
         const key = `tpl:${tplId}:${tplStatus}`;
-        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: "template_status", payload: { tplId, tplStatus } }, { onConflictIgnore: true });
+        const dedupe = await sbInsert("whatsapp_events", { dedupe_key: key, event_type: "template_status", payload: { tplId, tplStatus } }, { onConflictIgnore: true, conflictColumn: "dedupe_key" });
         if (dedupe.length && ["APPROVED", "PENDING", "REJECTED", "PAUSED", "ARCHIVED", "DELETED"].includes(tplStatus)) {
           await sbUpdate("whatsapp_templates", `template_id=eq.${encodeURIComponent(tplId)}`, { status: tplStatus, updated_at: (/* @__PURE__ */ new Date()).toISOString() });
           outcome.processed += 1;
@@ -2338,7 +2339,8 @@ async function routeWhatsapp(req) {
         if (isSchemaMissing(e)) {
           return ok({ webhook: { processed: 0, skipped: 0, detail: ["schema not created yet"] } });
         }
-        return { status: 200, json: { ok: true, webhook: { processed: 0, skipped: 0, detail: ["processing deferred"] } } };
+        const safeCode = e instanceof Error ? /timeout|abort/i.test(e.message) ? "timeout" : /network/i.test(e.message) ? "network" : /database|insert failed|storage/i.test(e.message) ? "database" : /token|configur/i.test(e.message) ? "config" : "internal" : "internal";
+        return { status: 200, json: { ok: true, webhook: { processed: 0, skipped: 0, detail: [`processing deferred (${safeCode})`] } } };
       }
     }
     throw new WaError("bad_request", 405, "Method not allowed for the webhook.");

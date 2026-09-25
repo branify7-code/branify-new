@@ -124,7 +124,9 @@ async function routeWhatsapp(req: IncomingMessage): Promise<HandlerResult> {
           // Acknowledge so Meta does not retry-storm before the schema is applied.
           return ok({ webhook: { processed: 0, skipped: 0, detail: ['schema not created yet'] } });
         }
-        return { status: 200, json: { ok: true, webhook: { processed: 0, skipped: 0, detail: ['processing deferred'] } } };
+        // 200 so Meta stops retrying; include only a SAFE error category for diagnosis.
+        const safeCode = e instanceof Error ? (/timeout|abort/i.test(e.message) ? 'timeout' : /network/i.test(e.message) ? 'network' : /database|insert failed|storage/i.test(e.message) ? 'database' : /token|configur/i.test(e.message) ? 'config' : 'internal') : 'internal';
+        return { status: 200, json: { ok: true, webhook: { processed: 0, skipped: 0, detail: [`processing deferred (${safeCode})`] } } };
       }
     }
     throw new WaError('bad_request', 405, 'Method not allowed for the webhook.');

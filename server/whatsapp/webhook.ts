@@ -227,7 +227,7 @@ export async function webhookProcess(raw: string, signatureHeader: string): Prom
         const wamid = String(st.id || '');
         const status = String(st.status || '');
         const key = `status:${wamid}:${status}`;
-        const dedupe = await sbInsert<{ id: string }>('whatsapp_events', { dedupe_key: key, event_type: `status_${status}`, payload: { wamid, status, ts: st.timestamp } }, { onConflictIgnore: true });
+        const dedupe = await sbInsert<{ id: string }>('whatsapp_events', { dedupe_key: key, event_type: `status_${status}`, payload: { wamid, status, ts: st.timestamp } }, { onConflictIgnore: true, conflictColumn: 'dedupe_key' });
         if (!dedupe.length) { outcome.skipped += 1; continue; }
         if (!wamid || !['sent', 'delivered', 'read', 'failed'].includes(status)) { outcome.skipped += 1; continue; }
         const err = (st.errors as Array<{ code?: number; title?: string; message?: string }> | undefined)?.[0];
@@ -251,7 +251,7 @@ export async function webhookProcess(raw: string, signatureHeader: string): Prom
         const inbound = parseInbound(m);
         if (!inbound || !inbound.from || !inbound.wamid) { outcome.skipped += 1; continue; }
         const key = `msg:${inbound.wamid}`;
-        const dedupe = await sbInsert<{ id: string }>('whatsapp_events', { dedupe_key: key, event_type: 'message_in', payload: { wamid: inbound.wamid, from: inbound.from, type: inbound.kind } }, { onConflictIgnore: true });
+        const dedupe = await sbInsert<{ id: string }>('whatsapp_events', { dedupe_key: key, event_type: 'message_in', payload: { wamid: inbound.wamid, from: inbound.from, type: inbound.kind } }, { onConflictIgnore: true, conflictColumn: 'dedupe_key' });
         if (!dedupe.length) { outcome.skipped += 1; outcome.detail.push(`duplicate message ${inbound.wamid}`); continue; }
         try {
           const waId = digitsOf(inbound.from);
@@ -307,7 +307,7 @@ export async function webhookProcess(raw: string, signatureHeader: string): Prom
       const tplStatus = String((change.field === 'message_template_status_update' && (value as { message_template_status?: string }).message_template_status) || '');
       if (tplId && tplStatus) {
         const key = `tpl:${tplId}:${tplStatus}`;
-        const dedupe = await sbInsert<{ id: string }>('whatsapp_events', { dedupe_key: key, event_type: 'template_status', payload: { tplId, tplStatus } }, { onConflictIgnore: true });
+        const dedupe = await sbInsert<{ id: string }>('whatsapp_events', { dedupe_key: key, event_type: 'template_status', payload: { tplId, tplStatus } }, { onConflictIgnore: true, conflictColumn: 'dedupe_key' });
         if (dedupe.length && ['APPROVED', 'PENDING', 'REJECTED', 'PAUSED', 'ARCHIVED', 'DELETED'].includes(tplStatus)) {
           await sbUpdate('whatsapp_templates', `template_id=eq.${encodeURIComponent(tplId)}`, { status: tplStatus, updated_at: new Date().toISOString() });
           outcome.processed += 1;

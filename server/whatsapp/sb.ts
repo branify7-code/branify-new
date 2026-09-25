@@ -79,11 +79,13 @@ export async function sbSelectOne<T>(path: string): Promise<T | null> {
 }
 
 /** INSERT one row. Returns inserted row when represent. */
-export async function sbInsert<T>(table: string, row: Record<string, unknown>, opts: { represent?: boolean; onConflictIgnore?: boolean } = {}): Promise<T[]> {
+export async function sbInsert<T>(table: string, row: Record<string, unknown>, opts: { represent?: boolean; onConflictIgnore?: boolean; conflictColumn?: string } = {}): Promise<T[]> {
   const extra: Record<string, string> = {};
-  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? 'resolution=ignore-duplicates,return=representation' : 'return=representation';
+  if (opts.represent) extra.Prefer = opts.onConflictIgnore ? 'resolution=merge-duplicates,return=representation' : 'return=representation';
   else if (opts.onConflictIgnore) extra.Prefer = 'resolution=ignore-duplicates';
-  const { status, json } = await run('POST', `/${table}`, row, extra);
+  // Deterministic duplicate handling under concurrent webhook deliveries.
+  const conflict = opts.conflictColumn ? `?on_conflict=${opts.conflictColumn}` : '';
+  const { status, json } = await run('POST', `/${table}${conflict}`, row, extra);
   if (status >= 400) throw new StoreError('db', 502, sbMessage(json, `Database insert failed (HTTP ${status}).`));
   return (Array.isArray(json) ? json : []) as T[];
 }
