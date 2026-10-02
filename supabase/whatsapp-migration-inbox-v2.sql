@@ -60,5 +60,26 @@ create policy "admins manage whatsapp-media objects" on storage.objects
   using (bucket_id = 'whatsapp-media' and public.branify_is_admin())
   with check (bucket_id = 'whatsapp-media' and public.branify_is_admin());
 
--- 5. KEEP-ALIVE for schema probe (no-op) ---------------------------------------------
+-- 5. REALTIME PUBLICATION (waClient subscribes via postgres_changes) ----------------
+-- Supabase Realtime only streams tables registered in the supabase_realtime
+-- publication. Without this, the inbox silently falls back to polling.
+-- Idempotent: skips tables already registered.
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'whatsapp_messages'
+  ) then
+    alter publication supabase_realtime add table public.whatsapp_messages;
+  end if;
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'whatsapp_conversations'
+  ) then
+    alter publication supabase_realtime add table public.whatsapp_conversations;
+  end if;
+end $$;
+-- RLS stays in force: realtime delivers rows per the requesting admin's JWT.
+
+-- 6. KEEP-ALIVE for schema probe (no-op) ---------------------------------------------
 select 1;
